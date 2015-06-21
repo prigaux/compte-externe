@@ -16,7 +16,9 @@
    </div>
    <div ng-if="homonyme.comparisons.length">
      Voici les différences avec le compte <b>{{homonyme.uid}}</b> :
-     <table class="table table-bordered" compare="homonyme.comparisons">
+     <table class="table table-bordered">
+	<tbody compare="homonyme.comparisons">
+	</tbody>
      </table>
    </div>
    <p style="height: 1em">
