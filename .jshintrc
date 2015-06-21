@@ -1,0 +1,22 @@
+{
+  "devel": true, // Allow development statements e.g. `console.log();`.
+  "globalstrict": true,
+  "globals": {
+    "angular": false,
+    "describe": false,
+    "it": false,
+    "expect": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "module": false,
+    "inject": false
+  },
+  "predef": [ // Extra globals.
+  		"define",
+		"require",
+		"exports",
+		"process",
+		"__dirname",
+		"module"
+	]
+}

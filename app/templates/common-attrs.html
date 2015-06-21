@@ -1,0 +1,38 @@
+
+  <div my-bootstrap-form-group="supannCivilite" label="Civilité">
+    <label class="radio-inline" ng-repeat="val in ['M.', 'Mme']">
+      <input type="radio" name="supannCivilite" ng-model="v.supannCivilite" ng-value="val" required>{{val}}
+    </label>
+  </div>
+
+  <div my-bootstrap-form-group="givenName" label="Prénom">
+    <input name="givenName" ng-model="v.givenName" type="text" required form-control>
+  </div>
+
+  <div my-bootstrap-form-group="sn" label="Nom d'usage">
+    <input name="sn" ng-model="v.sn" type="text" required form-control>
+  </div>
+
+  <div my-bootstrap-form-group="birthName" label="Nom de naissance">
+    <input name="birthName" ng-model="v.birthName" type="text" form-control>
+  </div>
+
+  <div my-bootstrap-form-group="day" multi="true" label="Date de naissance">
+   <div class="col-xs-2" my-has-error="day">
+    <input name="day" ng-model="v.birthDay.day" type="number" min="1" max="31" placeholder="Jour" required form-control>
+  </div>
+  <div class="col-xs-2" my-has-error="month">
+    <input name="month" ng-model="v.birthDay.month" type="number" min="1" max="12" placeholder="Mois" required form-control> 
+  </div>
+  <div class="col-xs-5" my-has-error="year">
+    <input name="year" ng-model="v.birthDay.year" type="number" min="1900" max="{{maxYear}}" placeholder="Année" required  form-control>
+  </div>
+  </div>
+
+  <div my-bootstrap-form-group="homePostalAddress" label="Adresse personnelle">
+    <input name="homePostalAddress" ng-model="v.homePostalAddress" required form-control>
+  </div>
+
+  <div my-bootstrap-form-group="homePhone" label="Téléphone personnel">
+    <input name="homePhone" ng-model="v.homePhone" pattern="[0-9]{10}" required form-control>
+  </div>

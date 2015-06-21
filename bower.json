@@ -1,0 +1,18 @@
+{
+  "name": "angular-seed",
+  "description": "A starter project for AngularJS",
+  "version": "0.0.0",
+  "homepage": "https://github.com/angular/angular-seed",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "jsdiff": "1.x",
+    "bootstrap": "3.x",
+    "angular": "1.4.x",
+    "angular-route": "1.4.x",
+    "angular-loader": "1.4.x",
+    "angular-mocks": "~1.4.x",
+    "angular-bootstrap": "x",
+    "html5-boilerplate": "~4.3.0"
+  }
+}

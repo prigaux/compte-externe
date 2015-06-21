@@ -1,0 +1,56 @@
+<div class="normalContent" ng-show="v && homonymes"> 
+
+ <h4 style="margin-top: 2em">Modérer la création du compte</h4>
+
+ <div ng-if="homonymes.length">
+   <p style="height: 2em"></p>
+     <div class="alert alert-danger" >
+       Les informations fournies pour le nouveau compte correspondent à un compte existant.
+     </div>
+ </div>
+
+ <div ng-repeat="homonyme in homonymes">
+   <p style="height: 0.5em">
+   <div ng-if="homonyme.comparisons.length == 0">
+     Le compte <b>{{homonyme.uid}}</b> correspond exactement.
+   </div>
+   <div ng-if="homonyme.comparisons.length">
+     Voici les différences avec le compte <b>{{homonyme.uid}}</b> :
+     <table class="table table-bordered" compare="homonyme.comparisons">
+     </table>
+   </div>
+   <p style="height: 1em">
+ </div>
+
+
+ <form novalidate name="myForm" ng-submit="submitted = 1; submit()" class="form-horizontal">
+   
+   <div my-bootstrap-form-group="Shib_Identity_Provider" label="Etablissement" ng-if="v.Shib_Identity_Provider">
+     <input name="Shib_Identity_Provider" ng-model="v.Shib_Identity_Provider" type="text" disabled form-control>
+   </div>
+
+   <div my-bootstrap-form-group="eduPersonPrincipalName" label="Identifiant dans l'établissement" ng-if="v.eduPersonPrincipalName">
+     <input name="eduPersonPrincipalName" ng-model="v.eduPersonPrincipalName" type="text" disabled form-control>
+   </div>
+
+   <div my-bootstrap-form-group="mail" label="Mail" ng-if="v.mail">
+     <input name="mail" ng-model="v.mail" type="text" disabled form-control>
+   </div>
+   
+  
+  <div ng-include="'templates/common-attrs.html'"></div>
+  <div ng-include="'templates/extern-attrs.html'"></div>
+
+  <div my-bootstrap-form-group>
+      <button class="btn btn-primary" type="submit">
+	<span class="glyphicon glyphicon-plus"></span>
+	Approuver</button>
+
+      <button class="btn btn-primary" ng-click="reject()">
+	<span class="glyphicon glyphicon-trash"></span>
+	Rejeter</button>
+  </div>
+
+ </form>
+</div>
+
