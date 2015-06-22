@@ -20,8 +20,11 @@ var conf = {
 	base_structures: "ou=structures,dc=univ,dc=fr",
 
 	structures_attrs: { key: 'supannCodeEntite', name: 'ou', description: 'description' },
-
-	types: { up1BirthDay: 'datetime' },
+	
+	types: {
+	    up1BirthDay: 'datetime',
+	    homePostalAddress: 'postalAddress',
+	},
 	
 	people: {
 	    attrs: { birthDay: 'up1BirthDay' },

@@ -71,7 +71,6 @@ function homonyme_scoring(birthDay, known_birthDay) {
 
 function homonymes_scoring(l, birthDay) {
     l.forEach(function (u) {
-	u.birthDay = people_result(u, 'birthDay');
 	u.score = u.birthDay ? homonyme_scoring(u.birthDay, birthDay) : 0;
     });
     return _.sortBy(l, 'score').reverse();
@@ -80,8 +79,18 @@ function homonymes_scoring(l, birthDay) {
 function people_result(e, attr) {
     var ldapAttr = peopleLdapAttr(attr);
     var type = conf.ldap.types[ldapAttr];
-    if (!ldap.convert.from[type]) throw "invalid ldap type " + type + " for type " + attr;
-    return ldap.convert.from[type](e[attr]);
+    if (type) {
+	if (!ldap.convert.from[type]) throw "invalid ldap type " + type + " for type " + attr;
+	return ldap.convert.from[type](e[attr]);
+    } else {
+	return e[attr];
+    }
+}
+
+function people_convert_from_ldap(e) {
+    return _.mapValues(e, function (v, attr) {
+	return people_result(e, attr);
+    });
 }
 
 function peopleLdapAttr(attr) {
@@ -104,8 +113,9 @@ exports.homonymes = function (sns, givenNames, birthDay, attrs) {
 			  filter,
 			  ldapAttrs, 
 			  { sizeLimit: 10 }).then(function (l) {
-			   return homonymes_scoring(l, birthDay).filter(function (e) {
-			       return e.score > 0;
-			   });
-		       });
+			      l = l.map(people_convert_from_ldap);
+			      return homonymes_scoring(l, birthDay).filter(function (e) {
+				  return e.score > 0;
+			      });
+			  });
 };

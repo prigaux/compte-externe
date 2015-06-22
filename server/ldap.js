@@ -181,6 +181,9 @@ ldap.convert = {
 	    var m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)Z$/);
 	    return m && new Date(Date.UTC(m[1], parseInt(m[2])-1, m[3], m[4], m[5], m[6]));
 	},
+	postalAddress: function (s) {
+	    return s && s.replace(/\$/g, "\n");
+	},
     },
 };
 
