@@ -103,7 +103,12 @@ function getRaw(req, id) {
 }
 
 function get(req, id) {
-    return getRaw(req, id).then(sv_removeHiddenAttrs);
+    return getRaw(req, id).then(sv_removeHiddenAttrs).then(function (sv) {
+	sv.attrs = _.omit(step(sv).attrs, function (val) {
+	    return val.hidden;
+	});
+	return sv;
+    });
 }
 
 function set(req, id, v) {

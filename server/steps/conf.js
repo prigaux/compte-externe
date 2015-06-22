@@ -24,6 +24,7 @@ var attrs = {
 
 var moderator_attrs = _.defaults({
     uid: {},
+    structureParrain: { readonly: true },
 }, attrs);
 
 var steps = {   
