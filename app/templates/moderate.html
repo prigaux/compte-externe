@@ -17,8 +17,13 @@
    <div ng-if="homonyme.comparisons.length">
      Voici les différences avec le compte <b>{{homonyme.uid}}</b> :
      <table class="table table-bordered">
-	<tbody compare="homonyme.comparisons">
-	</tbody>
+       <tbody ng-repeat="e in homonyme.comparisons">
+	 <tr>
+	   <td>{{label[e.attr]}}</td>
+	   <td ng-bind-html="e.cmp[0]"></td>
+	   <td ng-bind-html="e.cmp[1]"></td>
+	 </tr>
+       </tbody>
      </table>
    </div>
    <p style="height: 1em">

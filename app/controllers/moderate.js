@@ -9,7 +9,7 @@ angular.module('myApp')
   });
 }])
 
-.controller('ModerateCtrl', function($location, $scope, $routeParams, attrsEdit, ws) {
+.controller('ModerateCtrl', function($location, $scope, $routeParams, attrsEdit, ws, helpers) {
     var id = $routeParams.id;
 
     function nextStep (resp) {
@@ -22,7 +22,7 @@ angular.module('myApp')
 	    var val1 = ""+val;
 	    var val2 = ""+homonyme[attr];
 	    if (val1 !== val2) {
-		r.push([val1, val2]);
+		r.push({ attr: attr, cmp: helpers.formatDifferences(val1, val2) });
 	    }
 	});
 	homonyme.comparisons = r;
