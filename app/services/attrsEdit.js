@@ -4,6 +4,7 @@ angular.module('myApp')
 
 .service("attrsEdit", function(ws) {
     this.manager = function($scope, id, expectedStep, nextStep) {
+	$scope.label = conf.attr_labels;
 	$scope.maxYear = new Date().getUTCFullYear();
 
 	ws.getInScope($scope, id, expectedStep);

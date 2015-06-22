@@ -1,9 +1,9 @@
 
-  <div my-bootstrap-form-group="supannMailPerso" label="Email personnel">
+  <div my-bootstrap-form-group="supannMailPerso" label="{{label.supannMailPerso}}">
     <input name="supannMailPerso" ng-model="v.supannMailPerso" type="email" pattern=".*@.*\..*" required form-control>
   </div>
 
-  <div my-bootstrap-form-group="structureParrain" label="SERVICE QUI INVITE : (UFR, Service, Laboratoire...)">
+  <div my-bootstrap-form-group="structureParrain" label="{{label.structureParrain}}">
     <input name="structureParrain" ng-model="v.structureParrainS" type="text" typeahead="e as e.description for e in structures_search($viewValue)"
 	   ng-disabled="attrs.structureParrain.readonly"
 	   form-control>

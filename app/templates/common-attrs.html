@@ -1,23 +1,23 @@
 
-  <div my-bootstrap-form-group="supannCivilite" label="Civilité">
+  <div my-bootstrap-form-group="supannCivilite" label="{{label.supannCivilite}}">
     <label class="radio-inline" ng-repeat="val in ['M.', 'Mme']">
       <input type="radio" name="supannCivilite" ng-model="v.supannCivilite" ng-value="val" required>{{val}}
     </label>
   </div>
 
-  <div my-bootstrap-form-group="givenName" label="Prénom">
+  <div my-bootstrap-form-group="givenName" label="{{label.givenName}}">
     <input name="givenName" ng-model="v.givenName" type="text" required form-control>
   </div>
 
-  <div my-bootstrap-form-group="sn" label="Nom d'usage">
+  <div my-bootstrap-form-group="sn" label="{{label.sn}}">
     <input name="sn" ng-model="v.sn" type="text" required form-control>
   </div>
 
-  <div my-bootstrap-form-group="birthName" label="Nom de naissance">
+  <div my-bootstrap-form-group="birthName" label="{{label.birthName}}">
     <input name="birthName" ng-model="v.birthName" type="text" form-control>
   </div>
 
-  <div my-bootstrap-form-group="day" multi="true" label="Date de naissance">
+  <div my-bootstrap-form-group="day" multi="true" label="{{label.birthDay}}">
    <div class="col-xs-2" my-has-error="day">
     <input name="day" ng-model="v.birthDay.day" type="number" min="1" max="31" placeholder="Jour" required form-control>
   </div>
@@ -29,10 +29,11 @@
   </div>
   </div>
 
-  <div my-bootstrap-form-group="homePostalAddress" label="Adresse personnelle">
-    <input name="homePostalAddress" ng-model="v.homePostalAddress" required form-control>
+  <div my-bootstrap-form-group="homePostalAddress" label="{{label.homePostalAddress}}">
+    <textarea name="homePostalAddress" ng-model="v.homePostalAddress" rows="3" required form-control>
+    </textarea>
   </div>
 
-  <div my-bootstrap-form-group="homePhone" label="Téléphone personnel">
+  <div my-bootstrap-form-group="homePhone" label="{{label.homePhone}}">
     <input name="homePhone" ng-model="v.homePhone" pattern="[0-9]{10}" required form-control>
   </div>
