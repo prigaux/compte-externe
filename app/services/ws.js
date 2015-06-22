@@ -79,13 +79,18 @@ angular.module('myApp')
 
     this.listInScope = function($scope, params) {
 	return $http.get('/api/comptes', { params: params }).then(function (resp) {
+	    if ($scope.$$destroyed) return;
 	    var svs = resp.data;
 	    if (svs.error) {
 		$scope.err = svs;
 	    } else {
 		$scope.svs = svs;
 	    }
-	}, handleErr);
+	}, function (resp) {
+	    var err = resp.data;
+	    if (!$scope.$$destroyed) alert(err);
+	    return $q.reject(err);
+	});
     };
 
     this.homonymes = function(id, params) {
