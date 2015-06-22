@@ -7,22 +7,11 @@
    <div ng-include="'templates/common-attrs.html'"></div>
    <div ng-include="'templates/extern-attrs.html'"></div>
 
-   <!--
-  <div class="form-group" ng-class="{'has-error': submitted && myForm.key.$invalid}">
-    <label class="col-md-3 control-label" for="key">Clé</label>
-    <div class="col-md-6">
-      <input type="text" name="key" ng-model="service.key" my-validator="{ unique: checkUniqueName }" required maxlength="30" class="form-control">
-      <span display-required-if-needed input-name="myForm.key"></span>
-      <span ng-show="submitted && myForm.key.$error.unique" class="help-block">Already in use</span>
-    </div>
-  </div>
-  -->
-
-  <div my-bootstrap-form-group>
+   <div my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit">
 	<span class="glyphicon glyphicon-plus"></span>
 	Demander la création</button>
-  </div>
+   </div>
 
  </form>
 
