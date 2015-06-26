@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soap:Body>
+    <validateAccount>
+      <in0>
+        <entry xmlns="http://remote.services.activbo.esupportail.org">
+          <key xsi:type="xsd:string">uid</key>
+          <value xsi:type="xsd:string">{{uid}}</value>
+        </entry>
+      </in0>
+      <in1>
+        <string>displayName</string>
+      </in1>
+    </validateAccount>
+  </soap:Body>
+</soap:Envelope>

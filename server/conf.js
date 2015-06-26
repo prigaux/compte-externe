@@ -1,5 +1,6 @@
 'use strict';
 
+var fs = require('fs');
 var sendmailTransport = require('nodemailer-sendmail-transport');
 
 var conf = {
@@ -66,6 +67,13 @@ var conf = {
     mongodb: { 
 	url: "mongodb://localhost:27017/compte-externe",
     },
+
+    esup_activ_bo: {
+	url: "http://xxxx.univ.fr:8080/esup-activ-bo/xfire/AccountManagement",
+    },
+
+    http_client_CAs: fs.readFileSync('/etc/ssl/certs/ca-certificates.crt').toString().split(/(?=-----BEGIN CERTIFICATE-----)/),
+
 };
 
 module.exports = conf;
