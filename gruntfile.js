@@ -40,7 +40,7 @@ module.exports = function(grunt) {
         },
         concurrent: {
             default: ['nodemon', 'watch'],
-            debug: ['nodemon', 'watch'],
+            debug: ['nodemon', 'watch', 'node-inspector'],
             options: {
                 logConcurrentOutput: true,
                 limit: 10
@@ -51,6 +51,22 @@ module.exports = function(grunt) {
                 NODE_ENV: 'test'
             }
         },
+
+
+	'node-inspector': {
+	    custom: {
+		options: {
+		    'web-port': 8081,
+		    'web-host': 'php-devel',
+		    'debug-port': 5858,
+		    'save-live-edit': true,
+		    'no-preload': true,
+		    'stack-trace-limit': 50,
+		    'hidden': []
+		}
+	    }
+	},
+	
     });
 
     require('load-grunt-tasks')(grunt);
