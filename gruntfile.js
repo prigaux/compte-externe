@@ -6,15 +6,20 @@ module.exports = function(grunt) {
     var watchFiles = {
         serverJS: ['gruntfile.js', 'start-server.js', 'server/**/*.js'],
         clientJS: ['app/**/*.js', '!app/bower_components/**/*'],
+	html_css: ['app/**/*.html', 'app/**/*.css'],
     };
 
     // Project Configuration
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         watch: {
-            serverJS: {
+            js: {
                 files: watchFiles.clientJS.concat(watchFiles.serverJS),
                 tasks: ['jshint'],
+                options: { livereload: true }
+            },
+            html_css: {
+                files: watchFiles.html_css,
                 options: { livereload: true }
             },
         },
