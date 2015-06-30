@@ -25,7 +25,9 @@ angular.module('myApp')
 	    element.removeAttr('my-error-msgs');
 
 	    var name = attrs.myErrorMsgs;    
-	    var error_msgs = '<div ng-messages="myForm.' + name + '.$error" ng-if="submitted"> <div ng-messages-include="form-errors"></div> </div>';
+	    var error_msgs = '<div ng-messages="myForm.' + name + '.$error" ng-if="submitted">' +
+		'<div ng-messages-include="form-errors"></div>' +
+		'</div>';
 	    var error_msgs2 = '<div ng-repeat="err in [errorMessages.' + name + ']" ng-if="submitted">' +
 		'<div ng-include="\'templates/form-errors-custom.html\'"></div>' +
 		'</div>';
