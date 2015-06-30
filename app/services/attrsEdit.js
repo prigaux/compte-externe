@@ -2,7 +2,7 @@
 
 angular.module('myApp')
 
-.service("attrsEdit", function(ws) {
+.service("attrsEdit", function(ws, conf) {
     this.manager = function($scope, id, expectedStep, nextStep) {
 	$scope.label = conf.attr_labels;
 	$scope.maxDay = 31;
