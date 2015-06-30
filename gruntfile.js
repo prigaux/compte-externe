@@ -4,9 +4,10 @@ var fs = require('fs');
 
 module.exports = function(grunt) {
     var watchFiles = {
-        serverJS: ['gruntfile.js', 'start-server.js', 'server/**/*.js'],
+        serverJS: ['gruntfile.js', 'start-server.js', 'server/**/*.js', '!server/tests/'],
         clientJS: ['app/**/*.js', '!app/bower_components/**/*'],
 	html_css: ['app/**/*.html', 'app/**/*.css'],
+	mochaTests: ['server/tests/**/*.js'],
     };
 
     // Project Configuration
@@ -22,6 +23,10 @@ module.exports = function(grunt) {
                 files: watchFiles.html_css,
                 options: { livereload: true }
             },
+	    mochaTests: {
+		files: watchFiles.mochaTests,
+		tasks: ['test:server'],
+	    },
         },
         jshint: {
             all: {
@@ -51,6 +56,9 @@ module.exports = function(grunt) {
                 NODE_ENV: 'test'
             }
         },
+	mochaTest: {
+	    src: watchFiles.mochaTests,
+	},
 
 
 	'node-inspector': {
@@ -78,4 +86,9 @@ module.exports = function(grunt) {
     grunt.registerTask('debug', ['lint', 'concurrent:debug']);
     grunt.registerTask('lint', ['jshint']);
     grunt.registerTask('build', ['lint']);
+
+    // Test task.
+    grunt.registerTask('test', ['test:server']);
+    grunt.registerTask('test:server', ['env:test', 'mochaTest']);
+    
 };
