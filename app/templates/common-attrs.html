@@ -1,3 +1,4 @@
+<div ng-include="'templates/form-errors.html'"></div>
 
   <div my-bootstrap-form-group="supannCivilite" label="{{label.supannCivilite}}">
     <label class="radio-inline" ng-repeat="val in ['M.', 'Mme']">
@@ -18,15 +19,21 @@
   </div>
 
   <div my-bootstrap-form-group="day" multi="true" label="{{label.birthDay}}">
-   <div class="col-xs-2" my-has-error="day">
-    <input name="day" ng-model="v.birthDay.day" type="number" min="1" max="31" placeholder="Jour" required form-control>
-  </div>
-  <div class="col-xs-2" my-has-error="month">
-    <input name="month" ng-model="v.birthDay.month" type="number" min="1" max="12" placeholder="Mois" required form-control> 
-  </div>
-  <div class="col-xs-5" my-has-error="year">
-    <input name="year" ng-model="v.birthDay.year" type="number" min="1900" max="{{maxYear}}" placeholder="Année" required  form-control>
-  </div>
+    <div class="col-xs-2" my-has-error="day">
+      <div my-error-msgs="day">
+	<input name="day" ng-model="v.birthDay.day" type="number" min="1" max="31" placeholder="Jour" required form-control>
+      </div>
+    </div>
+    <div class="col-xs-2" my-has-error="month">
+      <div my-error-msgs="month">
+	<input name="month" ng-model="v.birthDay.month" type="number" min="1" max="12" placeholder="Mois" required form-control>
+      </div>
+    </div>
+    <div class="col-xs-5" my-has-error="year">
+      <div my-error-msgs="year">
+	<input name="year" ng-model="v.birthDay.year" type="number" min="1900" max="{{maxYear}}" placeholder="Année" required  form-control>
+      </div>
+    </div>
   </div>
 
   <div my-bootstrap-form-group="homePostalAddress" label="{{label.homePostalAddress}}">
@@ -35,5 +42,6 @@
   </div>
 
   <div my-bootstrap-form-group="homePhone" label="{{label.homePhone}}">
-    <input name="homePhone" ng-model="v.homePhone" pattern="[0-9]{10}" required form-control>
+    <input name="homePhone" ng-model="v.homePhone" phone required form-control>
   </div>
+

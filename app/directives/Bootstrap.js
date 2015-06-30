@@ -16,6 +16,21 @@ angular.module('myApp')
     };
 })
 
+.directive("myErrorMsgs", function() {
+    return {
+	restrict: 'A',
+	transclude: true,
+	template: function(element, attrs) {
+	    // cleanup element:
+	    element.removeAttr('my-error-msgs');
+
+	    var name = attrs.myErrorMsgs;    
+	    var error_msgs = '<div ng-messages="myForm.' + name + '.$error" ng-if="submitted"> <div ng-messages-include="form-errors"></div> </div>';
+	    return "<div><div ng-transclude></div>" + error_msgs + "</div>";    
+        }
+    };
+})
+
 .directive("myBootstrapFormGroup", function() {
     return {
 	restrict: 'A',
@@ -28,9 +43,10 @@ angular.module('myApp')
 	    element.removeAttr('multi');
 	    element.addClass("form-group");
 	    var mayHasErrorAttr = name && !attrs.multi ? "my-has-error='" + name + "'" : '';
+	    var error_msgs = name && !attrs.multi ? "my-error-msgs='" + name + "'" : '';
 	    var label = attrs.label ? '<label class="col-md-3 control-label" for="' + name + '">' + attrs.label + '</label>' : '';
 	    var subClass = (attrs.label ? '' : 'col-md-offset-3') + ' ' + (attrs.multi ? '' : 'col-md-9');
-	    var sub = '<div class="' + subClass + '" ng-transclude></div>';
+	    var sub = '<div class="' + subClass + '" ' + error_msgs + '><div ng-transclude></div></div>';
 	    return "<div " + mayHasErrorAttr + ">" + label + sub + "</div>";
         }
     };
