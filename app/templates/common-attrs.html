@@ -21,7 +21,7 @@
   <div my-bootstrap-form-group="day" multi="true" label="{{label.birthDay}}">
     <div class="col-xs-2" my-has-error="day">
       <div my-error-msgs="day">
-	<input name="day" ng-model="v.birthDay.day" type="number" min="1" max="31" placeholder="Jour" required form-control>
+	<input name="day" ng-model="v.birthDay.day" type="number" min="1" max="{{maxDay}}" placeholder="Jour" required form-control>
       </div>
     </div>
     <div class="col-xs-2" my-has-error="month">
