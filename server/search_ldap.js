@@ -6,6 +6,8 @@ var ldap = require('./ldap');
 var filters = ldap.filters;
 var accents = require('diacritics');
 
+var maxLoginLength = 10;
+
 exports.structures = function (token, sizeLimit) {
     var words_filter = filters.fuzzy(['description', 'ou'], token);
     var many = [filters.eq("supannCodeEntite", token), 
@@ -118,4 +120,89 @@ exports.homonymes = function (sns, givenNames, birthDay, attrs) {
 				  return e.score > 0;
 			      });
 			  });
+};
+
+// export it to allow override
+exports.existLogin = function(login) {
+    return ldap.searchOne(conf.ldap.base_people, filters.eq("uid", login), "uid").then(function (v) {
+	return !!v;
+    });
+};
+
+function truncateLogin(login) {
+    return login.substr(0, maxLoginLength);
+}
+
+function checkLogin(login) {
+    var ok = login.match(/[a-z]/);
+    if (!ok) {
+	console.error('genLogin: ' + login + ': le login doit contenir au moins un caractère alphabétique');
+    }
+    return ok;
+}
+
+function accronyms(l, length) {
+    length = length || 1;
+    return l.map(function (s) {
+        return s.substr(0, length);
+    }).join('');
+}
+
+function accronyms_and_sn(sn, givenNames, coll) {
+    return truncateLogin(accronyms(givenNames, coll) + sn);
+}
+
+function genLogin_numeric_suffix(base, coll) {
+    var login = base.substr(0, maxLoginLength - (""+coll).length) + coll;
+    if (!checkLogin(login)) {
+	// argh, no letters anymore :-(
+	return undefined;   
+    } else {
+	return exports.existLogin(login).then(function (exist) {
+	    if (!exist) {
+		// yeepee
+		return login;
+	    } else {
+		return genLogin_numeric_suffix(base, coll+1);
+	    }
+	});
+    }
+}
+
+function genLogin_accronyms_prefix(sn, givenNames, coll, prev) {
+    // composition initiales du prénom + nom avec test conflits
+    if (coll >= maxLoginLength) return undefined;
+    var login = accronyms_and_sn(sn, givenNames, coll);
+    if (!checkLogin(login)) {
+	// weird...
+	return undefined;
+    } else if (login === prev) {
+	return undefined;
+    } else {
+	return exports.existLogin(login).then(function (exist) {
+	    if (!exist) {
+		// yeepee
+		return login;
+	    } else {
+		return genLogin_accronyms_prefix(sn, givenNames, coll+1, login);
+	    }
+	});
+    }
+}
+
+// génère un login unique
+exports.genLogin = function (sn, givenName) {
+    if (!sn) return Promise.resolve(undefined);
+    sn = accents.remove(sn);
+    sn = sn.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+    givenName = accents.remove(givenName || "");
+    givenName = givenName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    var givenNames = _.compact(givenName.split("-"));
+
+    return genLogin_accronyms_prefix(sn, givenNames, 1).then(function (login) {
+	return login ||
+	    genLogin_numeric_suffix(accronyms_and_sn(sn, givenNames, 1), 1);
+    });
+
 };
