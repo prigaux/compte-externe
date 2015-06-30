@@ -21,6 +21,7 @@ angular.module('myApp')
     };
 
     h.formatDifferences = function(val1, val2) {
+	/* globals JsDiff */
 	var diff = JsDiff.diffChars(val1, val2);
 	var fragment1 = '';
 	var fragment2 = '';

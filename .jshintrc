@@ -1,6 +1,8 @@
 {
   "devel": true, // Allow development statements e.g. `console.log();`.
   "globalstrict": true,
+  "undef": true,
+  "unused": "vars",
   "globals": {
     "angular": false,
     "describe": false,

@@ -5,7 +5,6 @@ var express = require('express');
 var acl_checker = require('./acl_checker');
 var db = require('./db');
 var utils = require('./utils');
-var ldap = require('./ldap');
 var search_ldap = require('./search_ldap');
 var mail = require('./mail');
 var conf = require('./conf');
@@ -185,7 +184,6 @@ function homonymes(req, id) {
     return getRaw(req, id).then(function (sv) {
 	// acls are checked => removing is allowed
 	console.log("sns", _.merge(_.at(sv.v, conf.ldap.people.sns)));
-	var comparedAttrs = _.keys(sv_removeHiddenAttrs(sv));
 	return search_ldap.homonymes(
 	    _.merge(_.at(sv.v, conf.ldap.people.sns)),
 	    _.merge(_.at(sv.v, conf.ldap.people.givenNames)),

@@ -87,5 +87,3 @@ module.exports.init = function (callback) {
 module.exports.new_id = function () {
     return "" + _id();
 };
-
-var mongodb = require('mongodb');

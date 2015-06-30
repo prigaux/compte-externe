@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
 var conf = require('../conf');
 var ldap = require('../ldap');
 var filters = ldap.filters;

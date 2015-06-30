@@ -1,7 +1,5 @@
 'use strict';
 
-var fs = require('fs');
-
 module.exports = function(grunt) {
     var watchFiles = {
         serverJS: ['gruntfile.js', 'start-server.js', 'server/**/*.js', '!server/tests/'],
