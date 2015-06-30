@@ -4,9 +4,10 @@ var _ = require('lodash');
 var conf = require('./conf');
 var ldap = require('./ldap');
 var filters = ldap.filters;
-var accents = require('diacritics');
 
 var maxLoginLength = 10;
+
+var remove_accents = _.deburr;
 
 exports.structures = function (token, sizeLimit) {
     var words_filter = filters.fuzzy(['description', 'ou'], token);
@@ -16,9 +17,9 @@ exports.structures = function (token, sizeLimit) {
 };
 
 function suggested_mail(sn, givenName) {
-    var s = accents.remove(sn);
+    var s = remove_accents(sn);
     if (givenName) {
-	givenName = accents.remove(givenName);
+	givenName = remove_accents(givenName);
 	// prénom présent: on exclue les points et on le préfixe au sn
         s = givenName.replace(/\./g, '') + "." + s.replace(/\./g, '');
     }
@@ -193,10 +194,10 @@ function genLogin_accronyms_prefix(sn, givenNames, coll, prev) {
 // génère un login unique
 exports.genLogin = function (sn, givenName) {
     if (!sn) return Promise.resolve(undefined);
-    sn = accents.remove(sn);
+    sn = remove_accents(sn);
     sn = sn.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-    givenName = accents.remove(givenName || "");
+    givenName = remove_accents(givenName || "");
     givenName = givenName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     var givenNames = _.compact(givenName.split("-"));
 

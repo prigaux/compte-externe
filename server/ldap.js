@@ -2,8 +2,9 @@
 
 var _ = require('lodash');
 var ldap = require('ldapjs');
-var accents = require('diacritics');
 var conf = require('./conf');
+
+var remove_accents = _.deburr;
 
 var client = ldap.createClient({ url: conf.ldap.uri });
 
@@ -152,7 +153,7 @@ filters.alike_same_accents = function (attr, str) {
 };
 
 filters.alike_no_accents = function (attr, str) {
-    return filters.alike_same_accents(attr, accents.remove(str));
+    return filters.alike_same_accents(attr, remove_accents(str));
 };
 
 filters.alike_many_same_accents = function (attr, strs) {
@@ -163,7 +164,7 @@ filters.alike_many_same_accents = function (attr, strs) {
 
 filters.alike_many = function (attr, strs) {
     var strs_ = _.uniq(_.flatten(strs.map(function (str) {
-	return [ str, accents.remove(str) ];
+	return [ str, remove_accents(str) ];
     })));
     return filters.alike_many_same_accents(attr, strs_);
 };
