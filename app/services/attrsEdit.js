@@ -5,6 +5,8 @@ angular.module('myApp')
 .service("attrsEdit", function(ws, conf) {
     this.manager = function($scope, id, expectedStep, nextStep) {
 	$scope.label = conf.attr_labels;
+	var accentsRange = '\u00C0-\u00FC';
+	$scope.allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
 	$scope.maxDay = 31;
 	$scope.maxYear = new Date().getUTCFullYear();
 
@@ -20,6 +22,8 @@ angular.module('myApp')
 
 	$scope.structures_search = ws.structures_search;
 
+	$scope.errorMessages = {};
+	
 	$scope.submit = function () {
 	    //if (!$scope.myForm.$valid) return;
 	    ws.set(id, $scope.v).then(nextStep);

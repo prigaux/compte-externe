@@ -7,15 +7,15 @@
   </div>
 
   <div my-bootstrap-form-group="givenName" label="{{label.givenName}}">
-    <input name="givenName" ng-model="v.givenName" type="text" required form-control>
+    <input name="givenName" ng-model="v.givenName" type="text" allowed-chars="{{allowedCharsInNames}}" required form-control>
   </div>
 
   <div my-bootstrap-form-group="sn" label="{{label.sn}}">
-    <input name="sn" ng-model="v.sn" type="text" required form-control>
+    <input name="sn" ng-model="v.sn" type="text" allowed-chars="{{allowedCharsInNames}}" required form-control>
   </div>
 
   <div my-bootstrap-form-group="birthName" label="{{label.birthName}}">
-    <input name="birthName" ng-model="v.birthName" type="text" form-control>
+    <input name="birthName" ng-model="v.birthName" type="text" allowed-chars="{{allowedCharsInNames}}" form-control>
   </div>
 
   <div my-bootstrap-form-group="day" multi="true" label="{{label.birthDay}}">

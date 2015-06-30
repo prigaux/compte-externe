@@ -26,7 +26,10 @@ angular.module('myApp')
 
 	    var name = attrs.myErrorMsgs;    
 	    var error_msgs = '<div ng-messages="myForm.' + name + '.$error" ng-if="submitted"> <div ng-messages-include="form-errors"></div> </div>';
-	    return "<div><div ng-transclude></div>" + error_msgs + "</div>";    
+	    var error_msgs2 = '<div ng-repeat="err in [errorMessages.' + name + ']" ng-if="submitted">' +
+		'<div ng-include="\'templates/form-errors-custom.html\'"></div>' +
+		'</div>';
+	    return "<div><div ng-transclude></div>" + error_msgs + error_msgs2 + "</div>";    
         }
     };
 })

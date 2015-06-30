@@ -1,0 +1,6 @@
+<span class="help-block" ng-if="err.allowedChars && err.allowedChars.forbiddenChars.length == 1">
+  Le caractère « {{err.allowedChars.forbiddenChars}} » n'est pas autorisé.
+</span>
+<span class="help-block" ng-if="err.allowedChars && err.allowedChars.forbiddenChars.length > 1">
+  Les caractères « {{err.allowedChars.forbiddenChars}} » ne sont pas autorisés.
+</span>
