@@ -13,3 +13,10 @@ var conf = {
 	structureParrain: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)",
     },
 };
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = conf;
+} else {
+    /* globals window */
+    window.conf = conf;
+}
