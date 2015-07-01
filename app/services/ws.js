@@ -59,6 +59,7 @@ angular.module('myApp')
     
     function handleErr(resp) {
 	var err = resp.data;
+	console.err(err);
 	alert(err);
 	return $q.reject(err);
     }
@@ -68,7 +69,8 @@ angular.module('myApp')
 	return $http.get(url).then(function (resp) {
 	    var sv = resp.data;
 	    if (sv.error) {
-		alert(sv);
+		console.error("error accessing ", url, ":", sv.error, sv.stack);
+		alert(sv.error);
 	    } else {
 		if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
 		if (sv.v) sv.v = fromWs(sv.v);
