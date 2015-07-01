@@ -2,6 +2,23 @@
 
 angular.module('myApp')
 
+.directive('sameAs', function() {
+    return {
+        require: "ngModel",
+        scope: {
+            otherModelValue: "=sameAs"
+        },
+        link: function(scope, elm, attrs, ctrl) {
+            ctrl.$validators.sameAs = function(modelValue) {
+                return modelValue == scope.otherModelValue;
+            };
+            scope.$watch("otherModelValue", function() {
+                ctrl.$validate();
+            });
+        }
+    };
+})
+
 .directive('phone', function() {
   return {
     require: 'ngModel',
