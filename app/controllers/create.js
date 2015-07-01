@@ -16,6 +16,8 @@ angular.module('myApp')
     function nextStep(resp) {
 	if (resp.step === 'validate_email') {
 	    $location.path('/awaiting-email-validation');
+	} else if (resp.login) {
+	    $location.path('/awaiting-moderation/' + resp.login);
 	} else {
 	    // TODO need to pass by SP shib
 	    //$location.path('/location');
