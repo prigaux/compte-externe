@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.validate', ['ngRoute'])
+angular.module('myApp')
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/validate/:id', {
