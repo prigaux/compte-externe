@@ -178,10 +178,13 @@ function listAuthorized(req) {
 function homonymes(req, id) {
     return getRaw(req, id).then(function (sv) {
 	// acls are checked => removing is allowed
-	console.log("sns", _.merge(_.at(sv.v, conf.ldap.people.sns)));
+	var sns = _.merge(_.at(sv.v, conf.ldap.people.sns));
+	var givenNames = _.merge(_.at(sv.v, conf.ldap.people.givenNames));
+	if (sns[0] === undefined) return [];
+	console.log("sns", sns);
 	return search_ldap.homonymes(
-	    _.merge(_.at(sv.v, conf.ldap.people.sns)),
-	    _.merge(_.at(sv.v, conf.ldap.people.givenNames)),
+	    sns,
+	    givenNames,
 	    new Date(sv.v.birthDay),
 	    _.keys(step(sv).attrs));
     });
