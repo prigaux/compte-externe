@@ -10,7 +10,7 @@ exports.getShibAttrs = function(req, _sv) {
 	return req.header(headerName);
     });
     console.log("action getShibAttrs:", v);
-    return Promise.resolve(v);
+    return Promise.resolve({ v: v });
 };
 
 exports.createCompte = function(req, sv) {
@@ -21,8 +21,7 @@ exports.createCompte = function(req, sv) {
 	if (v.supannMailPerso) {
 	    mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v: v });
 	}
-	// we can remove "v" from DB
-	return null;
+	return { v: v };
     });
 };
 
@@ -30,5 +29,5 @@ exports.sendValidationEmail = function(req, sv) {
     var v = sv.v;
     console.log("action sendValidationEmail");
     mail.sendWithTemplate('validation.html', { conf: conf, to: v.supannMailPerso, id: sv.id, v: v });
-    return Promise.resolve(v);
+    return Promise.resolve({ v: v });
 };

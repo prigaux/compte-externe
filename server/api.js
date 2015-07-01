@@ -21,29 +21,21 @@ function step(sv) {
 }
 
 function action_pre(req, sv) {
-    return action(req, sv, 'action_pre').then(function (v) {
-	//console.log("action returned " + v);
-	sv.v = v;
-	return sv;
-    });
+    return action(req, sv, 'action_pre');
 }
 function action_post(req, sv) {
-    return action(req, sv, 'action_post').then(function (v) {
-	// for notification to other moderators,
-	// either use the new "v" returned by the action
-	// or use the old "v" in case the action returned null, aka remove "v" from DB
-	if (v) sv.v = v;
+    return action(req, sv, 'action_post').tap(function (sv) {
 	mayNotifyModerators(req, sv, 'accepted');
-
-	sv.v = v;
-	return sv;
     });
 }
 function action(req, sv, action_name) {
     var f = step(sv)[action_name];
-    if (!f) return Promise.resolve(sv.v); // nothing to do
+    if (!f) return Promise.resolve(sv); // nothing to do
     //console.log("calling " + action_name + " for step " + sv.step);
-    return f(req, sv);
+    return f(req, sv).then(function (vr) {
+	//console.log("action returned", vr);
+	return _.defaults(vr, sv);
+    });
 }
 
 function mergeAttrs(attrs, prev, v) {
@@ -127,19 +119,24 @@ function setRaw(req, sv, v) {
 	sv.id = db.new_id();
     }
     sv.v = mergeAttrs(step(sv).attrs, sv.v, v);
-    return action_post(req, sv).then(function (sv) {
-	if (sv.v) {
-	    sv.step = step(sv).next;
-	    return action_pre(req, sv);
+    return action_post(req, sv).then(function (svr) {
+	svr.step = step(svr).next;
+	if (svr.step) {
+	    return action_pre(req, svr);
 	} else {
-	    return Promise.resolve(sv);
+	    return Promise.resolve(svr);
 	}
-    }).then(function (sv) {
-	if (sv.v) {
+    }).tap(function (svr) {
+	var sv = _.omit(svr, 'response');
+	if (sv.step) {
 	    return saveRaw(req, sv);
 	} else {
 	    return removeRaw(sv.id);
 	}
+    }).then(function (svr) {
+	var r = _.assign({success: true}, svr.response);
+	if (svr.step) r.step = svr.step;
+	return r;
     });
 }
 
@@ -147,14 +144,12 @@ function saveRaw(req, sv) {
     return db.save(sv).then(function (sv) {
 	bus.emit('changed');
 	mayNotifyModerators(req, sv, 'added');
-	return {success: true, step: sv.step};
     });
 }
 
 function removeRaw(id) {
     return db.remove(id).then(function () {
 	bus.emit('changed');
-	return {success: true};
     });
 }
 
