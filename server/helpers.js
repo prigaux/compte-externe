@@ -5,6 +5,16 @@ var concat = require('concat-stream');
 var simpleGet = require('simple-get');
 var conf = require('./conf');
 
+if (Promise.prototype.tap === undefined) {
+    Promise.prototype.tap = function (f) {
+	return this.then(function (v) {
+	    var p = f(v);
+	    if (!p || !p.then) p = Promise.resolve(p);
+	    return p.then(function () { return v; });
+	});
+    };
+}
+
 exports.post = function (url, body, options) {
     options = _.assign({ url: url, body: body, ca: conf.http_client_CAs }, options);
     return new Promise(function (resolve, reject) {

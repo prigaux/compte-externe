@@ -9,6 +9,7 @@ var search_ldap = require('./search_ldap');
 var mail = require('./mail');
 var conf = require('./conf');
 var conf_steps = require('./steps/conf');
+require('./helpers');
 
 var router = express.Router();
 
@@ -76,7 +77,6 @@ function checkAcls(req, sv) {
     return acl_checker.isAuthorized(step(sv), req.user).then(function (ok) {
 	if (ok) {
 	    console.log("authorizing", req.user, "for step", sv.step);
-	    return sv;
 	} else {
 	    throw "unauthorised";
 	}
@@ -93,7 +93,7 @@ function getRaw(req, id) {
     if (id === 'new') {
 	return first_sv(req);
     } else {
-	return db.get(id).then(function (sv) {
+	return db.get(id).tap(function (sv) {
 	    if (!sv) throw "invalid id " + id;
 	    if (!sv.step) throw "internal error: missing step for id " + id;
 	    return checkAcls(req, sv);
