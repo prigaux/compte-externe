@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var mail = require('../mail');
 var utils = require('../utils');
+var search_ldap = require('../search_ldap');
 var conf = require('../conf');
 
 exports.getShibAttrs = function(req, _sv) {
@@ -22,6 +23,13 @@ exports.createCompte = function(req, sv) {
 	    mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v: v });
 	}
 	return { v: v };
+    });
+};
+
+exports.genLogin = function (req, sv) {
+    return search_ldap.genLogin(sv.v.sn, sv.v.givenName).then(function (login) {
+	var v = _.assign({ uid: login }, sv.v);
+	return { v: v, response: {login: login} };
     });
 };
 
