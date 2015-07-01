@@ -104,7 +104,7 @@ angular.module('myApp')
     this.set = function(id, v) {
 	var url = '/api/comptes/' + id;
 	v = toWs(v);
-	return $http.put(url, v).catch(function (resp) {
+	return $http.put(url, v).then(function (resp) {
 	    return resp.data;
 	}, handleErr);
     };
