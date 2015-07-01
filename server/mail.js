@@ -35,7 +35,7 @@ exports.sendWithTemplate = function (templateName, params) {
 	    var rawMsg = Mustache.render(data.toString(), params);
 	    console.log("===========================");
 	    console.log("mustache result for", templateName);
-	    console.log("with params", params);
+	    //console.log("with params", params);
 	    console.log(rawMsg);
 	    console.log("===========================");
 	    var m = rawMsg.match(/^Subject: *(.*)\n\n([^]*)/);
