@@ -12,6 +12,7 @@ var conf = {
 	supannMailPerso: "Email personnel",
 	structureParrain: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)",
 	userPassword: "Mot de passe",
+	barcode: "Code barre",
     },
 };
 
