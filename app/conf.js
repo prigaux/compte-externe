@@ -14,6 +14,41 @@ var conf = {
 	userPassword: "Mot de passe",
 	barcode: "Code barre",
     },
+    assets: {
+	lib: {
+	    css: [
+		'bower_components/html5-boilerplate/css/normalize.css',
+		'bower_components/html5-boilerplate/css/main.css',
+		'bower_components/bootstrap/dist/css/bootstrap.css',
+		'bower_components/angular-bootstrap/ui-bootstrap-csp.css',
+	    ],
+	    js: [
+		"bower_components/angular/angular.js",
+		"bower_components/angular-route/angular-route.js",
+		"bower_components/angular-messages/angular-messages.js",
+		"bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
+		"bower_components/jsdiff/diff.js",
+	    ],
+	},
+	css: [
+	    'app.css'
+	],
+	js: [
+	    "conf.js",
+	    "app.js",
+	    "controllers/various.js",
+	    "controllers/create.js",
+	    "controllers/validate.js",
+	    "controllers/moderate.js",
+	    "controllers/list.js",
+	    "services/ws.js",
+	    "services/attrsEdit.js",
+	    "services/helpers.js",
+	    "directives/various.js",
+	    "directives/validators.js",
+	    "directives/Bootstrap.js",
+	],
+    },
 };
 
 if (typeof module !== 'undefined' && module.exports) {

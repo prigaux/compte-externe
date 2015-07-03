@@ -16,15 +16,14 @@ var app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json({type: '*/*'})); // do not bother checking, everything we will get is JSON :)
 app.use(bodyParser.urlencoded({ extended: false }));
+app.get("/", utils.index_html);
 app.use(express.static(path.join(__dirname, 'app'),
 		      { maxAge: process.env.NODE_ENV == 'production' ? 60 * 60 * 1000 : 0 }));
 app.use(utils.express_auth);
 app.use('/api', api);
 
 // catch-all that should be replaced with list of angularjs routes
-app.all("/*", function(req, res, next) {
-    res.sendFile(__dirname + "/app/index.html");
-});
+app.all("/*", utils.index_html);
 
 db.init(function () {
     var port = process.env.PORT || 8080;        // set our port

@@ -9,6 +9,21 @@ exports.express_auth = function (req, res, next) {
   next();
 };
 
+exports.index_html = function (req, res, next) {
+    var fs = require('fs');
+    var Mustache = require('mustache');
+    var client_conf = require('../app/conf');
+    fs.readFile(__dirname + "/../app/index.html", function (err, data) {
+	if (err) {
+	    console.log(err);
+	} else {
+	    data = Mustache.render(data.toString(), client_conf);
+	    res.send(data);
+	}
+    });
+};
+
+
 exports.eventBus = function () {
     var bus = new EventEmitter();
     bus.setMaxListeners(conf.maxLiveModerators);

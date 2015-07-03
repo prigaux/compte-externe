@@ -10,11 +10,12 @@
   <title>Gestion des comptes externes</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/css/normalize.css">
-  <link rel="stylesheet" href="bower_components/html5-boilerplate/css/main.css">
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
-  <link rel="stylesheet" href="bower_components/angular-bootstrap/ui-bootstrap-csp.css"></script>
-  <link rel="stylesheet" href="app.css">
+  {{#assets.lib.css}}
+  <link rel="stylesheet" href="{{{.}}}">
+  {{/assets.lib.css}}
+  {{#assets.css}}
+  <link rel="stylesheet" href="{{{.}}}">
+  {{/assets.css}}
   <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
 <body>
@@ -30,23 +31,11 @@
     </div>
   </div>
 
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="bower_components/angular-messages/angular-messages.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-  <script src="conf.js"></script>
-  <script src="app.js"></script>
-  <script src="controllers/various.js"></script>
-  <script src="controllers/create.js"></script>
-  <script src="controllers/validate.js"></script>
-  <script src="controllers/moderate.js"></script>
-  <script src="controllers/list.js"></script>
-  <script src="services/ws.js"></script>
-  <script src="services/attrsEdit.js"></script>
-  <script src="services/helpers.js"></script>
-  <script src="directives/various.js"></script>
-  <script src="directives/validators.js"></script>
-  <script src="directives/Bootstrap.js"></script>
-  <script src="bower_components/jsdiff/diff.js"></script>
+  {{#assets.lib.js}}
+  <script src="{{{.}}}"></script>
+  {{/assets.lib.js}}
+  {{#assets.js}}
+  <script src="{{{.}}}"></script>
+  {{/assets.js}}
 </body>
 </html>
