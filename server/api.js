@@ -57,22 +57,20 @@ function sv_removeHiddenAttrs(sv) {
 function mayNotifyModerators(req, sv, notifyKind) {
     var notify = step(sv).notify;
     if (!notify) return;
-    acl_checker.moderators(step(sv)).then(function (mails) {
-	if (mails.length) {
-	    var params = _.merge({ to: mails.join(', '), moderator: req.user, conf: conf }, sv);
-	    mail.sendWithTemplate(notify[notifyKind], params);
-	}
-    });
+    var mails = sv.moderators;
+    if (mails.length) {
+	var params = _.merge({ to: mails.join(', '), moderator: req.user, conf: conf }, sv);
+	mail.sendWithTemplate(notify[notifyKind], params);
+    }
 }
 
 function checkAcls(req, sv) {
-    return acl_checker.isAuthorized(step(sv), req.user).then(function (ok) {
-	if (ok) {
-	    console.log("authorizing", req.user, "for step", sv.step);
-	} else {
-	    throw "unauthorised";
-	}
-    });
+    var ok = acl_checker.isAuthorized(sv.moderators, req.user);
+    if (ok) {
+	console.log("authorizing", req.user, "for step", sv.step);
+    } else {
+	throw "unauthorised";
+    }
 }
 
 function first_sv(req) {
@@ -88,7 +86,7 @@ function getRaw(req, id) {
 	return db.get(id).tap(function (sv) {
 	    if (!sv) throw "invalid id " + id;
 	    if (!sv.step) throw "internal error: missing step for id " + id;
-	    return checkAcls(req, sv);
+	    checkAcls(req, sv);
 	});
     }
 }
@@ -123,6 +121,15 @@ function setRaw(req, sv, v) {
 	svr.step = step(svr).next;
 	if (svr.step) {
 	    return action_pre(req, svr);
+	} else {
+	    return svr;
+	}
+    }).then(function (svr) {
+	if (svr.step) {
+	    return acl_checker.moderators(step(svr), svr.v).then(function (mails) {
+		svr.moderators = mails;
+		return svr;
+	    });
 	} else {
 	    return svr;
 	}
@@ -162,16 +169,8 @@ function remove(req, id) {
 }
 
 function listAuthorized(req) {
-    return acl_checker.authorizedSteps(req.user).then(function (steps) {
-	console.log("authorizedSteps for", req.user, ":", steps);
-
-	// remove steps with no acls: those steps are accessible when one already knows the id
-	steps = steps.filter(function (name) { return conf_steps.steps[name].acls; });
-	
-	console.log("listing comptes for steps:", steps);
-	return db.listBySteps(steps).then(function (svs) {
-	    return _.map(svs, sv_removeHiddenAttrs);
-	});
+    return db.listByModerator(req.user).then(function (svs) {
+	return _.map(svs, sv_removeHiddenAttrs);
     });
 }
 

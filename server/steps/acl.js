@@ -6,16 +6,9 @@ var filters = ldap.filters;
 
 // "includes" is optional, it will be computed from "list"
 function create(peopleFilter) {
-    var list = function (attr) {
+    return function (_v, attr) {
 	return ldap.searchThisAttr(conf.ldap.base_people, peopleFilter, attr);
     };
-    var includes = function (user_id) {
-	var filter = filters.and([peopleFilter, filters.eq("eduPersonPrincipalName", user_id)]);
-	return ldap.searchOne(conf.ldap.base_people, filter, "eduPersonPrincipalName").then(function (v) {
-	    return !!v;
-	});
-    };
-    return { list: list, includes: includes };
 }
 
 var acl = {};

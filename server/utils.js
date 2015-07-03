@@ -5,7 +5,8 @@ var EventEmitter = require('events').EventEmitter;
 
 exports.express_auth = function (req, res, next) {
   var user_id = req.header('REMOTE_USER');
-  if (user_id) req.user = { id: user_id };
+  var mail = req.header('mail');
+  if (user_id) req.user = { id: user_id, mail: mail };
   next();
 };
 
