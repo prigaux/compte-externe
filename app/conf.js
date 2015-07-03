@@ -47,6 +47,7 @@ var conf = {
 	    "directives/various.js",
 	    "directives/validators.js",
 	    "directives/Bootstrap.js",
+	    "directives/password-strength.js",
 	],
 	tests: [
 	    // NB: only used by karma, wildcards allowed
