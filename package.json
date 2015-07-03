@@ -1,10 +1,10 @@
 {
-  "name": "angular-seed",
+  "name": "compte-externe",
   "private": true,
   "version": "0.0.0",
-  "description": "A starter project for AngularJS",
-  "repository": "https://github.com/angular/angular-seed",
-  "license": "MIT",
+  "description": "Application to create users external users with modular moderation workflow",
+  "repository": "https://github.com/prigaux/compte-externe",
+  "license": "Apache-2.0",
   "scripts": {
     "postinstall": "bower install",
     "prestart": "npm install"
