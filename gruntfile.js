@@ -57,7 +57,11 @@ module.exports = function(grunt) {
 	mochaTest: {
 	    src: watchFiles.mochaTests,
 	},
-
+	karma: {
+	    unit: {
+		configFile: 'karma.conf.js',
+	    },
+	},
 
 	'node-inspector': {
 	    custom: {
@@ -86,7 +90,8 @@ module.exports = function(grunt) {
     grunt.registerTask('build', ['lint']);
 
     // Test task.
-    grunt.registerTask('test', ['test:server']);
+    grunt.registerTask('test', ['test:server', 'test:client']);
     grunt.registerTask('test:server', ['env:test', 'mochaTest']);
+    grunt.registerTask('test:client', ['env:test', 'karma:unit']);
     
 };

@@ -48,6 +48,13 @@ var conf = {
 	    "directives/validators.js",
 	    "directives/Bootstrap.js",
 	],
+	tests: [
+	    // NB: only used by karma, wildcards allowed
+	    'bower_components/angular-mocks/angular-mocks.js',
+	    "controllers/*_test.js",
+	    "directives/*_test.js",
+	    "services/*_test.js",
+	],
     },
 };
 
