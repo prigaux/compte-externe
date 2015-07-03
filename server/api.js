@@ -124,7 +124,7 @@ function setRaw(req, sv, v) {
 	if (svr.step) {
 	    return action_pre(req, svr);
 	} else {
-	    return Promise.resolve(svr);
+	    return svr;
 	}
     }).tap(function (svr) {
 	var sv = _.omit(svr, 'response');
