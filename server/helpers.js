@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var assert = require('assert');
 var concat = require('concat-stream');
 var simpleGet = require('simple-get');
 var conf = require('./conf');
@@ -11,6 +12,15 @@ if (Promise.prototype.tap === undefined) {
 	    var p = f(v);
 	    if (!p || !p.then) p = Promise.resolve(p);
 	    return p.then(function () { return v; });
+	});
+    };
+}
+
+if (Promise.prototype.then_spread === undefined) {
+    Promise.prototype.then_spread = function (f) {
+	return this.then(function (v) {
+	    assert(_.isArray(v));
+	    return f.apply(null, v);
 	});
     };
 }
