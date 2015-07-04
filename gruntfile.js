@@ -23,12 +23,12 @@ module.exports = function(grunt) {
             },
 	    mochaTests: {
 		files: watchFiles.mochaTests,
-		tasks: ['test:server'],
+		tasks: ['test:server', 'jshint'],
 	    },
         },
         jshint: {
             all: {
-                src: watchFiles.clientJS.concat(watchFiles.serverJS),
+                src: watchFiles.clientJS.concat(watchFiles.serverJS, watchFiles.mochaTests),
                 options: { jshintrc: true }
             }
         },
