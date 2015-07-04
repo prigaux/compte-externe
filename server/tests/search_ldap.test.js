@@ -2,12 +2,8 @@
 
 var _ = require('lodash');
 var assert = require('assert');
-
-function require_fresh(name) {
-    var file = require.resolve(name);
-    delete require.cache[file];
-    return require(name);
-}
+var require_fresh = require('./test_utils').require_fresh;
+var test_ldap = require('./test_ldap');
 
 describe('genLogin', function() {
     
@@ -93,5 +89,29 @@ describe('genLogin', function() {
 		 [ 'jprigaux', 'jepirigaux', 'jeapieriga', 'jeanpierri', 'jeanpierrr', 'jeanpierre',
 		   'jprigaux1', 'jprigaux2', 'jprigaux3', 'jprigaux4' ]));
     });
+
+
+    describe('use test ldap', function() {
+	var search_ldap;
+	before(function () {
+	    return test_ldap().then(function () {
+		search_ldap = require_fresh('../search_ldap');
+	    });
+	});
+	
+	function check(sn, givenName, wantedLogin) {
+	    return function () {
+		return search_ldap.genLogin(sn, givenName).then(function (login) {
+		    assert.equal(login, wantedLogin);
+		});
+	    };
+	}
+
+	it('should not use first solution', 
+	   check('Rigaux', 'Pascal', "parigaux"));
+
+	it('should not use first&second solution', 
+	   check('Rigaux', 'Ayme', "aymrigaux"));
        
+    });
 });
