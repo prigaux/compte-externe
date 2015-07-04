@@ -115,3 +115,37 @@ describe('genLogin', function() {
        
     });
 });
+
+describe('homonymes', function() {
+
+    describe('use test ldap', function() {
+	var search_ldap;
+	before(function () {
+	    return test_ldap().then(function () {
+		search_ldap = require_fresh('../search_ldap');
+	    });
+	});
+
+	it('should detect simple homonyme', function () {
+	    return search_ldap.homonymes(
+		['rigaux'], ['pascal'], new Date('1975-10-02'),
+		['uid','birthDay']).then(function (l) {
+		    assert.equal(l.length, 1);
+		    assert.equal(l[0].uid, "prigaux");
+		    assert.equal(l[0].score, 3);
+		});
+	});
+	it('should detect homonyme with birth date a little different', function () {
+	    return search_ldap.homonymes(
+		['rigaux'], ['ayme'], new Date('1975-10-02'),
+		['uid','birthDay']).then(function (l) {
+		    assert.equal(l.length, 2);
+		    assert.equal(l[0].uid, "arigaux");
+		    assert.equal(l[0].score, 3);
+		    assert.equal(l[1].uid, "ayrigaux");
+		    assert.equal(l[1].score, 1);
+		});
+	});
+       
+    });
+});

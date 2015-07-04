@@ -13,9 +13,10 @@ function test_params() {
     };
 
     var people = [
-	{ uid: "prigaux", sn: "rigaux", givenName: "pascal", cn: "rigaux pascal", displayName: "pascal rigaux", objectClass: [] },
-	{ uid: "arigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux aymé", displayName: "aymé rigaux", objectClass: [] },
-	{ uid: "ayrigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux aymé", displayName: "aymé rigaux", objectClass: [] },
+	{ uid: "prigaux", sn: "rigaux", givenName: "pascal", cn: "rigaux pascal", displayName: "pascal rigaux", up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [] },
+	{ uid: "e10000000", sn: "rigaux", givenName: "pascal", cn: "rigaux pascal", displayName: "pascal rigaux", up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','student'], objectClass: [] },
+	{ uid: "arigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux ayme", displayName: "aymé rigaux", up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [] },
+	{ uid: "ayrigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux ayme", displayName: "aymé rigaux", up1BirthDay: '19750101000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [] },
     ];
     DNs[params.base_people] = {};
     people.forEach(function (e) {

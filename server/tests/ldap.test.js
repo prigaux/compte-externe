@@ -26,8 +26,8 @@ describe('ldap', function () {
 
 	it("should handle simple equality filter", function () {
 	    return ldap.search(conf.ldap.base_people, "(sn=Rigaux)", {}).then(function (l) {
-		assert.equal(l.length, 3);
-		assert.deepEqual(_.pluck(l, 'sn'), ["rigaux","rigaux","rigaux"]);
+		assert.equal(l.length, 4);
+		assert.deepEqual(_.pluck(l, 'sn'), ["rigaux","rigaux","rigaux","rigaux"]);
 	    });
 	});
 
