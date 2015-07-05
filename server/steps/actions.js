@@ -28,7 +28,7 @@ exports.createCompte = function(req, sv) {
 
 exports.genLogin = function (req, sv) {
     return search_ldap.genLogin(sv.v.sn, sv.v.givenName).then(function (login) {
-	var v = _.assign({ uid: login }, sv.v);
+	var v = _.assign({ supannAliasLogin: login }, sv.v);
 	return { v: v, response: {login: login} };
     });
 };

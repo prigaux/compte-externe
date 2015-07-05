@@ -25,6 +25,7 @@ var attrs = {
 
 var moderator_attrs = _.defaults({
     uid: {},
+    supannAliasLogin: {},
     structureParrain: { readonly: true },
 }, attrs);
 
