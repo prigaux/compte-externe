@@ -9,6 +9,9 @@ angular.module('myApp')
   }).when('/create', {
     templateUrl: 'templates/welcome-create.html',
     controller: 'EmptyCtrl'
+  }).when('/created/:id', {
+    templateUrl: 'templates/created.html',
+    controller: 'IdCtrl'
   }).when('/awaiting-email-validation', {
     templateUrl: 'templates/awaiting-email-validation.html',
     controller: 'EmptyCtrl'
