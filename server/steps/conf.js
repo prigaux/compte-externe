@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var actions = require('./actions');
 var acl = require('./acl');
+var main_conf = require('../conf');
 
 function readonly(attrs) {
     return _.mapValues(attrs, function (options) {
@@ -31,6 +32,18 @@ var steps = {
     extern: {
 	attrs: attrs,
 	next: 'homonymes',
+    },
+
+    federation: {
+	attrs: attrs,
+	action_pre: actions.getShibAttrs,
+	next: 'homonymes',
+    },
+
+    cas: {
+	attrs: attrs,
+	action_pre: actions.getShibAttrs,
+	action_post: actions.createCompte,
     },
 
     homonymes: {
@@ -67,7 +80,14 @@ var steps = {
 };
 
 function allowedFirstSteps(req) {
-    return ['extern'];
+    var l = ['extern'];
+    if (req.user) {
+	l.push('federation');
+	var idp = req.header('Shib-Identity-Provider');
+	if (idp && idp === main_conf.cas_idp)
+	    l.push('cas');
+    }
+    return l;
 }
 
 var firstStep = function (req) {

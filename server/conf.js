@@ -64,6 +64,8 @@ var conf = {
 	},
     },
 
+    cas_idp: 'https://idp.univ.fr',
+
     mongodb: { 
 	url: "mongodb://localhost:27017/compte-externe",
     },

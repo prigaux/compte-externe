@@ -6,6 +6,9 @@ angular.module('myApp')
   $routeProvider.when('/', {
     templateUrl: 'templates/welcome.html',
     controller: 'EmptyCtrl'
+  }).when('/create', {
+    templateUrl: 'templates/welcome-create.html',
+    controller: 'EmptyCtrl'
   }).when('/awaiting-email-validation', {
     templateUrl: 'templates/awaiting-email-validation.html',
     controller: 'EmptyCtrl'
