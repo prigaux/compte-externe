@@ -8,6 +8,7 @@
     "describe": false,
     "it": false,
     "expect": false,
+    "before": false,
     "beforeEach": false,
     "afterEach": false,
     "module": false,
