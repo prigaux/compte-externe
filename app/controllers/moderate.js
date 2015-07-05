@@ -13,6 +13,13 @@ angular.module('myApp')
     var id = $routeParams.id;
 
     function nextStep (resp) {
+	if (resp.login && !resp.step) {
+	    // user created
+	    if ($scope.v.supannAliasLogin &&
+		$scope.v.supannAliasLogin !== resp.login) {
+		alert("L'utilisateur a été créé, mais avec l'identifiant « " + resp.login + "». Il faut prévenir l'utilisateur");
+	    }
+	}
 	$location.path('/moderate');
     }
 
