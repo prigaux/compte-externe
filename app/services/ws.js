@@ -74,6 +74,7 @@ angular.module('myApp')
 	    } else {
 		if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
 		if (sv.v) sv.v = fromWs(sv.v);
+		sv.modifyTimestamp = fromJSONDate(sv.modifyTimestamp);
 		angular.extend($scope, sv);
 	    }
 	}, handleErr);

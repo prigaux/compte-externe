@@ -46,10 +46,11 @@ function init_methods(svs) {
 	}).then(fromDB);
     };
 
+    // lists svs, sorted by steps + recent one at the beginning
     module.exports.listByModerator = function (user) {
 	var mail = user.mail;
 	return toPromise(function (onResult) {
-	    svs.find({ moderators: mail }).sort({ step: 1 }).toArray(onResult);
+	    svs.find({ moderators: mail }).sort({ step: 1, modifyTimestamp: -1 }).toArray(onResult);
 	}).then(function (svs) {
 	    return _.map(svs, fromDB);
 	});
@@ -65,6 +66,7 @@ function init_methods(svs) {
 	return toPromise(function (onResult) {
 	    console.log("saving in DB:", sv);
 	    var sv_ = toDB(sv);
+	    sv_.modifyTimestamp = new Date();
 	    svs.updateOne({ _id: sv_._id }, sv_, {upsert: true}, onResult);
 	}).then(function (result) {
 	    return sv;

@@ -1,6 +1,7 @@
 <ul ng-repeat="(step,svs_) in svs | groupBy:'step'">
   {{step}} :
   <li ng-repeat="sv in svs_">
+  le {{sv.modifyTimestamp | date:'dd/MM/yyyy à HH:mm'}} :
    <a ng-href="/moderate/{{sv.id}}">
      {{sv.v.sn || 'inconnu'}}
      {{sv.v.givenName || 'inconnu'}}
