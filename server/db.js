@@ -49,7 +49,7 @@ function init_methods(svs) {
     module.exports.listByModerator = function (user) {
 	var mail = user.mail;
 	return toPromise(function (onResult) {
-	    svs.find({ moderators: mail }).toArray(onResult);
+	    svs.find({ moderators: mail }).sort({ step: 1 }).toArray(onResult);
 	}).then(function (svs) {
 	    return _.map(svs, fromDB);
 	});

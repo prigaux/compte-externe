@@ -44,6 +44,7 @@ var conf = {
 	    "services/ws.js",
 	    "services/attrsEdit.js",
 	    "services/helpers.js",
+	    "filters/various.js",
 	    "directives/various.js",
 	    "directives/validators.js",
 	    "directives/Bootstrap.js",
