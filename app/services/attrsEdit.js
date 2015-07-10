@@ -7,6 +7,7 @@ angular.module('myApp')
 	$scope.label = conf.attr_labels;
 	var accentsRange = '\u00C0-\u00FC';
 	$scope.allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
+	$scope.passwordPattern = /(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,}/;
 	$scope.maxDay = 31;
 	$scope.maxYear = new Date().getUTCFullYear();
 
