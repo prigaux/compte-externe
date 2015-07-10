@@ -15,6 +15,9 @@ angular.module('myApp')
   }).when('/awaiting-email-validation', {
     templateUrl: 'templates/awaiting-email-validation.html',
     controller: 'EmptyCtrl'
+  }).when('/browser-exit', {
+    templateUrl: 'templates/browser-exit.html',
+    controller: 'EmptyCtrl'
   }).when('/awaiting-moderation/:id', {
     templateUrl: 'templates/awaiting-moderation.html',
     controller: 'IdCtrl'

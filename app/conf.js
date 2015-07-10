@@ -1,6 +1,8 @@
 'use strict';
 
 var conf = {
+    forceBrowserExit: true,
+    
     attr_labels: {
 	supannCivilite: "Civilité",
 	givenName: "Prénom",
@@ -25,6 +27,7 @@ var conf = {
 	    js: [
 		"bower_components/angular/angular.js",
 		"bower_components/angular-route/angular-route.js",
+		"bower_components/angular-cookies/angular-cookies.js",
 		"bower_components/angular-messages/angular-messages.js",
 		"bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
 		"bower_components/jsdiff/diff.js",
@@ -44,11 +47,13 @@ var conf = {
 	    "services/ws.js",
 	    "services/attrsEdit.js",
 	    "services/helpers.js",
+	    "services/forceBrowserExit.js",
 	    "filters/various.js",
 	    "directives/various.js",
 	    "directives/validators.js",
 	    "directives/Bootstrap.js",
 	    "directives/password-strength.js",
+	    "start.js",
 	],
 	tests: [
 	    // NB: only used by karma, wildcards allowed

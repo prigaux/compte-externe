@@ -4,6 +4,7 @@
 angular.module('myApp', [
   'ngMessages',
   'ngRoute',
+  'ngCookies',
   'ui.bootstrap',
 ]).
 service("conf", function($window) {
