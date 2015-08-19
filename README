@@ -1,3 +1,14 @@
+Installation
+
+  # for initscript
+  npm install -g forever
+
+  # for ldapjs & phantomjs
+  apt-get install git-core bzip2 make
+
+  npm install
+
+
 Apache shibboleth SP configuration:
 
   <Location /api>
@@ -15,5 +26,5 @@ Apache shibboleth SP configuration:
   </LocationMatch>
 
   <LocationMatch ^/(create/cas)>
-    ShibRequestSetting entityID https://idp-test.univ-paris1.fr
+    ShibRequestSetting entityID https://idp.univ.fr
   </LocationMatch>
