@@ -1,3 +1,5 @@
+<h4>Modération</h4>
+
 <ul ng-repeat="(step,svs_) in svs | groupBy:'step'">
   {{step}} :
   <li ng-repeat="sv in svs_">
@@ -8,3 +10,7 @@
    </a>
 </li>
 </ul>
+
+<div ng-if="svs.length === 0">
+  Rien à modérer
+</div>
