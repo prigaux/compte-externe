@@ -2,17 +2,42 @@
 
 var _ = require('lodash');
 var mail = require('../mail');
+var ldap = require('../ldap');
 var utils = require('../utils');
 var search_ldap = require('../search_ldap');
 var esup_activ_bo = require('../esup_activ_bo');
 var conf = require('../conf');
+var filters = ldap.filters;
 
-exports.getShibAttrs = function(req, _sv) {
+function getShibAttrs(req, _sv) {
     var v = _.mapValues(conf.shibboleth.header_map, function (headerName) {
 	return req.header(headerName);
     });
     console.log("action getShibAttrs:", v);
     return Promise.resolve({ v: v });
+}
+exports.getShibAttrs = getShibAttrs;
+
+exports.getCasAttrs = function(req, _sv) {
+    return getShibAttrs(req, _sv).then(function (sv) {
+	var filter = filters.eq("eduPersonPrincipalName", sv.v.eduPersonPrincipalName);
+	return ldap.searchOne(conf.ldap.base_people, filter, { attributes: ["supannAliasLogin", "displayName"] });
+    }).then(function (v) {
+	console.log("getCasAttrs", v);
+	return { v: v };
+    });
+};
+
+exports.chain = function (l_actions) {
+    return function(req, sv) {
+	if (!sv || !sv.then) sv = Promise.resolve(sv);
+	l_actions.forEach(function (action) {
+	    sv = sv.then(function (sv) {
+		return action(req, sv);
+	    });
+	});
+	return sv;
+    };
 };
 
 exports.createCompte = function(req, sv) {
