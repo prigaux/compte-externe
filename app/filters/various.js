@@ -2,6 +2,14 @@
 
 angular.module('myApp')
 
+.filter('formatIdpId', function () {
+    return function (s) {
+	s = s.replace(/^https?:\/\//, '');
+	s = s.replace(/.*\.(.*\..*)/, '$1');
+	return s;
+    };
+})
+
 .filter('groupBy', function ($parse) {
 
     function memoize(func, hasher) {
