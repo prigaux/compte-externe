@@ -2,7 +2,7 @@
 
 angular.module('myApp')
 
-.service("attrsEdit", function(ws, conf) {
+.service("attrsEdit", function(helpers, ws, conf) {
     this.manager = function($scope, id, expectedStep, nextStep) {
 	$scope.label = conf.attr_labels;
 	var accentsRange = '\u00C0-\u00FC';
@@ -17,6 +17,18 @@ angular.module('myApp')
 			     31,30,31,30,31 ];
 	$scope.$watch('v.birthDay.month', function (month) {
 	    $scope.maxDay = month2maxDay[month] || 31;
+	});
+
+	$scope.$watch('v.homePostalAddress.postalCode', function (postalCode) {
+	    if (!postalCode) return;	    
+	    var address = $scope.v && $scope.v.homePostalAddress;
+	    if (address && !address.town) {
+		helpers.frenchPostalCodeToTowns(postalCode).then(function (towns) {
+		    if (!address.town && towns && towns.length === 1) {
+			address.town = towns[0];
+		    }
+		});
+	    }
 	});
 
 	ws.getInScope($scope, id, expectedStep);

@@ -31,6 +31,18 @@ angular.module('myApp')
   };
 })
 
+.directive('frenchPostalCode', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+	ctrl.$validators.frenchPostalCode = function(modelValue, viewValue) {
+	    var val = viewValue && viewValue.replace(/\s/g, '');
+	    return /[0-9]{5}/.test(val);
+	};
+    }
+  };
+})
+
 .directive('allowedChars', function() {
   return {
     require: 'ngModel',

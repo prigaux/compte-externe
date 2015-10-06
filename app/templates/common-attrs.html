@@ -36,9 +36,30 @@
     </div>
   </div>
 
-  <div my-bootstrap-form-group="homePostalAddress" label="{{label.homePostalAddress}}">
-    <textarea name="homePostalAddress" ng-model="v.homePostalAddress" rows="3" required form-control>
-    </textarea>
+  <p
+  
+  <div my-bootstrap-form-group="address_line1" label="{{label.address_line1}}">
+    <input name="address_line1" ng-model="v.homePostalAddress.line1" placeholder="Numéro, rue" required form-control>
+  </div>
+  <div my-bootstrap-form-group="address_line2">
+    <input name="address_line2" ng-model="v.homePostalAddress.line2" placeholder="complément d'adresse" form-control>
+  </div>
+  <div my-bootstrap-form-group="postalCode" multi="true">
+    <div class="col-md-offset-3 col-xs-2" my-has-error="postalCode">
+      <div my-error-msgs="postalCode">
+	<input name="postalCode" ng-model="v.homePostalAddress.postalCode" minlength="5" maxlength="5" french-postal-code placeholder="Code postal" required form-control>
+      </div>
+    </div>
+    <div class="col-xs-7" my-has-error="town">
+      <div my-error-msgs="town">
+	<input name="town" ng-model="v.homePostalAddress.town" placeholder="Ville" required form-control>
+      </div>
+    </div>
+    <!-- -div class="col-xs-3" my-has-error="country">
+      <div my-error-msgs="country">
+	<input name="country" ng-model="v.homePostalAddress.country" placeholder="Pays" required form-control>
+      </div>
+    </div -->
   </div>
 
   <div my-bootstrap-form-group="homePhone" label="{{label.homePhone}}">

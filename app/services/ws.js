@@ -32,12 +32,27 @@ angular.module('myApp')
     function toJSONDate(date) {
 	return new Date(Date.UTC(date.year, date.month - 1, date.day));
     }
-    function fromWs(v) {
+    function fromHomePostalAddress(addr) {
+	var m = addr.match(/(.*)\$(.*)\$(.*)/);
+	var m1 = m[1].match(/(.*)\$(.*)/);
+	var m2 = m[2].match(/(\d+) (.*)/);
+	return m && { postalCode: m2[1], town: m2[2], country: m[3], line1: m1 ? m1[1]: m[1], line2: m1 ? m1[2] : '' };
+    }
+    function toHomePostalAddress(addr) {
+	if (!addr.postalCode && !addr.town) return undefined;
+	return addr.line1 + (addr.line2 ? "$" + addr.line2 : '') + "$" + addr.postalCode + " " + addr.town + "$" + (addr.country || 'FRANCE');
+    }
+    ws.fromWs = function(v) {
 	//v.birthDay = "19751002000000Z"; //"1975-10-02";
 	if (v.birthDay) {
 	    v.birthDay = fromLDAPDate(v.birthDay) || fromJSONDate(v.birthDay) || {};
 	} else {
 	    v.birthDay = {};
+	}
+	if (v.homePostalAddress) {
+	    v.homePostalAddress = fromHomePostalAddress(v.homePostalAddress);
+	} else {
+	    v.homePostalAddress = {};
 	}
 	if (v.structureParrain) {
 	    ws.structures_search(v.structureParrain, 1).then(function (resp) {
@@ -45,17 +60,18 @@ angular.module('myApp')
 	    });
 	}
 	return v;
-    }
+    };
 
-    function toWs(v) {
+    ws.toWs = function(v) {
 	v = angular.copy(v);
 	v.birthDay = toJSONDate(v.birthDay);
+	v.homePostalAddress = toHomePostalAddress(v.homePostalAddress);
 	if (v.structureParrainS) {
 	    v.structureParrain = v.structureParrainS.key;
 	    delete v.structureParrainS;
 	}
 	return v;
-    }
+    };
     
     function handleErr(resp) {
 	var err = resp.data;
@@ -73,7 +89,7 @@ angular.module('myApp')
 		alert(sv.error);
 	    } else {
 		if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
-		if (sv.v) sv.v = fromWs(sv.v);
+		if (sv.v) sv.v = ws.fromWs(sv.v);
 		sv.modifyTimestamp = fromJSONDate(sv.modifyTimestamp);
 		angular.extend($scope, sv);
 	    }
@@ -98,13 +114,13 @@ angular.module('myApp')
 
     this.homonymes = function(id, params) {
 	return $http.get('/api/homonymes/' + id).then(function (resp) {
-	    return resp.data.map(fromWs);
+	    return resp.data.map(ws.fromWs);
 	}, handleErr);
     };
 
     this.set = function(id, v) {
 	var url = '/api/comptes/' + id;
-	v = toWs(v);
+	v = ws.toWs(v);
 	return $http.put(url, v).then(function (resp) {
 	    return resp.data;
 	}, handleErr);
