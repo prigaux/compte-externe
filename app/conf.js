@@ -16,6 +16,9 @@ var conf = {
 	userPassword: "Mot de passe",
 	barcode: "Code barre",
     },
+
+    title: "Gestion de comptes",
+
     assets: {
 	lib: {
 	    css: [
