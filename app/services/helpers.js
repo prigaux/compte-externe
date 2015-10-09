@@ -46,20 +46,10 @@ angular.module('myApp')
     };
 
     h.frenchPostalCodeToTowns = function (postalCode) {
-	var big3 = { 13: "Marseille", 69: "Lyon", 75: "Paris" };
-	var m = postalCode.match(/^(13|69|75)/);
-	if (m) {
-	    var town = big3[m[1]];
-	    return $q.resolve([town]);
-	}
-	var url = 'http://api.geonames.org/postalCodeLookupJSON';
-	var username = 'univp1';
-	var params = { postalcode: postalCode, country: 'FR', username: username };
+	var url = 'https://ws.univ-paris1.fr/postalCodeLookup';
+	var params = { postalcode: postalCode, country: 'FR' };
 	return $http.get(url, { params: params }).then(function (r) {
-	    var l = r.data && r.data.postalcodes;
-	    return l && l.map(function (e) {
-		return e.placeName;
-	    });
+	    return r.data && r.data.towns;
 	});
     };
 });
