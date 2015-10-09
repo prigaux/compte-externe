@@ -5,15 +5,16 @@ angular.module('myApp')
 .service("forceBrowserExit", function($rootScope, $location, $cookies) {
     var cookieName = 'forceBrowserExit';
     
-    return function(triggerRoute, forcedRoute) {
+    return function(triggerUrl, forcedRoute) {
 	$rootScope.$on("$routeChangeStart", function (event, next, current) {
 	    if ($cookies.get(cookieName)) {
 		$location.path(forcedRoute);
-	    } else {
-		var route = next.$$route.originalPath;
-		if (route.match(triggerRoute)) {
-		    $cookies.put(cookieName, true);
-		}
+	    }
+	});
+	$rootScope.$on("$locationChangeSuccess", function (event, url) {
+	    if (url.match(triggerUrl)) {
+		console.log("forceBrowserExit!");
+		$cookies.put(cookieName, true);
 	    }
 	});
     };
