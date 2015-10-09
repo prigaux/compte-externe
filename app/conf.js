@@ -21,6 +21,9 @@ var conf = {
 	barcode: "Code barre",
     },
 
+    attr_formatting: {
+    },
+
     title: "Gestion de comptes",
 
     assets: {

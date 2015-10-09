@@ -5,6 +5,7 @@ angular.module('myApp')
 .service("attrsEdit", function(helpers, ws, conf) {
     this.manager = function($scope, id, expectedStep, nextStep) {
 	$scope.label = conf.attr_labels;
+	$scope.attr_formatting = conf.attr_formatting;
 	var accentsRange = '\u00C0-\u00FC';
 	$scope.allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
 	$scope.passwordPattern = /(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,}/;
