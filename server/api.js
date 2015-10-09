@@ -1,19 +1,19 @@
 'use strict';
 
-var _ = require('lodash');
-var express = require('express');
-var acl_checker = require('./acl_checker');
-var db = require('./db');
-var utils = require('./utils');
-var search_ldap = require('./search_ldap');
-var mail = require('./mail');
-var conf = require('./conf');
-var conf_steps = require('./steps/conf');
+const _ = require('lodash');
+const express = require('express');
+const acl_checker = require('./acl_checker');
+const db = require('./db');
+const utils = require('./utils');
+const search_ldap = require('./search_ldap');
+const mail = require('./mail');
+const conf = require('./conf');
+const conf_steps = require('./steps/conf');
 require('./helpers');
 
-var router = express.Router();
+const router = express.Router();
 
-var bus = utils.eventBus();
+const bus = utils.eventBus();
 
 
 function step(sv) {
@@ -24,15 +24,15 @@ function action_pre(req, sv) {
     return action(req, sv, 'action_pre');
 }
 function action_post(req, sv) {
-    return action(req, sv, 'action_post').tap(function (sv) {
+    return action(req, sv, 'action_post').tap(sv => {
 	mayNotifyModerators(req, sv, 'accepted');
     });
 }
 function action(req, sv, action_name) {
-    var f = step(sv)[action_name];
+    let f = step(sv)[action_name];
     if (!f) return Promise.resolve(sv); // nothing to do
     //console.log("calling " + action_name + " for step " + sv.step);
-    return f(req, sv).then(function (vr) {
+    return f(req, sv).then(vr => {
 	//console.log("action returned", vr);
 	return _.defaults(vr, sv);
     });
@@ -43,9 +43,9 @@ function mergeAttrs(attrs, prev, v) {
 }
 
 function removeHiddenAttrs(attrs, v) {
-    return _.omit(v, function (val, key) { 
-	return !attrs[key] || attrs[key].hidden;
-    });
+    return _.omit(v, (val, key) => ( 
+	!attrs[key] || attrs[key].hidden
+    ));
 }
 
 function sv_removeHiddenAttrs(sv) {
@@ -55,17 +55,17 @@ function sv_removeHiddenAttrs(sv) {
 }
 
 function mayNotifyModerators(req, sv, notifyKind) {
-    var notify = step(sv).notify;
+    let notify = step(sv).notify;
     if (!notify) return;
-    var mails = sv.moderators;
+    let mails = sv.moderators;
     if (mails.length) {
-	var params = _.merge({ to: mails.join(', '), moderator: req.user, conf: conf }, sv);
+	let params = _.merge({ to: mails.join(', '), moderator: req.user, conf: conf }, sv);
 	mail.sendWithTemplate(notify[notifyKind], params);
     }
 }
 
 function checkAcls(req, sv) {
-    var ok = acl_checker.isAuthorized(sv.moderators, req.user);
+    let ok = acl_checker.isAuthorized(sv.moderators, req.user);
     if (ok) {
 	console.log("authorizing", req.user, "for step", sv.step);
     } else {
@@ -74,8 +74,8 @@ function checkAcls(req, sv) {
 }
 
 function first_sv(req) {
-    var step = conf_steps.firstStep(req);
-    var empty_sv = { step: step, v: {} };
+    let step = conf_steps.firstStep(req);
+    let empty_sv = { step: step, v: {} };
     return action_pre(req, empty_sv);
 }
 
@@ -83,7 +83,7 @@ function getRaw(req, id) {
     if (id === 'new') {
 	return first_sv(req);
     } else {
-	return db.get(id).tap(function (sv) {
+	return db.get(id).tap(sv => {
 	    if (!sv) throw "invalid id " + id;
 	    if (!sv.step) throw "internal error: missing step for id " + id;
 	    checkAcls(req, sv);
@@ -92,18 +92,18 @@ function getRaw(req, id) {
 }
 
 function get(req, id) {
-    return getRaw(req, id).then(sv_removeHiddenAttrs).then(function (sv) {
-	sv.attrs = _.omit(step(sv).attrs, function (val) {
-	    return val.hidden;
-	});
+    return getRaw(req, id).then(sv_removeHiddenAttrs).then(sv => {
+	sv.attrs = _.omit(step(sv).attrs, val => (
+	    val.hidden
+	));
 	return sv;
     });
 }
 
 function set(req, id, v) {
-    return getRaw(req, id).then(function (sv) {
-	return setRaw(req, sv, v);
-    });
+    return getRaw(req, id).then(sv => (
+	setRaw(req, sv, v)
+    ));
 }
 
 // 1. merge allow new v attrs into sv
@@ -117,51 +117,51 @@ function setRaw(req, sv, v) {
 	sv.id = db.new_id();
     }
     sv.v = mergeAttrs(step(sv).attrs, sv.v, v);
-    return action_post(req, sv).then(function (svr) {
+    return action_post(req, sv).then(svr => {
 	svr.step = step(svr).next;
 	if (svr.step) {
 	    return action_pre(req, svr);
 	} else {
 	    return svr;
 	}
-    }).then(function (svr) {
+    }).then(svr => {
 	if (svr.step) {
-	    return acl_checker.moderators(step(svr), svr.v).then(function (mails) {
+	    return acl_checker.moderators(step(svr), svr.v).then(mails => {
 		svr.moderators = mails;
 		return svr;
 	    });
 	} else {
 	    return svr;
 	}
-    }).tap(function (svr) {
-	var sv = _.omit(svr, 'response');
+    }).tap(svr => {
+	let sv = _.omit(svr, 'response');
 	if (sv.step) {
 	    return saveRaw(req, sv);
 	} else {
 	    return removeRaw(sv.id);
 	}
-    }).then(function (svr) {
-	var r = _.assign({success: true}, svr.response);
+    }).then(svr => {
+	let r = _.assign({success: true}, svr.response);
 	if (svr.step) r.step = svr.step;
 	return r;
     });
 }
 
 function saveRaw(req, sv) {
-    return db.save(sv).then(function (sv) {
+    return db.save(sv).then(sv => {
 	bus.emit('changed');
 	mayNotifyModerators(req, sv, 'added');
     });
 }
 
 function removeRaw(id) {
-    return db.remove(id).then(function () {
+    return db.remove(id).then(() => {
 	bus.emit('changed');
     });
 }
 
 function remove(req, id) {
-    return getRaw(req, id).then(function (sv) {
+    return getRaw(req, id).then(sv => {
 	// acls are checked => removing is allowed
 	mayNotifyModerators(req, sv, 'rejected');
 	return removeRaw(sv.id);
@@ -169,16 +169,16 @@ function remove(req, id) {
 }
 
 function listAuthorized(req) {
-    return db.listByModerator(req.user).then(function (svs) {
-	return _.map(svs, sv_removeHiddenAttrs);
-    });
+    return db.listByModerator(req.user).then(svs => (
+	_.map(svs, sv_removeHiddenAttrs)
+    ));
 }
 
 function homonymes(req, id) {
-    return getRaw(req, id).then(function (sv) {
+    return getRaw(req, id).then(sv => {
 	// acls are checked => removing is allowed
-	var sns = _.merge(_.at(sv.v, conf.ldap.people.sns));
-	var givenNames = _.merge(_.at(sv.v, conf.ldap.people.givenNames));
+	let sns = _.merge(_.at(sv.v, conf.ldap.people.sns));
+	let givenNames = _.merge(_.at(sv.v, conf.ldap.people.givenNames));
 	if (sns[0] === undefined) return [];
 	console.log("sns", sns);
 	return search_ldap.homonymes(
@@ -190,19 +190,19 @@ function homonymes(req, id) {
 }
 
 function respondJson(req, res, p) {
-    var logPrefix = req.method + " " + req.path + ":";
-    p.then(function (r) {
+    let logPrefix = req.method + " " + req.path + ":";
+    p.then(r => {
 	console.log(logPrefix, r);
 	res.json(r || {});
-    }, function (err) {
+    }, err => {
 	console.error(logPrefix, err + err.stack);
 	res.json({error: ""+err, stack: err.stack});
     });
 }
 
-router.get('/comptes', function(req, res) {
+router.get('/comptes', (req, res) => {
     if (req.query.poll) {
-	bus.once('changed', function () {
+	bus.once('changed', () => {
 	    respondJson(req, res, listAuthorized(req));
 	});
     } else {
@@ -210,37 +210,37 @@ router.get('/comptes', function(req, res) {
     }
 });
 
-router.get('/comptes/new/:step', function(req, res) {
+router.get('/comptes/new/:step', (req, res) => {
     respondJson(req, res, get(req, 'new'));
 });
 
-router.get('/comptes/:id', function(req, res) {
+router.get('/comptes/:id', (req, res) => {
     respondJson(req, res, get(req, req.params.id));
 });
 
-router.put('/comptes/new/:step', function(req, res) {
+router.put('/comptes/new/:step', (req, res) => {
     respondJson(req, res, set(req, 'new', req.body));
 });
 
-router.put('/comptes/:id', function(req, res) {
+router.put('/comptes/:id', (req, res) => {
     respondJson(req, res, set(req, req.params.id, req.body));
 });
 
-router.delete('/comptes/:id', function(req, res) {
+router.delete('/comptes/:id', (req, res) => {
     respondJson(req, res, remove(req, req.params.id));
 });
 
-router.get('/homonymes/:id', function(req, res) {
+router.get('/homonymes/:id', (req, res) => {
     respondJson(req, res, homonymes(req, req.params.id));
 });
 
 function search_structures(req) {
-    var token = req.query.token;
+    let token = req.query.token;
     if (!token) throw "missing token parameter";
-    var sizeLimit = parseInt(req.query.maxRows) || 10;
+    let sizeLimit = parseInt(req.query.maxRows) || 10;
     return search_ldap.structures(token, sizeLimit);
 }
-router.get('/structures', function(req, res) {
+router.get('/structures', (req, res) => {
     respondJson(req, res, search_structures(req));
 });
 

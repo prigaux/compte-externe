@@ -1,11 +1,11 @@
 'use strict';
 
-module.exports = function (params) {
-var ldap = require('ldapjs');
-var host = 'localhost';
-var db = params.DNs;
+module.exports = params => {
+const ldap = require('ldapjs');
+const host = 'localhost';
+const db = params.DNs;
 
-var server = ldap.createServer();
+const server = ldap.createServer();
 
 function authorize(req, res, next) {
   if (req.dn.toString() !== params.dn || req.credentials !== params.password) {
@@ -17,28 +17,28 @@ function authorize(req, res, next) {
 }
 
 function search(dn, filter, scope) {
-    var dns;
+    let dns;
     if (scope === 'base') {
 	dns = [dn.toString()];
     } else {
-	dns = Object.keys(db).filter(function(k) {
-	    return dn.equals(k) || dn.parentOf(k);
-	});
+	dns = Object.keys(db).filter(k => (
+	    dn.equals(k) || dn.parentOf(k)
+	));
     }
     // force case insensitive on all attrs
     // (workaround bug "Filters match on attribute values only case-sensitively #156")
     filter = ldap.parseFilter(filter.toString().toLowerCase());
-    return dns.filter(function (dn) {
-	return filter.matches(db[dn]);
-    });
+    return dns.filter(dn => (
+	filter.matches(db[dn])
+    ));
 }
 
-server.search(params.base, function(req, res, next) {
-  var dn = req.dn.toString();
+server.search(params.base, (req, res, next) => {
+  let dn = req.dn.toString();
   //console.log("ldap server.search", req.dn, req.filter);
   if (db[dn]) {
-      var dns = search(req.dn, req.filter, req.scope);
-      dns.forEach(function (dn) {
+      let dns = search(req.dn, req.filter, req.scope);
+      dns.forEach(dn => {
 	  res.send({ dn: dn, attributes: db[dn] });
       });
       res.end();
@@ -52,11 +52,11 @@ server.search(params.base, function(req, res, next) {
 
 server.bind(params.base, authorize);
 
-return new Promise(function (resolve, reject) {    
-    server.on('error', function (err) {
+return new Promise((resolve, reject) => {    
+    server.on('error', err => {
 	reject(err);
     });	
-    server.listen(params.port || 0, host, function () {
+    server.listen(params.port || 0, host, () => {
 	//console.log('LDAP server up at: %s', server.url);
 	resolve(server);
     });

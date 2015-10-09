@@ -1,17 +1,17 @@
 'use strict';
 
-var _ = require('lodash');
-var actions = require('./actions');
-var acl = require('./acl');
-var main_conf = require('../conf');
+const _ = require('lodash');
+const actions = require('./actions');
+const acl = require('./acl');
+const main_conf = require('../conf');
 
 function readonly(attrs) {
-    return _.mapValues(attrs, function (options) {
-	return _.defaults({ readonly: true }, options);
-    });
+    return _.mapValues(attrs, options => (
+	_.defaults({ readonly: true }, options)
+    ));
 }
 
-var attrs = {
+const attrs = {
     supannCivilite: {},
     sn: {},
     givenName: {},
@@ -23,13 +23,13 @@ var attrs = {
     structureParrain: {},
 };
 
-var moderator_attrs = _.defaults({
+const moderator_attrs = _.defaults({
     uid: {},
     supannAliasLogin: {},
     structureParrain: { readonly: true },
 }, attrs);
 
-var steps = {   
+const steps = {   
     extern: {
 	attrs: attrs,
 	next: 'homonymes',
@@ -81,19 +81,19 @@ var steps = {
 };
 
 function allowedFirstSteps(req) {
-    var l = ['extern'];
+    let l = ['extern'];
     if (req.user) {
 	l.push('federation');
-	var idp = req.header('Shib-Identity-Provider');
+	let idp = req.header('Shib-Identity-Provider');
 	if (idp && idp === main_conf.cas_idp)
 	    l.push('cas');
     }
     return l;
 }
 
-var firstStep = function (req) {
-    var wanted_step = req.params.step;
-    var allowed = allowedFirstSteps(req);
+const firstStep = req => {
+    let wanted_step = req.params.step;
+    let allowed = allowedFirstSteps(req);
     if (wanted_step) {
 	if (_.contains(allowed, wanted_step)) {
 	    return wanted_step;

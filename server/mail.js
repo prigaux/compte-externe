@@ -1,23 +1,23 @@
 'use strict';
 
-var _ = require('lodash');
-var fs = require('fs');
-var nodemailer = require('nodemailer');
-var conf = require('./conf');
-var Mustache = require('mustache');
+const _ = require('lodash');
+const fs = require('fs');
+const nodemailer = require('nodemailer');
+const conf = require('./conf');
+const Mustache = require('mustache');
 
-var mailTransporter = nodemailer.createTransport(conf.mail.transport);
+const mailTransporter = nodemailer.createTransport(conf.mail.transport);
 
 // sendMail does not return a promise, it will be done in background. We simply log errors
 // params example:
 // { from: 'xxx <xxx@xxx>', to: 'foo@bar, xxx@boo', subject: 'xxx', text: '...', html: '...' }
-var send = exports.send = function (params) {
+const send = exports.send = params => {
     params = _.assign({ from: conf.mail.from }, params);
     if (conf.mail.intercept) {
 	params.subject = '[would be sent to ' + params.to + '] ' + params.subject;
 	params.to = conf.mail.intercept;
     }
-    mailTransporter.sendMail(params, function(error, info){
+    mailTransporter.sendMail(params, (error, info) =>{
 	if (error) {
             console.log(error);
 	} else {
@@ -26,19 +26,19 @@ var send = exports.send = function (params) {
     });
 };
 
-exports.sendWithTemplate = function (templateName, params) {
+exports.sendWithTemplate = (templateName, params) => {
     console.log("sendWithTemplate");
-    fs.readFile(__dirname + "/templates/mail/" + templateName, function (err, data) {
+    fs.readFile(__dirname + "/templates/mail/" + templateName, (err, data) => {
 	if (err) {
 	    console.log(err);
 	} else {
-	    var rawMsg = Mustache.render(data.toString(), params);
+	    let rawMsg = Mustache.render(data.toString(), params);
 	    console.log("===========================");
 	    console.log("mustache result for", templateName);
 	    //console.log("with params", params);
 	    console.log(rawMsg);
 	    console.log("===========================");
-	    var m = rawMsg.match(/^Subject: *(.*)\n\n([^]*)/);
+	    let m = rawMsg.match(/^Subject: *(.*)\n\n([^]*)/);
 	    if (!m) {
 		console.error("invalid template " + templateName + ': first line must be "Subject: ..."');
 	    } else {

@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 'use strict';
 
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
 
-var db = require('./server/db');
-var api = require('./server/api');
-var utils = require('./server/utils');
-var app = express();
+const db = require('./server/db');
+const api = require('./server/api');
+const utils = require('./server/utils');
+const app = express();
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/app/favicon.ico'));
@@ -25,8 +25,8 @@ app.use('/api', api);
 // catch-all that should be replaced with list of angularjs routes
 app.all("/*", utils.index_html);
 
-db.init(function () {
-    var port = process.env.PORT || 8080;        // set our port
+db.init(() => {
+    let port = process.env.PORT || 8080;        // set our port
     app.listen(port);
     console.log('Started on port ' + port);
 });

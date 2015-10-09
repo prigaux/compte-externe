@@ -1,22 +1,22 @@
 'use strict';
 
-var _ = require('lodash');
-var assert = require('assert');
-var require_fresh = require('./test_utils').require_fresh;
-var test_ldap = require('./test_ldap');
+const _ = require('lodash');
+const assert = require('assert');
+const require_fresh = require('./test_utils').require_fresh;
+const test_ldap = require('./test_ldap');
 
-describe('genLogin', function() {
+describe('genLogin', () => {
     
-    describe('simple', function() {
-	var search_ldap = require_fresh('../search_ldap');
-	search_ldap.existLogin = function () { return Promise.resolve(false); };
+    describe('simple', () => {
+	let search_ldap = require_fresh('../search_ldap');
+	search_ldap.existLogin = () => Promise.resolve(false);
 	
 	function check(sn, givenName, wantedLogin) {
-	    return function () {
-		return search_ldap.genLogin(sn, givenName).then(function (login) {
+	    return () => (
+		search_ldap.genLogin(sn, givenName).then(login => {
 		    assert.equal(login, wantedLogin);
-		});
-	    };
+		})
+	    );
 	}
 
 	it('should use sn', 
@@ -46,38 +46,38 @@ describe('genLogin', function() {
 
     });
 
-    describe('handle existing', function() {
-	var search_ldap = require_fresh('../search_ldap');
-	var added = {};
-	search_ldap.existLogin = function (s) {
-	    return Promise.resolve(added[s]);
-	};
+    describe('handle existing', () => {
+	let search_ldap = require_fresh('../search_ldap');
+	let added = {};
+	search_ldap.existLogin = s => (
+	    Promise.resolve(added[s])
+	);
 	
 	function iterate(sn, givenName, max) {
-	    var iter = function (r) {
-		return search_ldap.genLogin(sn, givenName).then(function (login) {
+	    let iter = r => (
+		search_ldap.genLogin(sn, givenName).then(login => {
 		    if (login && r.length < max) {
 			added[login] = true;
 			return iter(r.concat(login));
 		    } else {
 			return r;
 		    }
-		});
-	    };
+		})
+	    );
 	    return iter([]);
 	}
 
 	function check(sn, givenName, max, wantedLogins) {
-	    return function () {
-		return iterate(sn, givenName, max).then(function (logins) {
+	    return () => (
+		iterate(sn, givenName, max).then(logins => {
 		    assert.deepEqual(logins, wantedLogins);
-		});
-	    };
+		})
+	    );
 	}
 
 	it('multiple no givenName', 
 	    check('rigaux', '', 12, 
-		  _.range(0, 12).map(function (n) { return "rigaux" + (n || ''); })));
+		  _.range(0, 12).map(n => "rigaux" + (n || ''))));
 
 	it('multiple',
 	   check('rigaux', 'pascal', 10,
@@ -91,20 +91,20 @@ describe('genLogin', function() {
     });
 
 
-    describe('use test ldap', function() {
-	var search_ldap;
-	before(function () {
-	    return test_ldap().then(function () {
+    describe('use test ldap', () => {
+	let search_ldap;
+	before(() => (
+	    test_ldap().then(() => {
 		search_ldap = require_fresh('../search_ldap');
-	    });
-	});
+	    })
+	));
 	
 	function check(sn, givenName, wantedLogin) {
-	    return function () {
-		return search_ldap.genLogin(sn, givenName).then(function (login) {
+	    return () => (
+		search_ldap.genLogin(sn, givenName).then(login => {
 		    assert.equal(login, wantedLogin);
-		});
-	    };
+		})
+	    );
 	}
 
 	it('should not use first solution', 
@@ -116,36 +116,36 @@ describe('genLogin', function() {
     });
 });
 
-describe('homonymes', function() {
+describe('homonymes', () => {
 
-    describe('use test ldap', function() {
-	var search_ldap;
-	before(function () {
-	    return test_ldap().then(function () {
+    describe('use test ldap', () => {
+	let search_ldap;
+	before(() => (
+	    test_ldap().then(() => {
 		search_ldap = require_fresh('../search_ldap');
-	    });
-	});
+	    })
+	));
 
-	it('should detect simple homonyme', function () {
-	    return search_ldap.homonymes(
+	it('should detect simple homonyme', () => (
+	    search_ldap.homonymes(
 		['rigaux'], ['pascal'], new Date('1975-10-02'),
-		['uid','birthDay']).then(function (l) {
+		['uid','birthDay']).then(l => {
 		    assert.equal(l.length, 1);
 		    assert.equal(l[0].uid, "prigaux");
 		    assert.equal(l[0].score, 3);
-		});
-	});
-	it('should detect homonyme with birth date a little different', function () {
-	    return search_ldap.homonymes(
+		})
+	));
+	it('should detect homonyme with birth date a little different', () => (
+	    search_ldap.homonymes(
 		['rigaux'], ['ayme'], new Date('1975-10-02'),
-		['uid','birthDay']).then(function (l) {
+		['uid','birthDay']).then(l => {
 		    assert.equal(l.length, 2);
 		    assert.equal(l[0].uid, "arigaux");
 		    assert.equal(l[0].score, 3);
 		    assert.equal(l[1].uid, "ayrigaux");
 		    assert.equal(l[1].score, 1);
-		});
-	});
+		})
+	));
        
     });
 });

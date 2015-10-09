@@ -1,20 +1,20 @@
 'use strict';
 
-var conf = require('./conf');
-var EventEmitter = require('events').EventEmitter;
+const conf = require('./conf');
+const EventEmitter = require('events').EventEmitter;
 
-exports.express_auth = function (req, res, next) {
-  var user_id = req.header('REMOTE_USER');
-  var mail = req.header('mail');
+exports.express_auth = (req, res, next) => {
+  let user_id = req.header('REMOTE_USER');
+  let mail = req.header('mail');
   if (user_id) req.user = { id: user_id, mail: mail };
   next();
 };
 
-exports.index_html = function (req, res, next) {
-    var fs = require('fs');
-    var Mustache = require('mustache');
-    var client_conf = require('../app/conf');
-    fs.readFile(__dirname + "/../app/index.html", function (err, data) {
+exports.index_html = (req, res, next) => {
+    let fs = require('fs');
+    let Mustache = require('mustache');
+    let client_conf = require('../app/conf');
+    fs.readFile(__dirname + "/../app/index.html", (err, data) => {
 	if (err) {
 	    console.log(err);
 	} else {
@@ -25,30 +25,30 @@ exports.index_html = function (req, res, next) {
 };
 
 
-exports.eventBus = function () {
-    var bus = new EventEmitter();
+exports.eventBus = () => {
+    let bus = new EventEmitter();
     bus.setMaxListeners(conf.maxLiveModerators);
     return bus;
 };
 
 
-var spawn = require('child_process').spawn;
+const spawn = require('child_process').spawn;
 
-exports.popen = function(inText, cmd, params) {
-    var p = spawn(cmd, params);
+exports.popen = (inText, cmd, params) => {
+    let p = spawn(cmd, params);
     p.stdin.write(inText);
     p.stdin.end();
 
-    return new Promise(function (resolve, reject) {
-	var output = '';
-	var get_ouput = function (data) { output += data; };
+    return new Promise((resolve, reject) => {
+	let output = '';
+	let get_ouput = data => { output += data; };
 	
 	p.stdout.on('data', get_ouput);
 	p.stderr.on('data', get_ouput);
-	p.on('error', function (event) {
+	p.on('error', event => {
 	    reject(event);
 	});
-	p.on('close', function (code) {
+	p.on('close', code => {
 	    if (code === 0) resolve(output); else reject(output);
 	});
     });

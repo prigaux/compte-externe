@@ -1,9 +1,9 @@
 'use strict';
 
-var fs = require('fs');
-var sendmailTransport = require('nodemailer-sendmail-transport');
+const fs = require('fs');
+const sendmailTransport = require('nodemailer-sendmail-transport');
 
-var conf = {
+const conf = {
     maxLiveModerators: 100,
 
     mainUrl: 'https://compte-externe-test.univ.fr',
@@ -34,17 +34,17 @@ var conf = {
 	    homonymes_restriction: '(&(eduPersonAffiliation=*)(!(eduPersonAffiliation=student)))',
 	},
 
-	group_cn_to_memberOf: function (cn) {
-	    return "cn=" + cn + ",ou=groups,dc=univ,dc=fr";
-	},
+	group_cn_to_memberOf: cn => (
+	    "cn=" + cn + ",ou=groups,dc=univ,dc=fr"
+	),
 
 	// empty for anonymous bind:
 	dn: 'cn=comptex,ou=admin,dc=univ,dc=fr',
 	password: 'xxx',
 	
 	uid_to_eppn: "@univ.fr",
-	group_member_to_eppn: function (user_dn) {
-	    var r = user_dn.match(/^uid=([^,]*)/);
+	group_member_to_eppn: user_dn => {
+	    let r = user_dn.match(/^uid=([^,]*)/);
 	    if (!r) console.log("invalid group member " + user_dn);
 	    return r && r[1] + conf.ldap.uid_to_eppn;
 	}
