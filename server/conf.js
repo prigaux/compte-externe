@@ -54,7 +54,7 @@ var conf = {
 	header_map: {
 	    Shib_Identity_Provider: 'Shib-Identity-Provider',
 	    eduPersonPrincipalName: 'eppn',
-	    supannMailPerso: 'mail',
+	    mail: 'mail',
 
 	    supannCivilite: 'supannCivilite',
 	    cn: 'cn',
