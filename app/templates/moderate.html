@@ -33,7 +33,7 @@
  <form novalidate name="myForm" ng-submit="submitted = 1; submit()" class="form-horizontal">
    
    <div my-bootstrap-form-group="Shib_Identity_Provider" label="Etablissement" ng-if="v.Shib_Identity_Provider">
-     <input name="Shib_Identity_Provider" ng-model="v.Shib_Identity_Provider | formatIdpId" type="text" disabled form-control>
+     <input name="Shib_Identity_Provider" ng-value="v.Shib_Identity_Provider | formatIdpId" type="text" disabled class="form-control">
    </div>
 
    <div my-bootstrap-form-group="eduPersonPrincipalName" label="Identifiant dans l'établissement" ng-if="v.eduPersonPrincipalName">
