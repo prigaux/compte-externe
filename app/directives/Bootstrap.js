@@ -50,7 +50,7 @@ angular.module('myApp')
 	    var mayHasErrorAttr = name && !attrs.multi ? "my-has-error='" + name + "'" : '';
 	    var error_msgs = name && !attrs.multi ? "my-error-msgs='" + name + "'" : '';
 	    var label = attrs.label ? '<label class="col-md-3 control-label" for="' + name + '">' + attrs.label + '</label>' : '';
-	    var subClass = (attrs.label ? '' : 'col-md-offset-3') + ' ' + (attrs.multi ? '' : 'col-md-9');
+	    var subClass = (attrs.label || attrs.multi ? '' : 'col-md-offset-3') + ' ' + (attrs.multi ? '' : 'col-md-9');
 	    var sub = '<div class="' + subClass + '" ' + error_msgs + '><div ng-transclude></div></div>';
 	    return "<div " + mayHasErrorAttr + ">" + label + sub + "</div>";
         }
