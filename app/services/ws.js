@@ -34,9 +34,10 @@ angular.module('myApp')
     }
     function fromHomePostalAddress(addr) {
 	var m = addr.match(/(.*)\$(.*)\$(.*)/);
+	if (!m) return { line1: addr };
 	var m1 = m[1].match(/(.*)\$(.*)/);
 	var m2 = m[2].match(/(\d+) (.*)/);
-	return m && { postalCode: m2[1], town: m2[2], country: m[3], line1: m1 ? m1[1]: m[1], line2: m1 ? m1[2] : '' };
+	return { postalCode: m2[1], town: m2[2], country: m[3], line1: m1 ? m1[1]: m[1], line2: m1 ? m1[2] : '' };
     }
     function toHomePostalAddress(addr) {
 	if (!addr.postalCode && !addr.town) return undefined;
