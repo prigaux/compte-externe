@@ -35,6 +35,7 @@ angular.module('myApp')
 	ws.getInScope($scope, id, expectedStep);
 
 	$scope.structures_search = ws.structures_search;
+	$scope.frenchPostalCodeToTowns = helpers.frenchPostalCodeToTowns;
 
 	$scope.errorMessages = {};
 	

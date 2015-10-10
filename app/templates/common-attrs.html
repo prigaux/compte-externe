@@ -52,7 +52,9 @@
     </div>
     <div class="col-xs-7" my-has-error="town">
       <div my-error-msgs="town">
-	<input name="town" ng-model="v.homePostalAddress.town" placeholder="Ville" required form-control>
+	<input name="town" ng-model="v.homePostalAddress.town" type="text" placeholder="Ville"
+	       typeahead="e as e for e in frenchPostalCodeToTowns(v.homePostalAddress.postalCode, $viewValue)"
+	       required form-control>
       </div>
     </div>
     <!-- -div class="col-xs-3" my-has-error="country">

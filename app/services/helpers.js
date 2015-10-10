@@ -45,9 +45,9 @@ angular.module('myApp')
 	return [fragment1, fragment2].map($sce.trustAsHtml);
     };
 
-    h.frenchPostalCodeToTowns = function (postalCode) {
+    h.frenchPostalCodeToTowns = function (postalCode, token) {
 	var url = 'https://ws.univ-paris1.fr/postalCodeLookup';
-	var params = { postalcode: postalCode, country: 'FR' };
+	var params = { postalcode: postalCode, country: 'FR', token: token };
 	return $http.get(url, { params: params }).then(function (r) {
 	    return r.data && r.data.towns;
 	});
