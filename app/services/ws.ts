@@ -111,7 +111,7 @@ class WsService {
 	});
     }
 
-    homonymes(id, params) {
+    homonymes(id) {
 	return this.$http.get('/api/homonymes/' + id).then(function (resp) {
 	    return (<any>resp.data).map(this.fromWs);
 	}, this._handleErr);
