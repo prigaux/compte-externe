@@ -54,9 +54,7 @@ class WsService {
  }
 
   structures_search(token, maxRows) {
-	return this.$http.get('/api/structures', {params: {token: token, maxRows: maxRows}}).then(function (resp) {
-	    return resp.data;
-	});
+	return this.$http.get('/api/structures', {params: {token: token, maxRows: maxRows}}).then((resp) => resp.data);
     }
 
     _fromJSONDate(date : string) {
@@ -101,7 +99,7 @@ class WsService {
             v_.homePostalAddress = new HomePostalAddress('');
 	}
 	if (v.structureParrain) {
-	    this.structures_search(v.structureParrain, 1).then(function (resp) {
+	    this.structures_search(v.structureParrain, 1).then((resp) => {
 		v_.structureParrainS = resp[0];
 	    });
 	}
@@ -129,7 +127,7 @@ class WsService {
 
     getInScope($scope, id  : string, expectedStep : string) {
 	var url = '/api/comptes/' + id;
-	return this.$http.get(url).then(function (resp) {
+	return this.$http.get(url).then((resp) => {
 	    var sv = <any>resp.data;
 	    if (sv.error) {
 		console.error("error accessing ", url, ":", sv.error, sv.stack);
@@ -137,14 +135,14 @@ class WsService {
 	    } else {
 		if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
 		if (sv.v) sv.v = this.fromWs(sv.v);
-		sv.modifyTimestamp = this.fromJSONDate(sv.modifyTimestamp);
+		sv.modifyTimestamp = this._fromJSONDate(sv.modifyTimestamp);
 		angular.extend($scope, sv);
 	    }
 	}, this._handleErr);
     }
 
     listInScope($scope, params) {
-	return this.$http.get('/api/comptes', { params: params }).then(function (resp) {
+	return this.$http.get('/api/comptes', { params: params }).then((resp) => {
 	    if ($scope.$$destroyed) return;
 	    var svs = <any>resp.data;
 	    if (svs.error) {
@@ -152,7 +150,7 @@ class WsService {
 	    } else {
 		$scope.svs = svs;
 	    }
-	}, function (resp) {
+	}, (resp) => {
 	    var err = resp.data;
 	    if (!$scope.$$destroyed) alert(err);
 	    return this.$q.reject(err);
@@ -160,24 +158,24 @@ class WsService {
     }
 
     homonymes(id) {
-	return this.$http.get('/api/homonymes/' + id).then(function (resp) {
-	    return (<any>resp.data).map(this.fromWs);
-	}, this._handleErr);
+	return this.$http.get('/api/homonymes/' + id).then((resp) => 
+	    (<any>resp.data).map(this.fromWs)
+	, this._handleErr);
     }
 
     set(id : string, v : V) {
 	var url = '/api/comptes/' + id;
 	var v_ = this.toWs(v);
-	return this.$http.put(url, v_).then(function (resp) {
-	    return resp.data;
-	}, this._handleErr);
+	return this.$http.put(url, v_).then(
+		(resp) => resp.data, 
+		this._handleErr);
     }
 
     delete(id : string) {
 	var url = '/api/comptes/' + id;
-	return this.$http.delete(url).then(function (resp) {
-	    return resp.data;
-	}, this._handleErr);
+	return this.$http.delete(url).then(
+		(resp) =>resp.data,
+		this._handleErr);
     }
 
 }
