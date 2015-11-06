@@ -63,7 +63,7 @@ angular.module('myApp')
 	require: 'ngModel', // controller to be passed into directive linking function
 	link: function (scope, elem, attr, ctrl) {
 	    elem.addClass("form-control");
-	    elem.attr('id', attr.name);
+	    elem.attr('id', attr['name']);
         }
     };
 });

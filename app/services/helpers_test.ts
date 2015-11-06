@@ -2,7 +2,7 @@
 
 describe('service helpers', function() {
 
-    beforeEach(module('myApp'));
+    beforeEach(angular.mock.module('myApp'));
 
     it('should exists', inject(function(helpers) {
       expect(helpers).toBeDefined();

@@ -2,7 +2,7 @@
 
 describe('service ws', function() {
 
-    beforeEach(module('myApp'));
+    beforeEach(angular.mock.module('myApp'));
 
     it('should exists', inject(function(ws) {
       expect(ws).toBeDefined();
