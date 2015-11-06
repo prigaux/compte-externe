@@ -1,10 +1,52 @@
-function padLeft(n, width) {
+function padLeft(n: string, width: number) {
 	n = n + '';
 	return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
 }
 
-function date_toString() {
-return [ padLeft(this.day, '2'), padLeft(this.month, '2'), padLeft(this.year, '4') ].join('/');
+class MyDate {
+    constructor(public year, public month, public day) {
+    }
+    toString() {
+        return [padLeft(this.day, 2), padLeft(this.month, 2), padLeft(this.year, 4)].join('/');
+    }
+    toDate() {
+        return new Date(Date.UTC(this.year, this.month - 1, this.day));
+    }
+}
+
+class HomePostalAddress {
+    constructor(public line1) { }
+    toString() {
+        return this.line1;
+    }
+}
+
+class HomePostalAddressPrecise extends HomePostalAddress {
+    constructor(public line1, public line2, public postalCode, public town, public country) {
+        super(line1);
+    }
+    toString() {
+        if (!this.postalCode && !this.town) return undefined;
+        return this.line1 + (this.line2 ? "$" + this.line2 : '') + "$" + this.postalCode + " " + this.town + "$" + (this.country || 'FRANCE');
+    }
+}
+
+interface VCommon {
+    structureParrain?: string;
+    supannAliasLogin?: string;
+}
+interface VRaw extends VCommon {
+    birthDay?: string,
+    homePostalAddress?: string
+}
+interface V extends VCommon {
+    birthDay?: MyDate,
+    homePostalAddress?: HomePostalAddress,
+    structureParrainS: { key: string, name: string, description: string }
+}
+interface SVRaw {
+     v : VRaw;
+     error? : string;
 }
 
 class WsService {
@@ -17,59 +59,65 @@ class WsService {
 	});
     }
 
-    _fromJSONDate(date) {
+    _fromJSONDate(date : string) {
 	var d = new Date(date);
-	return d && { year: d.getUTCFullYear(), month: 1 + d.getUTCMonth(), day: d.getUTCDate(), toString: date_toString };
+  return d && new MyDate(d.getUTCFullYear(), 1 + d.getUTCMonth(), d.getUTCDate());
     }
-    _fromLDAPDate(date) {
+    _fromLDAPDate(date : string) {
 	var m = date.match(/^([0-9]{4})([0-9]{2})([0-9]{2})[0-9]{6}Z?$/);
-	return m && { year: parseInt(m[1]), month: parseInt(m[2]), day: parseInt(m[3]),
-		      toString: date_toString };
+  return m && new MyDate(parseInt(m[1]), parseInt(m[2]), parseInt(m[3]));
     }
-    _toJSONDate(date) {
-	return new Date(Date.UTC(date.year, date.month - 1, date.day));
+    _toJSONDate(date : MyDate) {
+        return date.toDate();
     }
-    fromHomePostalAddress(addr) {
+
+    _fromHomePostalAddress(addr) : HomePostalAddress {
 	var m = addr.match(/(.*)\$(.*)\$(.*)/);
-	if (!m) return { line1: addr };
+  if (!m) return new HomePostalAddress(addr);
 	var m1 = m[1].match(/(.*)\$(.*)/);
 	var m2 = m[2].match(/(\d+) (.*)/);
-	return { postalCode: m2[1], town: m2[2], country: m[3], line1: m1 ? m1[1]: m[1], line2: m1 ? m1[2] : '' };
+  return new HomePostalAddressPrecise(
+            m1 ? m1[1] : m[1],
+            m1 ? m1[2] : '',
+            m2[1], m2[2],
+            m[3]);
     }
-    toHomePostalAddress(addr) {
-	if (!addr.postalCode && !addr.town) return undefined;
-	return addr.line1 + (addr.line2 ? "$" + addr.line2 : '') + "$" + addr.postalCode + " " + addr.town + "$" + (addr.country || 'FRANCE');
+    _toHomePostalAddress(addr: HomePostalAddress) {
+        return addr.toString();
     }
     
-    fromWs(v) {
+    fromWs(v : VRaw) : V {
+  var v_: V = <any>angular.copy(v);
 	//v.birthDay = "19751002000000Z"; //"1975-10-02";
 	if (v.birthDay) {
-	    v.birthDay = this._fromLDAPDate(v.birthDay) || this._fromJSONDate(v.birthDay) || {};
-	} else {
-	    v.birthDay = {};
+            v_.birthDay = this._fromLDAPDate(v.birthDay) || this._fromJSONDate(v.birthDay);
+	}
+  if (!v_.birthDay) {
+            v_.birthDay = new MyDate(undefined, undefined, undefined);
 	}
 	if (v.homePostalAddress) {
-	    v.homePostalAddress = this.fromHomePostalAddress(v.homePostalAddress);
+            v_.homePostalAddress = this._fromHomePostalAddress(v.homePostalAddress);
 	} else {
-	    v.homePostalAddress = {};
+            v_.homePostalAddress = new HomePostalAddress('');
 	}
 	if (v.structureParrain) {
 	    this.structures_search(v.structureParrain, 1).then(function (resp) {
-		v.structureParrainS = resp[0];
+		v_.structureParrainS = resp[0];
 	    });
 	}
-	return v;
+	return v_;
     }
 
-    toWs = function(v) {
-	v = angular.copy(v);
-	v.birthDay = this.toJSONDate(v.birthDay);
-	v.homePostalAddress = this.toHomePostalAddress(v.homePostalAddress);
-	if (v.structureParrainS) {
-	    v.structureParrain = v.structureParrainS.key;
-	    delete v.structureParrainS;
-	}
-	return v;
+    toWs(v : V) : VRaw {
+        var v_: VRaw = <any>angular.copy(v);
+        if (v.birthDay) {
+            v_.birthDay = v.birthDay.toDate().toString();
+        }
+				v_.homePostalAddress = this._toHomePostalAddress(v.homePostalAddress);
+				if (v.structureParrainS) {
+	    		v_.structureParrain = v.structureParrainS.key;
+				}
+				return v_;
     }
     
     _handleErr(resp) {
@@ -79,7 +127,7 @@ class WsService {
 	return this.$q.reject(err);
     }
 
-    getInScope($scope, id, expectedStep) {
+    getInScope($scope, id  : string, expectedStep : string) {
 	var url = '/api/comptes/' + id;
 	return this.$http.get(url).then(function (resp) {
 	    var sv = <any>resp.data;
@@ -117,15 +165,15 @@ class WsService {
 	}, this._handleErr);
     }
 
-    set(id, v) {
+    set(id : string, v : V) {
 	var url = '/api/comptes/' + id;
-	v = this.toWs(v);
-	return this.$http.put(url, v).then(function (resp) {
+	var v_ = this.toWs(v);
+	return this.$http.put(url, v_).then(function (resp) {
 	    return resp.data;
 	}, this._handleErr);
     }
 
-    delete(id) {
+    delete(id : string) {
 	var url = '/api/comptes/' + id;
 	return this.$http.delete(url).then(function (resp) {
 	    return resp.data;

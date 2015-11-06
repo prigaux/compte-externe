@@ -22,7 +22,7 @@ angular.module('myApp')
 	});
     }
 
-    $http.get(url).success(function (sv : any) {
+    $http.get(url).success(function (sv : SVRaw) {
 	if (sv.error) {
 	    alert(sv);
 	} else {

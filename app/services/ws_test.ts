@@ -1,5 +1,7 @@
 'use strict';
 
+let raw = (o) => angular.extend({}, o);
+
 describe('service ws', function() {
 
     beforeEach(angular.mock.module('myApp'));
@@ -13,7 +15,7 @@ describe('service ws', function() {
 	it('should encode/decode homePostalAddress', inject(function(ws, $sce) {
 	    function check(in_, out) {
 		var r = ws.fromWs({ homePostalAddress: in_ });
-		expect(r.homePostalAddress).toEqual(out);
+		expect(raw(r.homePostalAddress)).toEqual(out);
 		expect(ws.toWs(r).homePostalAddress).toEqual(in_);
 	    }
 	    check("44 rue balard$75015 PARIS$FRANCE",
