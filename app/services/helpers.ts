@@ -1,12 +1,8 @@
-'use strict';
+class HelpersService {
+ constructor (private $sce : ng.ISCEService, private $http : ng.IHttpService, private $q : ng.IQService) {
+ }
 
-angular.module('myApp')
-
-.service("helpers", function($sce, $http, $q) {
-
-    var h = this;
-	
-    var entityMap = {
+    static entityMap = {
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
@@ -14,13 +10,13 @@ angular.module('myApp')
         "'": '&#39;',
         "/": '&#x2F;'
     };
-    h.escapeHtml = function(str) {
-        return String(str).replace(/[&<>"'\/]/g, function (s) {
-	    return entityMap[s];
-        });
-    };
+    escapeHtml(str) {
+        return String(str).replace(/[&<>"'\/]/g, (s) =>
+	       HelpersService.entityMap[s]
+        );
+    }
 
-    h.formatDifferences = function(val1, val2) {
+    formatDifferences(val1, val2) {
 	/* globals JsDiff */
 	var diff = JsDiff.diffChars(val1, val2);
 	var fragment1 = '';
@@ -32,7 +28,7 @@ angular.module('myApp')
 		diff[i + 1] = swap;
 	    }
 
-	    var txt = h.escapeHtml(diff[i].value);
+	    var txt = this.escapeHtml(diff[i].value);
 	    if (diff[i].removed) {
 		fragment1 += '<ins>' + txt + '</ins>';
 	    } else if (diff[i].added) {
@@ -42,14 +38,16 @@ angular.module('myApp')
 		fragment2 += txt;
 	    }
 	}
-	return [fragment1, fragment2].map($sce.trustAsHtml);
-    };
+	return [fragment1, fragment2].map(this.$sce.trustAsHtml);
+    }
 
-    h.frenchPostalCodeToTowns = function (postalCode, token) {
+    frenchPostalCodeToTowns(postalCode, token) {
 	var url = '//search-towns-as.univ-paris1.fr/';
 	var params = { postalcode: postalCode, country: 'FR', token: token };
-	return $http.get(url, { params: params }).then(function (r) {
-	    return r.data && r.data.towns;
-	});
-    };
-});
+	return this.$http.get(url, { params: params }).then((r) => 
+	    r.data && r.data['towns']
+	);
+    }
+}
+
+angular.module('myApp').service("helpers", HelpersService);
