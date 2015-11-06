@@ -76,7 +76,7 @@ angular.module('myApp')
     
     function handleErr(resp) {
 	var err = resp.data;
-	console.err(err);
+	console.error(err);
 	alert(err);
 	return $q.reject(err);
     }
