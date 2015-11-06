@@ -46,7 +46,7 @@ angular.module('myApp')
     };
 
     h.frenchPostalCodeToTowns = function (postalCode, token) {
-	var url = 'https://ws.univ-paris1.fr/postalCodeLookup';
+	var url = '//search-towns-as.univ-paris1.fr/';
 	var params = { postalcode: postalCode, country: 'FR', token: token };
 	return $http.get(url, { params: params }).then(function (r) {
 	    return r.data && r.data.towns;
