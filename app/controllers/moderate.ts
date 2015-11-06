@@ -9,7 +9,7 @@ angular.module('myApp')
   });
 }])
 
-.controller('ModerateCtrl', function($location, $scope, $routeParams, attrsEdit, ws, helpers) {
+.controller('ModerateCtrl', function($location : ng.ILocationService, attrsEdit : AttrsEditService, ws : WsService, helpers : HelpersService, $scope, $routeParams) {
     var id = $routeParams.id;
 
     function nextStep (resp) {

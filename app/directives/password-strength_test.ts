@@ -4,7 +4,7 @@ describe("directive password-strength", function() {
 
     beforeEach(angular.mock.module('myApp'));
 
-    var compile, rootScope;
+    var compile : ng.ICompileService, rootScope;
     
     beforeEach(inject(function($compile, $rootScope) {
 	compile = $compile;

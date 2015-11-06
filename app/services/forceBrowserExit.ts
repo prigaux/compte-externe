@@ -2,7 +2,7 @@
 
 angular.module('myApp')
 
-.service("forceBrowserExit", function($rootScope, $location, $cookies) {
+.service("forceBrowserExit", function($rootScope, $location : ng.ILocationService, $cookies : angular.cookies.ICookiesService) {
     var cookieName = 'forceBrowserExit';
     
     return function(triggerUrl, forcedRoute) {
@@ -14,7 +14,7 @@ angular.module('myApp')
 	$rootScope.$on("$locationChangeSuccess", function (event, url) {
 	    if (url.match(triggerUrl)) {
 		console.log("forceBrowserExit!");
-		$cookies.put(cookieName, true);
+		$cookies.put(cookieName, 'true');
 	    }
 	});
     };

@@ -8,7 +8,7 @@ return [ padLeft(this.day, '2'), padLeft(this.month, '2'), padLeft(this.year, '4
 }
 
 class WsService {
- constructor(private $http, private $q) {
+ constructor(private $http : ng.IHttpService, private $q : ng.IQService) {
  }
 
   structures_search(token, maxRows) {
@@ -82,7 +82,7 @@ class WsService {
     getInScope($scope, id, expectedStep) {
 	var url = '/api/comptes/' + id;
 	return this.$http.get(url).then(function (resp) {
-	    var sv = resp.data;
+	    var sv = <any>resp.data;
 	    if (sv.error) {
 		console.error("error accessing ", url, ":", sv.error, sv.stack);
 		alert(sv.error);
@@ -98,7 +98,7 @@ class WsService {
     listInScope($scope, params) {
 	return this.$http.get('/api/comptes', { params: params }).then(function (resp) {
 	    if ($scope.$$destroyed) return;
-	    var svs = resp.data;
+	    var svs = <any>resp.data;
 	    if (svs.error) {
 		$scope.err = svs;
 	    } else {
@@ -113,7 +113,7 @@ class WsService {
 
     homonymes(id, params) {
 	return this.$http.get('/api/homonymes/' + id).then(function (resp) {
-	    return resp.data.map(this.fromWs);
+	    return (<any>resp.data).map(this.fromWs);
 	}, this._handleErr);
     }
 

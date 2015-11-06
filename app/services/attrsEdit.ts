@@ -1,5 +1,5 @@
 class AttrsEditService {
- constructor(private helpers, private ws, private conf) {
+ constructor(private helpers : HelpersService, private ws : WsService, private conf) {
  }
 
  manager($scope, id, expectedStep, nextStep) {

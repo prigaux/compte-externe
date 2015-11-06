@@ -9,7 +9,7 @@ angular.module('myApp')
   });
 }])
 
-.controller('ModerateListCtrl', function($scope, ws) {
+.controller('ModerateListCtrl', function(ws : WsService, $scope) {
 
     function listRec(params) {
 	ws.listInScope($scope, params).then(function () {
