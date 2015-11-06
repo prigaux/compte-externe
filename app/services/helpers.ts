@@ -41,7 +41,7 @@ class HelpersService {
 	return [fragment1, fragment2].map(this.$sce.trustAsHtml);
     }
 
-    frenchPostalCodeToTowns(postalCode, token) {
+    frenchPostalCodeToTowns(postalCode : string, token : string = '') : ng.IPromise<string[]> {
 	var url = '//search-towns-as.univ-paris1.fr/';
 	var params = { postalcode: postalCode, country: 'FR', token: token };
 	return this.$http.get(url, { params: params }).then((r) => 
