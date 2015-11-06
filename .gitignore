@@ -1,7 +1,11 @@
+app/**/*.js
+app/**/*.js.map
 logs/*
 !.gitkeep
 node_modules/
 bower_components/
+typings/
+.tscache
 tmp
 .DS_Store
 .idea

@@ -3,7 +3,7 @@
 module.exports = function(grunt) {
     var watchFiles = {
         serverJS: ['gruntfile.js', 'start-server.js', 'server/**/*.js', '!server/tests/'],
-        clientJS: ['app/**/*.js', '!app/bower_components/**/*'],
+        clientTS: ['app/**/*.ts', '!app/bower_components/**/*'],
 	html_css: ['app/**/*.html', 'app/**/*.css'],
 	mochaTests: ['server/tests/**/*.js'],
     };
@@ -13,8 +13,13 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         watch: {
             js: {
-                files: watchFiles.clientJS.concat(watchFiles.serverJS),
+                files: watchFiles.serverJS,
                 tasks: ['jshint'],
+                options: { livereload: true }
+            },
+            ts: {
+                files: watchFiles.clientTS,
+                tasks: ['ts'],
                 options: { livereload: true }
             },
             html_css: {
@@ -26,9 +31,14 @@ module.exports = function(grunt) {
 		tasks: ['test:server', 'jshint'],
 	    },
         },
+	ts: {
+            dev: {
+                src: watchFiles.clientTS,
+            }
+	},	
         jshint: {
             all: {
-                src: watchFiles.clientJS.concat(watchFiles.serverJS, watchFiles.mochaTests),
+                src: watchFiles.serverJS.concat(watchFiles.mochaTests),
                 options: { jshintrc: true }
             }
         },
@@ -62,7 +72,14 @@ module.exports = function(grunt) {
 		configFile: 'karma.conf.js',
 	    },
 	},
-
+	tsd: {
+            refresh: {
+		options: {
+                    command: 'reinstall',
+                    config: 'tsd.json',
+		}
+            }
+	},
 	'node-inspector': {
 	    custom: {
 		options: {
@@ -84,7 +101,7 @@ module.exports = function(grunt) {
     // Making grunt default to force in order not to break the project.
     grunt.option('force', true);
 
-    grunt.registerTask('default', ['lint', 'concurrent:default']);
+    grunt.registerTask('default', ['ts:dev', 'lint', 'concurrent:default']);
     grunt.registerTask('debug', ['lint', 'concurrent:debug']);
     grunt.registerTask('lint', ['jshint']);
     grunt.registerTask('build', ['lint']);

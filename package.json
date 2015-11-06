@@ -26,6 +26,7 @@
     "nodemailer": "^1.3.4",
     "nodemailer-sendmail-transport": "^1.0.0",
     "simple-get": "^1.3.3",
+    "typescript": "^1.6.2",
     "xml2js": "^0.4.9"
   },
   "devDependencies": {
@@ -38,6 +39,8 @@
     "grunt-nodemon": "~0.3.0",
     "grunt-concurrent": "~1.0.0",
     "grunt-karma": "^0.11.2",
+    "grunt-ts": "^5.1.0",
+    "grunt-tsd": "^0.1.0",
     "jasmine-core": "^2.3.4",
     "karma": "^0.12.37",
     "karma-jasmine": "^0.3.6",
