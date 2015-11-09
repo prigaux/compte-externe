@@ -38,55 +38,58 @@ function toPromise(f) {
     });
 }
 
-function init_methods(svs) {
+let real_svs = null;
 
-    module.exports.get = id => (
+function svs() {
+  if (!real_svs) throw "db.init not done";
+  return real_svs;
+}
+
+export const get = id => (
 	toPromise(onResult => {
-	    svs.findOne({ _id: _id(id) }, onResult);
+	    svs().findOne({ _id: _id(id) }, onResult);
 	}).then(fromDB)
     );
 
     // lists svs, sorted by steps + recent one at the beginning
-    module.exports.listByModerator = user => {
+export const listByModerator = user => {
 	let mail = user.mail;
 	return toPromise(onResult => {
-	    svs.find({ moderators: mail }).sort({ step: 1, modifyTimestamp: -1 }).toArray(onResult);
+	    svs().find({ moderators: mail }).sort({ step: 1, modifyTimestamp: -1 }).toArray(onResult);
 	}).then(svs => (
 	    _.map(svs, fromDB)
 	));
     };
 
-    module.exports.remove = id => (
+export const remove = id => (
 	toPromise(onResult => {
-	    svs.remove({ _id: _id(id) }, onResult);
+	    svs().remove({ _id: _id(id) }, onResult);
 	})
     );
 
-    module.exports.save = sv => (
+export const save = sv => (
 	toPromise(onResult => {
 	    console.log("saving in DB:", sv);
 	    let sv_ = toDB(sv);
 	    sv_.modifyTimestamp = new Date();
-	    svs.updateOne({ _id: sv_._id }, sv_, {upsert: true}, onResult);
+	    svs().updateOne({ _id: sv_._id }, sv_, {upsert: true}, onResult);
 	}).then((_result) => (
 	    sv
 	))
     );
 
-}
-
-module.exports.init = callback => {
+export function init(callback) {
   mongodb.MongoClient.connect(conf.mongodb.url, (error, client) => {
       if (error) {
 	  console.log(error);
 	  process.exit(1);
       }
-      init_methods(client.collection('sv'));
+      real_svs = client.collection('sv');
 
       callback();
   });
-};
+}
 
-module.exports.new_id = () => (
+export const new_id = () => (
     "" + _id()
 );
