@@ -22,7 +22,7 @@ function fromDB(sv_) {
 }
 function toDB(sv) {
     let sv_ = _.omit(sv, 'id');
-    sv_._id = _id(sv.id);
+    sv_['_id'] = _id(sv.id);
     return sv_;
 }
 
@@ -71,8 +71,8 @@ export const save = sv => (
 	toPromise(onResult => {
 	    console.log("saving in DB:", sv);
 	    let sv_ = toDB(sv);
-	    sv_.modifyTimestamp = new Date();
-	    svs().updateOne({ _id: sv_._id }, sv_, {upsert: true}, onResult);
+	    sv_['modifyTimestamp'] = new Date();
+	    svs().updateOne({ _id: sv_['_id'] }, sv_, {upsert: true}, onResult);
 	}).then((_result) => (
 	    sv
 	))

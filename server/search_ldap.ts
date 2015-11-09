@@ -118,7 +118,7 @@ export const homonymes = (sns, givenNames, birthDay, attrs) => {
 			  { sizeLimit: 10 }).then(l => {
 			      l = l.map(people_convert_from_ldap);
 			      return homonymes_scoring(l, birthDay).filter(e => (
-				  e.score > 0
+				  e['score'] > 0
 			      ));
 			  });
 };

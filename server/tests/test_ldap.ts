@@ -29,7 +29,7 @@ function create_server(params) {
     if (!params) params = test_params();
     return require('./ldap_server')(params).then(server => {
 	let conf = _.omit(params, 'DNs');
-	conf.uri = server.url;
+	conf['uri'] = server.url;
 	return conf;
     });
 }

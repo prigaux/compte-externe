@@ -58,8 +58,8 @@ function _validateAccount(uid) {
 	let entries = deepGetKey(response, 'entry');
 	if (_.isArray(entries)) {
 	    let vals = _.zipObject(_.map(entries, 'key'), _.map(entries, 'value'));
-	    if (!vals.code) throw "esup_activ_bo.validateAccount did not return code for uid " + uid + ". Account already activated?";
-	    return vals.code;
+	    if (!vals['code']) throw "esup_activ_bo.validateAccount did not return code for uid " + uid + ". Account already activated?";
+	    return vals['code'];
 	} else {
 	    throw "esup_activ_bo.validateAccount failed: " + (get_fault(xml) || JSON.stringify(xml));
 	}
