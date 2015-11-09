@@ -30,7 +30,7 @@ export const post = (url, body, options) => {
     return new Promise((resolve, reject) => {
 	simpleGet.post(options, (err, res) => {
 	    if (err) return reject(err);
-	    res.setTimeout(options.timeout || 10000);
+	    res.setTimeout(options.timeout || 10000, null);
 
 	    //console.log(res.headers)
 
