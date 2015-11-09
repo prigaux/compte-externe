@@ -20,7 +20,7 @@ function _id(id : string = undefined) {
 function fromDB(sv_) {
     return renameKey(sv_, '_id', 'id');
 }
-function toDB(sv) {
+function toDB(sv : sv) {
     let sv_ = _.omit(sv, 'id');
     sv_['_id'] = _id(sv.id);
     return sv_;

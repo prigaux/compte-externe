@@ -12,7 +12,7 @@ client.bind(conf.ldap.dn, conf.ldap.password, err => {
     if (err) console.log("err: " + err);
 });
 
-export const search = (base, filter, options) => {
+export const search = (base, filter, options) : Promise<any> => {
     let params = _.assign({ filter: filter, scope: "sub" }, options);
     return new Promise((resolve, reject) => {
 	let l = [];
@@ -92,7 +92,7 @@ export const readMap = (base, attrsMap, options) => {
     return read(base, options).then(doAttrsMap(attrsMap));
 };
 
-export const searchThisAttr = (base, filter, attr, options = {}) => {
+export const searchThisAttr = (base, filter, attr : string, options = {}) => {
     options = _.assign({ attributes: [attr] }, options);
     return search(base, filter, options).then(l => (
 	_.map(l, e => e[attr])

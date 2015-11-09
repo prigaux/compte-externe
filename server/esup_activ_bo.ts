@@ -7,7 +7,7 @@ import Mustache = require('mustache');
 import helpers = require('./helpers');
 import conf = require('./conf');
 
-const parseString = helpers.promisify_callback(xml2js.parseString);
+const parseString : (xml: string, options: xml2js.Options) => Promise<any> = helpers.promisify_callback(xml2js.parseString);
 const readFile = helpers.promisify_callback(fs.readFile);
 
 // alike xpath //k

@@ -1,4 +1,4 @@
-'use strict';
+/// <reference path='types.d.ts' />
 
 import _ = require('lodash');
 import express = require('express');
@@ -73,13 +73,13 @@ function checkAcls(req, sv) {
     }
 }
 
-function first_sv(req) {
+function first_sv(req) : Promise<sv> {
     let step = conf_steps.firstStep(req);
     let empty_sv = { step: step, v: {} };
     return action_pre(req, empty_sv);
 }
 
-function getRaw(req, id) {
+function getRaw(req, id) : Promise<sv> {
     if (id === 'new') {
 	return first_sv(req);
     } else {
@@ -134,14 +134,14 @@ function setRaw(req, sv, v) {
 	    return svr;
 	}
     }).tap(svr => {
-	let sv = _.omit(svr, 'response');
+	let sv = <sv> _.omit(svr, 'response');
 	if (sv.step) {
 	    return saveRaw(req, sv);
 	} else {
 	    return removeRaw(sv.id);
 	}
     }).then(svr => {
-	let r = _.assign({success: true}, svr.response);
+	let r = <response> _.assign({success: true}, svr.response);
 	if (svr.step) r.step = svr.step;
 	return r;
     });
@@ -174,7 +174,7 @@ function listAuthorized(req) {
     ));
 }
 
-function homonymes(req, id) {
+function homonymes(req : express.Request, id : string) : Promise<ldapEntry[]> {
     return getRaw(req, id).then(sv => {
 	// acls are checked => removing is allowed
 	let sns = _.merge(_.at(sv.v, conf.ldap.people.sns));
@@ -189,7 +189,7 @@ function homonymes(req, id) {
     });
 }
 
-function respondJson(req, res, p) {
+function respondJson(req : express.Request, res : express.Response, p : Promise<response>) {
     let logPrefix = req.method + " " + req.path + ":";
     p.then(r => {
 	console.log(logPrefix, r);

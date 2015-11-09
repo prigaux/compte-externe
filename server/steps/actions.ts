@@ -44,7 +44,7 @@ export const createCompte = (req, sv) => {
     console.log("action createCompte:", v);
     return utils.popen(JSON.stringify(v), 'createCompte', []).then(data => {
 	try { 
-	    let resp = JSON.parse(data);
+	    let resp = JSON.parse(<any>data);
 	    if (!resp.uid) console.error("createCompte should return uid");
 	    if (!resp.supannAliasLogin) console.error("createCompte should return supannAliasLogin");
 	    v.uid = resp.uid;
