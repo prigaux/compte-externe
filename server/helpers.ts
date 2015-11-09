@@ -34,8 +34,7 @@ export const post = (url : string, body : string, options : simpleGet.Options) :
 };
 
 export const promisify_callback = f => (
-    args => {
-	args = Array.prototype.slice.call(arguments, 0);
+    (...args) => {
 	return new Promise((resolve, reject) => {
 	    function callback(err, result) {
 		if (err) reject(err); else resolve(result);
