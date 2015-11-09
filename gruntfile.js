@@ -73,10 +73,16 @@ module.exports = function(grunt) {
 	    },
 	},
 	tsd: {
-            refresh: {
+    server: {
+options: {
+            command: 'reinstall',
+            config: 'server/tsd.json',
+}
+    },
+            client: {
 		options: {
                     command: 'reinstall',
-                    config: 'tsd.json',
+                    config: 'app/tsd.json',
 		}
             }
 	},

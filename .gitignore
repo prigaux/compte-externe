@@ -6,7 +6,7 @@ logs/*
 !.gitkeep
 node_modules/
 bower_components/
-typings/
+typings*/
 .tscache
 tmp
 .DS_Store

@@ -1,4 +1,4 @@
-/// <reference path='../typings/tsd.d.ts' />
+/// <reference path='../typings-server/tsd.d.ts' />
 
 declare type ldapEntry = any
 declare type id = string

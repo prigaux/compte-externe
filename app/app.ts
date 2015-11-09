@@ -1,7 +1,4 @@
-/// <reference path="../typings/angularjs/angular.d.ts" />
-/// <reference path="../typings/angularjs/angular-route.d.ts" />
-/// <reference path="../typings/angularjs/angular-cookies.d.ts" />
-/// <reference path="../typings/diff/diff.d.ts" />
+/// <reference path="../typings-client/tsd.d.ts" />
 
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
