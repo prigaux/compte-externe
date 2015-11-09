@@ -30,10 +30,8 @@
     "xml2js": "^0.4.9"
   },
   "devDependencies": {
-    "jshint": "^2.8.0",
     "grunt-env": "~0.4.1",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-contrib-jshint": "~0.10.0",
     "grunt-mocha-test": "~0.12.1",
     "grunt-node-inspector": "x",
     "grunt-nodemon": "~0.3.0",

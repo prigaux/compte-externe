@@ -2,6 +2,7 @@
 
 module.exports = function(grunt) {
     var watchFiles = {
+        serverTS: ['server/**/*.ts'],
         serverJS: ['gruntfile.js', 'start-server.js', 'server/**/*.js', '!server/tests/'],
         clientTS: ['app/**/*.ts', '!app/bower_components/**/*'],
 	html_css: ['app/**/*.html', 'app/**/*.css'],
@@ -12,14 +13,13 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         watch: {
-            js: {
+            serverJS: {
                 files: watchFiles.serverJS,
-                tasks: ['jshint'],
                 options: { livereload: true }
             },
-            ts: {
+            clientTS: {
                 files: watchFiles.clientTS,
-                tasks: ['ts'],
+                tasks: ['ts:client'],
                 options: { livereload: true }
             },
             html_css: {
@@ -28,20 +28,20 @@ module.exports = function(grunt) {
             },
 	    mochaTests: {
 		files: watchFiles.mochaTests,
-		tasks: ['test:server', 'jshint'],
+		tasks: ['test:server'],
 	    },
         },
 	ts: {
-            dev: {
+            client: {
                 src: watchFiles.clientTS,
+            },
+            server: {
+                src: watchFiles.serverTS,
+                options: {
+                  module: 'commonjs'
+                },
             }
 	},	
-        jshint: {
-            all: {
-                src: watchFiles.serverJS.concat(watchFiles.mochaTests),
-                options: { jshintrc: true }
-            }
-        },
         nodemon: {
             dev: {
                 script: 'start-server.js',
@@ -101,14 +101,12 @@ module.exports = function(grunt) {
     // Making grunt default to force in order not to break the project.
     grunt.option('force', true);
 
-    grunt.registerTask('default', ['ts:dev', 'lint', 'concurrent:default']);
-    grunt.registerTask('debug', ['lint', 'concurrent:debug']);
-    grunt.registerTask('lint', ['jshint']);
-    grunt.registerTask('build', ['lint']);
+    grunt.registerTask('default', ['ts', 'concurrent:default']);
+    grunt.registerTask('debug', ['concurrent:debug']);
 
     // Test task.
     grunt.registerTask('test', ['test:server', 'test:client']);
-    grunt.registerTask('test:server', ['env:test', 'mochaTest']);
-    grunt.registerTask('test:client', ['env:test', 'karma:unit']);
+    grunt.registerTask('test:server', ['ts:server', 'env:test', 'mochaTest']);
+    grunt.registerTask('test:client', ['ts:client', 'env:test', 'karma:unit']);
     
 };
