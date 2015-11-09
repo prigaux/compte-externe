@@ -174,11 +174,13 @@ function listAuthorized(req) {
     ));
 }
 
+let _merge_at = (v : v, attrs) => <string[]> _.merge(_.at(v, attrs))
+
 function homonymes(req : express.Request, id : string) : Promise<ldapEntry[]> {
     return getRaw(req, id).then(sv => {
 	// acls are checked => removing is allowed
-	let sns = _.merge(_.at(sv.v, conf.ldap.people.sns));
-	let givenNames = _.merge(_.at(sv.v, conf.ldap.people.givenNames));
+	let sns = _merge_at(sv.v, conf.ldap.people.sns);
+	let givenNames = _merge_at(sv.v, conf.ldap.people.givenNames);
 	if (sns[0] === undefined) return [];
 	console.log("sns", sns);
 	return search_ldap.homonymes(
