@@ -1,7 +1,6 @@
-'use strict';
+import ldap = require('ldapjs');
 
-module.exports = params => {
-const ldap = require('ldapjs');
+const doIt = params => {
 const host = 'localhost';
 const db = params.DNs;
 
@@ -63,3 +62,5 @@ return new Promise((resolve, reject) => {
 });
 
 };
+
+export = doIt;

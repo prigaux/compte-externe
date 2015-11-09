@@ -1,17 +1,17 @@
 'use strict';
 
-const _ = require('lodash');
-const fs = require('fs');
-const nodemailer = require('nodemailer');
-const conf = require('./conf');
-const Mustache = require('mustache');
+import _ = require('lodash');
+import fs = require('fs');
+import nodemailer = require('nodemailer');
+import conf = require('./conf');
+import Mustache = require('mustache');
 
 const mailTransporter = nodemailer.createTransport(conf.mail.transport);
 
 // sendMail does not return a promise, it will be done in background. We simply log errors
 // params example:
 // { from: 'xxx <xxx@xxx>', to: 'foo@bar, xxx@boo', subject: 'xxx', text: '...', html: '...' }
-const send = exports.send = params => {
+export const send = params => {
     params = _.assign({ from: conf.mail.from }, params);
     if (conf.mail.intercept) {
 	params.subject = '[would be sent to ' + params.to + '] ' + params.subject;
@@ -26,7 +26,7 @@ const send = exports.send = params => {
     });
 };
 
-exports.sendWithTemplate = (templateName, params) => {
+export const sendWithTemplate = (templateName, params) => {
     console.log("sendWithTemplate");
     fs.readFile(__dirname + "/templates/mail/" + templateName, (err, data) => {
 	if (err) {

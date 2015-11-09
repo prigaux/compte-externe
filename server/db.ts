@@ -1,8 +1,8 @@
 'use strict';
 
-const _ = require('lodash');
-const mongodb = require('mongodb');
-const conf = require('./conf');
+import _ = require('lodash');
+import mongodb = require('mongodb');
+import conf = require('./conf');
 
 function renameKey(o, oldK, newK) {
     if (o && (oldK in o)) {

@@ -1,10 +1,10 @@
 'use strict';
 
-const _ = require('lodash');
-const assert = require('assert');
-const concat = require('concat-stream');
-const simpleGet = require('simple-get');
-const conf = require('./conf');
+import _ = require('lodash');
+import assert = require('assert');
+import concat = require('concat-stream');
+import simpleGet = require('simple-get');
+import conf = require('./conf');
 
 if (Promise.prototype.tap === undefined) {
     Promise.prototype.tap = function (f) {
@@ -25,7 +25,7 @@ if (Promise.prototype.then_spread === undefined) {
     };
 }
 
-exports.post = (url, body, options) => {
+export const post = (url, body, options) => {
     options = _.assign({ url: url, body: body, ca: conf.http_client_CAs }, options);
     return new Promise((resolve, reject) => {
 	simpleGet.post(options, (err, res) => {
@@ -42,7 +42,7 @@ exports.post = (url, body, options) => {
     });
 };
 
-exports.promisify_callback = f => (
+export const promisify_callback = f => (
     args => {
 	args = Array.prototype.slice.call(arguments, 0);
 	return new Promise((resolve, reject) => {

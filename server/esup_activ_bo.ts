@@ -1,11 +1,11 @@
 'use strict';
 
-const _ = require('lodash');
-const fs = require('fs');
-const xml2js = require('xml2js');
-const Mustache = require('mustache');
-const helpers = require('./helpers');
-const conf = require('./conf');
+import _ = require('lodash');
+import fs = require('fs');
+import xml2js = require('xml2js');
+import Mustache = require('mustache');
+import helpers = require('./helpers');
+import conf = require('./conf');
 
 const parseString = helpers.promisify_callback(xml2js.parseString);
 const readFile = helpers.promisify_callback(fs.readFile);
@@ -77,7 +77,7 @@ function _setPassword(uid, code, password) {
     });
 }
 
-exports.setPassword = (uid, password) => (
+export const setPassword = (uid, password) => (
     _validateAccount(uid).then(code => (
 	code && _setPassword(uid, code, password)
     ))

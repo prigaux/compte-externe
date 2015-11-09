@@ -1,7 +1,7 @@
 'use strict';
 
-const _ = require('lodash');
-const test_utils = require('./test_utils');
+import _ = require('lodash');
+import test_utils = require('./test_utils');
 
 function test_params() {
     let DNs = {};
@@ -34,10 +34,11 @@ function create_server(params) {
     });
 }
 
-module.exports = params => (
+const doIt = (params) => (
     create_server(params).then(ldap_conf => {
 	let conf = test_utils.require_fresh('../conf');
 	_.assign(conf.ldap, ldap_conf);
 	return [conf, test_utils.require_fresh('../ldap')];
     })
 );
+export = doIt;

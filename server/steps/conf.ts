@@ -1,9 +1,9 @@
 'use strict';
 
-const _ = require('lodash');
-const actions = require('./actions');
-const acl = require('./acl');
-const main_conf = require('../conf');
+import _ = require('lodash');
+import actions = require('./actions');
+import acl = require('./acl');
+import main_conf = require('../conf');
 
 function readonly(attrs) {
     return _.mapValues(attrs, options => (
@@ -29,7 +29,7 @@ const moderator_attrs = _.defaults({
     structureParrain: { readonly: true },
 }, attrs);
 
-const steps = {   
+export const steps = {
     extern: {
 	attrs: attrs,
 	next: 'homonymes',
@@ -91,7 +91,7 @@ function allowedFirstSteps(req) {
     return l;
 }
 
-const firstStep = req => {
+export const firstStep = req => {
     let wanted_step = req.params.step;
     let allowed = allowedFirstSteps(req);
     if (wanted_step) {
@@ -104,5 +104,3 @@ const firstStep = req => {
 	return allowed[0];
     }
 };
-
-module.exports = { steps: steps, firstStep: firstStep };

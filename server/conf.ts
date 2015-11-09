@@ -1,7 +1,7 @@
 'use strict';
 
-const fs = require('fs');
-const sendmailTransport = require('nodemailer-sendmail-transport');
+import fs = require('fs');
+import sendmailTransport = require('nodemailer-sendmail-transport');
 
 const conf = {
     maxLiveModerators: 100,
@@ -78,4 +78,4 @@ const conf = {
 
 };
 
-module.exports = conf;
+export = conf;

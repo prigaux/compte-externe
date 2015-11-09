@@ -1,7 +1,7 @@
 'use strict';
 
-const conf = require('../conf');
-const ldap = require('../ldap');
+import conf = require('../conf');
+import ldap = require('../ldap');
 const filters = ldap.filters;
 
 // "includes" is optional, it will be computed from "list"
@@ -11,15 +11,11 @@ function create(peopleFilter) {
     );
 }
 
-const acl = {};
-
-acl.ldapGroup = cn => (
+export const ldapGroup = cn => (
     create(filters.memberOf(cn))
 );
 
-acl.user_id = user_id => {
+export const user_id = user_id => {
     let attr = user_id.match(/@/) ? "eduPersonPrincipalName" : "uid";
     return create(filters.eq(attr, user_id));
 };
-
-module.exports = acl;

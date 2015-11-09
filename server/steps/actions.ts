@@ -1,24 +1,23 @@
 'use strict';
 
-const _ = require('lodash');
-const mail = require('../mail');
-const ldap = require('../ldap');
-const utils = require('../utils');
-const search_ldap = require('../search_ldap');
-const esup_activ_bo = require('../esup_activ_bo');
-const conf = require('../conf');
+import _ = require('lodash');
+import mail = require('../mail');
+import ldap = require('../ldap');
+import utils = require('../utils');
+import search_ldap = require('../search_ldap');
+import esup_activ_bo = require('../esup_activ_bo');
+import conf = require('../conf');
 const filters = ldap.filters;
 
-function getShibAttrs(req, _sv) {
+export function getShibAttrs(req, _sv) {
     let v = _.mapValues(conf.shibboleth.header_map, headerName => (
 	req.header(headerName)
     ));
     console.log("action getShibAttrs:", v);
     return Promise.resolve({ v: v });
 }
-exports.getShibAttrs = getShibAttrs;
 
-exports.getCasAttrs = (req, _sv) => (
+export const getCasAttrs = (req, _sv) => (
     getShibAttrs(req, _sv).then(sv => {
 	let filter = filters.eq("eduPersonPrincipalName", sv.v.eduPersonPrincipalName);
 	return ldap.searchOne(conf.ldap.base_people, filter, { attributes: ["supannAliasLogin", "displayName"] });
@@ -28,7 +27,7 @@ exports.getCasAttrs = (req, _sv) => (
     })
 );
 
-exports.chain = l_actions => (
+export const chain = l_actions => (
     (req, sv) => {
 	if (!sv || !sv.then) sv = Promise.resolve(sv);
 	l_actions.forEach(action => {
@@ -40,7 +39,7 @@ exports.chain = l_actions => (
     }
 );
 
-exports.createCompte = (req, sv) => {
+export const createCompte = (req, sv) => {
     let v = sv.v;
     console.log("action createCompte:", v);
     return utils.popen(JSON.stringify(v), 'createCompte', []).then(data => {
@@ -64,14 +63,14 @@ exports.createCompte = (req, sv) => {
     });
 };
 
-exports.genLogin = (req, sv) => (
+export const genLogin = (req, sv) => (
     search_ldap.genLogin(sv.v.sn, sv.v.givenName).then(login => {
 	let v = _.assign({ supannAliasLogin: login }, sv.v);
 	return { v: v, response: {login: login} };
     })
 );
 
-exports.sendValidationEmail = (req, sv) => {
+export const sendValidationEmail = (req, sv) => {
     let v = sv.v;
     console.log("action sendValidationEmail");
     mail.sendWithTemplate('validation.html', { conf: conf, to: v.supannMailPerso, id: sv.id, v: v });

@@ -1,16 +1,16 @@
 'use strict';
 
-const conf = require('./conf');
-const EventEmitter = require('events').EventEmitter;
+import conf = require('./conf');
+import { EventEmitter } from 'events';
 
-exports.express_auth = (req, res, next) => {
+export const express_auth = (req, res, next) => {
   let user_id = req.header('REMOTE_USER');
   let mail = req.header('mail');
   if (user_id) req.user = { id: user_id, mail: mail };
   next();
 };
 
-exports.index_html = (req, res, next) => {
+export const index_html = (req, res, next) => {
     let fs = require('fs');
     let Mustache = require('mustache');
     let client_conf = require('../app/conf');
@@ -25,16 +25,16 @@ exports.index_html = (req, res, next) => {
 };
 
 
-exports.eventBus = () => {
+export const eventBus = () => {
     let bus = new EventEmitter();
     bus.setMaxListeners(conf.maxLiveModerators);
     return bus;
 };
 
 
-const spawn = require('child_process').spawn;
+import { spawn } from 'child_process';
 
-exports.popen = (inText, cmd, params) => {
+export const popen = (inText, cmd, params) => {
     let p = spawn(cmd, params);
     p.stdin.write(inText);
     p.stdin.end();

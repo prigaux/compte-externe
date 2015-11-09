@@ -1,8 +1,8 @@
 'use strict';
 
-const _ = require('lodash');
-const assert = require('assert');
-const test_ldap = require('./test_ldap');
+import _ = require('lodash');
+import assert = require('assert');
+import test_ldap = require('./test_ldap');
 require('../helpers');
 
 describe('ldap', () => {

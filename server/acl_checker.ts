@@ -1,12 +1,12 @@
 'use strict';
 
-const _ = require('lodash');
+import _ = require('lodash');
 
-exports.isAuthorized = (moderators, user) => (
+export const isAuthorized = (moderators, user) => (
     !moderators || user && user.mail && _.includes(moderators, user.mail)
 );
 
-exports.moderators = (step, v) => {
+export const moderators = (step, v) => {
     let acls = step.acls;
     if (!acls) return Promise.resolve(undefined);
 

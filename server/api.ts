@@ -1,14 +1,14 @@
 'use strict';
 
-const _ = require('lodash');
-const express = require('express');
-const acl_checker = require('./acl_checker');
-const db = require('./db');
-const utils = require('./utils');
-const search_ldap = require('./search_ldap');
-const mail = require('./mail');
-const conf = require('./conf');
-const conf_steps = require('./steps/conf');
+import _ = require('lodash');
+import express = require('express');
+import acl_checker = require('./acl_checker');
+import db = require('./db');
+import utils = require('./utils');
+import search_ldap = require('./search_ldap');
+import mail = require('./mail');
+import conf = require('./conf');
+import conf_steps = require('./steps/conf');
 require('./helpers');
 
 const router = express.Router();
@@ -244,4 +244,4 @@ router.get('/structures', (req, res) => {
     respondJson(req, res, search_structures(req));
 });
 
-module.exports = router;
+export = router;

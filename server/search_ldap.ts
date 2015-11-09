@@ -1,15 +1,15 @@
 'use strict';
 
-const _ = require('lodash');
-const conf = require('./conf');
-const ldap = require('./ldap');
+import _ = require('lodash');
+import conf = require('./conf');
+import ldap = require('./ldap');
 const filters = ldap.filters;
 
 const maxLoginLength = 10;
 
 const remove_accents = _.deburr;
 
-exports.structures = (token, sizeLimit) => {
+export const structures = (token, sizeLimit) => {
     let words_filter = filters.fuzzy(['description', 'ou'], token);
     let many = [filters.eq("supannCodeEntite", token), 
 		filters.and([ words_filter, "(supannCodeEntite=*)"])];
@@ -100,7 +100,7 @@ function peopleLdapAttr(attr) {
     return conf.ldap.people.attrs[attr] || attr;
 }
 
-exports.homonymes = (sns, givenNames, birthDay, attrs) => {
+export const homonymes = (sns, givenNames, birthDay, attrs) => {
     attrs.push('dn');
     let ldapAttrs = _.reduce(attrs, (r, attr) => {
 	r[attr] = peopleLdapAttr(attr);
@@ -124,7 +124,7 @@ exports.homonymes = (sns, givenNames, birthDay, attrs) => {
 };
 
 // export it to allow override
-exports.existLogin = login => (
+export const existLogin = login => (
     ldap.searchOne(conf.ldap.base_people, filters.eq("uid", login), "uid").then(v => (
 	!!v
     ))
@@ -159,7 +159,7 @@ function genLogin_numeric_suffix(base, coll) {
 	// argh, no letters anymore :-(
 	return undefined;   
     } else {
-	return exports.existLogin(login).then(exist => {
+	return existLogin(login).then(exist => {
 	    if (!exist) {
 		// yeepee
 		return login;
@@ -180,7 +180,7 @@ function genLogin_accronyms_prefix(sn, givenNames, coll, prev) {
     } else if (login === prev) {
 	return undefined;
     } else {
-	return exports.existLogin(login).then(exist => {
+	return existLogin(login).then(exist => {
 	    if (!exist) {
 		// yeepee
 		return login;
@@ -192,7 +192,7 @@ function genLogin_accronyms_prefix(sn, givenNames, coll, prev) {
 }
 
 // génère un login unique
-exports.genLogin = (sn, givenName) => {
+export const genLogin = (sn, givenName) => {
     if (!sn) return Promise.resolve(undefined);
     sn = remove_accents(sn);
     sn = sn.toLowerCase().replace(/[^a-z0-9]/g, '');

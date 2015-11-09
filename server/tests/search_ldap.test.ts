@@ -1,9 +1,9 @@
 'use strict';
 
-const _ = require('lodash');
-const assert = require('assert');
-const require_fresh = require('./test_utils').require_fresh;
-const test_ldap = require('./test_ldap');
+import _ = require('lodash');
+import assert = require('assert');
+import { require_fresh } from './test_utils';
+import test_ldap = require('./test_ldap');
 
 describe('genLogin', () => {
     
