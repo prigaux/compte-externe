@@ -92,7 +92,7 @@ export const readMap = (base, attrsMap, options) => {
     return read(base, options).then(doAttrsMap(attrsMap));
 };
 
-export const searchThisAttr = (base, filter, attr, options) => {
+export const searchThisAttr = (base, filter, attr, options = {}) => {
     options = _.assign({ attributes: [attr] }, options);
     return search(base, filter, options).then(l => (
 	_.map(l, e => e[attr])

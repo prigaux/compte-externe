@@ -170,7 +170,7 @@ function genLogin_numeric_suffix(base, coll) {
     }
 }
 
-function genLogin_accronyms_prefix(sn, givenNames, coll, prev) {
+function genLogin_accronyms_prefix(sn, givenNames, coll, prev = null) {
     // composition initiales du prénom + nom avec test conflits
     if (coll >= maxLoginLength) return undefined;
     let login = accronyms_and_sn(sn, givenNames, coll);

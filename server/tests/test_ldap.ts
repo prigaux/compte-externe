@@ -34,7 +34,7 @@ function create_server(params) {
     });
 }
 
-const doIt = (params) => (
+const doIt = (params = undefined) => (
     create_server(params).then(ldap_conf => {
 	let conf = test_utils.require_fresh('../conf');
 	_.assign(conf.ldap, ldap_conf);

@@ -14,7 +14,7 @@ function renameKey(o, oldK, newK) {
     return o;
 }
 
-function _id(id) {
+function _id(id : string = undefined) {
     return new mongodb.ObjectID(id);
 }
 function fromDB(sv_) {
