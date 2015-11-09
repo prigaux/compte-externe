@@ -16,15 +16,6 @@ if (Promise.prototype.tap === undefined) {
     };
 }
 
-if (Promise.prototype.then_spread === undefined) {
-    Promise.prototype.then_spread = function(f) {
-	return this.then(v => {
-	    assert(_.isArray(v));
-	    return f.apply(null, v);
-	});
-    };
-}
-
 export const post = (url, body, options) => {
     options = _.assign({ url: url, body: body, ca: conf.http_client_CAs }, options);
     return new Promise((resolve, reject) => {

@@ -9,7 +9,7 @@ describe('ldap', () => {
     let conf, ldap;
 
     before(() => (
-	test_ldap().then_spread((_conf_, _ldap_) => {
+	test_ldap().then(([_conf_, _ldap_]) => {
 	    conf = _conf_;
 	    ldap = _ldap_;
 	})
