@@ -1,5 +1,6 @@
 'use strict';
 
+import _ = require('lodash');
 import conf = require('./conf');
 import { EventEmitter } from 'events';
 
@@ -13,12 +14,13 @@ export const express_auth = (req, res, next) => {
 export const index_html = (req, res, next) => {
     let fs = require('fs');
     let Mustache = require('mustache');
-    let client_conf = require('../app/conf');
+    let client_conf = require('../app/conf');    
+    let conf = _.merge({ livereload: process.env.NODE_ENV !== 'production' }, client_conf);
     fs.readFile(__dirname + "/../app/index.html", (err, data) => {
 	if (err) {
 	    console.log(err);
 	} else {
-	    data = Mustache.render(data.toString(), client_conf);
+	    data = Mustache.render(data.toString(), conf);
 	    res.send(data);
 	}
     });
