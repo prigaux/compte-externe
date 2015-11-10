@@ -9,19 +9,19 @@
       "commit": "421d6610bdb09e1015b71f5991d7a68d079eca21"
     },
     "express/express.d.ts": {
-      "commit": "421d6610bdb09e1015b71f5991d7a68d079eca21"
+      "commit": "8c4ec896ab619e7cb6572f82423e6e1eece70f5a"
     },
     "lodash/lodash.d.ts": {
       "commit": "421d6610bdb09e1015b71f5991d7a68d079eca21"
     },
     "node/node.d.ts": {
-      "commit": "421d6610bdb09e1015b71f5991d7a68d079eca21"
+      "commit": "8c4ec896ab619e7cb6572f82423e6e1eece70f5a"
     },
     "mime/mime.d.ts": {
-      "commit": "421d6610bdb09e1015b71f5991d7a68d079eca21"
+      "commit": "8c4ec896ab619e7cb6572f82423e6e1eece70f5a"
     },
     "serve-static/serve-static.d.ts": {
-      "commit": "421d6610bdb09e1015b71f5991d7a68d079eca21"
+      "commit": "8c4ec896ab619e7cb6572f82423e6e1eece70f5a"
     },
     "nodemailer/nodemailer.d.ts": {
       "commit": "421d6610bdb09e1015b71f5991d7a68d079eca21"
@@ -46,6 +46,12 @@
     },
     "mocha/mocha.d.ts": {
       "commit": "421d6610bdb09e1015b71f5991d7a68d079eca21"
+    },
+    "body-parser/body-parser.d.ts": {
+      "commit": "8c4ec896ab619e7cb6572f82423e6e1eece70f5a"
+    },
+    "morgan/morgan.d.ts": {
+      "commit": "8c4ec896ab619e7cb6572f82423e6e1eece70f5a"
     }
   }
 }
