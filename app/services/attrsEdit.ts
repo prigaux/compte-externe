@@ -22,9 +22,9 @@ class AttrsEditService {
 	$scope.$watch('v.homePostalAddress.postalCode', (postalCode) => {
 	    if (!postalCode) return;	    
 	    var address = $scope.v && $scope.v.homePostalAddress;
-	    if (address && !address.town) {
+	    if (address) {
 		this.helpers.frenchPostalCodeToTowns(postalCode).then((towns) => {
-		    if (!address.town && towns && towns.length === 1) {
+		    if (towns && towns.length === 1) {
 			address.town = towns[0];
 		    }
 		});
