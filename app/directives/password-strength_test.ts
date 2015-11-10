@@ -1,6 +1,6 @@
 'use strict';
 
-describe("directive password-strength", function() {
+xdescribe("directive password-strength", function() {
 
     beforeEach(angular.mock.module('myApp'));
 
