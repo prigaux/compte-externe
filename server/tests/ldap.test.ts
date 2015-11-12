@@ -27,7 +27,7 @@ describe('ldap', () => {
 	it("should handle simple equality filter", () => (
 	    ldap.search(conf.ldap.base_people, "(sn=Rigaux)", {}).then(l => {
 		assert.equal(l.length, 4);
-		assert.deepEqual(_.pluck(l, 'sn'), ["rigaux","rigaux","rigaux","rigaux"]);
+		assert.deepEqual(_.pluck(l, 'sn'), ["rigaux", "rigaux", "rigaux", "rigaux"]);
 	    })
 	));
 

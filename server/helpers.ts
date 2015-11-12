@@ -16,9 +16,9 @@ if (Promise.prototype.tap === undefined) {
     };
 }
 
-export const post = (url : string, body : string, options : simpleGet.Options) : Promise<string> => {
+export const post = (url: string, body: string, options: simpleGet.Options) : Promise<string> => {
     options = _.assign({ url: url, body: body, ca: conf.http_client_CAs }, options);
-    return new Promise((resolve : (string) => void, reject : (any) => void) => {
+    return new Promise((resolve: (string) => void, reject: (any) => void) => {
 	simpleGet.post(options, (err, res) => {
 	    if (err) return reject(err);
 	    res.setTimeout(options.timeout || 10000, null);

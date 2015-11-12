@@ -15,7 +15,7 @@ app.use(bodyParser.json({type: '*/*'})); // do not bother checking, everything w
 app.use(bodyParser.urlencoded({ extended: false }));
 app.get("/", utils.index_html);
 app.use(express.static(path.join(__dirname, '../app'),
-		      { maxAge: process.env.NODE_ENV == 'production' ? 60 * 60 * 1000 : 0 }));
+                       { maxAge: process.env.NODE_ENV === 'production' ? 60 * 60 * 1000 : 0 }));
 app.use(utils.express_auth);
 app.use('/api', api);
 

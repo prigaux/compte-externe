@@ -58,8 +58,8 @@ function homonymes_filter(sns, givenNames) {
     return filters.or(l);
 }
 
-function homonyme_scoring(birthDay : Date, known_birthDay : Date) {
-    let partialInLdap = birthDay.getUTCMonth()+1 === 1 && birthDay.getUTCDate() === 1; // we have many entries with birthDay 1945-01-01, in that case matching only year is enough
+function homonyme_scoring(birthDay: Date, known_birthDay: Date) {
+    let partialInLdap = birthDay.getUTCMonth() + 1 === 1 && birthDay.getUTCDate() === 1; // we have many entries with birthDay 1945-01-01, in that case matching only year is enough
     function same(method) {
 	return birthDay[method]() === known_birthDay[method]();
     }
@@ -100,7 +100,7 @@ function peopleLdapAttr(attr) {
     return conf.ldap.people.attrs[attr] || attr;
 }
 
-export const homonymes = (sns : string[], givenNames : string[], birthDay : Date, attrs : string[]) : Promise<ldapEntry[]> => {
+export const homonymes = (sns: string[], givenNames: string[], birthDay: Date, attrs: string[]) : Promise<ldapEntry[]> => {
     attrs.push('dn');
     let ldapAttrs = _.reduce(attrs, (r, attr) => {
 	r[attr] = peopleLdapAttr(attr);
@@ -154,7 +154,7 @@ function accronyms_and_sn(sn, givenNames, coll) {
 }
 
 function genLogin_numeric_suffix(base, coll) {
-    let login = base.substr(0, maxLoginLength - (""+coll).length) + coll;
+    let login = base.substr(0, maxLoginLength - ("" + coll).length) + coll;
     if (!checkLogin(login)) {
 	// argh, no letters anymore :-(
 	return undefined;   
@@ -164,7 +164,7 @@ function genLogin_numeric_suffix(base, coll) {
 		// yeepee
 		return login;
 	    } else {
-		return genLogin_numeric_suffix(base, coll+1);
+		return genLogin_numeric_suffix(base, coll + 1);
 	    }
 	});
     }
@@ -185,7 +185,7 @@ function genLogin_accronyms_prefix(sn, givenNames, coll, prev = null) {
 		// yeepee
 		return login;
 	    } else {
-		return genLogin_accronyms_prefix(sn, givenNames, coll+1, login);
+		return genLogin_accronyms_prefix(sn, givenNames, coll + 1, login);
 	    }
 	});
     }

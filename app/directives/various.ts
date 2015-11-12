@@ -2,7 +2,7 @@
 
 angular.module('myApp')
 
-.directive('autoFocus', function($timeout : ng.ITimeoutService) {
+.directive('autoFocus', function($timeout: ng.ITimeoutService) {
     return {
         link: {
             post: function postLink(scope, elem, attrs) {

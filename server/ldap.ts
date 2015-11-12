@@ -92,7 +92,7 @@ export const readMap = (base, attrsMap, options) => {
     return read(base, options).then(doAttrsMap(attrsMap));
 };
 
-export const searchThisAttr = (base, filter, attr : string, options = {}) => {
+export const searchThisAttr = (base, filter, attr: string, options = {}) => {
     options = _.assign({ attributes: [attr] }, options);
     return search(base, filter, options).then(l => (
 	_.map(l, e => e[attr])
@@ -174,7 +174,7 @@ export const convert = {
 	datetime: dt => {
 	    if (!dt) return dt;
 	    let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)Z$/);
-	    return m && new Date(Date.UTC(m[1], parseInt(m[2])-1, m[3], m[4], m[5], m[6]));
+	    return m && new Date(Date.UTC(m[1], parseInt(m[2]) - 1, m[3], m[4], m[5], m[6]));
 	},
 	postalAddress: s => (
 	    s && s.replace(/\$/g, "\n")

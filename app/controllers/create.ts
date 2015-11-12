@@ -9,7 +9,7 @@ angular.module('myApp')
   });
 }])
 
-.controller('CreateCtrl', function($location : ng.ILocationService, attrsEdit : AttrsEditService, $scope, $routeParams) {
+.controller('CreateCtrl', function($location: ng.ILocationService, attrsEdit: AttrsEditService, $scope, $routeParams) {
     var kind = $routeParams.kind;
     var newId = 'new/' + kind;
 

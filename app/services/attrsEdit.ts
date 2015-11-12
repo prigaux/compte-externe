@@ -1,5 +1,5 @@
 class AttrsEditService {
- constructor(private helpers : HelpersService, private ws : WsService, private conf) {
+ constructor(private helpers: HelpersService, private ws: WsService, private conf) {
  }
 
  manager($scope, id, expectedStep, nextStep) {
@@ -12,9 +12,9 @@ class AttrsEditService {
 	$scope.maxYear = new Date().getUTCFullYear();
 
 	var month2maxDay = [ undefined,
-			     31,29,31,30,31,30,
+			     31, 29, 31, 30, 31, 30,
 			     31, // july
-			     31,30,31,30,31 ];
+			     31, 30, 31, 30, 31 ];
 	$scope.$watch('v.birthDay.month', (month) => {
 	    $scope.maxDay = month2maxDay[month] || 31;
 	});

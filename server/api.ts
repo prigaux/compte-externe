@@ -73,13 +73,13 @@ function checkAcls(req, sv) {
     }
 }
 
-function first_sv(req) : Promise<sv> {
+function first_sv(req): Promise<sv> {
     let step = conf_steps.firstStep(req);
     let empty_sv = { step: step, v: {} };
     return action_pre(req, empty_sv);
 }
 
-function getRaw(req, id) : Promise<sv> {
+function getRaw(req, id): Promise<sv> {
     if (id === 'new') {
 	return first_sv(req);
     } else {
@@ -174,9 +174,9 @@ function listAuthorized(req) {
     ));
 }
 
-let _merge_at = (v : v, attrs) => <string[]> _.merge(_.at(v, attrs))
+let _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(v, attrs));
 
-function homonymes(req : express.Request, id : string) : Promise<ldapEntry[]> {
+function homonymes(req: express.Request, id: string): Promise<ldapEntry[]> {
     return getRaw(req, id).then(sv => {
 	// acls are checked => removing is allowed
 	let sns = _merge_at(sv.v, conf.ldap.people.sns);
@@ -191,14 +191,14 @@ function homonymes(req : express.Request, id : string) : Promise<ldapEntry[]> {
     });
 }
 
-function respondJson(req : express.Request, res : express.Response, p : Promise<response>) {
+function respondJson(req: express.Request, res: express.Response, p: Promise<response>) {
     let logPrefix = req.method + " " + req.path + ":";
     p.then(r => {
 	console.log(logPrefix, r);
 	res.json(r || {});
     }, err => {
 	console.error(logPrefix, err + err.stack);
-	res.json({error: ""+err, stack: err.stack});
+	res.json({error: "" + err, stack: err.stack});
     });
 }
 

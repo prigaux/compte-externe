@@ -14,13 +14,13 @@ function renameKey(o, oldK, newK) {
     return o;
 }
 
-function _id(id : string = undefined) {
+function _id(id: string = undefined) {
     return new mongodb.ObjectID(id);
 }
 function fromDB(sv_) {
     return renameKey(sv_, '_id', 'id');
 }
-function toDB(sv : sv) {
+function toDB(sv: sv) {
     let sv_ = _.omit(sv, 'id');
     sv_['_id'] = _id(sv.id);
     return sv_;

@@ -2,7 +2,7 @@
 
 angular.module('myApp')
 
-.service("forceBrowserExit", function($rootScope, $location : ng.ILocationService, $cookies : angular.cookies.ICookiesService) {
+.service("forceBrowserExit", function($rootScope, $location: ng.ILocationService, $cookies: angular.cookies.ICookiesService) {
     var cookieName = 'forceBrowserExit';
     
     return function(triggerUrl, forcedRoute) {

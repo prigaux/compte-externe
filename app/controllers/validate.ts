@@ -9,11 +9,11 @@ angular.module('myApp')
   });
 }])
 
-.controller('ValidateCtrl', function($http : ng.IHttpService, $location : ng.ILocationService, $scope, $routeParams) {
+.controller('ValidateCtrl', function($http: ng.IHttpService, $location: ng.ILocationService, $scope, $routeParams) {
     var url = '/api/comptes/' + $routeParams.id;
 
     function set(v) {
-	$http.put(url, v).success(function (resp : any) {
+	$http.put(url, v).success(function (resp: any) {
 	    if (resp && resp.success) {
 		$scope.finished = true;
 	    }
@@ -22,7 +22,7 @@ angular.module('myApp')
 	});
     }
 
-    $http.get(url).success(function (sv : SVRaw) {
+    $http.get(url).success(function (sv: SVRaw) {
 	if (sv.error) {
 	    alert(sv);
 	} else {

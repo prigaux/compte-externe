@@ -17,7 +17,7 @@ export const send = params => {
 	params.subject = '[would be sent to ' + params.to + '] ' + params.subject;
 	params.to = conf.mail.intercept;
     }
-    mailTransporter.sendMail(params, (error, info) =>{
+    mailTransporter.sendMail(params, (error, info) => {
 	if (error) {
             console.log(error);
 	} else {

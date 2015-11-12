@@ -9,7 +9,7 @@ angular.module('myApp')
   });
 }])
 
-.controller('ModerateCtrl', function($location : ng.ILocationService, attrsEdit : AttrsEditService, ws : WsService, helpers : HelpersService, $scope, $routeParams) {
+.controller('ModerateCtrl', function($location: ng.ILocationService, attrsEdit: AttrsEditService, ws: WsService, helpers: HelpersService, $scope, $routeParams) {
     var id = $routeParams.id;
 
     function nextStep (resp) {
@@ -26,8 +26,8 @@ angular.module('myApp')
     function computeComparisons(homonyme) {		
 	var r = [];
 	angular.forEach($scope.v, function (val, attr) {
-	    var val1 = ""+val;
-	    var val2 = ""+homonyme[attr];
+	    var val1 = "" + val;
+	    var val2 = "" + homonyme[attr];
 	    if (val1 !== val2) {
 		r.push({ attr: attr, cmp: helpers.formatDifferences(val1, val2) });
 	    }

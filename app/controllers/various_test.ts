@@ -5,7 +5,7 @@ describe('controller various', function() {
 
   describe('create controller', function(){
 
-    it('should create EmptyCtrl', angular.mock.inject(function($controller : ng.IControllerService) {
+    it('should create EmptyCtrl', angular.mock.inject(function($controller: ng.IControllerService) {
       var ctrl = $controller('EmptyCtrl');
       expect(ctrl).toBeDefined();
     }));

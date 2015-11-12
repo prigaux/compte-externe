@@ -26,6 +26,7 @@ angular.module('myApp')
 }])
 
 .controller('EmptyCtrl', function() {
+  // empty
 })
 
 .controller('IdCtrl', function($scope, $routeParams) {

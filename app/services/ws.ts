@@ -36,40 +36,40 @@ interface VCommon {
     supannAliasLogin?: string;
 }
 interface VRaw extends VCommon {
-    birthDay?: string,
-    homePostalAddress?: string
+    birthDay?: string;
+    homePostalAddress?: string;
 }
 interface V extends VCommon {
-    birthDay?: MyDate,
-    homePostalAddress?: HomePostalAddress,
-    structureParrainS: { key: string, name: string, description: string }
+    birthDay?: MyDate;
+    homePostalAddress?: HomePostalAddress;
+    structureParrainS: { key: string, name: string, description: string };
 }
 interface SVRaw {
-     v : VRaw;
+     v: VRaw;
      error? : string;
 }
 
 class WsService {
- constructor(private $http : ng.IHttpService, private $q : ng.IQService) {
+ constructor(private $http: ng.IHttpService, private $q: ng.IQService) {
  }
 
   structures_search(token, maxRows) {
 	return this.$http.get('/api/structures', {params: {token: token, maxRows: maxRows}}).then((resp) => resp.data);
     }
 
-    _fromJSONDate(date : string) {
+    _fromJSONDate(date: string) {
 	var d = new Date(date);
   return d && new MyDate(d.getUTCFullYear(), 1 + d.getUTCMonth(), d.getUTCDate());
     }
-    _fromLDAPDate(date : string) {
+    _fromLDAPDate(date: string) {
 	var m = date.match(/^([0-9]{4})([0-9]{2})([0-9]{2})[0-9]{6}Z?$/);
   return m && new MyDate(parseInt(m[1]), parseInt(m[2]), parseInt(m[3]));
     }
-    _toJSONDate(date : MyDate) {
+    _toJSONDate(date: MyDate) {
         return date.toDate();
     }
 
-    _fromHomePostalAddress(addr) : HomePostalAddress {
+    _fromHomePostalAddress(addr): HomePostalAddress {
 	var m = addr.match(/(.*)\$(.*)\$(.*)/);
   if (!m) return new HomePostalAddress(addr);
 	var m1 = m[1].match(/(.*)\$(.*)/);
@@ -84,7 +84,7 @@ class WsService {
         return addr.toString();
     }
     
-    fromWs(v : VRaw) : V {
+    fromWs(v: VRaw): V {
   var v_: V = <any>angular.copy(v);
 	//v.birthDay = "19751002000000Z"; //"1975-10-02";
 	if (v.birthDay) {
@@ -106,7 +106,7 @@ class WsService {
 	return v_;
     }
 
-    toWs(v : V) : VRaw {
+    toWs(v: V): VRaw {
         var v_: VRaw = <any>angular.copy(v);
         if (v.birthDay) {
             v_.birthDay = v.birthDay.toDate().toString();
@@ -125,7 +125,7 @@ class WsService {
 	return this.$q.reject(err);
     }
 
-    getInScope($scope, id  : string, expectedStep : string) {
+    getInScope($scope, id: string, expectedStep: string) {
 	var url = '/api/comptes/' + id;
 	return this.$http.get(url).then((resp) => {
 	    var sv = <any>resp.data;
@@ -163,7 +163,7 @@ class WsService {
 	, this._handleErr);
     }
 
-    set(id : string, v : V) {
+    set(id: string, v: V) {
 	var url = '/api/comptes/' + id;
 	var v_ = this.toWs(v);
 	return this.$http.put(url, v_).then(
@@ -171,10 +171,10 @@ class WsService {
 		this._handleErr);
     }
 
-    delete(id : string) {
+    delete(id: string) {
 	var url = '/api/comptes/' + id;
 	return this.$http.delete(url).then(
-		(resp) =>resp.data,
+		(resp) => resp.data,
 		this._handleErr);
     }
 
