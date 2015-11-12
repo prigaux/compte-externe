@@ -10,7 +10,7 @@ angular.module('myApp')
         },
         link: function(scope, elm, attrs, ctrl) {
             ctrl['$validators'].sameAs = function(modelValue) {
-                return modelValue == scope['otherModelValue'];
+                return modelValue === scope['otherModelValue'];
             };
             scope.$watch("otherModelValue", function() {
                 ctrl['$validate']();
