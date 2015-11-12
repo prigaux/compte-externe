@@ -1,7 +1,6 @@
 'use strict';
 
 import _ = require('lodash');
-import assert = require('assert');
 import concat = require('concat-stream');
 import simpleGet = require('simple-get');
 import conf = require('./conf');
