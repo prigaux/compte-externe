@@ -4,25 +4,25 @@ angular.module('myApp')
 
 .filter('formatIdpId', function () {
     return function (s) {
-	s = s.replace(/^https?:\/\//, '');
-	s = s.replace(/.*\.(.*\..*)/, '$1');
-	return s;
+        s = s.replace(/^https?:\/\//, '');
+        s = s.replace(/.*\.(.*\..*)/, '$1');
+        return s;
     };
 })
 
 .filter('groupBy', function ($parse) {
 
     function memoize(func, hasher) {
-	var memo = {};
-	return function() {
-	    var key = hasher.apply(this, arguments);
-	    return key in memo ? memo[key] : (memo[key] = func.apply(this, arguments));
-	};
+        var memo = {};
+        return function() {
+            var key = hasher.apply(this, arguments);
+            return key in memo ? memo[key] : (memo[key] = func.apply(this, arguments));
+        };
     }
     
     function groupBy(items, getter) {
         var result = {};
-	console.log("groupBy");
+        console.log("groupBy");
         items.forEach(function (elm) {
             var prop = getter(elm);    
             if (!result[prop]) result[prop] = [];
@@ -32,7 +32,7 @@ angular.module('myApp')
     }
 
     return memoize(function(items, field) {
-	if (!items) return undefined;
+        if (!items) return undefined;
         var getter = $parse(field);
         return groupBy(items, function(item) {
             return getter(item);

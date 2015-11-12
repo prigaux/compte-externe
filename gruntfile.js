@@ -5,8 +5,8 @@ module.exports = function(grunt) {
         serverTS: ['server/**/*.ts'],
         serverJS: ['gruntfile.js', 'start-server.js', 'server/**/*.js', '!server/tests/'],
         clientTS: ['app/**/*.ts', '!app/bower_components/**/*'],
-	html_css: ['app/**/*.html', 'app/**/*.css'],
-	mochaTests: ['server/tests/**/*.js'],
+        html_css: ['app/**/*.html', 'app/**/*.css'],
+        mochaTests: ['server/tests/**/*.js'],
     };
 
     // Project Configuration
@@ -26,12 +26,12 @@ module.exports = function(grunt) {
                 files: watchFiles.html_css,
                 options: { livereload: true }
             },
-	    mochaTests: {
-		files: watchFiles.mochaTests,
-		tasks: ['test:server'],
-	    },
+            mochaTests: {
+                files: watchFiles.mochaTests,
+                tasks: ['test:server'],
+            },
         },
-	ts: {
+        ts: {
             client: {
                 src: watchFiles.clientTS,
             },
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
                   module: 'commonjs'
                 },
             }
-	},	
+        },      
         nodemon: {
             dev: {
                 script: 'start-server.js',
@@ -65,15 +65,15 @@ module.exports = function(grunt) {
                 NODE_ENV: 'test'
             }
         },
-	mochaTest: {
-	    src: watchFiles.mochaTests,
-	},
-	karma: {
-	    unit: {
-		configFile: 'karma.conf.js',
-	    },
-	},
-	tsd: {
+        mochaTest: {
+            src: watchFiles.mochaTests,
+        },
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js',
+            },
+        },
+        tsd: {
     server: {
 options: {
             command: 'reinstall',
@@ -81,26 +81,26 @@ options: {
 }
     },
             client: {
-		options: {
+                options: {
                     command: 'reinstall',
                     config: 'app/tsd.json',
-		}
+                }
             }
-	},
-	'node-inspector': {
-	    custom: {
-		options: {
-		    'web-port': 8081,
-		    'web-host': 'php-devel',
-		    'debug-port': 5858,
-		    'save-live-edit': true,
-		    'no-preload': true,
-		    'stack-trace-limit': 50,
-		    'hidden': []
-		}
-	    }
-	},
-	
+        },
+        'node-inspector': {
+            custom: {
+                options: {
+                    'web-port': 8081,
+                    'web-host': 'php-devel',
+                    'debug-port': 5858,
+                    'save-live-edit': true,
+                    'no-preload': true,
+                    'stack-trace-limit': 50,
+                    'hidden': []
+                }
+            }
+        },
+        
     });
 
     require('load-grunt-tasks')(grunt);

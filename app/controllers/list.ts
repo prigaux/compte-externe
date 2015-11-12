@@ -12,9 +12,9 @@ angular.module('myApp')
 .controller('ModerateListCtrl', function(ws: WsService, $scope) {
 
     function listRec(params) {
-	ws.listInScope($scope, params).then(function () {
-	    listRec({ poll: true });
-	});
+        ws.listInScope($scope, params).then(function () {
+            listRec({ poll: true });
+        });
     }
     listRec({});
 });

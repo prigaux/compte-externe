@@ -7,8 +7,8 @@ angular.module('myApp')
         link: {
             post: function postLink(scope, elem, attrs) {
                 $timeout(function () {
-		    elem[0].focus();
-		});
+                    elem[0].focus();
+                });
             }
         }
     };

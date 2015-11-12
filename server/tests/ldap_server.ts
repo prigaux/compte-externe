@@ -18,17 +18,17 @@ function authorize(req, res, next) {
 function search(dn, filter, scope) {
     let dns;
     if (scope === 'base') {
-	dns = [dn.toString()];
+        dns = [dn.toString()];
     } else {
-	dns = Object.keys(db).filter(k => (
-	    dn.equals(k) || dn.parentOf(k)
-	));
+        dns = Object.keys(db).filter(k => (
+            dn.equals(k) || dn.parentOf(k)
+        ));
     }
     // force case insensitive on all attrs
     // (workaround bug "Filters match on attribute values only case-sensitively #156")
     filter = ldap.parseFilter(filter.toString().toLowerCase());
     return dns.filter(dn => (
-	filter.matches(db[dn])
+        filter.matches(db[dn])
     ));
 }
 
@@ -38,7 +38,7 @@ server.search(params.base, (req, res, next) => {
   if (db[dn]) {
       let dns = search(req.dn, req.filter, req.scope);
       dns.forEach(dn => {
-	  res.send({ dn: dn, attributes: db[dn] });
+          res.send({ dn: dn, attributes: db[dn] });
       });
       res.end();
       return next();
@@ -53,11 +53,11 @@ server.bind(params.base, authorize);
 
 return new Promise((resolve, reject) => {    
     server.on('error', err => {
-	reject(err);
-    });	
+        reject(err);
+    }); 
     server.listen(params.port || 0, host, () => {
-	//console.log('LDAP server up at: %s', server.url);
-	resolve(server);
+        //console.log('LDAP server up at: %s', server.url);
+        resolve(server);
     });
 });
 

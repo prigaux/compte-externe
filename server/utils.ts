@@ -17,12 +17,12 @@ export const index_html = (req, res, next) => {
     let client_conf = require('../app/conf');    
     let conf = _.merge({ livereload: process.env.NODE_ENV !== 'production' }, client_conf);
     fs.readFile(__dirname + "/../app/index.html", (err, data) => {
-	if (err) {
-	    console.log(err);
-	} else {
-	    data = Mustache.render(data.toString(), conf);
-	    res.send(data);
-	}
+        if (err) {
+            console.log(err);
+        } else {
+            data = Mustache.render(data.toString(), conf);
+            res.send(data);
+        }
     });
 };
 
@@ -42,16 +42,16 @@ export const popen = (inText, cmd, params) => {
     p.stdin.end();
 
     return new Promise((resolve, reject) => {
-	let output = '';
-	let get_ouput = data => { output += data; };
-	
-	p.stdout.on('data', get_ouput);
-	p.stderr.on('data', get_ouput);
-	p.on('error', event => {
-	    reject(event);
-	});
-	p.on('close', code => {
-	    if (code === 0) resolve(output); else reject(output);
-	});
+        let output = '';
+        let get_ouput = data => { output += data; };
+        
+        p.stdout.on('data', get_ouput);
+        p.stderr.on('data', get_ouput);
+        p.on('error', event => {
+            reject(event);
+        });
+        p.on('close', code => {
+            if (code === 0) resolve(output); else reject(output);
+        });
     });
 };

@@ -25,7 +25,7 @@ function action_pre(req, sv) {
 }
 function action_post(req, sv) {
     return action(req, sv, 'action_post').tap(sv => {
-	mayNotifyModerators(req, sv, 'accepted');
+        mayNotifyModerators(req, sv, 'accepted');
     });
 }
 function action(req, sv, action_name) {
@@ -33,8 +33,8 @@ function action(req, sv, action_name) {
     if (!f) return Promise.resolve(sv); // nothing to do
     //console.log("calling " + action_name + " for step " + sv.step);
     return f(req, sv).then(vr => {
-	//console.log("action returned", vr);
-	return _.defaults(vr, sv);
+        //console.log("action returned", vr);
+        return _.defaults(vr, sv);
     });
 }
 
@@ -44,7 +44,7 @@ function mergeAttrs(attrs, prev, v) {
 
 function removeHiddenAttrs(attrs, v) {
     return _.omit(v, (val, key) => ( 
-	!attrs[key] || attrs[key].hidden
+        !attrs[key] || attrs[key].hidden
     ));
 }
 
@@ -59,17 +59,17 @@ function mayNotifyModerators(req, sv, notifyKind) {
     if (!notify) return;
     let mails = sv.moderators;
     if (mails.length) {
-	let params = _.merge({ to: mails.join(', '), moderator: req.user, conf: conf }, sv);
-	mail.sendWithTemplate(notify[notifyKind], params);
+        let params = _.merge({ to: mails.join(', '), moderator: req.user, conf: conf }, sv);
+        mail.sendWithTemplate(notify[notifyKind], params);
     }
 }
 
 function checkAcls(req, sv) {
     let ok = acl_checker.isAuthorized(sv.moderators, req.user);
     if (ok) {
-	console.log("authorizing", req.user, "for step", sv.step);
+        console.log("authorizing", req.user, "for step", sv.step);
     } else {
-	throw "unauthorised";
+        throw "unauthorised";
     }
 }
 
@@ -81,28 +81,28 @@ function first_sv(req): Promise<sv> {
 
 function getRaw(req, id): Promise<sv> {
     if (id === 'new') {
-	return first_sv(req);
+        return first_sv(req);
     } else {
-	return db.get(id).tap(sv => {
-	    if (!sv) throw "invalid id " + id;
-	    if (!sv.step) throw "internal error: missing step for id " + id;
-	    checkAcls(req, sv);
-	});
+        return db.get(id).tap(sv => {
+            if (!sv) throw "invalid id " + id;
+            if (!sv.step) throw "internal error: missing step for id " + id;
+            checkAcls(req, sv);
+        });
     }
 }
 
 function get(req, id) {
     return getRaw(req, id).then(sv_removeHiddenAttrs).then(sv => {
-	sv.attrs = _.omit(step(sv).attrs, val => (
-	    val.hidden
-	));
-	return sv;
+        sv.attrs = _.omit(step(sv).attrs, val => (
+            val.hidden
+        ));
+        return sv;
     });
 }
 
 function set(req, id, v) {
     return getRaw(req, id).then(sv => (
-	setRaw(req, sv, v)
+        setRaw(req, sv, v)
     ));
 }
 
@@ -113,64 +113,64 @@ function set(req, id, v) {
 // 5. save to DB or remove from DB if one action returned null
 function setRaw(req, sv, v) {
     if (!sv.id) {
-	// do not really on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
-	sv.id = db.new_id();
+        // do not really on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
+        sv.id = db.new_id();
     }
     sv.v = mergeAttrs(step(sv).attrs, sv.v, v);
     return action_post(req, sv).then(svr => {
-	svr.step = step(svr).next;
-	if (svr.step) {
-	    return action_pre(req, svr);
-	} else {
-	    return svr;
-	}
+        svr.step = step(svr).next;
+        if (svr.step) {
+            return action_pre(req, svr);
+        } else {
+            return svr;
+        }
     }).then(svr => {
-	if (svr.step) {
-	    return acl_checker.moderators(step(svr), svr.v).then(mails => {
-		svr.moderators = mails;
-		return svr;
-	    });
-	} else {
-	    return svr;
-	}
+        if (svr.step) {
+            return acl_checker.moderators(step(svr), svr.v).then(mails => {
+                svr.moderators = mails;
+                return svr;
+            });
+        } else {
+            return svr;
+        }
     }).tap(svr => {
-	let sv = <sv> _.omit(svr, 'response');
-	if (sv.step) {
-	    return saveRaw(req, sv);
-	} else {
-	    return removeRaw(sv.id);
-	}
+        let sv = <sv> _.omit(svr, 'response');
+        if (sv.step) {
+            return saveRaw(req, sv);
+        } else {
+            return removeRaw(sv.id);
+        }
     }).then(svr => {
-	let r = <response> _.assign({success: true}, svr.response);
-	if (svr.step) r.step = svr.step;
-	return r;
+        let r = <response> _.assign({success: true}, svr.response);
+        if (svr.step) r.step = svr.step;
+        return r;
     });
 }
 
 function saveRaw(req, sv) {
     return db.save(sv).then(sv => {
-	bus.emit('changed');
-	mayNotifyModerators(req, sv, 'added');
+        bus.emit('changed');
+        mayNotifyModerators(req, sv, 'added');
     });
 }
 
 function removeRaw(id) {
     return db.remove(id).then(() => {
-	bus.emit('changed');
+        bus.emit('changed');
     });
 }
 
 function remove(req, id) {
     return getRaw(req, id).then(sv => {
-	// acls are checked => removing is allowed
-	mayNotifyModerators(req, sv, 'rejected');
-	return removeRaw(sv.id);
+        // acls are checked => removing is allowed
+        mayNotifyModerators(req, sv, 'rejected');
+        return removeRaw(sv.id);
     });
 }
 
 function listAuthorized(req) {
     return db.listByModerator(req.user).then(svs => (
-	_.map(svs, sv_removeHiddenAttrs)
+        _.map(svs, sv_removeHiddenAttrs)
     ));
 }
 
@@ -178,37 +178,37 @@ let _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(v, attrs));
 
 function homonymes(req: express.Request, id: string): Promise<ldapEntry[]> {
     return getRaw(req, id).then(sv => {
-	// acls are checked => removing is allowed
-	let sns = _merge_at(sv.v, conf.ldap.people.sns);
-	let givenNames = _merge_at(sv.v, conf.ldap.people.givenNames);
-	if (sns[0] === undefined) return [];
-	console.log("sns", sns);
-	return search_ldap.homonymes(
-	    sns,
-	    givenNames,
-	    new Date(sv.v.birthDay),
-	    _.keys(step(sv).attrs));
+        // acls are checked => removing is allowed
+        let sns = _merge_at(sv.v, conf.ldap.people.sns);
+        let givenNames = _merge_at(sv.v, conf.ldap.people.givenNames);
+        if (sns[0] === undefined) return [];
+        console.log("sns", sns);
+        return search_ldap.homonymes(
+            sns,
+            givenNames,
+            new Date(sv.v.birthDay),
+            _.keys(step(sv).attrs));
     });
 }
 
 function respondJson(req: express.Request, res: express.Response, p: Promise<response>) {
     let logPrefix = req.method + " " + req.path + ":";
     p.then(r => {
-	console.log(logPrefix, r);
-	res.json(r || {});
+        console.log(logPrefix, r);
+        res.json(r || {});
     }, err => {
-	console.error(logPrefix, err + err.stack);
-	res.json({error: "" + err, stack: err.stack});
+        console.error(logPrefix, err + err.stack);
+        res.json({error: "" + err, stack: err.stack});
     });
 }
 
 router.get('/comptes', (req, res) => {
     if (req.query.poll) {
-	bus.once('changed', () => {
-	    respondJson(req, res, listAuthorized(req));
-	});
+        bus.once('changed', () => {
+            respondJson(req, res, listAuthorized(req));
+        });
     } else {
-	respondJson(req, res, listAuthorized(req));
+        respondJson(req, res, listAuthorized(req));
     }
 });
 

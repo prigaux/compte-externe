@@ -4,8 +4,8 @@ var files = assets.lib.js.concat(assets.js, assets.tests).map(function (f) { ret
 
 module.exports = function(config){
     config.set({
-	files: files,
-	frameworks: ['jasmine'],
-	browsers : ['PhantomJS'],
+        files: files,
+        frameworks: ['jasmine'],
+        browsers : ['PhantomJS'],
     });
 };

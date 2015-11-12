@@ -32,8 +32,8 @@ declare module 'simple-get' {
     import { ClientRequest, IncomingMessage } from 'http';
 
     interface Options {
-	headers? : {};
-	timeout? : number;
+        headers? : {};
+        timeout? : number;
     }
 
     export function post(opts: Options, callback: (err: any, result: IncomingMessage) => void): ClientRequest
@@ -41,7 +41,7 @@ declare module 'simple-get' {
 
 declare module 'ldapjs' {
     export interface Client {
-     	bind: any; 
+        bind: any; 
       search: any;
     }
     

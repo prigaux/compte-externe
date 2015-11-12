@@ -7,7 +7,7 @@ const filters = ldap.filters;
 // "includes" is optional, it will be computed from "list"
 function create(peopleFilter: string): acl_search {
     return (_v, attr: string) => (
-	ldap.searchThisAttr(conf.ldap.base_people, peopleFilter, attr)
+        ldap.searchThisAttr(conf.ldap.base_people, peopleFilter, attr)
     );
 }
 

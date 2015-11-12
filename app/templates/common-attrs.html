@@ -21,17 +21,17 @@
   <div my-bootstrap-form-group="day" multi="true" label="{{label.birthDay}}">
     <div class="col-xs-2" my-has-error="day">
       <div my-error-msgs="day">
-	<input name="day" ng-model="v.birthDay.day" type="number" min="1" max="{{maxDay}}" placeholder="Jour" required form-control>
+        <input name="day" ng-model="v.birthDay.day" type="number" min="1" max="{{maxDay}}" placeholder="Jour" required form-control>
       </div>
     </div>
     <div class="col-xs-2" my-has-error="month">
       <div my-error-msgs="month">
-	<input name="month" ng-model="v.birthDay.month" type="number" min="1" max="12" placeholder="Mois" required form-control>
+        <input name="month" ng-model="v.birthDay.month" type="number" min="1" max="12" placeholder="Mois" required form-control>
       </div>
     </div>
     <div class="col-xs-5" my-has-error="year">
       <div my-error-msgs="year">
-	<input name="year" ng-model="v.birthDay.year" type="number" min="1900" max="{{maxYear}}" placeholder="Année" required  form-control>
+        <input name="year" ng-model="v.birthDay.year" type="number" min="1900" max="{{maxYear}}" placeholder="Année" required  form-control>
       </div>
     </div>
   </div>
@@ -47,19 +47,19 @@
   <div my-bootstrap-form-group="postalCode" multi="true">
     <div class="col-md-offset-3 col-xs-2" my-has-error="postalCode">
       <div my-error-msgs="postalCode">
-	<input name="postalCode" ng-model="v.homePostalAddress.postalCode" minlength="5" maxlength="5" french-postal-code placeholder="Code postal" required form-control>
+        <input name="postalCode" ng-model="v.homePostalAddress.postalCode" minlength="5" maxlength="5" french-postal-code placeholder="Code postal" required form-control>
       </div>
     </div>
     <div class="col-xs-7" my-has-error="town">
       <div my-error-msgs="town">
-	<input name="town" ng-model="v.homePostalAddress.town" type="text" placeholder="Ville"
-	       typeahead="e as e for e in frenchPostalCodeToTowns(v.homePostalAddress.postalCode, $viewValue)"
-	       required form-control>
+        <input name="town" ng-model="v.homePostalAddress.town" type="text" placeholder="Ville"
+               typeahead="e as e for e in frenchPostalCodeToTowns(v.homePostalAddress.postalCode, $viewValue)"
+               required form-control>
       </div>
     </div>
     <!-- -div class="col-xs-3" my-has-error="country">
       <div my-error-msgs="country">
-	<input name="country" ng-model="v.homePostalAddress.country" placeholder="Pays" required form-control>
+        <input name="country" ng-model="v.homePostalAddress.country" placeholder="Pays" required form-control>
       </div>
     </div -->
   </div>

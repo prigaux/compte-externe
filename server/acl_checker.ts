@@ -11,6 +11,6 @@ export const moderators = (step: step, v: v) => {
     if (!acls) return Promise.resolve(undefined);
 
     return Promise.all(_.map(acls, acl => (
-	acl(v, "mail")
+        acl(v, "mail")
     ))).then(_.flatten);
 };

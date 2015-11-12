@@ -1,17 +1,17 @@
 'use strict';
 
 (function () {
-		                                
+                                                
 var colors = [ "red", "#ffd801", "orange", "#3bce08", "#3bce08" ];
 var msgs = [ "Très faible", "Faible", "Moyen", "Fort", "Très fort" ];
 
 
 function toCategories(passwd) {
     return passwd
-	.replace(/[a-z]/g, 'a')
-	.replace(/[A-Z]/g, 'A')
-	.replace(/[0-9]/g, '0')
-	.replace(/[!,@#$%^&*?_~]/g, '!');
+        .replace(/[a-z]/g, 'a')
+        .replace(/[A-Z]/g, 'A')
+        .replace(/[0-9]/g, '0')
+        .replace(/[!,@#$%^&*?_~]/g, '!');
 }
 
 var rules = [
@@ -28,29 +28,29 @@ var rules = [
 
 function strengthlevel(score) {
     return score < 12 ? 0 :
-	score < 20 ? 1 :
-	score < 27 ? 2 :
-	score < 45 ? 3 : 4;
+        score < 20 ? 1 :
+        score < 27 ? 2 :
+        score < 45 ? 3 : 4;
 }
-		
+                
 function computeScore(passwd) {
     var score = 0;
     var logs = [];
 
     var lengthScore =
-	passwd.length < 5 ? 3 :
-	passwd.length < 8 ? 6 :
-	passwd.length < 16 ? 12 : 18;
+        passwd.length < 5 ? 3 :
+        passwd.length < 8 ? 6 :
+        passwd.length < 16 ? 12 : 18;
     score += lengthScore;
     logs.push(lengthScore + " points for password length " + passwd.length);
 
     var simplified = toCategories(passwd);
 
     rules.forEach(function (rule) {
-	if (simplified.match(rule.regexp)) {
-	    score += rule.points;
-	    logs.push(rule.points + " points for " + rule.desc);
-	}
+        if (simplified.match(rule.regexp)) {
+            score += rule.points;
+            logs.push(rule.points + " points for " + rule.desc);
+        }
     });
 
     logs.push("total for " + passwd + ": " + score + " points");
@@ -64,19 +64,19 @@ angular.module('myApp')
 
 .directive("passwordStrength", function() {
     return {
-	restrict: 'A',
-	scope: { passwd: '=passwordStrength' },
-	controller: function ($scope) {
-	    $scope.$watch('passwd', function (passwd) {
-		var score = computeScore(passwd || '');
-		var level = strengthlevel(score);
-		$scope.width = (score * 5) + "px";
-		$scope.color = colors[level];
-		$scope.msg = msgs[level];
-	    });
-	},
-	template: '<span ng-style="{color: color}">{{msg}}</span>' +
-	    '<div style="font-size: 1px; height: 3px; border: 1px solid white" ng-style="{width: width, background: color}"></div>',
+        restrict: 'A',
+        scope: { passwd: '=passwordStrength' },
+        controller: function ($scope) {
+            $scope.$watch('passwd', function (passwd) {
+                var score = computeScore(passwd || '');
+                var level = strengthlevel(score);
+                $scope.width = (score * 5) + "px";
+                $scope.color = colors[level];
+                $scope.msg = msgs[level];
+            });
+        },
+        template: '<span ng-style="{color: color}">{{msg}}</span>' +
+            '<div style="font-size: 1px; height: 3px; border: 1px solid white" ng-style="{width: width, background: color}"></div>',
 
     };
 });

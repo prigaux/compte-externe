@@ -1,6 +1,6 @@
 function padLeft(n: string, width: number) {
-	n = n + '';
-	return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+        n = n + '';
+        return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
 }
 
 class MyDate {
@@ -54,27 +54,27 @@ class WsService {
  }
 
   structures_search(token, maxRows) {
-	return this.$http.get('/api/structures', {params: {token: token, maxRows: maxRows}}).then((resp) => resp.data);
+        return this.$http.get('/api/structures', {params: {token: token, maxRows: maxRows}}).then((resp) => resp.data);
     }
 
     _fromJSONDate(date: string) {
-	var d = new Date(date);
-  return d && new MyDate(d.getUTCFullYear(), 1 + d.getUTCMonth(), d.getUTCDate());
+        var d = new Date(date);
+        return d && new MyDate(d.getUTCFullYear(), 1 + d.getUTCMonth(), d.getUTCDate());
     }
     _fromLDAPDate(date: string) {
-	var m = date.match(/^([0-9]{4})([0-9]{2})([0-9]{2})[0-9]{6}Z?$/);
-  return m && new MyDate(parseInt(m[1]), parseInt(m[2]), parseInt(m[3]));
+        var m = date.match(/^([0-9]{4})([0-9]{2})([0-9]{2})[0-9]{6}Z?$/);
+        return m && new MyDate(parseInt(m[1]), parseInt(m[2]), parseInt(m[3]));
     }
     _toJSONDate(date: MyDate) {
         return date.toDate();
     }
 
     _fromHomePostalAddress(addr): HomePostalAddress {
-	var m = addr.match(/(.*)\$(.*)\$(.*)/);
-  if (!m) return new HomePostalAddress(addr);
-	var m1 = m[1].match(/(.*)\$(.*)/);
-	var m2 = m[2].match(/(\d+) (.*)/);
-  return new HomePostalAddressPrecise(
+        var m = addr.match(/(.*)\$(.*)\$(.*)/);
+        if (!m) return new HomePostalAddress(addr);
+        var m1 = m[1].match(/(.*)\$(.*)/);
+        var m2 = m[2].match(/(\d+) (.*)/);
+        return new HomePostalAddressPrecise(
             m1 ? m1[1] : m[1],
             m1 ? m1[2] : '',
             m2[1], m2[2],
@@ -85,25 +85,25 @@ class WsService {
     }
     
     fromWs(v: VRaw): V {
-  var v_: V = <any>angular.copy(v);
-	//v.birthDay = "19751002000000Z"; //"1975-10-02";
-	if (v.birthDay) {
+        var v_: V = <any>angular.copy(v);
+        //v.birthDay = "19751002000000Z"; //"1975-10-02";
+        if (v.birthDay) {
             v_.birthDay = this._fromLDAPDate(v.birthDay) || this._fromJSONDate(v.birthDay);
-	}
-  if (!v_.birthDay) {
+        }
+        if (!v_.birthDay) {
             v_.birthDay = new MyDate(undefined, undefined, undefined);
-	}
-	if (v.homePostalAddress) {
+        }
+        if (v.homePostalAddress) {
             v_.homePostalAddress = this._fromHomePostalAddress(v.homePostalAddress);
-	} else {
+        } else {
             v_.homePostalAddress = new HomePostalAddress('');
-	}
-	if (v.structureParrain) {
-	    this.structures_search(v.structureParrain, 1).then((resp) => {
-		v_.structureParrainS = resp[0];
-	    });
-	}
-	return v_;
+        }
+        if (v.structureParrain) {
+            this.structures_search(v.structureParrain, 1).then((resp) => {
+                v_.structureParrainS = resp[0];
+            });
+        }
+        return v_;
     }
 
     toWs(v: V): VRaw {
@@ -111,71 +111,71 @@ class WsService {
         if (v.birthDay) {
             v_.birthDay = v.birthDay.toDate().toString();
         }
-				v_.homePostalAddress = this._toHomePostalAddress(v.homePostalAddress);
-				if (v.structureParrainS) {
-	    		v_.structureParrain = v.structureParrainS.key;
-				}
-				return v_;
+        v_.homePostalAddress = this._toHomePostalAddress(v.homePostalAddress);
+        if (v.structureParrainS) {
+            v_.structureParrain = v.structureParrainS.key;
+        }
+        return v_;
     }
     
     _handleErr(resp) {
-	var err = resp.data;
-	console.error(err);
-	alert(err);
-	return this.$q.reject(err);
+        var err = resp.data;
+        console.error(err);
+        alert(err);
+        return this.$q.reject(err);
     }
 
     getInScope($scope, id: string, expectedStep: string) {
-	var url = '/api/comptes/' + id;
-	return this.$http.get(url).then((resp) => {
-	    var sv = <any>resp.data;
-	    if (sv.error) {
-		console.error("error accessing ", url, ":", sv.error, sv.stack);
-		alert(sv.error);
-	    } else {
-		if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
-		if (sv.v) sv.v = this.fromWs(sv.v);
-		sv.modifyTimestamp = this._fromJSONDate(sv.modifyTimestamp);
-		angular.extend($scope, sv);
-	    }
-	}, this._handleErr);
+        var url = '/api/comptes/' + id;
+        return this.$http.get(url).then((resp) => {
+            var sv = <any>resp.data;
+            if (sv.error) {
+                console.error("error accessing ", url, ":", sv.error, sv.stack);
+                alert(sv.error);
+            } else {
+                if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
+                if (sv.v) sv.v = this.fromWs(sv.v);
+                sv.modifyTimestamp = this._fromJSONDate(sv.modifyTimestamp);
+                angular.extend($scope, sv);
+            }
+        }, this._handleErr);
     }
 
     listInScope($scope, params) {
-	return this.$http.get('/api/comptes', { params: params }).then((resp) => {
-	    if ($scope.$$destroyed) return;
-	    var svs = <any>resp.data;
-	    if (svs.error) {
-		$scope.err = svs;
-	    } else {
-		$scope.svs = svs;
-	    }
-	}, (resp) => {
-	    var err = resp.data;
-	    if (!$scope.$$destroyed) alert(err);
-	    return this.$q.reject(err);
-	});
+        return this.$http.get('/api/comptes', { params: params }).then((resp) => {
+            if ($scope.$$destroyed) return;
+            var svs = <any>resp.data;
+            if (svs.error) {
+                $scope.err = svs;
+            } else {
+                $scope.svs = svs;
+            }
+        }, (resp) => {
+            var err = resp.data;
+            if (!$scope.$$destroyed) alert(err);
+            return this.$q.reject(err);
+        });
     }
 
     homonymes(id) {
-	return this.$http.get('/api/homonymes/' + id).then((resp) => 
-	    (<any>resp.data).map(this.fromWs)
-	, this._handleErr);
+        return this.$http.get('/api/homonymes/' + id).then((resp) => 
+            (<any>resp.data).map(this.fromWs)
+        , this._handleErr);
     }
 
     set(id: string, v: V) {
-	var url = '/api/comptes/' + id;
-	var v_ = this.toWs(v);
-	return this.$http.put(url, v_).then(
-		(resp) => resp.data, 
-		this._handleErr);
+        var url = '/api/comptes/' + id;
+        var v_ = this.toWs(v);
+        return this.$http.put(url, v_).then(
+                (resp) => resp.data, 
+                this._handleErr);
     }
 
     delete(id: string) {
-	var url = '/api/comptes/' + id;
-	return this.$http.delete(url).then(
-		(resp) => resp.data,
-		this._handleErr);
+        var url = '/api/comptes/' + id;
+        return this.$http.delete(url).then(
+                (resp) => resp.data,
+                this._handleErr);
     }
 
 }

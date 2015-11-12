@@ -18,11 +18,11 @@
      Voici les différences avec le compte <b>{{homonyme.uid}}</b> :
      <table class="table table-bordered">
        <tbody ng-repeat="e in homonyme.comparisons">
-	 <tr>
-	   <td>{{label[e.attr]}}</td>
-	   <td ng-bind-html="e.cmp[0]"></td>
-	   <td ng-bind-html="e.cmp[1]"></td>
-	 </tr>
+         <tr>
+           <td>{{label[e.attr]}}</td>
+           <td ng-bind-html="e.cmp[0]"></td>
+           <td ng-bind-html="e.cmp[1]"></td>
+         </tr>
        </tbody>
      </table>
    </div>
@@ -54,12 +54,12 @@
 
   <div my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit">
-	<span class="glyphicon glyphicon-plus"></span>
-	Approuver</button>
+        <span class="glyphicon glyphicon-plus"></span>
+        Approuver</button>
 
       <button class="btn btn-primary" ng-click="reject()">
-	<span class="glyphicon glyphicon-trash"></span>
-	Rejeter</button>
+        <span class="glyphicon glyphicon-trash"></span>
+        Rejeter</button>
   </div>
 
  </form>

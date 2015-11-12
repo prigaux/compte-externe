@@ -14,36 +14,36 @@ const mailTransporter = nodemailer.createTransport(conf.mail.transport);
 export const send = params => {
     params = _.assign({ from: conf.mail.from }, params);
     if (conf.mail.intercept) {
-	params.subject = '[would be sent to ' + params.to + '] ' + params.subject;
-	params.to = conf.mail.intercept;
+        params.subject = '[would be sent to ' + params.to + '] ' + params.subject;
+        params.to = conf.mail.intercept;
     }
     mailTransporter.sendMail(params, (error, info) => {
-	if (error) {
+        if (error) {
             console.log(error);
-	} else {
+        } else {
             console.log('Mail sent: ', info);
-	}
+        }
     });
 };
 
 export const sendWithTemplate = (templateName, params) => {
     console.log("sendWithTemplate");
     fs.readFile(__dirname + "/templates/mail/" + templateName, (err, data) => {
-	if (err) {
-	    console.log(err);
-	} else {
-	    let rawMsg = Mustache.render(data.toString(), params);
-	    console.log("===========================");
-	    console.log("mustache result for", templateName);
-	    //console.log("with params", params);
-	    console.log(rawMsg);
-	    console.log("===========================");
-	    let m = rawMsg.match(/^Subject: *(.*)\n\n([^]*)/);
-	    if (!m) {
-		console.error("invalid template " + templateName + ': first line must be "Subject: ..."');
-	    } else {
-		send({ to: params.to, subject: m[1], html: m[2] });
-	    }
-	}
+        if (err) {
+            console.log(err);
+        } else {
+            let rawMsg = Mustache.render(data.toString(), params);
+            console.log("===========================");
+            console.log("mustache result for", templateName);
+            //console.log("with params", params);
+            console.log(rawMsg);
+            console.log("===========================");
+            let m = rawMsg.match(/^Subject: *(.*)\n\n([^]*)/);
+            if (!m) {
+                console.error("invalid template " + templateName + ': first line must be "Subject: ..."');
+            } else {
+                send({ to: params.to, subject: m[1], html: m[2] });
+            }
+        }
     });
 };
