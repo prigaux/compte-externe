@@ -47,6 +47,7 @@ module.exports = function(grunt) {
                 script: 'start-server.js',
                 options: {
                     nodeArgs: ['--debug'],
+                    env: { NODE_ENV: 'debug' },
                     watch: watchFiles.serverJS 
                 }
             }
