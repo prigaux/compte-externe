@@ -139,7 +139,7 @@ function checkLogin(login: string) {
     if (!ok) {
         console.error('genLogin: ' + login + ': le login doit contenir au moins un caractère alphabétique');
     }
-    return ok;
+    return !!ok;
 }
 
 function accronyms(l: string[], length: number) {

@@ -42,7 +42,7 @@ export const sendWithTemplate = (templateName: string, params: {}) => {
             if (!m) {
                 console.error("invalid template " + templateName + ': first line must be "Subject: ..."');
             } else {
-                send({ to: params.to, subject: m[1], html: m[2] });
+                send({ to: params['to'], subject: m[1], html: m[2] });
             }
         }
     });
