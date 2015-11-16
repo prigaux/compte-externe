@@ -130,8 +130,8 @@ export const filters = {
     eq: (attr: string, val: string) => "(" + attr + "=" + val + ")",
     startsWith: (attr: string, val: string) => "(" + attr + "=" + val + "*)",
     contains: (attr: string, val: string, prefix: string) => "(" + attr + "=" + (prefix || '') + "*" + val + "*)",
-    and: (filters: filter[]) => filters.length === 1 ? filters : "(&" + filters.join('') + ")",
-    or: (filters: filter[]) => filters.length === 1 ? filters : "(|" + filters.join('') + ")",
+    and: (filters: filter[]) => filters.length === 1 ? filters[0] : "(&" + filters.join('') + ")",
+    or: (filters: filter[]) => filters.length === 1 ? filters[0] : "(|" + filters.join('') + ")",
     memberOf: (cn: string) => filters.eq("memberOf", conf.ldap.group_cn_to_memberOf(cn)),
 
   // search for non ordered "token" words
