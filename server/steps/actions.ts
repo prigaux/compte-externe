@@ -9,15 +9,15 @@ import esup_activ_bo = require('../esup_activ_bo');
 import conf = require('../conf');
 const filters = ldap.filters;
 
-export function getShibAttrs(req, _sv) {
+export const getShibAttrs: simpleAction = (req, _sv) => {
     let v = _.mapValues(conf.shibboleth.header_map, headerName => (
         req.header(headerName)
     ));
     console.log("action getShibAttrs:", v);
     return Promise.resolve({ v: v });
-}
+};
 
-export const getCasAttrs = (req, _sv) => (
+export const getCasAttrs: simpleAction = (req, _sv) => (
     getShibAttrs(req, _sv).then(sv => {
         let filter = filters.eq("eduPersonPrincipalName", sv.v.eduPersonPrincipalName);
         return ldap.searchOne(conf.ldap.base_people, filter, { attributes: ["supannAliasLogin", "displayName"] });
@@ -27,24 +27,24 @@ export const getCasAttrs = (req, _sv) => (
     })
 );
 
-export const chain = l_actions => (
-    (req, sv) => {
-        if (!sv || !sv.then) sv = Promise.resolve(sv);
+export function chain(l_actions: simpleAction[]): action {
+    return (req, sv_: sv) => {
+        let sv: Promise<vr> = Promise.resolve(sv_);
         l_actions.forEach(action => {
             sv = sv.then(sv => (
                 action(req, sv)
             ));
         });
         return sv;
-    }
-);
+    };
+}
 
-export const createCompte = (req, sv) => {
+export const createCompte: simpleAction = (req, sv) => {
     let v = sv.v;
     console.log("action createCompte:", v);
     return utils.popen(JSON.stringify(v), 'createCompte', []).then(data => {
         try { 
-            let resp = JSON.parse(<any>data);
+            let resp = JSON.parse(data);
             if (!resp.uid) console.error("createCompte should return uid");
             if (!resp.supannAliasLogin) console.error("createCompte should return supannAliasLogin");
             v.uid = resp.uid;
@@ -63,14 +63,14 @@ export const createCompte = (req, sv) => {
     });
 };
 
-export const genLogin = (req, sv) => (
+export const genLogin: simpleAction = (req, sv) => (
     search_ldap.genLogin(sv.v.sn, sv.v.givenName).then(login => {
         let v = _.assign({ supannAliasLogin: login }, sv.v);
         return { v: v, response: {login: login} };
     })
 );
 
-export const sendValidationEmail = (req, sv) => {
+export const sendValidationEmail: action = (req, sv) => {
     let v = sv.v;
     console.log("action sendValidationEmail");
     mail.sendWithTemplate('validation.html', { conf: conf, to: v.supannMailPerso, id: sv.id, v: v });

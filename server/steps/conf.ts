@@ -1,17 +1,18 @@
 'use strict';
 
 import _ = require('lodash');
+import express = require('express');
 import actions = require('./actions');
 import acl = require('./acl');
 import main_conf = require('../conf');
 
-function readonly(attrs) {
+function readonly(attrs): StepAttrsOption {
     return _.mapValues(attrs, options => (
         _.defaults({ readonly: true }, options)
     ));
 }
 
-const attrs = {
+const attrs: StepAttrsOption = {
     supannCivilite: {},
     sn: {},
     givenName: {},
@@ -23,13 +24,13 @@ const attrs = {
     structureParrain: {},
 };
 
-const moderator_attrs = _.defaults({
+const moderator_attrs = <StepAttrsOption> _.defaults({
     uid: {},
     supannAliasLogin: {},
     structureParrain: { readonly: true },
 }, attrs);
 
-export const steps = {
+export const steps: Steps = {
     extern: {
         attrs: attrs,
         next: 'homonymes',
@@ -80,7 +81,7 @@ export const steps = {
     },
 };
 
-function allowedFirstSteps(req) {
+function allowedFirstSteps(req: express.Request): string[] {
     let l = ['extern'];
     if (req.user) {
         l.push('federation');
@@ -91,8 +92,8 @@ function allowedFirstSteps(req) {
     return l;
 }
 
-export const firstStep = req => {
-    let wanted_step = req.params.step;
+export function firstStep(req: express.Request): string {
+    let wanted_step: string = req.params.step;
     let allowed = allowedFirstSteps(req);
     if (wanted_step) {
         if (_.contains(allowed, wanted_step)) {
@@ -103,4 +104,4 @@ export const firstStep = req => {
     } else {
         return allowed[0];
     }
-};
+}

@@ -1,21 +1,60 @@
 /// <reference path='../typings-server/tsd.d.ts' />
 
-declare type ldapEntry = any
+declare interface CurrentUser {
+  id: string;
+  mail: string;
+}
+declare type Mails = string[]
+declare interface StringMap {
+  [index: string]: string;
+}
+declare interface LdapEntry {
+  [index: string]: string[] | Date | number | string;
+  birthDay: Date;
+  score: number;
+}
+declare interface LdapRawEntry {
+  [index: string]: string[];
+}
 declare type id = string
 declare type v = any
 declare type response = any
 declare type sv = {
-  id: id,
+  id?: id,
   step: string,
   v: v,
+  moderators?: Mails,
+  attrs?: StepAttrsOption,
 }
 
-declare type svr = sv | { response: response }
+declare type vr = {v: v; response?: response }
+declare type svr = sv & { response?: response }
+declare type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
+declare type action = (req: any, sv: sv) => Promise<vr>
+declare type acl_search = (v, string) => Promise<string[]>
 
-declare type acl_search = (v, string) => Promise<ldapEntry[]>
-
-declare interface step {
-  acls: acl_search[];
+declare interface StepAttrOption {
+  readonly?: boolean;
+  hidden?: boolean;
+}
+declare interface StepAttrsOption {
+  [index: string]: StepAttrOption;
+}
+declare interface StepNotify {
+  added?: string;
+  rejected?: string;
+  accepted?: string;    
+}
+declare type step = {
+  acls?: acl_search[];
+  attrs: StepAttrsOption;
+  next?: string;
+  notify?: StepNotify;
+  action_pre?: action;
+  action_post?: action;
+}
+declare type steps = {
+  [index: string]: step;
 }
 
 
@@ -40,6 +79,12 @@ declare module 'simple-get' {
 }
 
 declare module 'ldapjs' {
+    export interface Options {
+      attributes?: string[];
+      scope?: string;
+      filter?: string;
+      sizeLimit?: number;
+    }
     export interface Client {
         bind: any; 
       search: any;

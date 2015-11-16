@@ -50,7 +50,7 @@ function get_fault(xml) {
 }
 
 // returns a code which allows setPassword
-function _validateAccount(uid) {
+function _validateAccount(uid: string): Promise<string> {
     let params = { uid: uid };
     return soap("validateAccount.xml", params).then(xml => {
         //console.dir(xml, { depth: null });
@@ -67,7 +67,7 @@ function _validateAccount(uid) {
 }
 
 // returns a code which allows setPassword
-function _setPassword(uid, code, password) {
+function _setPassword(uid: string, code: string, password: string) {
     let params = { id: uid, code: code, password: password };
     return soap("setPassword.xml", params).then(xml => {
         console.dir(xml, { depth: null });
@@ -77,7 +77,7 @@ function _setPassword(uid, code, password) {
     });
 }
 
-export const setPassword = (uid, password) => (
+export const setPassword = (uid: string, password: string) => (
     _validateAccount(uid).then(code => (
         code && _setPassword(uid, code, password)
     ))

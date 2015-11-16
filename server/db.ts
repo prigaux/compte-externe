@@ -17,7 +17,7 @@ function renameKey(o, oldK, newK) {
 function _id(id: string = undefined) {
     return new mongodb.ObjectID(id);
 }
-function fromDB(sv_) {
+function fromDB(sv_): sv {
     return renameKey(sv_, '_id', 'id');
 }
 function toDB(sv: sv) {
@@ -26,8 +26,8 @@ function toDB(sv: sv) {
     return sv_;
 }
 
-function toPromise(f) {
-    return new Promise((resolve, reject) => {
+function toPromise<T>(f: (cb: (err: T, result: T) => void) => void): Promise<T> {
+    return <Promise<T>> new Promise((resolve, reject) => {
         f((err, result) => {
             if (err) {
                 reject(err);
@@ -38,21 +38,21 @@ function toPromise(f) {
     });
 }
 
-let real_svs = null;
+let real_svs: mongodb.Collection = null;
 
 function svs() {
   if (!real_svs) throw "db.init not done";
   return real_svs;
 }
 
-export const get = id => (
+export const get = (id: id) => (
         toPromise(onResult => {
             svs().findOne({ _id: _id(id) }, onResult);
         }).then(fromDB)
     );
 
     // lists svs, sorted by steps + recent one at the beginning
-export const listByModerator = user => {
+export const listByModerator = (user: CurrentUser) => {
         let mail = user.mail;
         return toPromise(onResult => {
             svs().find({ moderators: mail }).sort({ step: 1, modifyTimestamp: -1 }).toArray(onResult);
@@ -61,13 +61,13 @@ export const listByModerator = user => {
         ));
     };
 
-export const remove = id => (
+export const remove = (id: id) => (
         toPromise(onResult => {
             svs().remove({ _id: _id(id) }, onResult);
         })
     );
 
-export const save = sv => (
+export const save = (sv: sv) => (
         toPromise(onResult => {
             console.log("saving in DB:", sv);
             let sv_ = toDB(sv);

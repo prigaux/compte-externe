@@ -11,7 +11,7 @@ const mailTransporter = nodemailer.createTransport(conf.mail.transport);
 // sendMail does not return a promise, it will be done in background. We simply log errors
 // params example:
 // { from: 'xxx <xxx@xxx>', to: 'foo@bar, xxx@boo', subject: 'xxx', text: '...', html: '...' }
-export const send = params => {
+export const send = (params: nodemailer.SendMailOptions) => {
     params = _.assign({ from: conf.mail.from }, params);
     if (conf.mail.intercept) {
         params.subject = '[would be sent to ' + params.to + '] ' + params.subject;
@@ -26,7 +26,7 @@ export const send = params => {
     });
 };
 
-export const sendWithTemplate = (templateName, params) => {
+export const sendWithTemplate = (templateName: string, params: {}) => {
     console.log("sendWithTemplate");
     fs.readFile(__dirname + "/templates/mail/" + templateName, (err, data) => {
         if (err) {

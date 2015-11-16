@@ -11,11 +11,11 @@ function create(peopleFilter: string): acl_search {
     );
 }
 
-export const ldapGroup = (cn: string) => (
+export const ldapGroup = (cn: string): acl_search => (
     create(filters.memberOf(cn))
 );
 
-export const user_id = (user_id: string) => {
+export const user_id = (user_id: string): acl_search => {
     let attr = user_id.match(/@/) ? "eduPersonPrincipalName" : "uid";
     return create(filters.eq(attr, user_id));
 };

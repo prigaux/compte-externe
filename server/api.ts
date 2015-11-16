@@ -11,24 +11,26 @@ import conf = require('./conf');
 import conf_steps = require('./steps/conf');
 require('./helpers');
 
+type req = express.Request;
+
 const router = express.Router();
 
 const bus = utils.eventBus();
 
 
-function step(sv) {
+function step(sv: sv): Step {
     return conf_steps.steps[sv.step];
 }
 
-function action_pre(req, sv) {
+function action_pre(req: req, sv: sv) {
     return action(req, sv, 'action_pre');
 }
-function action_post(req, sv) {
+function action_post(req: req, sv: sv) {
     return action(req, sv, 'action_post').tap(sv => {
         mayNotifyModerators(req, sv, 'accepted');
     });
 }
-function action(req, sv, action_name) {
+function action(req: req, sv: sv, action_name: string): Promise<svr> {
     let f = step(sv)[action_name];
     if (!f) return Promise.resolve(sv); // nothing to do
     //console.log("calling " + action_name + " for step " + sv.step);
@@ -38,23 +40,23 @@ function action(req, sv, action_name) {
     });
 }
 
-function mergeAttrs(attrs, prev, v) {
+function mergeAttrs(attrs, prev, v: v) {
     return _.assign(prev, removeHiddenAttrs(attrs, v));
 }
 
-function removeHiddenAttrs(attrs, v) {
+function removeHiddenAttrs(attrs: StepAttrsOption, v: v) {
     return _.omit(v, (val, key) => ( 
         !attrs[key] || attrs[key].hidden
     ));
 }
 
-function sv_removeHiddenAttrs(sv) {
+function sv_removeHiddenAttrs(sv: sv): sv {
     sv = _.clone(sv);
     sv.v = removeHiddenAttrs(step(sv).attrs, sv.v);
     return sv;
 }
 
-function mayNotifyModerators(req, sv, notifyKind) {
+function mayNotifyModerators(req: req, sv: sv, notifyKind: string) {
     let notify = step(sv).notify;
     if (!notify) return;
     let mails = sv.moderators;
@@ -64,7 +66,7 @@ function mayNotifyModerators(req, sv, notifyKind) {
     }
 }
 
-function checkAcls(req, sv) {
+function checkAcls(req: req, sv: sv) {
     let ok = acl_checker.isAuthorized(sv.moderators, req.user);
     if (ok) {
         console.log("authorizing", req.user, "for step", sv.step);
@@ -73,13 +75,13 @@ function checkAcls(req, sv) {
     }
 }
 
-function first_sv(req): Promise<sv> {
+function first_sv(req: req): Promise<sv> {
     let step = conf_steps.firstStep(req);
     let empty_sv = { step: step, v: {} };
     return action_pre(req, empty_sv);
 }
 
-function getRaw(req, id): Promise<sv> {
+function getRaw(req: req, id: id): Promise<sv> {
     if (id === 'new') {
         return first_sv(req);
     } else {
@@ -91,16 +93,16 @@ function getRaw(req, id): Promise<sv> {
     }
 }
 
-function get(req, id) {
+function get(req: req, id: id) {
     return getRaw(req, id).then(sv_removeHiddenAttrs).then(sv => {
-        sv.attrs = _.omit(step(sv).attrs, val => (
+        sv.attrs = <StepAttrsOption> _.omit(step(sv).attrs, val => (
             val.hidden
         ));
         return sv;
     });
 }
 
-function set(req, id, v) {
+function set(req: req, id: id, v: v) {
     return getRaw(req, id).then(sv => (
         setRaw(req, sv, v)
     ));
@@ -111,7 +113,7 @@ function set(req, id, v) {
 // 3. advance to new step
 // 4. call action_pre
 // 5. save to DB or remove from DB if one action returned null
-function setRaw(req, sv, v) {
+function setRaw(req: req, sv: sv, v: v) {
     if (!sv.id) {
         // do not really on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
         sv.id = db.new_id();
@@ -147,20 +149,20 @@ function setRaw(req, sv, v) {
     });
 }
 
-function saveRaw(req, sv) {
+function saveRaw(req: req, sv: sv) {
     return db.save(sv).then(sv => {
         bus.emit('changed');
         mayNotifyModerators(req, sv, 'added');
     });
 }
 
-function removeRaw(id) {
+function removeRaw(id: id) {
     return db.remove(id).then(() => {
         bus.emit('changed');
     });
 }
 
-function remove(req, id) {
+function remove(req: req, id: id) {
     return getRaw(req, id).then(sv => {
         // acls are checked => removing is allowed
         mayNotifyModerators(req, sv, 'rejected');
@@ -168,7 +170,7 @@ function remove(req, id) {
     });
 }
 
-function listAuthorized(req) {
+function listAuthorized(req: req) {
     return db.listByModerator(req.user).then(svs => (
         _.map(svs, sv_removeHiddenAttrs)
     ));
@@ -176,7 +178,7 @@ function listAuthorized(req) {
 
 let _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(v, attrs));
 
-function homonymes(req: express.Request, id: string): Promise<ldapEntry[]> {
+function homonymes(req: req, id: id): Promise<LdapEntry[]> {
     return getRaw(req, id).then(sv => {
         // acls are checked => removing is allowed
         let sns = _merge_at(sv.v, conf.ldap.people.sns);
@@ -191,7 +193,7 @@ function homonymes(req: express.Request, id: string): Promise<ldapEntry[]> {
     });
 }
 
-function respondJson(req: express.Request, res: express.Response, p: Promise<response>) {
+function respondJson(req: req, res: express.Response, p: Promise<response>) {
     let logPrefix = req.method + " " + req.path + ":";
     p.then(r => {
         console.log(logPrefix, r);
@@ -236,7 +238,7 @@ router.get('/homonymes/:id', (req, res) => {
     respondJson(req, res, homonymes(req, req.params.id));
 });
 
-function search_structures(req) {
+function search_structures(req: req) {
     let token = req.query.token;
     if (!token) throw "missing token parameter";
     let sizeLimit = parseInt(req.query.maxRows) || 10;
