@@ -12,5 +12,5 @@ export const moderators = (step: step, v: v): Promise<string[]> => {
 
     return Promise.all(_.map(acls, acl => (
         acl(v, "mail")
-    ))).then(_.flatten);
+    ))).then(mails => _.flatten(mails));
 };
