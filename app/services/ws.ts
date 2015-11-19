@@ -54,7 +54,7 @@ class WsService {
  }
 
   structures_search(token, maxRows) {
-        return this.$http.get('/api/structures', {params: {token: token, maxRows: maxRows}}).then((resp) => resp.data);
+        return this.$http.get('/api/structures', {params: {token, maxRows}}).then((resp) => resp.data);
     }
 
     _fromJSONDate(date: string) {
@@ -142,7 +142,7 @@ class WsService {
     }
 
     listInScope($scope, params) {
-        return this.$http.get('/api/comptes', { params: params }).then((resp) => {
+        return this.$http.get('/api/comptes', { params }).then((resp) => {
             if ($scope.$$destroyed) return;
             var svs = <any>resp.data;
             if (svs.error) {

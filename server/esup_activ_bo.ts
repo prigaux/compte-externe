@@ -29,7 +29,7 @@ function raw_soap(url, body) {
         SOAPAction: "",
         "content-type": "text/xml",
     };
-    return helpers.post(url, body, { headers: headers }).then(result => (
+    return helpers.post(url, body, { headers }).then(result => (
         parseString(result, { explicitArray: false, ignoreAttrs: true })
     ));
 }
@@ -51,7 +51,7 @@ function get_fault(xml) {
 
 // returns a code which allows setPassword
 function _validateAccount(uid: string): Promise<string> {
-    let params = { uid: uid };
+    let params = { uid };
     return soap("validateAccount.xml", params).then(xml => {
         //console.dir(xml, { depth: null });
         let response = deepGetKey(xml, 'ns1:validateAccountResponse');
@@ -68,7 +68,7 @@ function _validateAccount(uid: string): Promise<string> {
 
 // returns a code which allows setPassword
 function _setPassword(uid: string, code: string, password: string) {
-    let params = { id: uid, code: code, password: password };
+    let params = { id: uid, code, password };
     return soap("setPassword.xml", params).then(xml => {
         console.dir(xml, { depth: null });
         let response = deepGetKey(xml, 'ns1:setPasswordResponse');

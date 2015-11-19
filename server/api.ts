@@ -61,7 +61,7 @@ function mayNotifyModerators(req: req, sv: sv, notifyKind: string) {
     if (!notify) return;
     let mails = sv.moderators;
     if (mails.length) {
-        let params = _.merge({ to: mails.join(', '), moderator: req.user, conf: conf }, sv);
+        let params = _.merge({ to: mails.join(', '), moderator: req.user, conf }, sv);
         mail.sendWithTemplate(notify[notifyKind], params);
     }
 }
@@ -77,7 +77,7 @@ function checkAcls(req: req, sv: sv) {
 
 function first_sv(req: req): Promise<sv> {
     let step = conf_steps.firstStep(req);
-    let empty_sv = { step: step, v: {} };
+    let empty_sv = { step, v: {} };
     return action_pre(req, empty_sv);
 }
 

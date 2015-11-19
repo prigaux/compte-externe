@@ -14,7 +14,7 @@ export const getShibAttrs: simpleAction = (req, _sv) => {
         req.header(headerName)
     ));
     console.log("action getShibAttrs:", v);
-    return Promise.resolve({ v: v });
+    return Promise.resolve({ v });
 };
 
 export const getCasAttrs: simpleAction = (req, _sv) => (
@@ -23,7 +23,7 @@ export const getCasAttrs: simpleAction = (req, _sv) => (
         return ldap.searchOne(conf.ldap.base_people, filter, { attributes: ["supannAliasLogin", "displayName"] });
     }).then(v => {
         console.log("getCasAttrs", v);
-        return { v: v };
+        return { v };
     })
 );
 
@@ -54,25 +54,25 @@ export const createCompte: simpleAction = (req, sv) => {
         }
             
         if (v.supannMailPerso) {
-            mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v: v });
+            mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v });
         }
         if (v.userPassword) {
             esup_activ_bo.setPassword(v.uid, v.userPassword);
         }
-        return { v: v, response: {login: v.supannAliasLogin} };
+        return { v, response: {login: v.supannAliasLogin} };
     });
 };
 
 export const genLogin: simpleAction = (req, sv) => (
     search_ldap.genLogin(sv.v.sn, sv.v.givenName).then(login => {
         let v = _.assign({ supannAliasLogin: login }, sv.v);
-        return { v: v, response: {login: login} };
+        return { v, response: {login} };
     })
 );
 
 export const sendValidationEmail: action = (req, sv) => {
     let v = sv.v;
     console.log("action sendValidationEmail");
-    mail.sendWithTemplate('validation.html', { conf: conf, to: v.supannMailPerso, id: sv.id, v: v });
-    return Promise.resolve({ v: v });
+    mail.sendWithTemplate('validation.html', { conf, v, to: v.supannMailPerso, id: sv.id });
+    return Promise.resolve({ v });
 };

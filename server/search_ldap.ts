@@ -13,7 +13,7 @@ export const structures = (token: string, sizeLimit: number) => {
     let words_filter = filters.fuzzy(['description', 'ou'], token);
     let many = [filters.eq("supannCodeEntite", token), 
                 filters.and([ words_filter, "(supannCodeEntite=*)"])];
-    return ldap.searchManyMap(conf.ldap.base_structures, many, conf.ldap.structures_attrs, {sizeLimit: sizeLimit});
+    return ldap.searchManyMap(conf.ldap.base_structures, many, conf.ldap.structures_attrs, {sizeLimit});
 };
 
 function suggested_mail(sn: string, givenName: string) {

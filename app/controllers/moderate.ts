@@ -29,7 +29,7 @@ angular.module('myApp')
             var val1 = "" + val;
             var val2 = "" + homonyme[attr];
             if (val1 !== val2) {
-                r.push({ attr: attr, cmp: helpers.formatDifferences(val1, val2) });
+                r.push({ attr, cmp: helpers.formatDifferences(val1, val2) });
             }
         });
         homonyme.comparisons = r;

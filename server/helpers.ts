@@ -16,7 +16,7 @@ if (Promise.prototype.tap === undefined) {
 }
 
 export const post = (url: string, body: string, options: simpleGet.Options) : Promise<string> => {
-    options = _.assign({ url: url, body: body, ca: conf.http_client_CAs }, options);
+    options = _.assign({ url, body, ca: conf.http_client_CAs }, options);
     return new Promise((resolve: (string) => void, reject: (any) => void) => {
         simpleGet.post(options, (err, res) => {
             if (err) return reject(err);

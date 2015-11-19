@@ -38,7 +38,7 @@ server.search(params.base, (req, res, next) => {
   if (db[dn]) {
       let dns = search(req.dn, req.filter, req.scope);
       dns.forEach(dn => {
-          res.send({ dn: dn, attributes: db[dn] });
+          res.send({ dn, attributes: db[dn] });
       });
       res.end();
       return next();
