@@ -18,7 +18,7 @@ const router = express.Router();
 const bus = utils.eventBus();
 
 
-function step(sv: sv): Step {
+function step(sv: sv): step {
     return conf_steps.steps[sv.step];
 }
 

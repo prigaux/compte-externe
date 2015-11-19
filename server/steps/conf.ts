@@ -30,7 +30,7 @@ const moderator_attrs = <StepAttrsOption> _.defaults({
     structureParrain: { readonly: true },
 }, attrs);
 
-export const steps: Steps = {
+export const steps: steps = {
     extern: {
         attrs: attrs,
         next: 'homonymes',
