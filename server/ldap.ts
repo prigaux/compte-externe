@@ -135,7 +135,7 @@ export const filters = {
     memberOf: (cn: string) => filters.eq("memberOf", conf.ldap.group_cn_to_memberOf(cn)),
 
   // search for non ordered "token" words
-  fuzzy_prefixedAttrs: (searchedAttrs: StringMap, token: string): filter => {
+  fuzzy_prefixedAttrs: (searchedAttrs: Dictionary<string>, token: string): filter => {
     let tokens = _.compact(token.split(/[\s,]+/));
     let l = tokens.map(tok => (
         filters.or(_.map(searchedAttrs, (prefix, attr) => (
@@ -147,7 +147,7 @@ export const filters = {
 
 // search for non ordered "token" words
   fuzzy: (attrs: string[], token: string): filter => {
-    let searchedAttrs: StringMap = {};
+    let searchedAttrs: Dictionary<string> = {};
     attrs.forEach(attr => { searchedAttrs[attr] = null; });
     return filters.fuzzy_prefixedAttrs(searchedAttrs, token);
   },

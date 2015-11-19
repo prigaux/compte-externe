@@ -1,5 +1,9 @@
 /// <reference path='../typings-server/tsd.d.ts' />
 
+declare interface Dictionary<T> {
+  [index: string]: T;
+}
+
 declare interface CurrentUser {
   id: string;
   mail: string;
@@ -37,9 +41,8 @@ declare interface StepAttrOption {
   readonly?: boolean;
   hidden?: boolean;
 }
-declare interface StepAttrsOption {
-  [index: string]: StepAttrOption;
-}
+declare type StepAttrsOption = Dictionary<StepAttrOption>;
+
 declare interface StepNotify {
   added?: string;
   rejected?: string;
@@ -53,10 +56,7 @@ declare type step = {
   action_pre?: action;
   action_post?: action;
 }
-declare type steps = {
-  [index: string]: step;
-}
-
+declare type steps = Dictionary<step>
 
 
 declare module 'nodemailer-sendmail-transport' {  
