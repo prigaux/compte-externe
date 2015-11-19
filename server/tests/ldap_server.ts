@@ -15,7 +15,7 @@ function authorize(req, res, next) {
   return next();
 }
 
-function search(dn, filter, scope) {
+function search(dn, filter, scope: string) {
     let dns;
     if (scope === 'base') {
         dns = [dn.toString()];

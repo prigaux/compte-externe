@@ -11,7 +11,7 @@ describe('genLogin', () => {
         let search_ldap = require_fresh('../search_ldap');
         search_ldap.existLogin = () => Promise.resolve(false);
         
-        function check(sn, givenName, wantedLogin) {
+        function check(sn: string, givenName: string, wantedLogin: string) {
             return () => (
                 search_ldap.genLogin(sn, givenName).then(login => {
                     assert.equal(login, wantedLogin);
@@ -47,13 +47,13 @@ describe('genLogin', () => {
     });
 
     describe('handle existing', () => {
-        let search_ldap = require_fresh('../search_ldap');
+        let search_ldap: search_ldap = require_fresh('../search_ldap');
         let added = {};
         search_ldap.existLogin = s => (
             Promise.resolve(added[s])
         );
         
-        function iterate(sn, givenName, max) {
+        function iterate(sn: string, givenName: string, max: number): Promise<string[]> {
             let iter = r => (
                 search_ldap.genLogin(sn, givenName).then(login => {
                     if (login && r.length < max) {
@@ -67,7 +67,7 @@ describe('genLogin', () => {
             return iter([]);
         }
 
-        function check(sn, givenName, max, wantedLogins) {
+        function check(sn: string, givenName: string, max: number, wantedLogins: string[]) {
             return () => (
                 iterate(sn, givenName, max).then(logins => {
                     assert.deepEqual(logins, wantedLogins);
@@ -99,7 +99,7 @@ describe('genLogin', () => {
             })
         ));
         
-        function check(sn, givenName, wantedLogin) {
+        function check(sn: string, givenName: string, wantedLogin: string) {
             return () => (
                 search_ldap.genLogin(sn, givenName).then(login => {
                     assert.equal(login, wantedLogin);
