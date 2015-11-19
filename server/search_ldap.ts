@@ -124,7 +124,7 @@ export const homonymes = (sns: string[], givenNames: string[], birthDay: Date, a
 };
 
 // export it to allow override
-export const existLogin = (login: string): Promise<boolean> => (
+export let existLogin = (login: string): Promise<boolean> => (
     ldap.searchOne(conf.ldap.base_people, filters.eq("uid", login), "uid").then(v => (
         !!v
     ))
