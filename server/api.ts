@@ -178,7 +178,7 @@ function listAuthorized(req: req) {
 
 let _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(v, attrs));
 
-function homonymes(req: req, id: id): Promise<LdapEntry[]> {
+function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
     return getRaw(req, id).then(sv => {
         // acls are checked => removing is allowed
         let sns = _merge_at(sv.v, conf.ldap.people.sns);

@@ -9,6 +9,18 @@ const maxLoginLength = 10;
 
 const remove_accents = _.deburr;
 
+type entry = typeof conf.ldap.types;
+
+export const searchPeople = (filter: ldap.filter, attrs: string[], options: ldap.Options) : Promise<entry[]> => {
+    let attrTypes = <entry> _.pick(conf.ldap.types, attrs);
+    // TODO check attrs are in conf.ldap.types
+    return ldap.search(conf.ldap.base_people,
+                          filter,
+                          attrTypes,
+                          conf.ldap.people.attrs,
+                          options);
+};
+
 export const structures = (token: string, sizeLimit: number) => {
     let words_filter = filters.fuzzy(['description', 'ou'], token);
     let many = [filters.eq("supannCodeEntite", token), 
@@ -71,53 +83,26 @@ function homonyme_scoring(birthDay: Date, known_birthDay: Date): number {
         sameMonth && sameDay ? 1 :
         0;
 }
+export type Homonyme = typeof conf.ldap.types & { score: number }
 
-function homonymes_scoring(l: LdapEntry[], birthDay: Date): LdapEntry[] {
-    l.forEach(u => {
-        u.score = u.birthDay ? homonyme_scoring(u.birthDay, birthDay) : 0;
+function homonymes_scoring(l: entry[], birthDay: Date): Homonyme[] {
+    let l_ = _.map(l, e => {
+      let score = e.birthDay ? homonyme_scoring(e.birthDay, birthDay) : 0;
+      return <Homonyme> _.merge({ score }, e);
     });
-    return _.sortBy(l, 'score').reverse();
+    return _.sortBy(l_, 'score').reverse();
 }
 
-function people_result(e: StringMap, attr: string) {
-    let ldapAttr = peopleLdapAttr(attr);
-    let type = conf.ldap.types[ldapAttr];
-    if (type) {
-        if (!ldap.convert.from[type]) throw "invalid ldap type " + type + " for type " + attr;
-        return ldap.convert.from[type](e[attr]);
-    } else {
-        return e[attr];
-    }
-}
-
-function people_convert_from_ldap(e: StringMap): LdapEntry {
-    return <LdapEntry> _.mapValues(e, (v, attr) => (
-        people_result(e, attr)
-    ));
-}
-
-function peopleLdapAttr(attr: string): string {
-    return conf.ldap.people.attrs[attr] || attr;
-}
-
-export const homonymes = (sns: string[], givenNames: string[], birthDay: Date, attrs: string[]) : Promise<LdapEntry[]> => {
-    attrs.push('dn');
-    let ldapAttrs = _.reduce(attrs, (r, attr) => {
-        r[attr] = peopleLdapAttr(attr);
-        return r;
-    }, {});
+export const homonymes = (sns: string[], givenNames: string[], birthDay: Date, attrs: string[]) : Promise<Homonyme[]> => {
+    attrs.push('uid', 'dn'); // we want the dn & uid to id the homonymes
     let filter = homonymes_filter(sns, givenNames);
     if (conf.ldap.people.homonymes_restriction) {
         filter = filters.and([filter, conf.ldap.people.homonymes_restriction]);
         //console.log("homonymes filter", filter);
     }
     //console.log("homonymes", sns, givenNames, birthDay);
-    return ldap.searchMap(conf.ldap.base_people, 
-                          filter,
-                          ldapAttrs, 
-                          { sizeLimit: 10 }).then(l => {
-                              let l_ = l.map(people_convert_from_ldap);
-                              return homonymes_scoring(l_, birthDay).filter(e => (
+    return searchPeople(filter, attrs, { sizeLimit: 10 }).then(l => {
+                              return homonymes_scoring(l, birthDay).filter(e => (
                                   e['score'] > 0
                               ));
                           });
@@ -125,7 +110,7 @@ export const homonymes = (sns: string[], givenNames: string[], birthDay: Date, a
 
 // export it to allow override
 export let existLogin = (login: string): Promise<boolean> => (
-    ldap.searchOne(conf.ldap.base_people, filters.eq("uid", login), "uid").then(v => (
+    ldap.searchOne(conf.ldap.base_people, filters.eq("uid", login), {}, null).then(v => (
         !!v
     ))
 );

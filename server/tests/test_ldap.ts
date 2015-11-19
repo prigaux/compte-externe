@@ -3,6 +3,13 @@
 import _ = require('lodash');
 import test_utils = require('./test_utils');
 
+// get module types:
+import __conf__ = require('../conf');
+import __ldap__ = require('../ldap');
+export type conf = typeof __conf__;
+export type ldap = typeof __ldap__;
+
+
 function test_params() {
     let DNs = {};
     let params = {
@@ -36,11 +43,11 @@ function create_server(params) {
     });
 }
 
-const doIt = (params = undefined) => (
+export const create = (params = undefined): Promise<{conf: conf, ldap: ldap}> => (
     create_server(params).then(ldap_conf => {
-        let conf = test_utils.require_fresh('../conf');
+        let conf: conf = test_utils.require_fresh('../conf');
         _.assign(conf.ldap, ldap_conf);
-        return [conf, test_utils.require_fresh('../ldap')];
+        let ldap: ldap = test_utils.require_fresh('../ldap');
+        return {conf, ldap};
     })
 );
-export = doIt;

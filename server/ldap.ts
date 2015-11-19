@@ -12,14 +12,19 @@ client.bind(conf.ldap.dn, conf.ldap.password, err => {
     if (err) console.log("err: " + err);
 });
 
-type AttrsMap = {} // it should be StringMap, but it causes too much headaches, 
-                   //  cf http://stackoverflow.com/questions/22077023/why-cant-i-indirectly-return-an-object-literal-to-satisfy-an-index-signature-re
-export type filter = string                   
+export type filter = string
+export type Options = ldapjs.Options
+export type LdapAttrValue = string | number | Date | string[];
+export type LdapEntry = Dictionary<LdapAttrValue>;
 
-export const search = (base: string, filter: filter, options: ldapjs.Options) : Promise<LdapRawEntry[]> => {
-    let params = merge({ filter: filter, scope: "sub" }, options);
+type AttrRemap = {} // it should be Dictionary<string>, but it causes too much headaches,
+                   //  cf http://stackoverflow.com/questions/22077023/why-cant-i-indirectly-return-an-object-literal-to-satisfy-an-index-signature-re
+type RawValue = string | string[];
+
+export function searchRaw(base: string, filter: filter, attributes: string[], options: Options): Promise<Dictionary<RawValue>[]> {
+    let params = merge({ filter, attributes, scope: "sub" }, options);
     let p = new Promise((resolve, reject) => {
-        let l: LdapRawEntry[] = [];
+        let l: LdapEntry[] = [];
         client.search(base, params, (err, res) => {
             if (err) reject(err);
 
@@ -46,75 +51,121 @@ export const search = (base: string, filter: filter, options: ldapjs.Options) : 
             });
         });
     });
-    return <Promise<LdapRawEntry[]>> p;
+    return <Promise<Dictionary<RawValue>[]>> p;
+}
+
+
+export const convert = {
+    from: {
+        datetime: (dt: string): Date => {
+            if (!dt) return null;
+            let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)Z$/);
+            return m && new Date(Date.UTC(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]), parseInt(m[4]), parseInt(m[5]), parseInt(m[6])));
+        },
+        postalAddress: (s: string): string => (
+            s && s.replace(/\$/g, "\n")
+        ),
+    },
 };
 
-export const searchFilters = (base: string, filters: filter[], options: ldapjs.Options) => ( 
+function singleValue(attr: string, v: RawValue) {
+  if (_.isArray(v)) {
+    if (v.length > 1) console.warn(`attr ${attr} is multi-valued`);
+    return v[0];
+   } else {
+    return v;
+  }
+}
+
+// ldapjs return either a value if there is only one attribute value,
+// or an array of values if multiple value
+// this is problematic since depending on the values in LDAP, the type can change.
+// ensure we always have arrays
+// https://github.com/mcavage/node-ldapjs/issues/233
+function handleAttrType(attr: string, attrType: LdapAttrValue, v: RawValue): LdapAttrValue {
+    if (_.isArray(attrType)) {
+        return _.isArray(v) ? v : [v];
+    } else {
+        let s = singleValue(attr, v);
+        if (_.isString(attrType)) {
+            if (attrType === 'postalAddress') {
+                return convert.from.postalAddress(s);
+            } else {
+                return s;
+            }
+        } else if (_.isNumber(attrType)) {
+            return parseInt(s);
+        } else if (_.isDate(attrType)) {
+            return convert.from.datetime(s);
+        } else {
+            throw `unknown type for attribute ${attr}`;
+        }
+  }
+}
+
+function merge(a: Options, b: Options): Options {
+  return <Options> _.assign(a, b);
+}
+
+// NB: it should be <T extends LdapEntry> but it is not well handled by typescript
+// (NB: attrRemap should be Dictionary<string>, but it is not well handled by typescript)
+export function searchSimple<T extends {}>(base: string, filter: filter, attrTypes: T): Promise<T[]> {
+  return search(base, filter, attrTypes, null, {});
+}
+
+
+// NB: it should be <T extends LdapEntry> but it is not well handled by typescript
+// (NB: attrRemap should be Dictionary<string>, but it is not well handled by typescript)
+export function search<T extends {}>(base: string, filter: filter, attrTypes: T, attrRemap: AttrRemap, options: Options): Promise<T[]> {
+    let attrRemapRev = _.invert(attrRemap);
+    let attributes = _.keys(attrTypes);
+    if (attrRemap) {
+      attributes = attributes.map(k => attrRemap[k] || k);
+    }
+    let params = merge({ filter, attributes, scope: "sub" }, options);
+    let p = searchRaw(base, filter, attributes, params).then(l => 
+          l.map(o => {
+              // first remap the keys if needed
+              //console.log(o, attrRemap);
+              if (attrRemap) o = _.mapKeys(o, (_, k: string) => attrRemapRev[k] || k);
+              //console.log(o, attrRemap);
+              // then transform string|string[] into the types wanted
+              let r = _.mapValues(o, (v, attr) => 
+                       attr in attrTypes ? handleAttrType(attr, attrTypes[attr], v) : v);
+              return r;
+          })
+    );
+    return <Promise<T[]>> <any> p;
+}
+
+const searchMany = <T extends {}> (base: string, filters: filter[], attrTypes: T, attrRemap: AttrRemap, options: Options = {}): Promise<T[]> => (
     Promise.all(filters.map(filter => (
-        search(base, filter, options)
+        search(base, filter, attrTypes, attrRemap, options)
     ))).then(_.flatten).then(l => _.uniq(l, 'dn'))
 );
 
-function doAttrsMap(attrsMap: AttrsMap): (ldapRawEntry) => StringMap {
-    return e => (
-        <StringMap> _.mapValues(attrsMap, attr => {
-            // we want only one value...
-            return e[attr] && (_.isArray(e[attr]) ? e[attr][0] : e[attr]);
-        })
-    );
-}
-
-function merge(a: ldapjs.Options, b: ldapjs.Options): ldapjs.Options {
-  return <ldapjs.Options> _.assign(a, b);
-}
-function attrs(attrsMap: AttrsMap): string[] {
-  return <string[]> _.values(attrsMap);
-}
-
-export const searchMap = (base: string, filter: filter, attrsMap: AttrsMap, options: ldapjs.Options): Promise<StringMap[]> => {
-    options = merge({ attributes: attrs(attrsMap) }, options);
-    return search(base, filter, options).then(l => (
-        l.map(doAttrsMap(attrsMap))
-    ));
+export const searchManyMap = (base: string, filters: filter[], attrRemap: AttrRemap, options: Options = {}) => {
+    let attrTypes = _.mapValues(attrRemap, _ => '');
+    return searchMany(base, filters, attrTypes, attrRemap, options);
 };
 
-export const searchManyMap = (base: string, filters: filter[], attrsMap: AttrsMap, options: ldapjs.Options) => {
-    options = merge({ attributes: attrs(attrsMap) }, options);
-    return searchFilters(base, filters, options).then(l => (
-        l.map(doAttrsMap(attrsMap))
-    ));
-};
-
-export const searchOne = (base: string, filter: filter, options: ldapjs.Options) => {
+export const searchOne = <T extends LdapEntry> (base: string, filter: filter, attrTypes: T, attrRemap: AttrRemap, options: Options = {}) => {
     options = merge({ sizeLimit: 1 }, options); // no use getting more than one answer
-    return search(base, filter, options).then(l => (
+    return search(base, filter, attrTypes, attrRemap, options).then(l => (
         l.length ? l[0] : null
     ));
 };
 
-export const read = (dn: string, options: ldapjs.Options) => {
+export const read = <T extends LdapEntry> (dn: string, attrTypes: T, attrRemap: AttrRemap, options: Options = {}) => {
     options = merge({ sizeLimit: 1, scope: "base" }, options); // no use getting more than one answer
-    return search(dn, null, options).then(l => (
+    return search(dn, null, attrTypes, attrRemap, options).then(l => (
         l.length ? l[0] : null
     ));
 };
 
-export const readMap = (base: string, attrsMap: AttrsMap, options: ldapjs.Options) => {
-    options = merge({ attributes: attrs(attrsMap) }, options);
-    return read(base, options).then(doAttrsMap(attrsMap));
-};
-
-export const searchThisAttr = (base: string, filter: filter, attr: string, options: ldapjs.Options = {}): Promise<string[]> => {
-    options = merge({ attributes: [attr] }, options);
-    return search(base, filter, options).then(l => (
-        _.map(l, e => e[attr])
-    ));
-};
-
-export const searchOneThisAttr = (base: string, filter: string, attr: string, options: ldapjs.Options) => {
-    options = merge({ attributes: [attr] }, options);
-    return searchOne(base, filter, options).then(e => (
-        e && e[attr]
+export const searchThisAttr = <T extends LdapAttrValue>(base: string, filter: filter, attr: string, attrType: T, options: Options = {}): Promise<T[]> => {
+    return search(base, filter, { val: attrType }, { val: attr }, options).then(l => (
+        _.map(l, e => e.val)
     ));
 };
 
@@ -179,17 +230,4 @@ export const filters = {
   alike: (attr: string, str: string): filter => (
     filters.alike_many(attr, [str])
   ),
-};
-
-export const convert = {
-    from: {
-        datetime: (dt: string): Date => {
-            if (!dt) return null;
-            let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)Z$/);
-            return m && new Date(Date.UTC(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]), parseInt(m[4]), parseInt(m[5]), parseInt(m[6])));
-        },
-        postalAddress: (s: string): string => (
-            s && s.replace(/\$/g, "\n")
-        ),
-    },
 };

@@ -23,7 +23,8 @@ const conf = {
         structures_attrs: { key: 'supannCodeEntite', name: 'ou', description: 'description' },
         
         types: {
-            up1BirthDay: 'datetime',
+            uid: '', dn: '', cn: '', sn: '', displayName: '', givenName: '',
+            birthDay: new Date(),
             homePostalAddress: 'postalAddress',
         },
         

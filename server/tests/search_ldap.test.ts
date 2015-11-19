@@ -1,14 +1,18 @@
 'use strict';
 
 import _ = require('lodash');
-import assert = require('assert');
-import { require_fresh } from './test_utils';
+import { require_fresh, assert } from './test_utils';
 import test_ldap = require('./test_ldap');
+
+// get module types:
+import __search_ldap__ = require('../search_ldap');
+type search_ldap = typeof __search_ldap__;
+
 
 describe('genLogin', () => {
     
     describe('simple', () => {
-        let search_ldap = require_fresh('../search_ldap');
+        let search_ldap: search_ldap = require_fresh('../search_ldap');
         search_ldap.existLogin = () => Promise.resolve(false);
         
         function check(sn: string, givenName: string, wantedLogin: string) {
@@ -92,9 +96,9 @@ describe('genLogin', () => {
 
 
     describe('use test ldap', () => {
-        let search_ldap;
+        let search_ldap: search_ldap;
         before(() => (
-            test_ldap().then(() => {
+            test_ldap.create().then(() => {
                 search_ldap = require_fresh('../search_ldap');
             })
         ));
@@ -119,9 +123,9 @@ describe('genLogin', () => {
 describe('homonymes', () => {
 
     describe('use test ldap', () => {
-        let search_ldap;
+        let search_ldap: search_ldap;
         before(() => (
-            test_ldap().then(() => {
+            test_ldap.create().then(() => {
                 search_ldap = require_fresh('../search_ldap');
             })
         ));

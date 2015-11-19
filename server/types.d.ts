@@ -9,17 +9,7 @@ declare interface CurrentUser {
   mail: string;
 }
 declare type Mails = string[]
-declare interface StringMap {
-  [index: string]: string;
-}
-declare interface LdapEntry {
-  [index: string]: string[] | Date | number | string;
-  birthDay: Date;
-  score: number;
-}
-declare interface LdapRawEntry {
-  [index: string]: string[];
-}
+
 declare type id = string
 declare type v = any
 declare type response = any

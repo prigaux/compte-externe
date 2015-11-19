@@ -20,8 +20,8 @@ export const getShibAttrs: simpleAction = (req, _sv) => {
 export const getCasAttrs: simpleAction = (req, _sv) => (
     getShibAttrs(req, _sv).then(sv => {
         let filter = filters.eq("eduPersonPrincipalName", sv.v.eduPersonPrincipalName);
-        return ldap.searchOne(conf.ldap.base_people, filter, { attributes: ["supannAliasLogin", "displayName"] });
-    }).then(v => {
+        return search_ldap.searchPeople(filter, ['supannAliasLogin', 'displayName'], {});
+    }).then(vs => vs && vs[0]).then(v => {
         console.log("getCasAttrs", v);
         return { v };
     })
