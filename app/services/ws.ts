@@ -1,10 +1,10 @@
-function padLeft(n: string, width: number) {
-        n = n + '';
-        return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
+function padLeft(s: string | number, width: number) {
+    let n = s + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
 }
 
 class MyDate {
-    constructor(public year, public month, public day) {
+    constructor(public year: number, public month: number, public day: number) {
     }
     toString() {
         return [padLeft(this.day, 2), padLeft(this.month, 2), padLeft(this.year, 4)].join('/');
@@ -22,7 +22,7 @@ class HomePostalAddress {
 }
 
 class HomePostalAddressPrecise extends HomePostalAddress {
-    constructor(public line1, public line2, public postalCode, public town, public country) {
+    constructor(public line1: string, public line2: string, public postalCode: string, public town: string, public country: string) {
         super(line1);
     }
     toString() {
