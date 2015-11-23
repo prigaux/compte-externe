@@ -107,7 +107,9 @@ namespace WsService {
             if (v.birthDay) {
                 v_.birthDay = v.birthDay.toDate().toString();
             }
-            v_.homePostalAddress = _toHomePostalAddress(v.homePostalAddress);
+            if (v.homePostalAddress) {
+                v_.homePostalAddress = _toHomePostalAddress(v.homePostalAddress);
+            }
             if (v.structureParrainS) {
                 v_.structureParrain = v.structureParrainS.key;
             }
