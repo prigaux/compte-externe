@@ -1,8 +1,7 @@
-class HelpersService {
- constructor (private $sce: ng.ISCEService, private $http: ng.IHttpService, private $q: ng.IQService) {
- }
+namespace Helpers {
+ export function create($sce: ng.ISCEService, $http: ng.IHttpService, $q: ng.IQService, $injector) {
 
-    static entityMap = {
+    const entityMap = {
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
@@ -10,13 +9,13 @@ class HelpersService {
         "'": '&#39;',
         "/": '&#x2F;'
     };
-    escapeHtml(str) {
+    function escapeHtml(str) {
         return String(str).replace(/[&<>"'\/]/g, (s) =>
-               HelpersService.entityMap[s]
+               entityMap[s]
         );
     }
 
-    formatDifferences(val1, val2) {
+    function formatDifferences(val1, val2) {
         /* globals JsDiff */
         var diff = JsDiff.diffChars(val1, val2);
         var fragment1 = '';
@@ -28,7 +27,7 @@ class HelpersService {
                 diff[i + 1] = swap;
             }
 
-            var txt = this.escapeHtml(diff[i].value);
+            var txt = escapeHtml(diff[i].value);
             if (diff[i].removed) {
                 fragment1 += '<ins>' + txt + '</ins>';
             } else if (diff[i].added) {
@@ -38,16 +37,24 @@ class HelpersService {
                 fragment2 += txt;
             }
         }
-        return [fragment1, fragment2].map(this.$sce.trustAsHtml);
+        return [fragment1, fragment2].map($sce.trustAsHtml);
     }
 
-    frenchPostalCodeToTowns(postalcode: string, token: string = ''): ng.IPromise<string[]> {
+    function frenchPostalCodeToTowns(postalcode: string, token: string = ''): ng.IPromise<string[]> {
         var url = '//search-towns-as.univ-paris1.fr/';
         var params = { postalcode, token, country: 'FR' };
-        return this.$http.get(url, { params }).then((r) => 
+        return $http.get(url, { params }).then((r) => 
             r.data && r.data['towns']
         );
     }
+    function inject<T>(f: (...any) => T): T {
+       return $injector.invoke(f);
+     }
+
+    return { formatDifferences, frenchPostalCodeToTowns, inject };
+  }
+  let o = Ts.getReturnType(create);
+  export type T = typeof o;
 }
 
-angular.module('myApp').service("helpers", HelpersService);
+angular.module('myApp').service("helpers", Helpers.create);

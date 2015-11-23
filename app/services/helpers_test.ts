@@ -12,7 +12,7 @@ describe('service helpers', function() {
 
         var diff;
         
-        beforeEach(inject((helpers: HelpersService, $sce) => {
+        beforeEach(inject((helpers: Helpers.T, $sce) => {
             diff = function (val1, val2) {
                 return helpers.formatDifferences(val1, val2).map($sce.getTrustedHtml);
             };

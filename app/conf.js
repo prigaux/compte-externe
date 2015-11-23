@@ -54,6 +54,7 @@ var conf = {
             "controllers/validate.js",
             "controllers/moderate.js",
             "controllers/list.js",
+            "services/ts.js",
             "services/ws.js",
             "services/attrsEdit.js",
             "services/helpers.js",

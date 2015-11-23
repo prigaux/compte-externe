@@ -12,7 +12,7 @@ describe('service ws', function() {
 
     describe('homePostalAddress', function(){
         
-        it('should encode/decode homePostalAddress', inject(function(ws: WsService, $sce) {
+        it('should encode/decode homePostalAddress', inject(function(ws: WsService.T, $sce) {
             function check(in_, out) {
                 var r = ws.fromWs({ homePostalAddress: in_ });
                 expect(raw(r.homePostalAddress)).toEqual(out);
