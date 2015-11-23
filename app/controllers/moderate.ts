@@ -1,22 +1,20 @@
 'use strict';
 
-angular.module('myApp')
+function ModerateCtrl($location: ng.ILocationService, $scope: angular.IRootScopeService, ws: WsService.T, helpers: Helpers.T, $routeParams) {
+    const id = $routeParams.id;
 
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/moderate/:id', {
-    templateUrl: 'templates/moderate.html',
-    controller: 'ModerateCtrl'
-  });
-}])
-
-.controller('ModerateCtrl', function($location: ng.ILocationService, attrsEdit: AttrsEditService, ws: WsService, helpers: HelpersService, $scope, $routeParams) {
-    var id = $routeParams.id;
+    let o = Ts.assign(helpers.inject(AttrsEditController.create)($scope, { 
+      id, 
+      nextStep,
+    }), {
+      homonymes: [],
+    });
 
     function nextStep (resp) {
         if (resp.login && !resp.step) {
             // user created
-            if ($scope.v.supannAliasLogin &&
-                $scope.v.supannAliasLogin !== resp.login) {
+            if (o.v.supannAliasLogin &&
+                o.v.supannAliasLogin !== resp.login) {
                 alert("L'utilisateur a été créé, mais avec l'identifiant « " + resp.login + "». Il faut prévenir l'utilisateur");
             }
         }
@@ -25,7 +23,7 @@ angular.module('myApp')
 
     function computeComparisons(homonyme) {             
         var r = [];
-        angular.forEach($scope.v, function (val, attr) {
+        angular.forEach(o.v, function (val, attr) {
             var val1 = "" + val;
             var val2 = "" + homonyme[attr];
             if (val1 !== val2) {
@@ -35,16 +33,26 @@ angular.module('myApp')
         homonyme.comparisons = r;
     }
 
-    $scope.$watchGroup(['v', 'homonymes'], function (l) {
+    o.$watchGroup(['v', 'homonymes'], function (l) {
         if (l[0] && l[1]) {
-            $scope.homonymes.forEach(computeComparisons);
+            o.homonymes.forEach(computeComparisons);
         }
     });
 
     ws.homonymes(id).then(function (l) {
-        $scope.homonymes = l;
+        o.homonymes = l;
     });
 
-    attrsEdit.manager($scope, id, null, nextStep);
-    
-});
+    return o;
+}
+
+angular.module('myApp')
+
+.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/moderate/:id', {
+    templateUrl: 'templates/moderate.html',
+    controller: 'ModerateCtrl'
+  });
+}])
+
+.controller('ModerateCtrl', ModerateCtrl);

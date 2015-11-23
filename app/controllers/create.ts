@@ -1,17 +1,13 @@
 'use strict';
 
-angular.module('myApp')
-
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/create/:kind', {
-    templateUrl: 'templates/create.html',
-    controller: 'CreateCtrl'
-  });
-}])
-
-.controller('CreateCtrl', function($location: ng.ILocationService, attrsEdit: AttrsEditService, $scope, $routeParams) {
-    var kind = $routeParams.kind;
-    var newId = 'new/' + kind;
+function CreateCtrl($location: ng.ILocationService, helpers: Helpers.T, $scope, $routeParams) {
+    let kind = $routeParams.kind;
+    
+    let o = helpers.inject(AttrsEditController.create)($scope, { 
+      id: 'new/' + kind, 
+      expectedStep: kind, 
+      nextStep,
+    });
 
     function nextStep(resp) {
         if (resp.step === 'validate_email') {
@@ -26,6 +22,17 @@ angular.module('myApp')
             $location.path('/');
         }
     }
+    
+    return o;
+}
 
-    attrsEdit.manager($scope, newId, kind, nextStep);
-});
+angular.module('myApp')
+
+.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/create/:kind', {
+    templateUrl: 'templates/create.html',
+    controller: 'CreateCtrl'
+  });
+}])
+
+.controller('CreateCtrl', CreateCtrl);

@@ -1,51 +1,57 @@
-class AttrsEditService {
- constructor(private helpers: HelpersService, private ws: WsService, private conf) {
- }
+namespace AttrsEditController {
+  export type params = {
+    id: string;
+    expectedStep?: string;
+    nextStep: (resp: {}) => void;
+  }
 
- manager($scope, id, expectedStep, nextStep) {
-        $scope.label = this.conf.attr_labels;
-        $scope.attr_formatting = this.conf.attr_formatting;
-        var accentsRange = '\u00C0-\u00FC';
-        $scope.allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
-        $scope.passwordPattern = /(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,}/;
-        $scope.maxDay = 31;
-        $scope.maxYear = new Date().getUTCFullYear();
+  export const create = (helpers: Helpers.T, ws: WsService.T, conf) => ($scope: angular.IRootScopeService, params: params) => {
+    const accentsRange = '\u00C0-\u00FC';
+    const month2maxDay = [undefined,
+        31, 29, 31, 30, 31, 30,
+        31, // july
+        31, 30, 31, 30, 31];
 
-        var month2maxDay = [ undefined,
-                             31, 29, 31, 30, 31, 30,
-                             31, // july
-                             31, 30, 31, 30, 31 ];
-        $scope.$watch('v.birthDay.month', (month) => {
-            $scope.maxDay = month2maxDay[month] || 31;
-        });
+    let o = Ts.assign($scope, {
+      label: conf.attr_labels,
+      attr_formatting: conf.attr_formatting,
+      allowedCharsInNames: "[A-Za-z" + accentsRange + "'. -]",
+      passwordPattern: /(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,}/,
+      maxDay: 31,
+      maxYear: new Date().getUTCFullYear(),
+      v: <V> undefined,
+      errorMessages: {},
+      structures_search: ws.structures_search,
+      frenchPostalCodeToTowns: helpers.frenchPostalCodeToTowns,
+    });
 
-        $scope.$watch('v.homePostalAddress.postalCode', (postalCode) => {
-            if (!postalCode) return;        
-            var address = $scope.v && $scope.v.homePostalAddress;
+    o.$watch(Ts.try_(() => o.v.birthDay.month), (month) => {
+        o.maxDay = month2maxDay[month] || 31;
+    });
+
+    //o.$watch(helpers.try_(() => helpers.cast(o.v.homePostalAddress, HomePostalAddressPrecise).postalCode), (postalCode) => {
+    o.$watch('v.homePostalAddress.postalCode', (postalCode: string) => {
+            if (!postalCode) return;
+            var address = Ts.cast(o.v && o.v.homePostalAddress, HomePostalAddressPrecise);
             if (address) {
-                this.helpers.frenchPostalCodeToTowns(postalCode).then((towns) => {
+                helpers.frenchPostalCodeToTowns(postalCode).then((towns) => {
                     if (towns && towns.length === 1) {
                         address.town = towns[0];
                     }
                 });
             }
-        });
+    });
 
-        this.ws.getInScope($scope, id, expectedStep);
+    ws.getInScope(o, params.id, params.expectedStep);
 
-        $scope.structures_search = this.ws.structures_search;
-        $scope.frenchPostalCodeToTowns = this.helpers.frenchPostalCodeToTowns;
-
-        $scope.errorMessages = {};
-        
-        $scope.submit = () => {
-            //if (!$scope.myForm.$valid) return;
-            this.ws.set(id, $scope.v).then(nextStep);
-        };
-        $scope.reject = () => {
-            this.ws.delete(id).then(nextStep);
-        };
- };
+    function submit() {
+        //if (!o.myForm.$valid) return;
+        ws.set(params.id, o.v).then(params.nextStep);
+    }
+    function reject() {
+        ws.remove(params.id).then(params.nextStep);
+    }
+    
+    return Ts.assign(o, { submit, reject });
+  };
 }
-
-angular.module('myApp').service("attrsEdit", AttrsEditService);
