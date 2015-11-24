@@ -2,6 +2,7 @@
 
 import _ = require('lodash');
 import test_utils = require('./test_utils');
+import { parseDN } from 'ldapjs';
 
 // get module types:
 import __conf__ = require('../conf');
@@ -27,9 +28,12 @@ function test_params() {
         { uid: "ayrigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux ayme", displayName: "aymé rigaux", up1BirthDay: '19750101000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [] },
 /* tslint:enable */
     ];
-    DNs[params.base_people] = {};
+    function add(dn: string, e) {
+      DNs[parseDN(dn).toString()] = e;
+    }
+    add(params.base_people, {});
     people.forEach(e => {
-        DNs["uid=" + e.uid + "," + params.base_people] = e;
+        add("uid=" + e.uid + "," + params.base_people, e);
     });
     return params;
 }

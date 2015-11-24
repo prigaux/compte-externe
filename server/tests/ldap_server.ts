@@ -1,3 +1,4 @@
+import _ = require('lodash');
 import ldap = require('ldapjs');
 
 const doIt = params => {
@@ -7,7 +8,7 @@ const db = params.DNs;
 const server = ldap.createServer();
 
 function authorize(req, res, next) {
-  if (req.dn.toString() !== params.dn || req.credentials !== params.password) {
+  if (!req.dn.equals(params.dn) || req.credentials !== params.password) {
       //console.log(req.dn.toString(), '!==', params.dn, '||', req.credentials, '!==', params.password);
       return next(new ldap.InvalidCredentialsError());
   }
@@ -34,7 +35,7 @@ function search(dn, filter, scope: string) {
 
 server.search(params.base, (req, res, next) => {
   let dn = req.dn.toString();
-  //console.log("ldap server.search", req.dn, req.filter);
+  //console.log("ldap server.search", dn, req.filter.toString());
   if (db[dn]) {
       let dns = search(req.dn, req.filter, req.scope);
       dns.forEach(dn => {

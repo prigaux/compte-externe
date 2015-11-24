@@ -83,6 +83,7 @@ declare module 'ldapjs' {
     export function createClient(options: any): Client
     export function createServer(): any
     export function parseFilter(string): any
+    export function parseDN(string): any
     
     export class InvalidCredentialsError {}
     export class NoSuchObjectError { constructor(any) }
