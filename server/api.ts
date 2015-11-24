@@ -108,17 +108,7 @@ function set(req: req, id: id, v: v) {
     ));
 }
 
-// 1. merge allow new v attrs into sv
-// 2. call action_post
-// 3. advance to new step
-// 4. call action_pre
-// 5. save to DB or remove from DB if one action returned null
-function setRaw(req: req, sv: sv, v: v) {
-    if (!sv.id) {
-        // do not really on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
-        sv.id = db.new_id();
-    }
-    sv.v = mergeAttrs(step(sv).attrs, sv.v, v);
+function advance_sv(req: req, sv: sv) {
     return action_post(req, sv).then(svr => {
         svr.step = step(svr).next;
         if (svr.step) {
@@ -135,7 +125,21 @@ function setRaw(req: req, sv: sv, v: v) {
         } else {
             return svr;
         }
-    }).tap(svr => {
+    });
+}
+
+// 1. merge allow new v attrs into sv
+// 2. call action_post
+// 3. advance to new step
+// 4. call action_pre
+// 5. save to DB or remove from DB if one action returned null
+function setRaw(req: req, sv: sv, v: v) {
+    if (!sv.id) {
+        // do not really on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
+        sv.id = db.new_id();
+    }
+    sv.v = mergeAttrs(step(sv).attrs, sv.v, v);
+    return advance_sv(req, sv).tap(svr => {
         let sv = <sv> _.omit(svr, 'response');
         if (sv.step) {
             return saveRaw(req, sv);
