@@ -41,6 +41,7 @@ export function chain(l_actions: simpleAction[]): action {
 
 export const createCompte: simpleAction = (req, sv) => {
     let v = sv.v;
+    if (!v) throw "internal error: createCompte with no v";
     console.log("action createCompte:", v);
     return utils.popen(JSON.stringify(v), 'createCompte', []).then(data => {
         try { 
