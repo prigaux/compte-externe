@@ -6,7 +6,7 @@ import conf = require('./conf');
 
 const remove_accents = _.deburr;
 
-const client = ldapjs.createClient({ url: conf.ldap.uri });
+const client = ldapjs.createClient({ url: conf.ldap.uri, reconnect: true });
 
 client.bind(conf.ldap.dn, conf.ldap.password, err => {
     if (err) console.log("err: " + err);
