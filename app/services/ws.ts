@@ -105,7 +105,7 @@ namespace WsService {
         function toWs(v: V): VRaw {
             var v_: VRaw = <any>angular.copy(v);
             if (v.birthDay) {
-                v_.birthDay = v.birthDay.toDate().toString();
+                v_.birthDay = v.birthDay.toDate().toJSON();
             }
             if (v.homePostalAddress) {
                 v_.homePostalAddress = _toHomePostalAddress(v.homePostalAddress);
