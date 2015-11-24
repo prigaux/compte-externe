@@ -19,3 +19,6 @@ export const user_id = (user_id: string): acl_search => {
     let attr = user_id.match(/@/) ? "eduPersonPrincipalName" : "uid";
     return create(filters.eq(attr, user_id));
 };
+
+export const autoModerateIf = (f: (v) => boolean): acl_search =>
+    (v, _attr) => Promise.resolve(f(v) ? ["_AUTO_MODERATE_"] : []);
