@@ -43,9 +43,9 @@ export const steps: steps = {
     },
 
     cas: {
-        attrs: attrs,
-        action_pre: actions.getShibAttrs,
-        action_post: actions.createCompte,
+        attrs: {},
+        action_post: actions.getCasAttrs,
+        next: 'moderate',
     },
 
     homonymes: {
@@ -68,7 +68,8 @@ export const steps: steps = {
     },
 
     moderate: {
-        acls: [acl.user_id('prigaux'),
+        acls: [acl.autoModerateIf(v => v.autoCreate),
+               acl.user_id('prigaux'),
                acl.user_id('fchevreau'),
                acl.user_id('branciar'),
                //acl.ldapGroup("employees.administration.DGHB")

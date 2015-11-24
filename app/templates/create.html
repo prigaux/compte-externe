@@ -1,11 +1,12 @@
 <div class="normalContent" ng-show="v">
-
+ 
  <h4 style="margin-top: 2em">Création de compte</h4>
 
  <form novalidate name="myForm" ng-submit="submitted = 1; submit()" class="form-horizontal">
 
    <div ng-include="'templates/common-attrs.html'"></div>
    <div ng-include="'templates/extern-attrs.html'"></div>
+   <div ng-include="'templates/password-attrs.html'"></div>
 
    <div my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit">

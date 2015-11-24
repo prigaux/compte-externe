@@ -1,7 +1,12 @@
 'use strict';
 
-function CreateCtrl($location: ng.ILocationService, helpers: Helpers.T, $scope, $routeParams) {
+function CreateCtrl($location: ng.ILocationService, helpers: Helpers.T, ws: WsService.T, $scope, $routeParams) {
     let kind = $routeParams.kind;
+
+    if (kind === 'cas') {
+      ws.set('new/cas', <V> {}).then(() => $location.path('/auto-created'));
+      return {};
+    }
     
     let o = helpers.inject(AttrsEditController.create)($scope, { 
       id: 'new/' + kind, 
