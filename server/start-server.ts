@@ -1,3 +1,4 @@
+import _ = require('lodash');
 import express = require('express');
 import path = require('path');
 import logger = require('morgan');
@@ -7,6 +8,8 @@ import db = require('./db');
 import api = require('./api');
 import utils = require('./utils');
 const app = express();
+
+_.attempt(() => require('source-map-support').install());
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/app/favicon.ico'));
