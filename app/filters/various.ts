@@ -22,7 +22,6 @@ angular.module('myApp')
     
     function groupBy(items, getter) {
         var result = {};
-        console.log("groupBy");
         items.forEach(function (elm) {
             var prop = getter(elm);    
             if (!result[prop]) result[prop] = [];
