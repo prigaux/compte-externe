@@ -8,3 +8,16 @@
            ng-disabled="attrs.structureParrain.readonly"
            form-control>
   </div>
+
+  <div my-bootstrap-form-group="jpegPhoto" label="{{label.jpegPhoto}}" ng-if="attrs.jpegPhoto && !webcamLiveCtrl.error">
+      <!-- for validation: 
+      <input type="hidden" name="jpegPhoto" ng-model="v.jpegPhoto" required> -->
+      <div ng-if="v.jpegPhoto">
+          <img src="{{v.jpegPhoto}}">
+          <a ng-click="v.jpegPhoto = ''">Changer la photo</a>
+      </div>
+      <div ng-if="!v.jpegPhoto">
+          <div webcam-live-portrait="webcamLiveCtrl"></div>
+          <a ng-click="v.jpegPhoto = webcamLiveCtrl.get()">Prendre une photo</a>
+      </div>
+  </div>

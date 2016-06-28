@@ -21,6 +21,7 @@ namespace AttrsEditController {
       maxYear: new Date().getUTCFullYear(),
       v: <V> undefined,
       errorMessages: {},
+      webcamLiveCtrl: { width: 240, height: 300 },
       structures_search: ws.structures_search,
       frenchPostalCodeToTowns: helpers.frenchPostalCodeToTowns,
     });

@@ -16,6 +16,7 @@ var conf = {
         country: "Pays",
         homePhone: "Téléphone personnel",
         supannMailPerso: "Email personnel",
+        jpegPhoto: "Photo",
         structureParrain: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)",
         userPassword: "Mot de passe",
         barcode: "Code barre",
