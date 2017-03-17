@@ -50,7 +50,7 @@ interface SVRaw {
 }
 
 namespace WsService {
-    export function create($http: ng.IHttpService, $q: ng.IQService) {
+    export function create($http: ng.IHttpService) {
 
         function structures_search(token, maxRows) {
             return $http.get('/api/structures', { params: { token, maxRows } }).then((resp) => resp.data);
@@ -120,7 +120,7 @@ namespace WsService {
             var err = resp.data;
             console.error(err);
             alert(err);
-            return $q.reject(err);
+            return Promise.reject(err);
         }
 
         function getInScope($scope, id: string, expectedStep: string) {
@@ -151,7 +151,7 @@ namespace WsService {
             }, (resp) => {
                 var err = resp.data;
                 if (!$scope.$$destroyed) alert(err);
-                return $q.reject(err);
+                return Promise.reject(err);
             });
         }
 
