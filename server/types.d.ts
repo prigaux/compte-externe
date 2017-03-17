@@ -23,9 +23,9 @@ declare type sv = {
 
 declare type vr = {v: v; response?: response }
 declare type svr = sv & { response?: response }
-declare type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
-declare type action = (req: any, sv: sv) => Promise<vr>
-declare type acl_search = (v, string) => Promise<string[]>
+declare type simpleAction = (req: any, sv: {v: v}) => Promise<vr, any>
+declare type action = (req: any, sv: sv) => Promise<vr, any>
+declare type acl_search = (v, string) => Promise<string[], any>
 
 declare interface StepAttrOption {
   readonly?: boolean;
