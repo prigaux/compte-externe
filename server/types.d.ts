@@ -1,4 +1,4 @@
-/// <reference path='../typings-server/tsd.d.ts' />
+/// <reference path='typings/index.d.ts' />
 
 declare interface Dictionary<T> {
   [index: string]: T;

@@ -73,20 +73,6 @@ module.exports = function(grunt) {
                 configFile: 'karma.conf.js',
             },
         },
-        tsd: {
-    server: {
-options: {
-            command: 'reinstall',
-            config: 'server/tsd.json',
-}
-    },
-            client: {
-                options: {
-                    command: 'reinstall',
-                    config: 'app/tsd.json',
-                }
-            }
-        },
         'node-inspector': {
             custom: {
                 options: {

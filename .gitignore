@@ -5,8 +5,9 @@ server/**/*.js.map
 logs/*
 !.gitkeep
 node_modules/
-bower_components/
-typings*/
+app/bower_components/
+app/typings/
+server/typings/
 .tscache
 tmp
 .DS_Store

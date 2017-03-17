@@ -1,4 +1,4 @@
-/// <reference path="../typings-client/tsd.d.ts" />
+/// <reference path="typings/index.d.ts" />
 
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
