@@ -1,5 +1,5 @@
 namespace Helpers {
- export function create($sce: ng.ISCEService, $http: ng.IHttpService, $q: ng.IQService, $injector) {
+ export function create($sce: ng.ISCEService, $http: ng.IHttpService, $injector) {
 
     const entityMap = {
         "&": "&amp;",
