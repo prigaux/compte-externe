@@ -35,6 +35,7 @@ var conf = {
                 'bower_components/angular-bootstrap/ui-bootstrap-csp.css',
             ],
             js: [
+                "bower_components/axios/dist/axios.js",
                 "bower_components/angular/angular.js",
                 "bower_components/angular-route/angular-route.js",
                 "bower_components/angular-cookies/angular-cookies.js",

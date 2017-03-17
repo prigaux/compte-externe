@@ -15,6 +15,7 @@
     "angular-cookies": "1.4.x",
     "angular-mocks": "~1.4.x",
     "angular-bootstrap": "x",
-    "html5-boilerplate": "~4.3.0"
+    "html5-boilerplate": "~4.3.0",
+    "axios": "^0.15.3"
   }
 }

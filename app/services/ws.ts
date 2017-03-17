@@ -50,10 +50,10 @@ interface SVRaw {
 }
 
 namespace WsService {
-    export function create($http: ng.IHttpService) {
+    export function create() {
 
         function structures_search(token, maxRows) {
-            return $http.get('/api/structures', { params: { token, maxRows } }).then((resp) => resp.data);
+            return axios.get('/api/structures', { params: { token, maxRows } }).then((resp) => resp.data);
         }
 
         function _fromJSONDate(date: string) {
@@ -125,7 +125,7 @@ namespace WsService {
 
         function getInScope($scope, id: string, expectedStep: string) {
             var url = '/api/comptes/' + id;
-            return $http.get(url).then((resp) => {
+            return axios.get(url).then((resp) => {
                 var sv = <any>resp.data;
                 if (sv.error) {
                     console.error("error accessing ", url, ":", sv.error, sv.stack);
@@ -136,11 +136,12 @@ namespace WsService {
                     sv.modifyTimestamp = _fromJSONDate(sv.modifyTimestamp);
                     angular.extend($scope, sv);
                 }
+                $scope.$apply();
             }, _handleErr);
         }
 
         function listInScope($scope, params) {
-            return $http.get('/api/comptes', { params }).then((resp) => {
+            return axios.get('/api/comptes', { params }).then((resp) => {
                 if ($scope.$$destroyed) return;
                 var svs = <any>resp.data;
                 if (svs.error) {
@@ -148,6 +149,7 @@ namespace WsService {
                 } else {
                     $scope.svs = svs;
                 }
+                $scope.$apply();
             }, (resp) => {
                 var err = resp.data;
                 if (!$scope.$$destroyed) alert(err);
@@ -156,7 +158,7 @@ namespace WsService {
         }
 
         function homonymes(id) {
-            return $http.get('/api/homonymes/' + id).then((resp) =>
+            return axios.get('/api/homonymes/' + id).then((resp) =>
                 (<any>resp.data).map(fromWs)
                 , _handleErr);
         }
@@ -164,14 +166,14 @@ namespace WsService {
         function set(id: string, v: V) {
             var url = '/api/comptes/' + id;
             var v_ = toWs(v);
-            return $http.put(url, v_).then(
+            return axios.put(url, v_).then(
                 (resp) => resp.data,
                 _handleErr);
         }
 
         function remove(id: string) {
             var url = '/api/comptes/' + id;
-            return $http.delete(url).then(
+            return axios.delete(url).then( 
                 (resp) => resp.data,
                 _handleErr);
         }

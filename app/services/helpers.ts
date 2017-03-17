@@ -1,5 +1,5 @@
 namespace Helpers {
- export function create($sce: ng.ISCEService, $http: ng.IHttpService, $injector) {
+ export function create($sce: ng.ISCEService, $injector) {
 
     const entityMap = {
         "&": "&amp;",
@@ -40,10 +40,10 @@ namespace Helpers {
         return [fragment1, fragment2].map($sce.trustAsHtml);
     }
 
-    function frenchPostalCodeToTowns(postalcode: string, token: string = ''): ng.IPromise<string[]> {
+    function frenchPostalCodeToTowns(postalcode: string, token: string = ''): Promise<string[]> {
         var url = '//search-towns-as.univ-paris1.fr/';
         var params = { postalcode, token, country: 'FR' };
-        return $http.get(url, { params }).then((r) => 
+        return axios.get(url, { params }).then((r) => 
             r.data && r.data['towns']
         );
     }

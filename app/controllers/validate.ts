@@ -9,27 +9,27 @@ angular.module('myApp')
   });
 }])
 
-.controller('ValidateCtrl', function($http: ng.IHttpService, $location: ng.ILocationService, $scope, $routeParams) {
+.controller('ValidateCtrl', function($location: ng.ILocationService, $scope, $routeParams) {
     var url = '/api/comptes/' + $routeParams.id;
 
     function set(v) {
-        $http.put(url, v).success(function (resp: any) {
+        axios.put(url, v).then(r => r.data).then(function (resp: any) {
             if (resp && resp.success) {
                 $scope.finished = true;
             }
-        }).error(function (err) {
+        }).catch(function (err) {
             alert(err);
         });
     }
 
-    $http.get(url).success(function (sv: SVRaw) {
+    axios.get(url).then(r => r.data).then(function (sv: SVRaw) {
         if (sv.error) {
             alert(sv);
         } else {
             set(sv.v);
             
         }
-    }).error(function (err) {
+    }).catch(function (err) {
         alert(err);
     });
 });
