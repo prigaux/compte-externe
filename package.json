@@ -26,7 +26,7 @@
     "nodemailer": "^1.3.4",
     "nodemailer-sendmail-transport": "^1.0.0",
     "simple-get": "^1.3.3",
-    "typescript": "^1.6.2",
+    "typescript": "2.1.x",
     "typings": "^2.1.0",
     "xml2js": "^0.4.9"
   },

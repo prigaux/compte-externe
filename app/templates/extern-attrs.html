@@ -1,23 +1,26 @@
+<div>
+  <my-bootstrap-form-group name="supannMailPerso" :label="label.supannMailPerso" :validity="validity">
+    <input-with-validity name="supannMailPerso" v-model="v.supannMailPerso" type="email" required @validity="validity.supannMailPerso = $event"></input-with-validity>
+  </my-bootstrap-form-group>
 
-  <div my-bootstrap-form-group="supannMailPerso" label="{{label.supannMailPerso}}">
-    <input name="supannMailPerso" ng-model="v.supannMailPerso" type="email" required form-control>
-  </div>
+  <my-bootstrap-form-group name="structureParrain" :label="label.structureParrain" v-if="attrs.structureParrain" :validity="validity">
+    <div v-if="!attrs.structureParrain.readonly">
+      <input-with-validity name="structureParrain" :value="v.structureParrainS" type="text" style="display: none" @validity="validity.structureParrain = $event"></input-with-validity>
+      <v-select v-model="v.structureParrainS" :options="structures_search_result" label="description" :on-search="structures_search"></v-select>
+    </div>
+  </my-bootstrap-form-group>
 
-  <div my-bootstrap-form-group="structureParrain" label="{{label.structureParrain}}" ng-if="attrs.structureParrain">
-    <input name="structureParrain" ng-model="v.structureParrainS" type="text" typeahead="e as e.description for e in structures_search($viewValue)"
-           ng-disabled="attrs.structureParrain.readonly"
-           form-control>
-  </div>
+  <my-bootstrap-form-group name="jpegPhoto" :label="label.jpegPhoto" v-if="attrs.jpegPhoto" :validity="validity">
+      <!-- for validation: -->
+      <input-with-validity name="jpegPhoto" v-model="v.jpegPhoto" type="text" style="display: none" required @validity="validity.jpegPhoto = $event"></input-with-validity>
 
-  <div my-bootstrap-form-group="jpegPhoto" label="{{label.jpegPhoto}}" ng-if="attrs.jpegPhoto && !webcamLiveCtrl.error">
-      <!-- for validation: 
-      <input type="hidden" name="jpegPhoto" ng-model="v.jpegPhoto" required> -->
-      <div ng-if="v.jpegPhoto">
-          <img src="{{v.jpegPhoto}}">
-          <a ng-click="v.jpegPhoto = ''">Changer la photo</a>
+      <div v-if="v.jpegPhoto">
+          <img :src="v.jpegPhoto">
+          <a href="#" @click.prevent="v.jpegPhoto = ''">Changer la photo</a>
       </div>
-      <div ng-if="!v.jpegPhoto">
-          <div webcam-live-portrait="webcamLiveCtrl"></div>
-          <a ng-click="v.jpegPhoto = webcamLiveCtrl.get()">Prendre une photo</a>
+      <div v-if="!v.jpegPhoto">
+          <webcam-live-portrait width="240" height="300" :doget="doGet" @image="v.jpegPhoto = $event"></webcam-live-portrait>
+          <a href="#" @click.prevent="doGet = [0]">Prendre une photo</a>
       </div>
-  </div>
+  </my-bootstrap-form-group>
+</div>

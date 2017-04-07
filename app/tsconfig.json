@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    // ... other options omitted
+    "allowSyntheticDefaultImports": true,
+    "lib": [
+      "dom",
+      "es5"
+    ]
+  }
+}

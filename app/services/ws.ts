@@ -27,13 +27,14 @@ class HomePostalAddressPrecise extends HomePostalAddress {
     }
     toString() {
         if (!this.postalCode && !this.town) return undefined;
-        return this.line1 + (this.line2 ? "$" + this.line2 : '') + "$" + this.postalCode + " " + this.town + "$" + (this.country || 'FRANCE');
+        return this.line1 + (this.line2 ? "\n" + this.line2 : '') + "\n" + this.postalCode + " " + this.town + "\n" + (this.country || 'FRANCE');
     }
 }
 
 interface VCommon {
     structureParrain?: string;
     supannAliasLogin?: string;
+    jpegPhoto?: string;
 }
 interface VRaw extends VCommon {
     birthDay?: string;
@@ -46,13 +47,27 @@ interface V extends VCommon {
 }
 interface SVRaw {
     v: VRaw;
+    step: string;
     error?: string;
 }
 
-namespace WsService {
-    export function create() {
+interface StepAttrOption {
+  readonly?: boolean;
+  hidden?: boolean;
+}
+interface Dictionary<T> {
+  [index: string]: T;
+}
+type StepAttrsOption = Dictionary<StepAttrOption>;
 
-        function structures_search(token, maxRows) {
+interface Structure {
+    key: string;
+    name: string;
+    description: string;
+}
+
+namespace Ws {
+        export function structures_search(token : string, maxRows? : number) : Promise<Structure[]> {
             return axios.get('/api/structures', { params: { token, maxRows } }).then((resp) => resp.data);
         }
 
@@ -76,12 +91,12 @@ namespace WsService {
                 m2[1], m2[2],
                 m[3]);
         }
-        function _toHomePostalAddress(addr: HomePostalAddress) {
+        function _toHomePostalAddress(addr: HomePostalAddress) : string {
             return addr.toString();
         }
 
         function fromWs(v: VRaw): V {
-            var v_: V = <any>angular.copy(v);
+            var v_: V = <any> Helpers.copy(v);
             //v.birthDay = "19751002000000Z"; //"1975-10-02";
             if (v.birthDay) {
                 v_.birthDay = _fromLDAPDate(v.birthDay) || _fromJSONDate(v.birthDay);
@@ -94,6 +109,7 @@ namespace WsService {
             } else {
                 v_.homePostalAddress = new HomePostalAddressPrecise('', '', '', '', '');
             }
+            v_.structureParrainS = { key: null, name: null, description: null };
             if (v.structureParrain) {
                 structures_search(v.structureParrain, 1).then((resp) => {
                     v_.structureParrainS = resp[0];
@@ -102,8 +118,8 @@ namespace WsService {
             return v_;
         }
 
-        function toWs(v: V): VRaw {
-            var v_: VRaw = <any>angular.copy(v);
+        export function toWs(v: V): VRaw {
+            var v_: VRaw = <any>Helpers.copy(v);
             if (v.birthDay) {
                 v_.birthDay = v.birthDay.toDate().toJSON();
             }
@@ -123,7 +139,7 @@ namespace WsService {
             return Promise.reject(err);
         }
 
-        function getInScope($scope, id: string, expectedStep: string) {
+        export function getInScope($scope, id: string, expectedStep: string) : Promise<void> {
             var url = '/api/comptes/' + id;
             return axios.get(url).then((resp) => {
                 var sv = <any>resp.data;
@@ -134,36 +150,35 @@ namespace WsService {
                     if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
                     if (sv.v) sv.v = fromWs(sv.v);
                     sv.modifyTimestamp = _fromJSONDate(sv.modifyTimestamp);
-                    angular.extend($scope, sv);
+                    Helpers.eachObject(sv.attrs, (attr) => sv.v[attr] = sv.v[attr]); // ensure key exists for Vuejs setters
+                    Helpers.assign($scope, sv);
                 }
-                $scope.$apply();
             }, _handleErr);
         }
 
-        function listInScope($scope, params) {
+        export function listInScope($scope, params) : Promise<void> {
             return axios.get('/api/comptes', { params }).then((resp) => {
-                if ($scope.$$destroyed) return;
                 var svs = <any>resp.data;
                 if (svs.error) {
                     $scope.err = svs;
                 } else {
                     $scope.svs = svs;
                 }
-                $scope.$apply();
             }, (resp) => {
+                if (params.poll) return; // ignore errors when polling
                 var err = resp.data;
-                if (!$scope.$$destroyed) alert(err);
+                alert(err);
                 return Promise.reject(err);
             });
         }
 
-        function homonymes(id) {
+        export function homonymes(id) {
             return axios.get('/api/homonymes/' + id).then((resp) =>
-                (<any>resp.data).map(fromWs)
+                (<any>resp.data)
                 , _handleErr);
         }
 
-        function set(id: string, v: V) {
+        export function set(id: string, v: V) {
             var url = '/api/comptes/' + id;
             var v_ = toWs(v);
             return axios.put(url, v_).then(
@@ -171,18 +186,10 @@ namespace WsService {
                 _handleErr);
         }
 
-        function remove(id: string) {
+        export function remove(id: string) {
             var url = '/api/comptes/' + id;
             return axios.delete(url).then( 
                 (resp) => resp.data,
                 _handleErr);
         }
-
-        return { fromWs, toWs, remove, set, homonymes, listInScope, getInScope, structures_search };
-    }
-
-    let o = Ts.getReturnType(create);
-    export type T = typeof o;
 }
-
-angular.module('myApp').service("ws", WsService.create);

@@ -66,7 +66,7 @@ angular.module('myApp')
     return {
         restrict: 'A',
         scope: { passwd: '=passwordStrength' },
-        controller: function ($scope) {
+        controller($scope) {
             $scope.$watch('passwd', function (passwd) {
                 var score = computeScore(passwd || '');
                 var level = strengthlevel(score);
@@ -75,8 +75,8 @@ angular.module('myApp')
                 $scope.msg = msgs[level];
             });
         },
-        template: '<span ng-style="{color: color}">{{msg}}</span>' +
-            '<div style="font-size: 1px; height: 3px; border: 1px solid white" ng-style="{width: width, background: color}"></div>',
+        template: '<span :style="{color: color}">{{msg}}</span>' +
+            '<div style="font-size: 1px; height: 3px; border: 1px solid white" :style="{width: width, background: color}"></div>',
 
     };
 });

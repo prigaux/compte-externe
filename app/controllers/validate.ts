@@ -1,35 +1,34 @@
 'use strict';
 
-angular.module('myApp')
+const Validate : vuejs.ComponentOption = {
+  templateUrl: 'templates/validate.html',
+  props: ['id'],
+  data: { finished: false },
+  computed: {
+     url() { return '/api/comptes/' + this.id; }
+  },
 
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/validate/:id', {
-    templateUrl: 'templates/validate.html',
-    controller: 'ValidateCtrl'
-  });
-}])
-
-.controller('ValidateCtrl', function($location: ng.ILocationService, $scope, $routeParams) {
-    var url = '/api/comptes/' + $routeParams.id;
-
-    function set(v) {
-        axios.put(url, v).then(r => r.data).then(function (resp: any) {
+  methods: {
+    set(v) {
+        axios.put(this.url, v).then(r => r.data).then(function (resp: any) {
             if (resp && resp.success) {
-                $scope.finished = true;
+                this.finished = true;
             }
         }).catch(function (err) {
             alert(err);
         });
-    }
-
-    axios.get(url).then(r => r.data).then(function (sv: SVRaw) {
+    },
+  },
+  mounted() {
+    axios.get(this.url).then(r => r.data).then(function (sv: SVRaw) {
         if (sv.error) {
             alert(sv);
         } else {
-            set(sv.v);
+            this.set(sv.v);
             
         }
     }).catch(function (err) {
         alert(err);
     });
-});
+  },
+};

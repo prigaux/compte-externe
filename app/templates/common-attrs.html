@@ -1,70 +1,75 @@
-<div ng-include="'templates/form-errors.html'"></div>
+<div>
 
-  <div my-bootstrap-form-group="supannCivilite" label="{{label.supannCivilite}}">
-    <label class="radio-inline" ng-repeat="val in ['M.', 'Mme']">
-      <input type="radio" name="supannCivilite" ng-model="v.supannCivilite" ng-value="val" required>{{val}}
+  <my-bootstrap-form-group name="supannCivilite" :label="label.supannCivilite" :validity="validity">
+    <label class="radio-inline" v-for="val in ['M.', 'Mme']">
+      <input-with-validity type="radio" name="supannCivilite" v-model="v.supannCivilite" :value="val" required @validity="validity.supannCivilite = $event"></input-with-validity>
+      {{val}}
     </label>
-  </div>
+  </my-bootstrap-form-group>
 
-  <div my-bootstrap-form-group="givenName" label="{{label.givenName}}">
-    <input name="givenName" ng-model="v.givenName" type="text" allowed-chars="{{allowedCharsInNames}}" required form-control>
-  </div>
+  <my-bootstrap-form-group name="givenName" :label="label.givenName" :validity="validity">
+    <input-with-validity name="givenName" v-model="v.givenName" type="text" :allowed-chars="allowedCharsInNames" required @validity="validity.givenName = $event"></input-with-validity>
+  </my-bootstrap-form-group>
 
-  <div my-bootstrap-form-group="sn" label="{{label.sn}}">
-    <input name="sn" ng-model="v.sn" type="text" allowed-chars="{{allowedCharsInNames}}" required form-control>
-  </div>
+  <my-bootstrap-form-group name="sn" :label="label.sn" :validity="validity">
+    <input-with-validity name="sn" v-model="v.sn" type="text" :allowed-chars="allowedCharsInNames" required @validity="validity.sn = $event"></input-with-validity>
+  </my-bootstrap-form-group>
 
-  <div my-bootstrap-form-group="birthName" label="{{label.birthName}}">
-    <input name="birthName" ng-model="v.birthName" type="text" allowed-chars="{{allowedCharsInNames}}" form-control>
-  </div>
+  <my-bootstrap-form-group name="birthName" :label="label.birthName" :validity="validity">
+    <input-with-validity name="birthName" v-model="v.birthName" type="text" :allowed-chars="allowedCharsInNames" @validity="validity.birthName = $event"></input-with-validity>
+  </my-bootstrap-form-group>
 
-  <div my-bootstrap-form-group="day" multi="true" label="{{label.birthDay}}">
-    <div class="col-xs-2" my-has-error="day">
-      <div my-error-msgs="day">
-        <input name="day" ng-model="v.birthDay.day" type="number" min="1" max="{{maxDay}}" placeholder="Jour" required form-control>
+  <my-bootstrap-form-group name="day" multi="true" :label="label.birthDay">
+    <div class="col-xs-2" :class="{'has-error': validity.submitted && !validity.day.valid }">
+      <div>
+        <input-with-validity name="day" v-model="v.birthDay.day" type="number" min="1" :max="maxDay" placeholder="Jour" required @validity="validity.day = $event"></input-with-validity>
+        <validation-errors name="day" :validity="validity"></validation-errors>
       </div>
     </div>
-    <div class="col-xs-2" my-has-error="month">
-      <div my-error-msgs="month">
-        <input name="month" ng-model="v.birthDay.month" type="number" min="1" max="12" placeholder="Mois" required form-control>
+    <div class="col-xs-2" :class="{'has-error': validity.submitted && !validity.month.valid }">
+      <div>
+        <input-with-validity name="month" v-model="v.birthDay.month" type="number" min="1" max="12" placeholder="Mois" required @validity="validity.month = $event"></input-with-validity>
+        <validation-errors name="month" :validity="validity"></validation-errors>
       </div>
     </div>
-    <div class="col-xs-5" my-has-error="year">
-      <div my-error-msgs="year">
-        <input name="year" ng-model="v.birthDay.year" type="number" min="1900" max="{{maxYear}}" placeholder="Année" required  form-control>
+    <div class="col-xs-5" :class="{'has-error': validity.submitted && !validity.year.valid }">
+      <div>
+        <input-with-validity name="year" v-model="v.birthDay.year" type="number" min="1900" :max="maxYear" placeholder="Année" required  @validity="validity.year = $event"></input-with-validity>
+        <validation-errors name="year" :validity="validity"></validation-errors>
       </div>
-    </div>
-  </div>
+    </div>   
+  </my-bootstrap-form-group>
 
-  <p
-  
-  <div my-bootstrap-form-group="address_line1" label="{{label.address_line1}}">
-    <input name="address_line1" ng-model="v.homePostalAddress.line1" placeholder="Numéro, rue" required form-control>
-  </div>
-  <div my-bootstrap-form-group="address_line2">
-    <input name="address_line2" ng-model="v.homePostalAddress.line2" placeholder="complément d'adresse" form-control>
-  </div>
-  <div my-bootstrap-form-group="postalCode" multi="true">
-    <div class="col-md-offset-3 col-xs-2" my-has-error="postalCode">
-      <div my-error-msgs="postalCode">
-        <input name="postalCode" ng-model="v.homePostalAddress.postalCode" minlength="5" maxlength="5" french-postal-code placeholder="Code postal" required form-control>
+  <my-bootstrap-form-group name="address_line1" :label="label.address_line1" :validity="validity">
+    <input-with-validity name="address_line1" v-model="v.homePostalAddress.line1" placeholder="Numéro, rue" required @validity="validity.address_line1 = $event"></input-with-validity>
+  </my-bootstrap-form-group>
+  <my-bootstrap-form-group name="address_line2">
+    <input-with-validity name="address_line2" v-model="v.homePostalAddress.line2" placeholder="complément d'adresse"></input-with-validity>
+  </my-bootstrap-form-group>
+  <my-bootstrap-form-group name="postalCode" multi="true">
+    <div class="col-md-offset-3 col-xs-2" :class="{'has-error': validity.submitted && !validity.postalCode.valid}">
+      <div>
+        <input-with-validity name="postalCode" v-model="v.homePostalAddress.postalCode" real-type="frenchPostalCode" placeholder="Code postal" required @validity="validity.postalCode = $event"></input-with-validity>
+        <validation-errors name="postalCode" :validity="validity"></validation-errors>
       </div>
     </div>
-    <div class="col-xs-7" my-has-error="town">
-      <div my-error-msgs="town">
-        <input name="town" ng-model="v.homePostalAddress.town" type="text" placeholder="Ville"
-               typeahead="e as e for e in frenchPostalCodeToTowns(v.homePostalAddress.postalCode, $viewValue)"
-               required form-control>
+    <div class="col-xs-7" :class="{'has-error': validity.submitted && !validity.town.valid}">
+      <div>
+        <input-with-validity name="town" :value="v.homePostalAddress.town" type="text" style="display: none" required @validity="validity.town = $event"></input-with-validity>
+        <v-select v-model="v.homePostalAddress.town" :options="towns" :taggable="true" placeholder="Ville"></v-select>
+        <validation-errors name="town" :validity="validity"></validation-errors>
       </div>
     </div>
-    <!-- -div class="col-xs-3" my-has-error="country">
-      <div my-error-msgs="country">
-        <input name="country" ng-model="v.homePostalAddress.country" placeholder="Pays" required form-control>
+    <!-- -div class="col-xs-3" :class="{'has-error': validity.submitted && !validity.country.valid }">
+      <div>
+        <input-with-validity name="country" v-model="v.homePostalAddress.country" placeholder="Pays" required @validity="v.validity = $event"></input-with-validity>
+        <validation-errors name="country" :validity="validity"></validation-errors>
       </div>
     </div -->
-  </div>
+  </my-bootstrap-form-group>
 
-  <div my-bootstrap-form-group="homePhone" label="{{label.homePhone}}">
-    <input name="homePhone" ng-model="v.homePhone" phone required form-control>
-  </div>
+  <my-bootstrap-form-group name="homePhone" :label="label.homePhone" :validity="validity">
+    <input-with-validity name="homePhone" v-model="v.homePhone" real-type="phone" required @validity="validity.homePhone = $event"></input-with-validity>
+  </my-bootstrap-form-group>
 
+</div>

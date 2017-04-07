@@ -1,20 +1,24 @@
 'use strict';
 
-angular.module('myApp')
-
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/moderate', {
-    templateUrl: 'templates/list.html',
-    controller: 'ModerateListCtrl'
-  });
-}])
-
-.controller('ModerateListCtrl', function(ws: WsService.T, $scope) {
-
-    function listRec(params) {
-        ws.listInScope($scope, params).then(function () {
-            listRec({ poll: true });
+const ModerateList : vuejs.ComponentOption = {
+  name: 'ModerateList',
+  templateUrl: 'templates/list.html',
+  data: () => ({
+    svs: null,
+  }),
+  mounted() {
+      this.listRec({});
+  },
+  computed: { 
+      svsGroupedByStep() {
+         return this.svs ? Helpers.groupBy(this.svs, sv => sv.step) : undefined;
+      },
+  },
+  methods: {
+    listRec(params) {
+        Ws.listInScope(this, params).then(() => {
+            this.listRec({ poll: true });
         });
-    }
-    listRec({});
-});
+    },
+  },
+};

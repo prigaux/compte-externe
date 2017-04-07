@@ -1,16 +1,20 @@
+<div>
+
 <h4>Modération</h4>
 
-<ul ng-repeat="(step,svs_) in svs | groupBy:'step'">
+<ul v-for="(svs_,step) in svsGroupedByStep">
   {{step}} :
-  <li ng-repeat="sv in svs_">
-  le {{sv.modifyTimestamp | date:'dd/MM/yyyy à HH:mm'}} :
-   <a ng-href="/moderate/{{sv.id}}">
+  <li v-for="sv in svs_">
+  le {{sv.modifyTimestamp | date('dd/MM/yyyy à HH:mm')}} : 
+   <a :href="'/moderate/' + sv.id">
      {{sv.v.sn || 'inconnu'}}
      {{sv.v.givenName || 'inconnu'}}
    </a>
 </li>
 </ul>
 
-<div ng-if="svs.length === 0">
+<div v-if="svs && svs.length === 0">
   Rien à modérer
+</div>
+
 </div>

@@ -1,58 +1,120 @@
-namespace AttrsEditController {
-  export type params = {
-    id: string;
-    expectedStep?: string;
-    nextStep: (resp: {}) => void;
-  }
-
-  export const create = (helpers: Helpers.T, ws: WsService.T, conf) => ($scope: angular.IRootScopeService, params: params) => {
-    const accentsRange = '\u00C0-\u00FC';
-    const month2maxDay = [undefined,
+const accentsRange = '\u00C0-\u00FC';
+const month2maxDay = [undefined,
         31, 29, 31, 30, 31, 30,
         31, // july
         31, 30, 31, 30, 31];
 
-    let o = Ts.assign($scope, {
-      label: conf.attr_labels,
-      attr_formatting: conf.attr_formatting,
-      allowedCharsInNames: "[A-Za-z" + accentsRange + "'. -]",
-      passwordPattern: /(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,}/,
-      maxDay: 31,
-      maxYear: new Date().getUTCFullYear(),
-      v: <V> undefined,
-      errorMessages: {},
-      webcamLiveCtrl: { width: 240, height: 300 },
-      structures_search: ws.structures_search,
-      frenchPostalCodeToTowns: helpers.frenchPostalCodeToTowns,
-    });
+function attrs_data(vm) {
+    let validity = { submitted : false };
+    Helpers.eachObject(vm.attrs, (attr) => validity[attr] = {});
+    Helpers.eachObject(conf.attr_labels, (attr) => validity[attr] = {});
+    return { label: conf.attr_labels, validity };
+}
 
-    o.$watch(Ts.try_(() => o.v.birthDay.month), (month) => {
-        o.maxDay = month2maxDay[month] || 31;
-    });
+let attrsMixin : vuejs.ComponentOption = {
+    props: ['v', 'attrs', 'submitted'],
+    model: { prop: 'v', event: 'change' },
+    watch: {
+        submitted(b) {
+            this.validity.submitted = b;
+        },
+        v: {
+            deep: false,
+            handler(v) {
+                console.log("re-emitting", v);
+                return this.$emit('change', v);
+            },
+        },
+    },
+};
 
-    //o.$watch(helpers.try_(() => helpers.cast(o.v.homePostalAddress, HomePostalAddressPrecise).postalCode), (postalCode) => {
-    o.$watch('v.homePostalAddress.postalCode', (postalCode: string) => {
-            if (!postalCode) return;
-            var address = Ts.cast(o.v && o.v.homePostalAddress, HomePostalAddressPrecise);
+Vue.component('common-attrs', Helpers.templateUrl({
+    templateUrl: 'templates/common-attrs.html',
+    mixins: [attrsMixin],
+    data() {
+        var data = attrs_data(this);
+        data.validity = Helpers.assign(data.validity, { day: {}, month: {}, year: {} });
+        return Helpers.assign(data, {
+            towns: [],
+        });
+    },
+    computed: {
+        maxDay() {
+            return month2maxDay[this.month] || 31;
+        },
+        allowedCharsInNames() {
+            return "[A-Za-z" + accentsRange + "'. -]";
+        },
+        frenchPostalCodeToTowns() {
+            return Helpers.frenchPostalCodeToTowns;
+        },
+        maxYear() {
+            return new Date().getUTCFullYear();
+        },
+    },
+    watch: {
+      'v.homePostalAddress.postalCode'(postalCode: string) {
+            this.towns = [];
+            if (!postalCode || postalCode.length < 5) return;
+            var address = Helpers.cast(this.v && this.v.homePostalAddress, HomePostalAddressPrecise);
             if (address) {
-                helpers.frenchPostalCodeToTowns(postalCode).then((towns) => {
+                Helpers.frenchPostalCodeToTowns(postalCode).then((towns) => {
+                    this.towns = towns;
                     if (towns && towns.length === 1) {
                         address.town = towns[0];
                     }
                 });
             }
-    });
-
-    ws.getInScope(o, params.id, params.expectedStep);
-
-    function submit() {
-        //if (!o.myForm.$valid) return;
-        ws.set(params.id, o.v).then(params.nextStep);
-    }
-    function reject() {
-        ws.remove(params.id).then(params.nextStep);
-    }
-    
-    return Ts.assign(o, { submit, reject });
-  };
-}
+      },
+    },
+}));
+Vue.component('extern-attrs', Helpers.templateUrl({
+    templateUrl: 'templates/extern-attrs.html',
+    mixins: [attrsMixin],
+    data() {
+        return Helpers.assign(attrs_data(this), {
+            doGet: null,
+            structures_search_result: [],
+        });
+    },
+    methods: {
+        structures_search(search, loading) {
+            loading(true);
+            Ws.structures_search(search).then(structures => {
+                loading(false);
+                this.structures_search_result = structures;
+            }).catch(err => {
+                loading(false);
+                throw err;
+            });
+        },
+    },
+}));
+Vue.component('barcode-attrs', Helpers.templateUrl({
+    templateUrl: 'templates/barcode-attrs.html',
+    mixins: [attrsMixin],
+    data() {
+        return Helpers.assign(attrs_data(this), {
+        });
+    },
+    computed: {
+        attr_formatting: () => conf.attr_formatting,
+    },
+}));
+Vue.component('password-attrs', Helpers.templateUrl({
+    templateUrl: 'templates/password-attrs.html',
+    mixins: [attrsMixin],
+    data() {
+        return Helpers.assign(attrs_data(this), {
+          userPassword2: null,
+        });
+    },
+    computed: {
+      passwordPattern() {
+          return "(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,}"; 
+      },
+      error_msg() {
+          return conf.error_msg;
+      },
+    },
+}));

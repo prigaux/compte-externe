@@ -13,6 +13,8 @@ function readonly(attrs): StepAttrsOption {
 }
 
 const attrs: StepAttrsOption = {
+    status: {},
+    barcode: {},
     supannCivilite: {},
     sn: {},
     givenName: {},

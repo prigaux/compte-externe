@@ -1,12 +1,9 @@
 {
   "globalDependencies": {
-    "angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#421d6610bdb09e1015b71f5991d7a68d079eca21",
-    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#421d6610bdb09e1015b71f5991d7a68d079eca21",
+    "axios": "registry:dt/axios#0.9.1+20161016142654",
     "diff": "github:DefinitelyTyped/DefinitelyTyped/diff/diff.d.ts#68548c2daab053869f323d475419c693478bbb73",
-    "angular-route": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-route.d.ts#35989a3ab4834b8e8b2b56788f1d4fc46a25dc8d",
-    "angular-cookies": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-cookies.d.ts#35989a3ab4834b8e8b2b56788f1d4fc46a25dc8d",
     "es6-promise": "registry:dt/es6-promise#0.0.0+20160726191732",
     "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#421d6610bdb09e1015b71f5991d7a68d079eca21",
-    "angular-mocks": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular-mocks.d.ts#421d6610bdb09e1015b71f5991d7a68d079eca21"
+    "vue": "registry:dt/vue#1.0.21+20160929090511"
   }
 }

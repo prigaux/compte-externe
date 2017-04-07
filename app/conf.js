@@ -19,15 +19,30 @@ var conf = {
         jpegPhoto: "Photo",
         structureParrain: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)",
         userPassword: "Mot de passe",
+        userPassword2: "Confirmer le mot de passe",
         barcode: "Code barre",
         status: "Type de compte",
     },
-
     attr_formatting: {
         status: { invite: "Lecteur invité", extern: "Lecteur extérieur" },
     },
 
     title: "Gestion de comptes",
+
+    pattern: {
+        phone: "(\\s*[0-9]\\s*){10}",
+        frenchPostalCode: "\\s*[0-9]{5}\\s*",
+    },
+    error_msg: {
+        userPassword: 'Veuillez choisir un mot de passe comportant au moins 8 caractères. Ce mot de passe doit contenir des lettres minuscules, des lettres majuscules et des chiffres.',
+        phone: 'Le champ doit être un numéro de téléphone. Exemple: 01 02 03 04 05',
+        frenchPostalCode: 'Le champ doit être un code postal. Exemple: 75013',
+        forbiddenChars: function (forbiddenChars) {
+            return forbiddenChars.length == 1 ?
+             "Le caractère « " + forbiddenChars + " » n'est pas autorisé." :
+             "Les caractères « " + forbiddenChars + " » ne sont pas autorisés.";
+        }
+    },        
 
     assets: {
         lib: {
@@ -35,15 +50,12 @@ var conf = {
                 'bower_components/html5-boilerplate/css/normalize.css',
                 'bower_components/html5-boilerplate/css/main.css',
                 'bower_components/bootstrap/dist/css/bootstrap.css',
-                'bower_components/angular-bootstrap/ui-bootstrap-csp.css',
             ],
             js: [
                 "bower_components/axios/dist/axios.js",
-                "bower_components/angular/angular.js",
-                "bower_components/angular-route/angular-route.js",
-                "bower_components/angular-cookies/angular-cookies.js",
-                "bower_components/angular-messages/angular-messages.js",
-                "bower_components/angular-bootstrap/ui-bootstrap-tpls.js",
+                "bower_components/vue/dist/vue.js",
+                "bower_components/vue-router/dist/vue-router.js",
+                "bower_components/vue-select/dist/vue-select.js",
                 "bower_components/jsdiff/diff.js",
             ],
         },
@@ -52,18 +64,16 @@ var conf = {
         ],
         js: [
             "conf.js",
-            "app.js",
-            "controllers/various.js",
+            "services/helpers.js",
+            "services/ws.js",
+            "services/attrsEdit.js",
+            "services/attrsForm.js",
+            "services/forceBrowserExit.js",
+            "filters/various.js",
             "controllers/create.js",
             "controllers/validate.js",
             "controllers/moderate.js",
             "controllers/list.js",
-            "services/ts.js",
-            "services/ws.js",
-            "services/attrsEdit.js",
-            "services/helpers.js",
-            "services/forceBrowserExit.js",
-            "filters/various.js",
             "directives/various.js",
             "directives/validators.js",
             "directives/Bootstrap.js",
@@ -71,7 +81,6 @@ var conf = {
         ],
         tests: [
             // NB: only used by karma, wildcards allowed
-            'bower_components/angular-mocks/angular-mocks.js',
             "controllers/*_test.js",
             "directives/*_test.js",
             "services/*_test.js",

@@ -1,63 +1,70 @@
-'use strict';
+Vue.component('input-with-validity', {
+  template: "<input :name='name' :value='value' :type='type' @input='tellParent'>",
+  props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType'],
+  data: () => ({ prev: undefined }),
+  mounted() {
+    let element = this.$el;
 
-angular.module('myApp')
+    element.setAttribute('id', this.name);
+    if (this.type !== 'radio') element.classList.add("form-control");
+    this._setPattern(this);
 
-.directive('sameAs', function() {
-    return {
-        require: "ngModel",
-        scope: {
-            otherModelValue: "=sameAs"
-        },
-        link: function(scope, elm, attrs, ctrl) {
-            ctrl['$validators'].sameAs = function(modelValue) {
-                return modelValue === scope['otherModelValue'];
-            };
-            scope.$watch("otherModelValue", function() {
-                ctrl['$validate']();
-            });
+    element.addEventListener(this.type === 'radio' ? 'change' : 'input', () => {
+        this.checkValidity();
+        return false;
+    });
+    this.checkValidity();
+  },
+  watch: {
+    value(v) {
+        this.$el.value = v; // do it now to update validity
+        this.checkValidity();
+    },
+    sameAs(v) {
+        this.$el.setAttribute('pattern', Helpers.escapeRegexp(v));
+        this.checkValidity();
+    },
+  },
+  methods: {
+    tellParent() { 
+        this.$emit("input", this.$el.value);
+    },
+    checkValidity() {
+        if (this.allowedChars) this._checkAllowedChars();
+        if (this.realType) this._checkRealType();
+        let validity = Helpers.copy(this.$el.validity);
+        validity.message = this.$el.validationMessage;
+
+        let s = JSON.stringify(validity);
+        if (s !== this.prev) {
+            this.prev = s;
+            this.$emit('validity', validity);
+        }          
+    },
+    _setPattern() {
+        if (this.realType === 'phone') this.$el.setAttribute('pattern', conf.pattern.phone);
+        if (this.realType === 'frenchPostalCode') this.$el.setAttribute('pattern', conf.pattern.frenchPostalCode);
+    },
+    _setCustomMsg(msg) {
+        this.$el.setCustomValidity(msg);
+    },
+    _checkAllowedChars() {
+        let errChars = (this.$el.value || '').replace(new RegExp(this.allowedChars, "g"), '');
+        this._setCustomMsg(errChars !== '' ? conf.error_msg.forbiddenChars(errChars) : '');
+    },
+    _checkRealType() {
+        let validity = this.$el.validity;
+        let msg = '';
+        switch (this.realType) {
+            case 'phone' :
+                if (validity.patternMismatch) msg = conf.error_msg.phone;
+                break;
+            case 'frenchPostalCode':
+                if (validity.patternMismatch) msg = conf.error_msg.frenchPostalCode;
+                break;
         }
-    };
-})
-
-.directive('phone', function() {
-  return {
-    require: 'ngModel',
-    link: function(scope, elm, attrs, ctrl) {
-            ctrl['$validators'].phone = function(modelValue, viewValue) {
-            var val = viewValue && viewValue.replace(/\s/g, '');
-            return /[0-9]{10}/.test(val);
-        };
+        this._setCustomMsg(msg);
     }
-  };
-})
-
-.directive('frenchPostalCode', function() {
-  return {
-    require: 'ngModel',
-    link: function(scope, elm, attrs, ctrl) {
-        ctrl['$validators'].frenchPostalCode = function(modelValue, viewValue) {
-            var val = viewValue && viewValue.replace(/\s/g, '');
-            return /[0-9]{5}/.test(val);
-        };
-    }
-  };
-})
-
-.directive('allowedChars', function() {
-  return {
-    require: 'ngModel',
-      link: function(scope, elm, attrs, ctrl) {
-          var name = attrs['name'];
-          var allowedChars = attrs['allowedChars'];
-          ctrl['$validators'].allowedChars = function(modelValue, viewValue) {
-              var errChars = (viewValue || '').replace(new RegExp(allowedChars, "g"), '');
-              var ok = errChars === '';
-              if (scope['errorMessages']) {
-                  if (!scope['errorMessages'][name]) scope['errorMessages'][name] = {};
-                  scope['errorMessages'][name].allowedChars = ok ? undefined : { forbiddenChars: errChars };
-              }
-              return ok;
-          };
-    }
-  };
+  },
 });
+

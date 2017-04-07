@@ -1,21 +1,20 @@
 'use strict';
 
-angular.module('myApp')
+namespace ForceBrowserExit {
 
-.service("forceBrowserExit", function($rootScope, $location: ng.ILocationService, $cookies: angular.cookies.ICookiesService) {
-    var cookieName = 'forceBrowserExit';
+    const cookieName = 'forceBrowserExit';
     
-    return function(triggerUrl, forcedRoute) {
-        $rootScope.$on("$routeChangeStart", function (event, next, current) {
-            if ($cookies.get(cookieName)) {
-                $location.path(forcedRoute);
+    export function install(triggerUrl, forcedRoute) {
+        router.beforeEach((to, from, next) => {
+            if (Helpers.getCookie(cookieName)) {
+                next(forcedRoute);
+            } else {
+                if (to.match(triggerUrl)) {
+                    console.log("forceBrowserExit!");
+                    Helpers.createCookie(cookieName, 'true', 0);
+                }
+                next();
             }
         });
-        $rootScope.$on("$locationChangeSuccess", function (event, url) {
-            if (url.match(triggerUrl)) {
-                console.log("forceBrowserExit!");
-                $cookies.put(cookieName, 'true');
-            }
-        });
-    };
-});
+    }
+}

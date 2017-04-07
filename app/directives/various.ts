@@ -20,31 +20,27 @@ function may_crop_portrait(canvas, { width, height }) {
     return c;
 }
 
-angular.module('myApp')
 
-.directive('webcamLivePortrait', function factory() {
-  return {
+Vue.component('webcamLivePortrait', {
     template: `
     <div style="display: inline-block; position: relative;">
       <div style="height: 0">
-        <video style="background: white; margin: 0 auto; display: block;" autoplay></video>
+        <video ref="video" style="background: white; margin: 0 auto; display: block;" autoplay></video>
       </div>
-      <div ng-style="{ width: width + 'px', height: height + 'px' }" style="position: relative; margin: 0 auto; box-sizing: border-box; border: 2px dashed black;"></div>
+      <div :style="{ width: width + 'px', height: height + 'px' }" style="position: relative; margin: 0 auto; box-sizing: border-box; border: 2px dashed black;"></div>
     </div>
     `,
-    scope: { 'webcamLivePortrait': '=' },
-    link: function(scope, element, attrs) {
-        let o = scope['webcamLivePortrait'] || {};
-        scope['height'] = o.height;
-        scope['width'] = o.width;
-        let elt = <HTMLVideoElement> element.find("video")[0];
-        if (o.height) elt.height = o.height;
+    props: ['width', 'height', 'doget'],
+    mounted() {
+        let elt = this.$refs.video;
+        
+        if (this.height) elt.height = this.height;
         
         let success = (stream) => {
             elt.src = window.URL.createObjectURL(stream);
         };
         let err = (error) => {
-            o.error = error;
+            this.$emit('error', error)
         };
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true }).then(success).catch(err);
@@ -53,19 +49,16 @@ angular.module('myApp')
         } else {
             err("not handled by your browser");
         }
-        o.get = () => may_crop_portrait(toCanvas(elt), o).toDataURL('image/jpeg'); //.replace('data:' + format + ';base64,', '');
    },
-  };
-})
-
-.directive('autoFocus', function($timeout: ng.ITimeoutService) {
-    return {
-        link: {
-            post: function postLink(scope, elem, attrs) {
-                $timeout(function () {
-                    elem[0].focus();
-                });
-            }
-        }
-    };
+   watch: {
+       doget() {
+           this.$emit('image', may_crop_portrait(toCanvas(this.$refs.video), this).toDataURL('image/jpeg'));
+       },
+   },
 });
+
+Vue.directive('auto-focus', {
+    inserted(el : HTMLElement) { 
+        el.focus();
+    }
+})

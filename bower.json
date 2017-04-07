@@ -8,14 +8,10 @@
   "dependencies": {
     "jsdiff": "1.x",
     "bootstrap": "3.x",
-    "angular": "1.4.x",
-    "angular-route": "1.4.x",
-    "angular-loader": "1.4.x",
-    "angular-messages": "1.4.x",
-    "angular-cookies": "1.4.x",
-    "angular-mocks": "~1.4.x",
-    "angular-bootstrap": "x",
     "html5-boilerplate": "~4.3.0",
-    "axios": "^0.15.3"
+    "axios": "^0.15.3",
+    "vue": "^2.2.4",
+    "vue-router": "^2.3.0",
+    "vue-select": "sagalbot/vue-select#^2.1.0"
   }
 }

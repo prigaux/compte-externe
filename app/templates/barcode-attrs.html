@@ -1,0 +1,13 @@
+<div>
+  <my-bootstrap-form-group name="status" :label="label.status" :validity="validity">
+    <label class="radio-inline" v-for="(k,val) in attr_formatting.status">
+      <input-with-validity type="radio" name="status" v-model="v.status" :value="k" required @validity="validity.status = $event"></input-with-validity>
+      {{val}}
+    </label>
+  </my-bootstrap-form-group>
+
+   <my-bootstrap-form-group name="barcode" :label="label.barcode" :validity="validity" v-if="attrs.barcode">
+     <input-with-validity name="barcode" v-model="v.barcode" type="number" v-auto-focus required @validity="validity.barcode = $event"></input-with-validity>
+   </my-bootstrap-form-group>
+
+</div>

@@ -1,18 +1,18 @@
-<div class="normalContent" ng-show="v">
+<div class="normalContent" v-if="v">
  
  <h4 style="margin-top: 2em">Création de compte</h4>
 
- <form novalidate name="myForm" ng-submit="submitted = 1; submit()" class="form-horizontal">
+ <form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">
 
-   <div ng-include="'templates/common-attrs.html'"></div>
-   <div ng-include="'templates/extern-attrs.html'"></div>
-   <div ng-include="'templates/password-attrs.html'"></div>
+   <common-attrs v-model="v" :attrs="attrs" :submitted="submitted"></common-attrs>
+   <extern-attrs v-model="v" :attrs="attrs" :submitted="submitted"></extern-attrs>
+   <password-attrs v-model="v" :attrs="attrs" :submitted="submitted"></password-attrs>
 
-   <div my-bootstrap-form-group>
+   <my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit">
         <span class="glyphicon glyphicon-plus"></span>
         Demander la création</button>
-   </div>
+   </my-bootstrap-form-group>
 
  </form>
 

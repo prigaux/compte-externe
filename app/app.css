@@ -9,3 +9,20 @@ ins {
     background-color: #F2DEDE;
     text-decoration: none;
 }
+
+.has-error .v-select .dropdown-toggle {
+    border-color: #a94442;
+}
+
+.v-select input[type="search"] {
+    height: 32px !important;
+}
+.v-select .open-indicator {
+    bottom: 5px;
+}
+.v-select .selected-tag {
+    margin-top: 3px;
+}
+.v-select .no-options {
+    display: none;
+}
