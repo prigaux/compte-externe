@@ -44,6 +44,12 @@
      <input name="mail" ng-model="v.mail" type="text" disabled form-control>
    </div>
 
+  <div my-bootstrap-form-group="status" label="{{label.status}}">
+    <label class="radio-inline" ng-repeat="(k,val) in attr_formatting.status">
+      <input type="radio" name="status" ng-model="v.status" ng-value="k" required>{{val}}</label>
+    </label>
+  </div>
+
    <div my-bootstrap-form-group="barcode" label="{{label.barcode}}" ng-if="attrs.barcode">
      <input name="barcode" ng-model="v.barcode" type="number" auto-focus required form-control>
    </div>

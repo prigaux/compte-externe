@@ -20,9 +20,11 @@ var conf = {
         structureParrain: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)",
         userPassword: "Mot de passe",
         barcode: "Code barre",
+        status: "Type de compte",
     },
 
     attr_formatting: {
+        status: { invite: "Lecteur invité", extern: "Lecteur extérieur" },
     },
 
     title: "Gestion de comptes",
