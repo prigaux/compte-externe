@@ -1,7 +1,7 @@
 'use strict';
 
 var conf = {
-    forceBrowserExit: true,
+    forceBrowserExit: false,
     
     attr_labels: {
         supannCivilite: "Civilité",
