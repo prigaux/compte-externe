@@ -81,9 +81,9 @@ namespace Ws {
         }
 
         function _fromHomePostalAddress(addr): HomePostalAddress {
-            var m = addr.match(/(.*)\$(.*)\$(.*)/);
+            var m = addr.match(/(.*)\n(.*)\n(.*)/);
             if (!m) return new HomePostalAddress(addr);
-            var m1 = m[1].match(/(.*)\$(.*)/);
+            var m1 = m[1].match(/(.*)\n(.*)/);
             var m2 = m[2].match(/(\d+) (.*)/);
             return new HomePostalAddressPrecise(
                 m1 ? m1[1] : m[1],
