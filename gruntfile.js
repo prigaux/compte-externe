@@ -77,12 +77,8 @@ module.exports = function(grunt) {
             custom: {
                 options: {
                     'web-port': 8081,
-                    'web-host': 'php-devel',
-                    'debug-port': 5858,
                     'save-live-edit': true,
                     'no-preload': true,
-                    'stack-trace-limit': 50,
-                    'hidden': []
                 }
             }
         },
