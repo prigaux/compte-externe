@@ -87,6 +87,11 @@ function handleAttrType(attr: string, attrType: LdapAttrValue, v: RawValue): Lda
         return _.isArray(v) ? v : [v];
     } else {
         let s = singleValue(attr, v);
+        return convertAttrFromLdap(attr, attrType, s);
+    }
+}
+
+function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, s: string) {
         if (_.isString(attrType)) {
             if (attrType === 'postalAddress') {
                 return convert.from.postalAddress(s);
@@ -100,7 +105,6 @@ function handleAttrType(attr: string, attrType: LdapAttrValue, v: RawValue): Lda
         } else {
             throw `unknown type for attribute ${attr}`;
         }
-  }
 }
 
 function merge(a: Options, b: Options): Options {
