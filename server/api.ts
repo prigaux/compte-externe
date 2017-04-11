@@ -183,6 +183,13 @@ function listAuthorized(req: req) {
     ));
 }
 
+const body_to_v = (o) => (
+    _.mapValues(o, (val, attr) => {
+        let attrType = conf.types[attr];
+        return _.isDate(attrType) ? new Date(val) : val;
+    })
+);
+
 let _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(v, attrs));
 
 function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
@@ -230,11 +237,11 @@ router.get('/comptes/:id', (req, res) => {
 });
 
 router.put('/comptes/new/:step', (req, res) => {
-    respondJson(req, res, set(req, 'new', req.body));
+    respondJson(req, res, set(req, 'new', body_to_v(req.body)));
 });
 
 router.put('/comptes/:id', (req, res) => {
-    respondJson(req, res, set(req, req.params.id, req.body));
+    respondJson(req, res, set(req, req.params.id, body_to_v(req.body)));
 });
 
 router.delete('/comptes/:id', (req, res) => {
