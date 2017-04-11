@@ -126,8 +126,7 @@ export function search<T extends {}>(base: string, filter: filter, attrTypes: T,
     if (attrRemap) {
       attributes = attributes.map(k => attrRemap[k] || k);
     }
-    let params = merge({ filter, attributes, scope: "sub" }, options);
-    let p = searchRaw(base, filter, attributes, params).then(l => 
+    let p = searchRaw(base, filter, attributes, options).then(l => 
           l.map(o => {
               delete o['controls'];
               // first remap the keys if needed
