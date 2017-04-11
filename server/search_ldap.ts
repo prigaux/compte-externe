@@ -9,11 +9,11 @@ const maxLoginLength = 10;
 
 const remove_accents = _.deburr;
 
-type entry = typeof conf.ldap.types;
+type entry = typeof conf.types;
 
 export const searchPeople = (filter: ldap.filter, attrs: string[], options: ldap.Options) : Promise<entry[]> => {
-    let attrTypes = <entry> _.pick(conf.ldap.types, attrs);
-    // TODO check attrs are in conf.ldap.types
+    let attrTypes = <entry> _.pick(conf.types, attrs);
+    // TODO check attrs are in conf.types
     return ldap.search(conf.ldap.base_people,
                           filter,
                           attrTypes,
@@ -83,7 +83,7 @@ function homonyme_scoring(birthDay: Date, known_birthDay: Date): number {
         sameMonth && sameDay ? 1 :
         0;
 }
-export type Homonyme = typeof conf.ldap.types & { score: number }
+export type Homonyme = typeof conf.types & { score: number }
 
 function homonymes_scoring(l: entry[], birthDay: Date): Homonyme[] {
     let l_ = _.map(l, e => {

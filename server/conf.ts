@@ -14,6 +14,12 @@ const conf = {
         transport: sendmailTransport({}),
     },
 
+    types: {
+        uid: '', dn: '', cn: '', sn: '', displayName: '', givenName: '',
+        birthDay: new Date(),
+        homePostalAddress: 'postalAddress',
+    },
+        
     ldap: {
         uri: 'ldap://ldap-test.univ.fr',
         base: "dc=univ,dc=fr",
@@ -21,12 +27,6 @@ const conf = {
         base_structures: "ou=structures,dc=univ,dc=fr",
 
         structures_attrs: { key: 'supannCodeEntite', name: 'ou', description: 'description' },
-        
-        types: {
-            uid: '', dn: '', cn: '', sn: '', displayName: '', givenName: '',
-            birthDay: new Date(),
-            homePostalAddress: 'postalAddress',
-        },
         
         people: {
             attrs: { birthDay: 'up1BirthDay' },
