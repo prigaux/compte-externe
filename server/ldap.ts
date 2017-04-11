@@ -22,6 +22,10 @@ type AttrRemap = {} // it should be Dictionary<string>, but it causes too much h
 type RawValue = string | string[];
 
 export function searchRaw(base: string, filter: filter, attributes: string[], options: Options): Promise<Dictionary<RawValue>[]> {
+    if (attributes.length === 0) {
+        // workaround asking nothing and getting everything. Bug in ldapjs???
+        attributes = ['objectClass'];
+    }
     let params = merge({ filter, attributes, scope: "sub" }, options);
     let p = new Promise((resolve, reject) => {
         let l: LdapEntry[] = [];
@@ -110,6 +114,8 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, s: string) {
             return parseInt(s);
         } else if (_.isDate(attrType)) {
             return convert.from.datetime(s);
+        } else if (attr === 'dn' || attr === 'objectClass') {
+            return s;
         } else {
             throw `unknown type for attribute ${attr}`;
         }
@@ -126,6 +132,8 @@ function convertAttrToLdap(attr: string, attrType: LdapAttrValue, v): RawValue {
             return v.toString();
         } else if (_.isDate(attrType)) {
             return convert.to.datetime(v);
+        } else if (attr === 'dn' || attr === 'objectClass') {
+            return v.toString();
         } else {
             throw `unknown type for attribute ${attr}`;
         }
@@ -167,8 +175,7 @@ export function search<T extends {}>(base: string, filter: filter, attrTypes: T,
               if (attrRemap) o = _.mapKeys(o, (_, k: string) => attrRemapRev[k] || k);
               //console.log(o, attrRemap);
               // then transform string|string[] into the types wanted
-              let r = _.mapValues(o, (v, attr) => 
-                       attr in attrTypes ? handleAttrType(attr, attrTypes[attr], v) : v);
+              let r = _.mapValues(o, (v, attr) => handleAttrType(attr, attrTypes[attr], v));
               return r;
           })
     );
