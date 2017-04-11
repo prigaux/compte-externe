@@ -203,7 +203,7 @@ function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
 function respondJson(req: req, res: express.Response, p: Promise<response>) {
     let logPrefix = req.method + " " + req.path + ":";
     p.then(r => {
-        console.log(logPrefix, r);
+        //console.log(logPrefix, r);
         res.json(r || {});
     }, err => {
         console.error(logPrefix, err + err.stack);
