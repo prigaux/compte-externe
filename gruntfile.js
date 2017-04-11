@@ -77,8 +77,7 @@ module.exports = function(grunt) {
             custom: {
                 options: {
                     'web-port': 8081,
-                    'save-live-edit': true,
-                    'no-preload': true,
+                    'preload': false,
                 }
             }
         },
