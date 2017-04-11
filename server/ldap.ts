@@ -66,6 +66,14 @@ export const convert = {
             s && s.replace(/\$/g, "\n")
         ),
     },
+    to: {
+        datetime: (d: Date): string => (
+            d.toISOString().replace(/\.\d+/, '').replace(/[T:-]/g, '')
+        ),
+        postalAddress: (s: string): string => (
+            s && s.replace(/\n/g, "$")
+        ),
+    },
 };
 
 function singleValue(attr: string, v: RawValue) {
@@ -105,6 +113,31 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, s: string) {
         } else {
             throw `unknown type for attribute ${attr}`;
         }
+}
+
+function convertAttrToLdap(attr: string, attrType: LdapAttrValue, v): RawValue {
+        if (_.isString(attrType)) {
+            if (attrType === 'postalAddress') {
+                return convert.to.postalAddress(v);
+            } else {
+                return v;
+            }
+        } else if (_.isNumber(attrType)) {
+            return v.toString();
+        } else if (_.isDate(attrType)) {
+            return convert.to.datetime(v);
+        } else {
+            throw `unknown type for attribute ${attr}`;
+        }
+}
+
+export function convertToLdap<T extends {}>(attrTypes: T, attrRemap: AttrRemap, v: T): Dictionary<RawValue> {
+    let o : {} = v;
+    // transform to string|string[]
+    let r = _.mapValues(o, (v, attr) => convertAttrToLdap(attr, attrTypes[attr], v));
+    // then remap
+    if (attrRemap) r = _.mapKeys(r, (_, k: string) => attrRemap[k] || k);
+    return r;
 }
 
 function merge(a: Options, b: Options): Options {
