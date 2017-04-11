@@ -1,5 +1,5 @@
 Vue.component('input-with-validity', {
-  template: "<input :name='name' :value='value' :type='type' @input='tellParent'>",
+  template: "<input :name='name' :value='value' :type='type'>",
   props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType'],
   data: () => ({ prev: undefined }),
   mounted() {
@@ -10,6 +10,7 @@ Vue.component('input-with-validity', {
     this._setPattern(this);
 
     element.addEventListener(this.type === 'radio' ? 'change' : 'input', () => {
+        this.tellParent();
         this.checkValidity();
         return false;
     });
