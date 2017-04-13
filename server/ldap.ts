@@ -72,6 +72,16 @@ export const convert = {
             d.toISOString().replace(/\.\d+/, '').replace(/[T:-]/g, '')
         ),
     },
+    date: {
+        fromLdap: (dt: string): Date => {
+            if (!dt) return null;
+            let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)$/);
+            return m && new Date(Date.UTC(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3])));
+        },
+        toLdap: (d: Date): string => (
+            d.toISOString().replace(/T.*/, '').replace(/-/g, '')
+        ),
+    },
     postalAddress: {
         fromLdap: (s: string): string => (
             s && s.replace(/\$/g, "\n")

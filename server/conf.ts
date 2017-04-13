@@ -16,8 +16,16 @@ const conf = {
 
     types: {
         uid: '', dn: '', cn: '', sn: '', displayName: '', givenName: '',
+        supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '',
         birthDay: new Date(),
         homePostalAddress: '',
+
+        Shib_Identity_Provider: '',
+        eduPersonPrincipalName: '',
+
+        profilename: '',
+        startdate: new Date(),
+        enddate: new Date(),
     },
         
     ldap: {
@@ -35,6 +43,8 @@ const conf = {
             convert : { 
                 homePostalAddress: 'postalAddress',
                 up1BirthDay: 'datetime',
+                startdate: 'date',
+                enddate: 'date',
             },
             rename: { 
                 birthDay: 'up1BirthDay',
