@@ -4,51 +4,6 @@ declare interface Dictionary<T> {
   [index: string]: T;
 }
 
-declare interface CurrentUser {
-  id: string;
-  mail: string;
-}
-declare type Mails = string[]
-
-declare type id = string
-declare type v = any
-declare type response = any
-declare type sv = {
-  id?: id,
-  step: string,
-  v: v,
-  moderators?: Mails,
-  attrs?: StepAttrsOption,
-}
-
-declare type vr = {v: v; response?: response }
-declare type svr = sv & { response?: response }
-declare type simpleAction = (req: any, sv: {v: v}) => Promise<vr, any>
-declare type action = (req: any, sv: sv) => Promise<vr, any>
-declare type acl_search = (v, string) => Promise<string[], any>
-
-declare interface StepAttrOption {
-  readonly?: boolean;
-  hidden?: boolean;
-}
-declare type StepAttrsOption = Dictionary<StepAttrOption>;
-
-declare interface StepNotify {
-  added?: string;
-  rejected?: string;
-  accepted?: string;    
-}
-declare type step = {
-  acls?: acl_search[];
-  attrs: StepAttrsOption;
-  next?: string;
-  notify?: StepNotify;
-  action_pre?: action;
-  action_post?: action;
-}
-declare type steps = Dictionary<step>
-
-
 declare module 'nodemailer-sendmail-transport' {  
   export = nodemailerSendmailTransport.sendmailTransport;
 
