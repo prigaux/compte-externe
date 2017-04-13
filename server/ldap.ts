@@ -60,21 +60,21 @@ export function searchRaw(base: string, filter: filter, attributes: string[], op
 
 
 export const convert = {
-    from: {
-        datetime: (dt: string): Date => {
+    datetime: {
+        fromLdap: (dt: string): Date => {
             if (!dt) return null;
             let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)Z$/);
             return m && new Date(Date.UTC(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]), parseInt(m[4]), parseInt(m[5]), parseInt(m[6])));
         },
-        postalAddress: (s: string): string => (
-            s && s.replace(/\$/g, "\n")
-        ),
-    },
-    to: {
-        datetime: (d: Date): string => (
+        toLdap: (d: Date): string => (
             d.toISOString().replace(/\.\d+/, '').replace(/[T:-]/g, '')
         ),
-        postalAddress: (s: string): string => (
+    },
+    postalAddress: {
+        fromLdap: (s: string): string => (
+            s && s.replace(/\$/g, "\n")
+        ),
+        toLdap: (s: string): string => (
             s && s.replace(/\n/g, "$")
         ),
     },
@@ -106,14 +106,14 @@ function handleAttrType(attr: string, attrType: LdapAttrValue, v: RawValue): Lda
 function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, s: string) {
         if (_.isString(attrType)) {
             if (attrType === 'postalAddress') {
-                return convert.from.postalAddress(s);
+                return convert.postalAddress.fromLdap(s);
             } else {
                 return s;
             }
         } else if (_.isNumber(attrType)) {
             return parseInt(s);
         } else if (_.isDate(attrType)) {
-            return convert.from.datetime(s);
+            return convert.datetime.fromLdap(s);
         } else if (attr === 'dn' || attr === 'objectClass') {
             return s;
         } else {
@@ -124,14 +124,14 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, s: string) {
 function convertAttrToLdap(attr: string, attrType: LdapAttrValue, v): RawValue {
         if (_.isString(attrType)) {
             if (attrType === 'postalAddress') {
-                return convert.to.postalAddress(v);
+                return convert.postalAddress.toLdap(v);
             } else {
                 return v;
             }
         } else if (_.isNumber(attrType)) {
             return v.toString();
         } else if (_.isDate(attrType)) {
-            return convert.to.datetime(v);
+            return convert.datetime.toLdap(v);
         } else if (attr === 'dn' || attr === 'objectClass') {
             return v.toString();
         } else {

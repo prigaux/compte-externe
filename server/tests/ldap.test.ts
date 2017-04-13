@@ -44,7 +44,7 @@ describe('ldap', () => {
             return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrRemap).then(e => {
                 assert.equal(e.sn, "rigaux");
                 assert.equal(e.birthDay.toISOString(), new Date('1975-10-02').toISOString());                
-                assert.equal(ldap.convert.to.datetime(e.birthDay), '19751002000000Z');
+                assert.equal(ldap.convert.datetime.toLdap(e.birthDay), '19751002000000Z');
 
                 let rawLdapValue = ldap.convertToLdap(attrTypes, attrRemap, e);
                 assert.deepEqual(rawLdapValue, { sn: "rigaux", up1BirthDay: '19751002000000Z', dn: 'uid=prigaux, ou=people, dc=univ, dc=fr' });
