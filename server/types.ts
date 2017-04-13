@@ -1,3 +1,5 @@
+import conf = require('./conf');
+
 declare global {
     
 interface CurrentUser {
@@ -7,7 +9,7 @@ interface CurrentUser {
 type Mails = string[]
 
 type id = string
-type v = any
+type v = typeof conf.types & { autoCreate: boolean }
 type response = any
 type sv = {
   id?: id,
