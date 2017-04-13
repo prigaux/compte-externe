@@ -17,7 +17,7 @@ const conf = {
     types: {
         uid: '', dn: '', cn: '', sn: '', displayName: '', givenName: '',
         birthDay: new Date(),
-        homePostalAddress: 'postalAddress',
+        homePostalAddress: '',
     },
         
     ldap: {
@@ -26,10 +26,19 @@ const conf = {
         base_people: "ou=people,dc=univ,dc=fr",
         base_structures: "ou=structures,dc=univ,dc=fr",
 
-        structures_attrs: { key: 'supannCodeEntite', name: 'ou', description: 'description' },
+        structures: {
+            convert: {},
+            rename: { key: 'supannCodeEntite', name: 'ou', description: 'description' },
+        },
         
         people: {
-            attrs: { birthDay: 'up1BirthDay' },
+            convert : { 
+                homePostalAddress: 'postalAddress',
+                up1BirthDay: 'datetime',
+            },
+            rename: { 
+                birthDay: 'up1BirthDay',
+            },
             sns: ['sn'],
             givenNames: ['givenName'],
             homonymes_restriction: '(&(eduPersonAffiliation=*)(!(eduPersonAffiliation=student)))',

@@ -17,9 +17,11 @@ export type Options = ldapjs.Options
 export type LdapAttrValue = string | number | Date | string[];
 export type LdapEntry = Dictionary<LdapAttrValue>;
 
-type AttrRemap = {} // it should be Dictionary<string>, but it causes too much headaches,
-                   //  cf http://stackoverflow.com/questions/22077023/why-cant-i-indirectly-return-an-object-literal-to-satisfy-an-index-signature-re
-type RawValue = string | string[];
+     // it should be Dictionary<string>, but it causes too much headaches,
+     //  cf http://stackoverflow.com/questions/22077023/why-cant-i-indirectly-return-an-object-literal-to-satisfy-an-index-signature-re
+type AttrRemap = { rename: {}, convert: {} } 
+
+export type RawValue = string | string[];
 
 export function searchRaw(base: string, filter: filter, attributes: string[], options: Options): Promise<Dictionary<RawValue>[]> {
     if (attributes.length === 0) {
@@ -94,26 +96,22 @@ function singleValue(attr: string, v: RawValue) {
 // this is problematic since depending on the values in LDAP, the type can change.
 // ensure we always have arrays
 // https://github.com/mcavage/node-ldapjs/issues/233
-function handleAttrType(attr: string, attrType: LdapAttrValue, v: RawValue): LdapAttrValue {
+function handleAttrType(attr: string, attrType: LdapAttrValue, conversion: string, v: RawValue): LdapAttrValue {
     if (_.isArray(attrType)) {
         return _.isArray(v) ? v : [v];
     } else {
         let s = singleValue(attr, v);
-        return convertAttrFromLdap(attr, attrType, s);
+        return convertAttrFromLdap(attr, attrType, conversion, s);
     }
 }
 
-function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, s: string) {
-        if (_.isString(attrType)) {
-            if (attrType === 'postalAddress') {
-                return convert.postalAddress.fromLdap(s);
-            } else {
-                return s;
-            }
+function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: string, s: string) {
+        if (conversion) {
+            return convert[conversion].fromLdap(s);
+        } else if (_.isString(attrType)) {
+            return s;
         } else if (_.isNumber(attrType)) {
             return parseInt(s);
-        } else if (_.isDate(attrType)) {
-            return convert.datetime.fromLdap(s);
         } else if (attr === 'dn' || attr === 'objectClass') {
             return s;
         } else {
@@ -121,30 +119,29 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, s: string) {
         }
 }
 
-function convertAttrToLdap(attr: string, attrType: LdapAttrValue, v): RawValue {
-        if (_.isString(attrType)) {
-            if (attrType === 'postalAddress') {
-                return convert.postalAddress.toLdap(v);
-            } else {
-                return v;
-            }
+function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: string, v): RawValue {
+        if (conversion) {
+            return convert[conversion].toLdap(v);
+        } else if (_.isString(attrType)) {
+            return v;
         } else if (_.isNumber(attrType)) {
             return v.toString();
-        } else if (_.isDate(attrType)) {
-            return convert.datetime.toLdap(v);
         } else if (attr === 'dn' || attr === 'objectClass') {
             return v.toString();
         } else {
-            throw `unknown type for attribute ${attr}`;
+            console.error(`unknown type for attribute ${attr}`);
+            return v;
         }
 }
 
 export function convertToLdap<T extends {}>(attrTypes: T, attrRemap: AttrRemap, v: T): Dictionary<RawValue> {
-    let o : {} = v;
-    // transform to string|string[]
-    let r = _.mapValues(o, (v, attr) => convertAttrToLdap(attr, attrTypes[attr], v));
-    // then remap
-    if (attrRemap) r = _.mapKeys(r, (_, k: string) => attrRemap[k] || k);
+    let r = {};
+    _.forEach(v, (val, attr) => {
+        let attr_ = attrRemap.rename[attr] || attr;
+        // transform to string|string[]
+        let val_ = convertAttrToLdap(attr, attrTypes[attr], attrRemap.convert[attr_], val);
+        r[attr_] = val_;
+    });
     return r;
 }
 
@@ -162,20 +159,19 @@ export function searchSimple<T extends {}>(base: string, filter: filter, attrTyp
 // NB: it should be <T extends LdapEntry> but it is not well handled by typescript
 // (NB: attrRemap should be Dictionary<string>, but it is not well handled by typescript)
 export function search<T extends {}>(base: string, filter: filter, attrTypes: T, attrRemap: AttrRemap, options: Options): Promise<T[]> {
-    let attrRemapRev = _.invert(attrRemap);
-    let attributes = _.keys(attrTypes);
-    if (attrRemap) {
-      attributes = attributes.map(k => attrRemap[k] || k);
-    }
+    if (!attrRemap) attrRemap = { rename: {}, convert: {} }
+    let attrRemapRev = _.invert(attrRemap.rename);
+    let attributes = _.keys(attrTypes).map(k => attrRemap.rename[k] || k);
     let p = searchRaw(base, filter, attributes, options).then(l => 
           l.map(o => {
               delete o['controls'];
-              // first remap the keys if needed
-              //console.log(o, attrRemap);
-              if (attrRemap) o = _.mapKeys(o, (_, k: string) => attrRemapRev[k] || k);
-              //console.log(o, attrRemap);
-              // then transform string|string[] into the types wanted
-              let r = _.mapValues(o, (v, attr) => handleAttrType(attr, attrTypes[attr], v));
+              let r = {};
+              _.forEach(o, (val, attr) => {
+                let attr_ = attrRemapRev[attr] || attr;
+                // then transform string|string[] into the types wanted
+                let val_ = handleAttrType(attr_, attrTypes[attr_], attrRemap.convert[attr], val);
+                r[attr_] = val_;
+              });              
               return r;
           })
     );
@@ -189,7 +185,7 @@ const searchMany = <T extends {}> (base: string, filters: filter[], attrTypes: T
 );
 
 export const searchManyMap = (base: string, filters: filter[], attrRemap: AttrRemap, options: Options = {}) => {
-    let attrTypes = _.mapValues(attrRemap, _ => '');
+    let attrTypes = _.mapValues(attrRemap.rename, _ => '');
     return searchMany(base, filters, attrTypes, attrRemap, options);
 };
 
@@ -208,7 +204,7 @@ export const read = <T extends LdapEntry> (dn: string, attrTypes: T, attrRemap: 
 };
 
 export const searchThisAttr = <T extends LdapAttrValue>(base: string, filter: filter, attr: string, attrType: T, options: Options = {}): Promise<T[]> => {
-    return search(base, filter, { val: attrType }, { val: attr }, options).then(l => (
+    return search(base, filter, { val: attrType }, { rename: { val: attr }, convert: {} }, options).then(l => (
         _.map(l, e => e.val)
     ));
 };
