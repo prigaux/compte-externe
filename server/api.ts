@@ -40,12 +40,12 @@ function action(req: req, sv: sv, action_name: string): Promise<svr> {
     });
 }
 
-function mergeAttrs(attrs, prev, v: v) {
-    return _.assign(prev, removeHiddenAttrs(attrs, v));
+function mergeAttrs(attrs, prev, v: v): v {
+    return <v> _.assign(prev, removeHiddenAttrs(attrs, v));
 }
 
-function removeHiddenAttrs(attrs: StepAttrsOption, v: v) {
-    return _.omit(v, (val, key) => ( 
+function removeHiddenAttrs(attrs: StepAttrsOption, v: v): v {
+    return <v> _.omit(v, (val, key) => ( 
         !attrs[key] || attrs[key].hidden
     ));
 }
@@ -77,7 +77,7 @@ function checkAcls(req: req, sv: sv) {
 
 function first_sv(req: req): Promise<sv> {
     let step = conf_steps.firstStep(req);
-    let empty_sv = { step, v: {} };
+    let empty_sv = { step, v: <v> {} };
     return action_pre(req, empty_sv);
 }
 
@@ -190,7 +190,7 @@ const body_to_v = (o) => (
     })
 );
 
-let _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(v, attrs));
+let _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(<{}> v, attrs));
 
 function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
     return getRaw(req, id).then(sv => {
