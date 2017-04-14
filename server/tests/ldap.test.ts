@@ -41,7 +41,6 @@ describe('ldap', () => {
         it("should handle attr remap & conversion", () => {
             let attrTypes = {sn: '', birthDay: new Date()}
             let attrRemap = { rename: { birthDay: 'up1BirthDay' }, convert: { up1BirthDay: ldap_convert.datetime } }
-            let f = ldap.read
             return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrRemap).then(e => {
                 assert.equal(e.sn, "rigaux");
                 assert.equal(e.birthDay.toISOString(), new Date('1975-10-02').toISOString());                
