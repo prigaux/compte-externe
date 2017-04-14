@@ -2,6 +2,7 @@
 
 import _ = require('lodash');
 import ldapjs = require('ldapjs');
+import ldap_convert = require('./ldap_convert');
 import conf = require('./conf');
 
 const remove_accents = _.deburr;
@@ -60,38 +61,6 @@ export function searchRaw(base: string, filter: filter, attributes: string[], op
     return <Promise<Dictionary<RawValue>[]>> p;
 }
 
-
-export const convert = {
-    datetime: {
-        fromLdap: (dt: string): Date => {
-            if (!dt) return null;
-            let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)Z$/);
-            return m && new Date(Date.UTC(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]), parseInt(m[4]), parseInt(m[5]), parseInt(m[6])));
-        },
-        toLdap: (d: Date): string => (
-            d.toISOString().replace(/\.\d+/, '').replace(/[T:-]/g, '')
-        ),
-    },
-    date: {
-        fromLdap: (dt: string): Date => {
-            if (!dt) return null;
-            let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)$/);
-            return m && new Date(Date.UTC(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3])));
-        },
-        toLdap: (d: Date): string => (
-            d.toISOString().replace(/T.*/, '').replace(/-/g, '')
-        ),
-    },
-    postalAddress: {
-        fromLdap: (s: string): string => (
-            s && s.replace(/\$/g, "\n")
-        ),
-        toLdap: (s: string): string => (
-            s && s.replace(/\n/g, "$")
-        ),
-    },
-};
-
 function singleValue(attr: string, v: RawValue) {
   if (_.isArray(v)) {
     if (v.length > 1) console.warn(`attr ${attr} is multi-valued`);
@@ -117,7 +86,7 @@ function handleAttrType(attr: string, attrType: LdapAttrValue, conversion: strin
 
 function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: string, s: string) {
         if (conversion) {
-            return convert[conversion].fromLdap(s);
+            return ldap_convert[conversion].fromLdap(s);
         } else if (_.isString(attrType)) {
             return s;
         } else if (_.isNumber(attrType)) {
@@ -131,7 +100,7 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: 
 
 function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: string, v): RawValue {
         if (conversion) {
-            return convert[conversion].toLdap(v);
+            return ldap_convert[conversion].toLdap(v);
         } else if (_.isString(attrType)) {
             return v;
         } else if (_.isNumber(attrType)) {
