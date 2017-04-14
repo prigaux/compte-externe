@@ -18,9 +18,7 @@ export type Options = ldapjs.Options
 export type LdapAttrValue = string | number | Date | string[];
 export type LdapEntry = Dictionary<LdapAttrValue>;
 
-     // it should be Dictionary<string>, but it causes too much headaches,
-     //  cf http://stackoverflow.com/questions/22077023/why-cant-i-indirectly-return-an-object-literal-to-satisfy-an-index-signature-re
-type AttrRemap = { rename: {}, convert: {} } 
+type AttrRemap = { rename: Dictionary<string>, convert: Dictionary<string> } 
 
 export type RawValue = string | string[];
 
