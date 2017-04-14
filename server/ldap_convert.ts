@@ -1,5 +1,7 @@
 'use strict';
 
+import _ = require('lodash');
+
 const datetime: ldap_conversion = {
         fromLdap: (dt: string): Date => {
             if (!dt) return null;
@@ -31,5 +33,20 @@ const postalAddress: ldap_conversion = {
         ),
     };
 
-export default { datetime, date, postalAddress };
+function withEtiquette(etiquette: string): ldap_conversion {
+    return {
+        fromLdapMulti: (l: string[]): string => {
+            for (let s of l) {
+                if (_.startsWith(s, etiquette))
+                    return s.substr(etiquette.length);
+            }
+            return null;
+        },
+        toLdap: (s: string): string => (
+            etiquette + s
+        ),
+    };
+}
+
+export default { datetime, date, postalAddress, withEtiquette };
 

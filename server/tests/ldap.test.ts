@@ -50,6 +50,20 @@ describe('ldap', () => {
                 assert.deepEqual(rawLdapValue, { sn: "rigaux", up1BirthDay: '19751002000000Z', dn: 'uid=prigaux, ou=people, dc=univ, dc=fr' });
             })
         });
+
+        it("should handle etiquette conversion", () => {
+            assert.equal(ldap_convert.withEtiquette("{FOO}").fromLdapMulti(["{FOO}bar"]), "bar");
+            assert.equal(ldap_convert.withEtiquette("{FOO}").fromLdapMulti(["{BAR}bar"]), null);
+            assert.equal(ldap_convert.withEtiquette("{FOO}").fromLdapMulti(["xxx", "{FOO}bar"]), "bar");
+            let attrTypes = {idpId: ''}
+            let attrRemap = { rename: { idpId: 'supannEtablissement' }, convert: { supannEtablissement: ldap_convert.withEtiquette('{SAML}') } }
+            return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrRemap).then(e => {
+                assert.equal(e.idpId, "https://univ-test.fr");
+
+                let rawLdapValue = ldap.convertToLdap(attrTypes, attrRemap, e);
+                assert.deepEqual(rawLdapValue['supannEtablissement'], "{SAML}https://univ-test.fr");
+            })
+        });
         
 
     });

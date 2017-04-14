@@ -73,7 +73,9 @@ function singleValue(attr: string, v: RawValue) {
 // ensure we always have arrays
 // https://github.com/mcavage/node-ldapjs/issues/233
 function handleAttrType(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v: RawValue): LdapAttrValue {
-    if (_.isArray(attrType)) {
+    if (conversion && conversion.fromLdapMulti) {
+        return conversion.fromLdapMulti(_.isArray(v) ? v : [v]);
+    } else if (_.isArray(attrType)) {
         return _.isArray(v) ? v : [v];
     } else {
         let s = singleValue(attr, v);
