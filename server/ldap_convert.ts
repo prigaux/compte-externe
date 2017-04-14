@@ -1,7 +1,6 @@
 'use strict';
 
-export default {
-    datetime: {
+const datetime: ldap_conversion = {
         fromLdap: (dt: string): Date => {
             if (!dt) return null;
             let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)Z$/);
@@ -10,8 +9,9 @@ export default {
         toLdap: (d: Date): string => (
             d.toISOString().replace(/\.\d+/, '').replace(/[T:-]/g, '')
         ),
-    },
-    date: {
+    };
+
+const date: ldap_conversion = {
         fromLdap: (dt: string): Date => {
             if (!dt) return null;
             let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)$/);
@@ -20,14 +20,16 @@ export default {
         toLdap: (d: Date): string => (
             d.toISOString().replace(/T.*/, '').replace(/-/g, '')
         ),
-    },
-    postalAddress: {
+    };
+
+const postalAddress: ldap_conversion = {
         fromLdap: (s: string): string => (
             s && s.replace(/\$/g, "\n")
         ),
         toLdap: (s: string): string => (
             s && s.replace(/\n/g, "$")
         ),
-    },
-};
+    };
+
+export default { datetime, date, postalAddress };
 

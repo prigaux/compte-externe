@@ -46,4 +46,9 @@ type step = {
 }
 type steps = Dictionary<step>
 
+type ldap_conversion = {
+    fromLdap(string): any;
+    toLdap(any): string;
+}
+
 }
