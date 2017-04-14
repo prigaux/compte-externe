@@ -4,6 +4,12 @@ declare interface Dictionary<T> {
   [index: string]: T;
 }
 
+// added in helpers.ts
+interface Promise<T> {
+    tap<U>(onFulFill: (value: T) => Promise<U>): Promise<T>;
+    tap<U>(onFulfill: (value: T) => U): Promise<T>;
+}
+
 declare module 'nodemailer-sendmail-transport' {  
   export = nodemailerSendmailTransport.sendmailTransport;
 

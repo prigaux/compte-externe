@@ -1,7 +1,7 @@
 {
   "globalDependencies": {
-    "bluebird": "github:DefinitelyTyped/DefinitelyTyped/bluebird/bluebird.d.ts#421d6610bdb09e1015b71f5991d7a68d079eca21",
     "body-parser": "github:DefinitelyTyped/DefinitelyTyped/body-parser/body-parser.d.ts#8c4ec896ab619e7cb6572f82423e6e1eece70f5a",
+    "es6-promise": "registry:dt/es6-promise#0.0.0+20160726191732",
     "express": "github:DefinitelyTyped/DefinitelyTyped/express/express.d.ts#8c4ec896ab619e7cb6572f82423e6e1eece70f5a",
     "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#421d6610bdb09e1015b71f5991d7a68d079eca21",
     "mime": "github:DefinitelyTyped/DefinitelyTyped/mime/mime.d.ts#8c4ec896ab619e7cb6572f82423e6e1eece70f5a",
