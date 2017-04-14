@@ -98,7 +98,7 @@ const createCompteRaw = (req, v: Dictionary<ldap.RawValue>) => {
 
 export const genLogin: simpleAction = (req, sv) => (
     search_ldap.genLogin(sv.v.sn, sv.v.givenName).then(login => {
-        let v = _.assign({ supannAliasLogin: login }, sv.v);
+        let v = <v> _.assign({ supannAliasLogin: login }, sv.v);
         return { v, response: {login} };
     })
 );
