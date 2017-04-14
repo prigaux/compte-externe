@@ -2,7 +2,6 @@
 
 import _ = require('lodash');
 import ldapjs = require('ldapjs');
-import ldap_convert = require('./ldap_convert');
 import conf = require('./conf');
 
 const remove_accents = _.deburr;
@@ -18,7 +17,7 @@ export type Options = ldapjs.Options
 export type LdapAttrValue = string | number | Date | string[];
 export type LdapEntry = Dictionary<LdapAttrValue>;
 
-type AttrRemap = { rename: Dictionary<string>, convert: Dictionary<string> } 
+type AttrRemap = { rename: Dictionary<string>, convert: Dictionary<ldap_conversion> } 
 
 export type RawValue = string | string[];
 
@@ -73,7 +72,7 @@ function singleValue(attr: string, v: RawValue) {
 // this is problematic since depending on the values in LDAP, the type can change.
 // ensure we always have arrays
 // https://github.com/mcavage/node-ldapjs/issues/233
-function handleAttrType(attr: string, attrType: LdapAttrValue, conversion: string, v: RawValue): LdapAttrValue {
+function handleAttrType(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v: RawValue): LdapAttrValue {
     if (_.isArray(attrType)) {
         return _.isArray(v) ? v : [v];
     } else {
@@ -82,9 +81,9 @@ function handleAttrType(attr: string, attrType: LdapAttrValue, conversion: strin
     }
 }
 
-function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: string, s: string) {
+function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, s: string) {
         if (conversion) {
-            return ldap_convert[conversion].fromLdap(s);
+            return conversion.fromLdap(s);
         } else if (_.isString(attrType)) {
             return s;
         } else if (_.isNumber(attrType)) {
@@ -96,9 +95,9 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: 
         }
 }
 
-function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: string, v): RawValue {
+function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v): RawValue {
         if (conversion) {
-            return ldap_convert[conversion].toLdap(v);
+            return conversion.toLdap(v);
         } else if (_.isString(attrType)) {
             return v;
         } else if (_.isNumber(attrType)) {

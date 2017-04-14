@@ -2,6 +2,7 @@
 
 import fs = require('fs');
 import sendmailTransport = require('nodemailer-sendmail-transport');
+import ldap_convert from './ldap_convert';
 
 const conf = {
     maxLiveModerators: 100,
@@ -41,10 +42,10 @@ const conf = {
         
         people: {
             convert : { 
-                homePostalAddress: 'postalAddress',
-                up1BirthDay: 'datetime',
-                startdate: 'date',
-                enddate: 'date',
+                homePostalAddress: ldap_convert.postalAddress,
+                up1BirthDay: ldap_convert.datetime,
+                startdate: ldap_convert.date,
+                enddate: ldap_convert.date,
             },
             rename: { 
                 birthDay: 'up1BirthDay',
