@@ -21,9 +21,9 @@ type sv = {
 
 type vr = {v: v; response?: response }
 type svr = sv & { response?: response }
-type simpleAction = (req: any, sv: {v: v}) => Promise<vr, any>
-type action = (req: any, sv: sv) => Promise<vr, any>
-type acl_search = (v, string) => Promise<string[], any>
+type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
+type action = (req: any, sv: sv) => Promise<vr>
+type acl_search = (v, string) => Promise<string[]>
 
 interface StepAttrOption {
   readonly?: boolean;
