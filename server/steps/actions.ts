@@ -61,7 +61,7 @@ export const createCompte: simpleAction = (req, sv) => {
     });
 };
 
-const createCompteRaw = (req, v: Dictionary<ldap.RawValue>) => {
+const createCompteRaw = (req, v: Dictionary<ldap_RawValue>) => {
     let { profilename, priority, startdate, enddate, ...attrs } = v;
     
     let param = JSON.stringify({

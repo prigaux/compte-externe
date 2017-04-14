@@ -19,7 +19,7 @@ export type LdapEntry = Dictionary<LdapAttrValue>;
 
 type AttrRemap = { rename: Dictionary<string>, convert: Dictionary<ldap_conversion> } 
 
-export type RawValue = string | string[];
+type RawValue = ldap_RawValue;
 
 export function searchRaw(base: string, filter: filter, attributes: string[], options: Options): Promise<Dictionary<RawValue>[]> {
     if (attributes.length === 0) {
