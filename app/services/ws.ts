@@ -165,9 +165,8 @@ namespace Ws {
                     $scope.svs = svs;
                 }
             }, (resp) => {
-                if (params.poll) return; // ignore errors when polling
                 var err = resp.data;
-                alert(err);
+                alert(err || "server is down, please retry later");
                 return Promise.reject(err);
             });
         }
