@@ -9,6 +9,11 @@ import esup_activ_bo = require('../esup_activ_bo');
 import conf = require('../conf');
 const filters = ldap.filters;
 
+export const addAttrs = (v: Partial<v>) => (req, sv) => {
+    _.assign(sv.v, v);
+    return Promise.resolve(sv);
+}
+
 export const getShibAttrs: simpleAction = (req, _sv) => {
     let v = _.mapValues(conf.shibboleth.header_map, headerName => (
         req.header(headerName)
