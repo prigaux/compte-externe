@@ -120,8 +120,10 @@ function advance_sv(req: req, sv: sv) {
         if (svr.step) {
             return acl_checker.moderators(step(svr), svr.v).then(mails => {
                 if (_.contains(mails, "_AUTO_MODERATE_")) {
+                  // advance again to next step!
                   return setRaw(req, svr, svr.v);
                 }
+                if (mails && mails.length === 0) throw "no_moderators";
                 svr.moderators = mails;
                 return svr;
             });
