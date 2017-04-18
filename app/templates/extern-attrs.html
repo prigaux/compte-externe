@@ -10,6 +10,12 @@
     </div>
   </my-bootstrap-form-group>
 
+  <my-bootstrap-form-group name="duration" :label="label.duration_month" v-if="attrs.duration" :validity="validity">
+    <input-with-validity name="duration" :value="v.duration / 30" @input="v.duration = $event * 30" type="number" min="1" :max="attrs.duration.max / 30" required @validity="validity.duration = $event"></input-with-validity>
+  </my-bootstrap-form-group>
+
+
+
   <my-bootstrap-form-group name="jpegPhoto" :label="label.jpegPhoto" v-if="attrs.jpegPhoto" :validity="validity">
       <!-- for validation: -->
       <input-with-validity name="jpegPhoto" v-model="v.jpegPhoto" type="text" style="display: none" required @validity="validity.jpegPhoto = $event"></input-with-validity>

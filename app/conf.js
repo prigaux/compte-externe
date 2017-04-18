@@ -18,6 +18,7 @@ var conf = {
         supannMailPerso: "Email personnel",
         jpegPhoto: "Photo",
         structureParrain: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)",
+        duration_month: "Durée du compte (en mois)",
         userPassword: "Mot de passe",
         userPassword2: "Confirmer le mot de passe",
         barcode: "Code barre",

@@ -28,6 +28,7 @@ type acl_search = (v, string) => Promise<string[]>
 interface StepAttrOption {
   readonly?: boolean;
   hidden?: boolean;
+  max?: number;
 }
 type StepAttrsOption = Dictionary<StepAttrOption>;
 
