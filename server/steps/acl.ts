@@ -4,12 +4,14 @@ import conf = require('../conf');
 import ldap = require('../ldap');
 const filters = ldap.filters;
 
+const searchPeople = (peopleFilter: string, attr: string) => (
+    ldap.searchThisAttr(conf.ldap.base_people, peopleFilter, attr, '')
+);
+
 // "includes" is optional, it will be computed from "list"
-function create(peopleFilter: string): acl_search {
-    return (_v, attr: string) => (
-        ldap.searchThisAttr(conf.ldap.base_people, peopleFilter, attr, '')
-    );
-}
+const create = (peopleFilter: string): acl_search => (
+    (_v, attr: string) => searchPeople(peopleFilter, attr)
+);
 
 export const ldapGroup = (cn: string): acl_search => (
     create(filters.memberOf(cn))
