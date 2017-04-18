@@ -49,9 +49,9 @@ const Moderate : vuejs.ComponentOption = {
   templateUrl: 'templates/moderate.html',
   props: ['id'],
   data() {
-      return Helpers.assign(AttrsForm_data(), { 
+      return { 
         homonymes: [],
-      });
+      };
   },
 
   components: { 'compare-users': CompareUsers },

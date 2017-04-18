@@ -2,9 +2,9 @@ const Create : vuejs.ComponentOption = {
   templateUrl: 'templates/create.html',
   props: ['kind'],
   data() {
-      return Helpers.assign(AttrsForm_data(), { 
+      return { 
         homonymes: undefined,
-      });
+      };
   },
 
   mounted() {

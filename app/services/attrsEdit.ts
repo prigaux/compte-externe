@@ -14,6 +14,7 @@ function attrs_data(vm) {
 let attrsMixin : vuejs.ComponentOption = {
     props: ['v', 'attrs', 'submitted'],
     model: { prop: 'v', event: 'change' },
+    data: function() { return attrs_data(this); },
     watch: {
         submitted(b) {
             this.validity.submitted = b;
@@ -32,11 +33,10 @@ Vue.component('common-attrs', Helpers.templateUrl({
     templateUrl: 'templates/common-attrs.html',
     mixins: [attrsMixin],
     data() {
-        var data = attrs_data(this);
-        data.validity = Helpers.assign(data.validity, { day: {}, month: {}, year: {} });
-        return Helpers.assign(data, {
+        return {
+            validity: { day: {}, month: {}, year: {} },
             towns: [],
-        });
+        };
     },
     computed: {
         maxDay() {
@@ -72,10 +72,10 @@ Vue.component('extern-attrs', Helpers.templateUrl({
     templateUrl: 'templates/extern-attrs.html',
     mixins: [attrsMixin],
     data() {
-        return Helpers.assign(attrs_data(this), {
+        return {
             doGet: null,
             structures_search_result: [],
-        });
+        };
     },
     methods: {
         structures_search(search, loading) {
@@ -93,10 +93,6 @@ Vue.component('extern-attrs', Helpers.templateUrl({
 Vue.component('barcode-attrs', Helpers.templateUrl({
     templateUrl: 'templates/barcode-attrs.html',
     mixins: [attrsMixin],
-    data() {
-        return Helpers.assign(attrs_data(this), {
-        });
-    },
     computed: {
         attr_formatting: () => conf.attr_formatting,
     },
@@ -105,9 +101,9 @@ Vue.component('password-attrs', Helpers.templateUrl({
     templateUrl: 'templates/password-attrs.html',
     mixins: [attrsMixin],
     data() {
-        return Helpers.assign(attrs_data(this), {
+        return {
           userPassword2: null,
-        });
+        };
     },
     computed: {
       passwordPattern() {

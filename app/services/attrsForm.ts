@@ -14,6 +14,8 @@ const AttrsForm_mixin : vuejs.ComponentOption = {
         Ws.getInScope(this, this.id, this.expectedStep);
     },
 
+    data: AttrsForm_data,
+
     methods: {
       submit(event) {
           console.log("submit");
