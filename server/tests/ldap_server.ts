@@ -1,5 +1,34 @@
 import _ = require('lodash');
 import ldap = require('ldapjs');
+import helpers = require('ldap-filter/lib/helpers');
+
+/* workaround "Filters match on attribute values only case-sensitively" (ldapjs github issue #156) */
+function escapeRegExp(str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+}
+
+ldap['SubstringFilter'].prototype.matches = function (target, strictAttrCase) {
+  var tv = helpers.getAttrValue(target, this.attribute, strictAttrCase);
+  if (tv !== undefined && tv !== null) {
+    var re = '';
+
+    if (this.initial)
+      re += '^' + escapeRegExp(this.initial) + '.*';
+    this.any.forEach(function (s) {
+      re += escapeRegExp(s) + '.*';
+    });
+    if (this.final)
+      re += escapeRegExp(this.final) + '$';
+
+    var matcher = new RegExp(re, 'i');
+    return helpers.testValues(function (v) {
+      return matcher.test(v);
+    }, tv);
+  }
+
+  return false;
+};
+
 
 const doIt = params => {
 const host = 'localhost';
@@ -25,9 +54,7 @@ function search(dn, filter, scope: string) {
             dn.equals(k) || dn.parentOf(k)
         ));
     }
-    // force case insensitive on all attrs
-    // (workaround bug "Filters match on attribute values only case-sensitively #156")
-    filter = ldap.parseFilter(filter.toString().toLowerCase());
+    filter = ldap.parseFilter(filter.toString());
     return dns.filter(dn => (
         filter.matches(db[dn])
     ));

@@ -32,7 +32,7 @@ describe('ldap', () => {
         ));
 
         it("should handle simple equality filter", () => (
-            ldap.searchSimple(conf.ldap.base_people, "(sn=Rigaux)", {sn: ''}).then(l => {
+            ldap.searchSimple(conf.ldap.base_people, "(sn=rigaux)", {sn: ''}).then(l => {
                 let sns = l.map(e => e.sn);
                 assert.deepEqual(sns, ["rigaux", "rigaux", "rigaux", "rigaux"]);
             })
