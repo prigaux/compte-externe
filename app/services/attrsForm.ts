@@ -25,6 +25,8 @@ const AttrsForm_mixin : vuejs.ComponentOption = {
               if (resp.error === "no_moderators") {
                   alert(conf.error_msg.noModerators(this.v.structureParrainS.name));
                   Helpers.assign(this.v.structureParrainS, { key: null, name: null, description: null });
+              } else if (resp.error) {
+                  alert(resp.error);
               } else {
                 return this.nextStep(resp);
               }
