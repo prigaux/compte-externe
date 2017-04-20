@@ -12,7 +12,7 @@ const filters = ldap.filters;
 export const getShibAttrs: simpleAction = (req, _sv) => {
     let v = _.mapValues(conf.shibboleth.header_map, headerName => (
         req.header(headerName)
-    ));
+    )) as v;
     console.log("action getShibAttrs:", v);
     return Promise.resolve({ v });
 };

@@ -8,6 +8,7 @@ declare interface Dictionary<T> {
 interface Promise<T> {
     tap<U>(onFulFill: (value: T) => Promise<U>): Promise<T>;
     tap<U>(onFulfill: (value: T) => U): Promise<T>;
+    _ensureTypeSafety: T;
 }
 
 declare module 'nodemailer-sendmail-transport' {  
