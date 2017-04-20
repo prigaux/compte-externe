@@ -1,10 +1,7 @@
 <div>
 
   <my-bootstrap-form-group name="supannCivilite" :label="label.supannCivilite" :validity="validity">
-    <label class="radio-inline" v-for="val in ['M.', 'Mme']">
-      <input-with-validity type="radio" name="supannCivilite" v-model="v.supannCivilite" :value="val" required @validity="validity.supannCivilite = $event"></input-with-validity>
-      {{val}}
-    </label>
+    <radio-with-validity :values="{'M.': 'M.', Mme: 'Mme'}" name="supannCivilite" v-model="v.supannCivilite" @validity="validity.supannCivilite = $event"></radio-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="givenName" :label="label.givenName" :validity="validity">

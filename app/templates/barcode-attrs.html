@@ -1,9 +1,6 @@
 <div>
   <my-bootstrap-form-group name="status" :label="label.status" :validity="validity">
-    <label class="radio-inline" v-for="(k,val) in attr_formatting.status">
-      <input-with-validity type="radio" name="status" v-model="v.status" :value="k" required @validity="validity.status = $event"></input-with-validity>
-      {{val}}
-    </label>
+    <radio-with-validity :values="attr_formatting.status" name="status" v-model="v.status" @validity="validity.status = $event"></radio-with-validity>
   </my-bootstrap-form-group>
 
    <my-bootstrap-form-group name="barcode" :label="label.barcode" :validity="validity" v-if="attrs.barcode">

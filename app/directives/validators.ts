@@ -6,10 +6,10 @@ Vue.component('input-with-validity', {
     let element = this.$el;
 
     element.setAttribute('id', this.name);
-    if (this.type !== 'radio') element.classList.add("form-control");
+    element.classList.add("form-control");
     this._setPattern(this);
 
-    element.addEventListener(this.type === 'radio' ? 'change' : 'input', () => {
+    element.addEventListener('input', () => {
         this.tellParent();
         this.checkValidity();
         return false;
@@ -69,3 +69,30 @@ Vue.component('input-with-validity', {
   },
 });
 
+Vue.component('radio-with-validity', {
+  template: `
+  <span>
+    <label class="radio-inline" v-for="(descr, val) in values">
+       <input type="radio" :name="name" :value="val" :checked="val == value" @change="onchange" required>
+       {{descr}}
+    </label>
+  </span>`,
+  props: ['value', 'name', 'values'],
+  mounted() {
+    this.checkValidity(this.value);
+  },
+  watch: {
+    value: 'checkValidity',
+  },
+  methods: {
+    onchange(event) {
+        let v = event.target.value;
+        this.$emit("input", v);
+        this.checkValidity(v);
+    },
+    checkValidity(v) {
+        let validity = v ? { valid: true } : { valueMissing: true };
+        this.$emit('validity', validity);
+    },
+  },
+});
