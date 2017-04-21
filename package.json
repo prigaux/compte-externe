@@ -7,7 +7,9 @@
   "license": "Apache-2.0",
   "scripts": {
     "postinstall": "bower install && cd app && typings install && cd ../server && typings install",
-    "prestart": "npm install"
+    "prestart": "npm install",
+    "tsc": "concurrently 'tsc -p server' 'tsc -p app ||:'",
+    "start:w": "concurrently 'tsc --watch -p server/' 'tsc --watch -p app/' 'NODE_ENV=test nodemon --watch server/ start-server.js' 'live-reload --port 35729 app/'"
   },
   "engines": { "node": "^4" },
   "dependencies": {
@@ -31,6 +33,7 @@
     "xml2js": "^0.4.9"
   },
   "devDependencies": {
+    "concurrently": "^3.4.0",
     "grunt-env": "~0.4.1",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-mocha-test": "~0.12.1",
@@ -44,6 +47,8 @@
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.0",
     "ldap-filter": "^0.3.3",
+    "live-reload": "^1.1.0",    
+    "nodemon": "^1.11.0",
     "phantomjs": "^1.9.17",
     "load-grunt-tasks": "~1.0.0",
     "source-map-support": "^0.3.3"
