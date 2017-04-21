@@ -2,7 +2,7 @@
 
 import fs = require('fs');
 import sendmailTransport = require('nodemailer-sendmail-transport');
-import ldap_convert from './ldap_convert';
+import ldap_convert = require('./ldap_convert');
 
 const conf = {
     maxLiveModerators: 100,

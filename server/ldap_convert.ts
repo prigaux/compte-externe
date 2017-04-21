@@ -2,7 +2,7 @@
 
 import _ = require('lodash');
 
-const datetime: ldap_conversion = {
+export const datetime: ldap_conversion = {
         fromLdap: (dt: string): Date => {
             if (!dt) return null;
             let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)Z$/);
@@ -13,7 +13,7 @@ const datetime: ldap_conversion = {
         ),
     };
 
-const date: ldap_conversion = {
+export const date: ldap_conversion = {
         fromLdap: (dt: string): Date => {
             if (!dt) return null;
             let m = dt.match(/^(\d\d\d\d)(\d\d)(\d\d)$/);
@@ -24,7 +24,7 @@ const date: ldap_conversion = {
         ),
     };
 
-const postalAddress: ldap_conversion = {
+export const postalAddress: ldap_conversion = {
         fromLdap: (s: string): string => (
             s && s.replace(/\$/g, "\n")
         ),
@@ -33,7 +33,7 @@ const postalAddress: ldap_conversion = {
         ),
     };
 
-function withEtiquette(etiquette: string): ldap_conversion {
+export function withEtiquette(etiquette: string): ldap_conversion {
     return {
         fromLdapMulti: (l: string[]): string => {
             for (let s of l) {
@@ -47,6 +47,3 @@ function withEtiquette(etiquette: string): ldap_conversion {
         ),
     };
 }
-
-export default { datetime, date, postalAddress, withEtiquette };
-
