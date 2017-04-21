@@ -5,6 +5,18 @@ import ldap_convert = require('../ldap_convert');
 import test_ldap = require('./test_ldap');
 require('../helpers');
 
+describe('ldap_convert', () => {
+    describe('dn convert', () => {
+        it ("should work", () => {
+            let conv = ldap_convert.dn("ou", "dc=fr")
+            assert.equal(conv.toLdap("foo"), "ou=foo,dc=fr");
+            assert.equal(conv.fromLdap("ou=foo,dc=fr"), "foo");
+            assert.equal(conv.fromLdap("ou=foo,"), undefined);
+            assert.equal(conv.fromLdap("ou=foo,dc=fr,"), undefined);
+        });
+    });
+});
+
 describe('ldap', () => {
     let conf: test_ldap.conf;
     let ldap: test_ldap.ldap;

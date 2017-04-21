@@ -47,3 +47,17 @@ export function withEtiquette(etiquette: string): ldap_conversion {
         ),
     };
 }
+
+export function dn(attrName: string, base: string): ldap_conversion {
+    return {
+        fromLdap: (s: string): string => {
+            let base_ = _.escapeRegExp(base);
+            let reg = new RegExp(`^${attrName}=(.*),${base_}$`);
+            let m = s.match(reg);
+            return m && m[1];
+        },
+        toLdap: (s: string): string => (
+            attrName + "=" + s + "," + base
+        )
+    }
+}
