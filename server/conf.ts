@@ -4,11 +4,14 @@ import fs = require('fs');
 import sendmailTransport = require('nodemailer-sendmail-transport');
 import ldap_convert = require('./ldap_convert');
 
+const ldap_base = "dc=univ,dc=fr";
 const ldap_main = {
         uri: 'ldap://ldap-test.univ.fr',
-        base: "dc=univ,dc=fr",
-        base_people: "ou=people,dc=univ,dc=fr",
-        base_structures: "ou=structures,dc=univ,dc=fr",
+        base: ldap_base,
+        base_people: "ou=people," + ldap_base,
+        base_groups: "ou=groups," + ldap_base,
+        base_structures: "ou=structures," + ldap_base,
+        base_rolesGeneriques: "ou=supannRoleGenerique,ou=tables," + ldap_base,
 };
 
 const conf = {
@@ -71,11 +74,11 @@ const conf = {
         },
 
         group_cn_to_memberOf: cn => (
-            "cn=" + cn + ",ou=groups,dc=univ,dc=fr"
+            "cn=" + cn + "," + ldap_main.base_groups
         ),
 
         // empty for anonymous bind:
-        dn: 'cn=comptex,ou=admin,dc=univ,dc=fr',
+        dn: 'cn=comptex,ou=admin,' + ldap_main.base,
         password: 'xxx',
         
         uid_to_eppn: "@univ.fr",
