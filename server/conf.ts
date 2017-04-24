@@ -4,6 +4,13 @@ import fs = require('fs');
 import sendmailTransport = require('nodemailer-sendmail-transport');
 import ldap_convert = require('./ldap_convert');
 
+const ldap_main = {
+        uri: 'ldap://ldap-test.univ.fr',
+        base: "dc=univ,dc=fr",
+        base_people: "ou=people,dc=univ,dc=fr",
+        base_structures: "ou=structures,dc=univ,dc=fr",
+};
+
 const conf = {
     maxLiveModerators: 100,
 
@@ -30,10 +37,7 @@ const conf = {
     },
         
     ldap: {
-        uri: 'ldap://ldap-test.univ.fr',
-        base: "dc=univ,dc=fr",
-        base_people: "ou=people,dc=univ,dc=fr",
-        base_structures: "ou=structures,dc=univ,dc=fr",
+        ...ldap_main,
 
         structures: {
             convert: {},
