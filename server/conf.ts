@@ -20,8 +20,8 @@ const conf = {
     mainUrl: 'https://compte-externe-test.univ.fr',
     
     mail: {
-        from: 'Pascal Rigaux <pascal.rigaux@univ.fr>',
-        intercept: 'Pascal Rigaux <pascal.rigaux@univ.fr>',
+        from: 'Assistance <assistance@univ.fr>',
+        intercept: 'Admin <admin@univ.fr>',
         transport: sendmailTransport({}),
     },
 
