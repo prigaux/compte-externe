@@ -24,16 +24,21 @@ const conf = {
 
     types: {
         uid: '', dn: '', cn: '', sn: '', displayName: '', givenName: '',
+        supannCivilite: '',
         supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '',
-        birthDay: new Date(),
+        birthDay: new Date(), birthName: '',
         homePostalAddress: '',
+        jpegPhoto: '',
+        structureParrain: '',
 
         Shib_Identity_Provider: '',
         eduPersonPrincipalName: '',
 
         profilename: '',
+        priority: 0,
         startdate: new Date(),
         enddate: new Date(),
+        duration: 0,
     },
         
     ldap: {
