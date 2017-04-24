@@ -109,7 +109,7 @@ namespace Ws {
             } else {
                 v_.homePostalAddress = new HomePostalAddressPrecise('', '', '', '', '');
             }
-            v_.structureParrainS = { key: null, name: null, description: null };
+            v_.structureParrainS = undefined;
             if (v.structureParrain) {
                 structures_search(v.structureParrain, 1).then((resp) => {
                     v_.structureParrainS = resp[0];
