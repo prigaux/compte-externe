@@ -90,7 +90,7 @@ const conf = {
         header_map: {
             Shib_Identity_Provider: 'Shib-Identity-Provider',
             eduPersonPrincipalName: 'eppn',
-            mail: 'mail',
+            supannMailPerso: 'mail',
 
             supannCivilite: 'supannCivilite',
             cn: 'cn',
