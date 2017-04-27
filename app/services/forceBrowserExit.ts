@@ -6,10 +6,10 @@ namespace ForceBrowserExit {
     
     export function install(triggerUrl, forcedRoute) {
         router.beforeEach((to, from, next) => {
-            if (Helpers.getCookie(cookieName)) {
+            if (Helpers.getCookie(cookieName) && to.path !== forcedRoute) {
                 next(forcedRoute);
             } else {
-                if (to.match(triggerUrl)) {
+                if (to.path.match(triggerUrl)) {
                     console.log("forceBrowserExit!");
                     Helpers.createCookie(cookieName, 'true', 0);
                 }
