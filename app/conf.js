@@ -22,10 +22,7 @@ var conf = {
         userPassword: "Mot de passe",
         userPassword2: "Confirmer le mot de passe",
         barcode: "Code barre",
-        status: "Type de compte",
-    },
-    attr_formatting: {
-        status: { invite: "Lecteur invité", extern: "Lecteur extérieur" },
+        profilename: "Type de compte",
     },
 
     title: "Gestion de comptes",

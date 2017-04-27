@@ -94,7 +94,12 @@ Vue.component('barcode-attrs', Helpers.templateUrl({
     templateUrl: 'templates/barcode-attrs.html',
     mixins: [attrsMixin],
     computed: {
-        attr_formatting: () => conf.attr_formatting,
+      profilename2descr() {
+          let map = {};
+          let attr = this.attrs.profilename;
+          for (let e of attr.choices) map[e.key] = e.name;
+          return map;
+      },
     },
 }));
 Vue.component('password-attrs', Helpers.templateUrl({

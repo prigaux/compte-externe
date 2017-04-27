@@ -25,10 +25,15 @@ type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
 type action = (req: any, sv: sv) => Promise<vr>
 type acl_search = (v, string) => Promise<string[]>
 
+interface StepAttrOptionChoices {
+  key: string;
+  name?: string;
+}
 interface StepAttrOption {
   readonly?: boolean;
   hidden?: boolean;
   max?: number;
+  choices?: StepAttrOptionChoices[];
 }
 type StepAttrsOption = Dictionary<StepAttrOption>;
 

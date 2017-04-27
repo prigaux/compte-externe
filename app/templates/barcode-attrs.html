@@ -1,6 +1,6 @@
 <div>
-  <my-bootstrap-form-group name="status" :label="label.status" :validity="validity">
-    <radio-with-validity :values="attr_formatting.status" name="status" v-model="v.status" @validity="validity.status = $event"></radio-with-validity>
+  <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity">
+    <radio-with-validity :values="profilename2descr" name="profilename" v-model="v.profilename" @validity="validity.profilename = $event"></radio-with-validity>
   </my-bootstrap-form-group>
 
    <my-bootstrap-form-group name="barcode" :label="label.barcode" :validity="validity" v-if="attrs.barcode">
