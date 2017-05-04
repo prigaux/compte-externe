@@ -62,3 +62,10 @@ export const addDays = (date : Date, days : number) => {
     r.setDate(r.getDate() + days);
     return r;
 }
+
+export const nextDate = (pattern : string, date: Date) => {
+    let s = pattern.replace(/^XXXX-/, "" + date.getFullYear() + "-");
+    let r = new Date(s);
+    if (r.getTime() < date.getTime()) r.setFullYear(r.getFullYear() + 1);
+    return r;
+}
