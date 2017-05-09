@@ -3,7 +3,6 @@
 import { assert } from './test_utils';
 import utils = require('../utils');
 
-console.log("foo");
 describe('nextDate', () => {
         it ("should work", () => {
             assert.equal(utils.nextDate("XXXX-07-01", new Date('2017-06-30T23:59:59.000Z')).toISOString(), '2017-07-01T00:00:00.000Z');

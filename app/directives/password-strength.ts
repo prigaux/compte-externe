@@ -60,9 +60,7 @@ function computeScore(passwd) {
     return score;
 }
 
-angular.module('myApp')
-
-.directive("passwordStrength", function() {
+Vue.directive("passwordStrength", function() {
     return {
         restrict: 'A',
         scope: { passwd: '=passwordStrength' },
