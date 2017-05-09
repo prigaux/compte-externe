@@ -93,7 +93,7 @@ namespace Ws {
             return addr.toString();
         }
 
-        function fromWs(v: VRaw): V {
+        export function fromWs(v: VRaw): V {
             var v_: V = <any> Helpers.copy(v);
             //v.birthDay = "19751002000000Z"; //"1975-10-02";
             if (v.birthDay) {

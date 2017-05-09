@@ -82,7 +82,6 @@ var conf = {
         ],
         tests: [
             // NB: only used by karma, wildcards allowed
-            "controllers/*_test.js",
             "directives/*_test.js",
             "services/*_test.js",
         ],

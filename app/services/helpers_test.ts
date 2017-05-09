@@ -2,21 +2,11 @@
 
 describe('service helpers', function() {
 
-    beforeEach(angular.mock.module('myApp'));
-
-    it('should exists', inject((helpers) => {
-      expect(helpers).toBeDefined();
-    }));
-
     describe('formatDifferences', function(){
 
-        var diff;
-        
-        beforeEach(inject((helpers: Helpers.T, $sce) => {
-            diff = function (val1, val2) {
-                return helpers.formatDifferences(val1, val2).map($sce.getTrustedHtml);
-            };
-        }));
+        let diff = function (val1, val2) {
+            return Helpers.formatDifferences(val1, val2);
+        };
         
         it('should handle same value', () => {
             expect(diff("foo", "foo")).toEqual(['foo', 'foo']);
