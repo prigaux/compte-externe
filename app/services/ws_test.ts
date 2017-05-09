@@ -18,11 +18,11 @@ describe('service ws', function() {
                 expect(raw(r.homePostalAddress)).toEqual(out);
                 expect(ws.toWs(r).homePostalAddress).toEqual(in_);
             }
-            check("44 rue balard$75015 PARIS$FRANCE",
+            check("44 rue balard\n75015 PARIS\nFRANCE",
                   { postalCode: '75015', town: 'PARIS', country: 'FRANCE', line1: '44 rue balard', line2: '' });
-            check("APPT 11 BAT B$12, Rue DE LA ROQUETTE$75011 PARIS$FRANCE",
+            check("APPT 11 BAT B\n12, Rue DE LA ROQUETTE\n75011 PARIS\nFRANCE",
                   { postalCode: '75011', town: 'PARIS', country: 'FRANCE', line1: 'APPT 11 BAT B', line2: '12, Rue DE LA ROQUETTE' });
-            check("6 bis rue DES BOURGUIGNONS$HAMEAU DE BEZANLEU$77710 TREUZY LEVELAY$FRANCE",
+            check("6 bis rue DES BOURGUIGNONS\nHAMEAU DE BEZANLEU\n77710 TREUZY LEVELAY\nFRANCE",
                   { postalCode: '77710', town: 'TREUZY LEVELAY', country: 'FRANCE', line1: '6 bis rue DES BOURGUIGNONS', line2: 'HAMEAU DE BEZANLEU' });            
         }));
         

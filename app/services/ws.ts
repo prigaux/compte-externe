@@ -80,16 +80,14 @@ namespace Ws {
             return m && new MyDate(parseInt(m[1]), parseInt(m[2]), parseInt(m[3]));
         }
 
-        function _fromHomePostalAddress(addr): HomePostalAddress {
-            var m = addr.match(/(.*)\n(.*)\n(.*)/);
-            if (!m) return new HomePostalAddress(addr);
-            var m1 = m[1].match(/(.*)\n(.*)/);
-            var m2 = m[2].match(/(\d+) (.*)/);
-            return new HomePostalAddressPrecise(
-                m1 ? m1[1] : m[1],
-                m1 ? m1[2] : '',
-                m2[1], m2[2],
-                m[3]);
+        function _fromHomePostalAddress(addr: string): HomePostalAddress {
+            let lines = addr.split(/\n/);
+            if (lines.length < 3) return new HomePostalAddress(addr);
+            if (lines.length === 3) lines.splice(1, 0, ''); // add empty line2
+            let [ line1, line2, pt, country ] = lines;
+            let pt_ = pt.match(/(\d+) (.*)/);
+            if (!pt_) return new HomePostalAddress(addr);
+            return new HomePostalAddressPrecise(line1,line2, pt_[1], pt_[2], country);
         }
         function _toHomePostalAddress(addr: HomePostalAddress) : string {
             return addr.toString();
