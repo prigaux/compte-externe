@@ -11,14 +11,16 @@ const app = express();
 
 _.attempt(() => require('source-map-support').install());
 
+const staticFilesOptions = { maxAge: process.env.NODE_ENV === 'production' ? 60 * 60 * 1000 : 0 };
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/app/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json({type: '*/*'})); // do not bother checking, everything we will get is JSON :)
 app.use(bodyParser.urlencoded({ extended: false }));
 app.get("/", utils.index_html);
-app.use(express.static(path.join(__dirname, '../app'),
-                       { maxAge: process.env.NODE_ENV === 'production' ? 60 * 60 * 1000 : 0 }));
+app.use(express.static(path.join(__dirname, '../app'), staticFilesOptions));
+app.use("/node_modules", express.static(path.join(__dirname, '../node_modules'), staticFilesOptions));
 app.use(utils.express_auth);
 app.use('/api', api);
 

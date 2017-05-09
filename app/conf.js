@@ -48,16 +48,16 @@ var conf = {
     assets: {
         lib: {
             css: [
-                'bower_components/html5-boilerplate/css/normalize.css',
-                'bower_components/html5-boilerplate/css/main.css',
-                'bower_components/bootstrap/dist/css/bootstrap.css',
+                'node_modules/html5-boilerplate/dist/css/normalize.css',
+                'node_modules/html5-boilerplate/dist/css/main.css',
+                'node_modules/bootstrap/dist/css/bootstrap.css',
             ],
             js: [
-                "bower_components/axios/dist/axios.js",
-                "bower_components/vue/dist/vue.js",
-                "bower_components/vue-router/dist/vue-router.js",
-                "bower_components/vue-select/dist/vue-select.js",
-                "bower_components/jsdiff/diff.js",
+                "node_modules/axios/dist/axios.js",
+                "node_modules/vue/dist/vue.js",
+                "node_modules/vue-router/dist/vue-router.js",
+                "node_modules/vue-select/dist/vue-select.js",
+                "node_modules/diff/dist/diff.js",
             ],
         },
         css: [

@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     var watchFiles = {
         serverTS: ['server/**/*.ts'],
         serverJS: ['gruntfile.js', 'start-server.js', 'server/**/*.js', '!server/tests/'],
-        clientTS: ['app/**/*.ts', '!app/bower_components/**/*'],
+        clientTS: ['app/**/*.ts'],
         html_css: ['app/**/*.html', 'app/**/*.css'],
         mochaTests: ['server/tests/**/*.js'],
     };
