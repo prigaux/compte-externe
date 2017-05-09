@@ -73,7 +73,8 @@ namespace Helpers {
 
     export function eachObject<T>(o : T, fn : (string, any, T) => any) {
         for(var k in o) {
-            fn(k, o[k], o);
+            if (o.hasOwnProperty(k))
+                fn(k, o[k], o);
         }
     }
 
