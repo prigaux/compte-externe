@@ -8,7 +8,7 @@
   "scripts": {
     "postinstall": "cd app && typings install && cd ../server && typings install",
     "prestart": "npm install",
-    "tsc": "tsc -p server && tsc -p app ||:",
+    "tsc": "tsc -p server && tsc -p app",
     "start:w": "concurrently 'tsc --watch -p server/' 'tsc --watch -p app/' 'NODE_ENV=test nodemon --watch server/ start-server.js' 'live-reload --port 35729 app/'",
     "test:w": "mocha --watch server/tests"
   },
