@@ -144,7 +144,6 @@ export function remove_dns<T extends {}>(l: T[]): T[] {
 }
 
 // NB: it should be <T extends LdapEntry> but it is not well handled by typescript
-// (NB: attrRemap should be Dictionary<string>, but it is not well handled by typescript)
 export function searchSimple<T extends {}>(base: string, filter: filter, attrTypes: T): Promise<T[]> {
   return search(base, filter, attrTypes, null, {});
 }
