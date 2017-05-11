@@ -48,25 +48,23 @@ const conf = {
         ...ldap_main,
 
         structures: {
-            convert: {},
-            rename: { key: 'supannCodeEntite', name: 'ou', description: 'description' },
+            attrs: {
+                key: { ldapAttr: 'supannCodeEntite' }, 
+                name: { ldapAttr: 'ou' },
+                description: {},
+            },
         },
         
         people: {
-            convert : { 
-                homePostalAddress: ldap_convert.postalAddress,
-                up1BirthDay: ldap_convert.datetime,
-                startdate: ldap_convert.date,
-                enddate: ldap_convert.date,
-                supannEtablissement: ldap_convert.withEtiquette('{SAML}'),
-                supannRefId: ldap_convert.withEtiquette("{EPPN}"),
-                supannParrainDN: ldap_convert.dn("ou", ldap_main.base_structures),
-            },
-            rename: { 
-                birthDay: 'up1BirthDay',
-                Shib_Identity_Provider: 'supannEtablissement',
-                eduPersonPrincipalName: 'supannRefId',
-                structureParrain: 'supannParrainDN',
+            attrs : { 
+                homePostalAddress: { convert: ldap_convert.postalAddress },
+                birthDay: { ldapAttr: "up1BirthDay", convert: ldap_convert.datetime },
+                birthName: { ldapAttr: 'up1BirthName' },
+                startdate: { convert: ldap_convert.date },
+                enddate: { convert: ldap_convert.date },
+                Shib_Identity_Provider: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette('{SAML}') },
+                eduPersonPrincipalName: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{EPPN}") },                
+                structureParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("ou", ldap_main.base_structures) },
             },
             sns: ['sn'],
             givenNames: ['givenName'],

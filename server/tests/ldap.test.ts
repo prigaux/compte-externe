@@ -52,13 +52,13 @@ describe('ldap', () => {
 
         it("should handle attr remap & conversion", () => {
             let attrTypes = {sn: '', birthDay: new Date()}
-            let attrRemap = { rename: { birthDay: 'up1BirthDay' }, convert: { up1BirthDay: ldap_convert.datetime } }
-            return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrRemap).then(e => {
+            let attrsConvert = { birthDay: { ldapAttr: 'up1BirthDay', convert: ldap_convert.datetime } }
+            return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrsConvert).then(e => {
                 assert.equal(e.sn, "rigaux");
                 assert.equal(e.birthDay.toISOString(), new Date('1975-10-02').toISOString());                
                 assert.equal(ldap_convert.datetime.toLdap(e.birthDay), '19751002000000Z');
 
-                let rawLdapValue = ldap.convertToLdap(attrTypes, attrRemap, e);
+                let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e);
                 assert.deepEqual(rawLdapValue, { sn: "rigaux", up1BirthDay: '19751002000000Z', dn: 'uid=prigaux, ou=people, dc=univ, dc=fr' });
             })
         });
@@ -67,13 +67,29 @@ describe('ldap', () => {
             assert.equal(ldap_convert.withEtiquette("{FOO}").fromLdapMulti(["{FOO}bar"]), "bar");
             assert.equal(ldap_convert.withEtiquette("{FOO}").fromLdapMulti(["{BAR}bar"]), null);
             assert.equal(ldap_convert.withEtiquette("{FOO}").fromLdapMulti(["xxx", "{FOO}bar"]), "bar");
-            let attrTypes = {idpId: ''}
-            let attrRemap = { rename: { idpId: 'supannEtablissement' }, convert: { supannEtablissement: ldap_convert.withEtiquette('{SAML}') } }
-            return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrRemap).then(e => {
+        });
+        it("should handle etiquette conversion in ldap.read", () => {
+            let attrTypes = {idpId: ''}            
+            let attrsConvert = { idpId: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette('{SAML}') } }
+            return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrsConvert).then(e => {
                 assert.equal(e.idpId, "https://univ-test.fr");
 
-                let rawLdapValue = ldap.convertToLdap(attrTypes, attrRemap, e);
+                let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e);
                 assert.deepEqual(rawLdapValue['supannEtablissement'], "{SAML}https://univ-test.fr");
+            });
+        });
+        it("should handle etiquette conversion in ldap.read", () => {
+            let attrTypes = {idpId: '', mifare: ''}
+            let attrsConvert = { 
+                idpId: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette('{SAML}') },
+                mifare: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette('{MIFARE}') },
+             }
+            return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrsConvert).then(e => {
+                assert.equal(e.idpId, "https://univ-test.fr");
+                assert.equal(e.mifare, "mifare_id");
+
+                let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e);
+                assert.deepEqual(rawLdapValue['supannEtablissement'], ["{SAML}https://univ-test.fr", "{MIFARE}mifare_id"]);
             })
         });
         

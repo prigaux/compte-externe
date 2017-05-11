@@ -17,7 +17,7 @@ export const searchPeople = (filter: ldap.filter, attrs: string[], options: ldap
     return ldap.search(conf.ldap.base_people,
                           filter,
                           attrTypes,
-                          conf.ldap.people,
+                          conf.ldap.people.attrs,
                           options);
 };
 
@@ -25,7 +25,7 @@ export const structures = (token: string, sizeLimit: number) => {
     let words_filter = filters.fuzzy(['description', 'ou'], token);
     let many = [filters.eq("supannCodeEntite", token), 
                 filters.and([ words_filter, "(supannCodeEntite=*)"])];
-    return ldap.searchManyMap(conf.ldap.base_structures, many, conf.ldap.structures, {sizeLimit}).then(ldap.remove_dns);
+    return ldap.searchManyMap(conf.ldap.base_structures, many, conf.ldap.structures.attrs, {sizeLimit}).then(ldap.remove_dns);
 };
 
 function suggested_mail(sn: string, givenName: string) {

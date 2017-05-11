@@ -17,7 +17,8 @@ export type Options = ldapjs.Options
 export type LdapAttrValue = string | number | Date | string[];
 export type LdapEntry = Dictionary<LdapAttrValue>;
 
-type AttrRemap = { rename: Dictionary<string>, convert: Dictionary<ldap_conversion> } 
+type AttrConvert = { convert?: ldap_conversion, ldapAttr?: string }
+export type AttrsConvert = Dictionary<AttrConvert>
 
 type RawValue = ldap_RawValue;
 
@@ -112,13 +113,19 @@ function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ld
         }
 }
 
-export function convertToLdap<T extends {}>(attrTypes: T, attrRemap: AttrRemap, v: T): Dictionary<RawValue> {
+export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert, v: T): Dictionary<RawValue> {
     let r = {};
     _.forEach(v, (val, attr) => {
-        let attr_ = attrRemap.rename[attr] || attr;
+        let conv = attrsConvert[attr] || {};
+        let attr_ = conv.ldapAttr || attr;
         // transform to string|string[]
-        let val_ = convertAttrToLdap(attr, attrTypes[attr], attrRemap.convert[attr_], val);
-        r[attr_] = val_;
+        let val_ = convertAttrToLdap(attr, attrTypes[attr], conv.convert, val);
+        if (attr_ in r) {
+            if (!_.isArray(r[attr_])) r[attr_] = [ r[attr_] ];
+            r[attr_].push(val_);
+        } else {
+            r[attr_] = val_;
+        }
     });
     return r;
 }
@@ -144,20 +151,22 @@ export function searchSimple<T extends {}>(base: string, filter: filter, attrTyp
 
 
 // NB: it should be <T extends LdapEntry> but it is not well handled by typescript
-// (NB: attrRemap should be Dictionary<string>, but it is not well handled by typescript)
-export function search<T extends {}>(base: string, filter: filter, attrTypes: T, attrRemap: AttrRemap, options: Options): Promise<T[]> {
-    if (!attrRemap) attrRemap = { rename: {}, convert: {} }
-    let attrRemapRev = _.invert(attrRemap.rename);
-    let attributes = _.keys(attrTypes).map(k => attrRemap.rename[k] || k);
+export function search<T extends {}>(base: string, filter: filter, attrTypes: T, attrsConvert: AttrsConvert, options: Options): Promise<T[]> {
+    if (!attrsConvert) attrsConvert = {}
+    let attrRemap = _.mapValues(attrsConvert, (c, attr) => c.ldapAttr || attr);
+    let attrRemapRev = _.invertBy(attrRemap);
+    let attributes = _.keys(attrTypes).map(k => attrRemap[k] || k);
     let p = searchRaw(base, filter, attributes, options).then(l => 
           l.map(o => {
               delete o['controls'];
               let r = {};
               _.forEach(o, (val, attr) => {
-                let attr_ = attrRemapRev[attr] || attr;
-                // then transform string|string[] into the types wanted
-                let val_ = handleAttrType(attr_, attrTypes[attr_], attrRemap.convert[attr], val);
-                r[attr_] = val_;
+                let attrs = attrRemapRev[attr] || [attr];
+                for (let attr_ of attrs) {
+                    // then transform string|string[] into the types wanted
+                    let val_ = handleAttrType(attr_, attrTypes[attr_], attrsConvert[attr_] &&  attrsConvert[attr_].convert, val);
+                    r[attr_] = val_;
+                }
               });              
               return r;
           })
@@ -165,33 +174,34 @@ export function search<T extends {}>(base: string, filter: filter, attrTypes: T,
     return <Promise<T[]>> <any> p;
 }
 
-const searchMany = <T extends {}> (base: string, filters: filter[], attrTypes: T, attrRemap: AttrRemap, options: Options = {}): Promise<T[]> => (
+const searchMany = <T extends {}> (base: string, filters: filter[], attrTypes: T, attrsConvert: AttrsConvert, options: Options = {}): Promise<T[]> => (
     Promise.all(filters.map(filter => (
-        search(base, filter, attrTypes, attrRemap, options)
+        search(base, filter, attrTypes, attrsConvert, options)
     ))).then(_.flatten).then(l => _.uniqBy(l, 'dn'))
 );
 
-export const searchManyMap = (base: string, filters: filter[], attrRemap: AttrRemap, options: Options = {}) => {
-    let attrTypes = _.mapValues(attrRemap.rename, _ => '');
-    return searchMany(base, filters, attrTypes, attrRemap, options);
+
+export const searchManyMap = (base: string, filters: filter[], attrsConvert: AttrsConvert, options: Options = {}) => {
+    let attrTypes = _.mapValues(attrsConvert, _ => '');
+    return searchMany(base, filters, attrTypes, attrsConvert, options);
 };
 
-export const searchOne = <T extends LdapEntry> (base: string, filter: filter, attrTypes: T, attrRemap: AttrRemap, options: Options = {}) => {
+export const searchOne = <T extends LdapEntry> (base: string, filter: filter, attrTypes: T, attrsConvert: AttrsConvert, options: Options = {}) => {
     options = merge({ sizeLimit: 1 }, options); // no use getting more than one answer
-    return search(base, filter, attrTypes, attrRemap, options).then(l => (
+    return search(base, filter, attrTypes, attrsConvert, options).then(l => (
         l.length ? l[0] : null
     ));
 };
 
-export const read = <T extends LdapEntry> (dn: string, attrTypes: T, attrRemap: AttrRemap, options: Options = {}) => {
+export const read = <T extends LdapEntry> (dn: string, attrTypes: T, attrsConvert: AttrsConvert, options: Options = {}) => {
     options = merge({ sizeLimit: 1, scope: "base" }, options); // no use getting more than one answer
-    return search(dn, null, attrTypes, attrRemap, options).then(l => (
+    return search(dn, null, attrTypes, attrsConvert, options).then(l => (
         l.length ? l[0] : null
     ));
 };
 
 export const searchThisAttr = <T extends LdapAttrValue>(base: string, filter: filter, attr: string, attrType: T, options: Options = {}): Promise<T[]> => {
-    return search(base, filter, { val: attrType }, { rename: { val: attr }, convert: {} }, options).then(l => (
+    return search(base, filter, { val: attrType }, { val: { ldapAttr: attr } }, options).then(l => (
         _.map(l, e => e.val)
     ));
 };
