@@ -99,7 +99,7 @@ export function firstStep(req: express.Request): string {
     let wanted_step: string = req.params.step;
     let allowed = allowedFirstSteps(req);
     if (wanted_step) {
-        if (_.contains(allowed, wanted_step)) {
+        if (_.includes(allowed, wanted_step)) {
             return wanted_step;
         } else {
             throw "step " + wanted_step + " not allowed";

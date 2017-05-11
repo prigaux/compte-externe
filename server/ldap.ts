@@ -168,7 +168,7 @@ export function search<T extends {}>(base: string, filter: filter, attrTypes: T,
 const searchMany = <T extends {}> (base: string, filters: filter[], attrTypes: T, attrRemap: AttrRemap, options: Options = {}): Promise<T[]> => (
     Promise.all(filters.map(filter => (
         search(base, filter, attrTypes, attrRemap, options)
-    ))).then(_.flatten).then(l => _.uniq(l, 'dn'))
+    ))).then(_.flatten).then(l => _.uniqBy(l, 'dn'))
 );
 
 export const searchManyMap = (base: string, filters: filter[], attrRemap: AttrRemap, options: Options = {}) => {
