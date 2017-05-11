@@ -174,17 +174,11 @@ export function search<T extends {}>(base: string, filter: filter, attrTypes: T,
     return <Promise<T[]>> <any> p;
 }
 
-const searchMany = <T extends {}> (base: string, filters: filter[], attrTypes: T, attrsConvert: AttrsConvert, options: Options = {}): Promise<T[]> => (
+export const searchMany = <T extends {}> (base: string, filters: filter[], idAttr: string, attrTypes: T, attrsConvert: AttrsConvert, options: Options = {}): Promise<T[]> => (
     Promise.all(filters.map(filter => (
         search(base, filter, attrTypes, attrsConvert, options)
-    ))).then(_.flatten).then(l => _.uniqBy(l, 'dn'))
+    ))).then(_.flatten).then(l => _.uniqBy(l, idAttr))
 );
-
-
-export const searchManyMap = (base: string, filters: filter[], attrsConvert: AttrsConvert, options: Options = {}) => {
-    let attrTypes = _.mapValues(attrsConvert, _ => '');
-    return searchMany(base, filters, attrTypes, attrsConvert, options);
-};
 
 export const searchOne = <T extends LdapEntry> (base: string, filter: filter, attrTypes: T, attrsConvert: AttrsConvert, options: Options = {}) => {
     options = merge({ sizeLimit: 1 }, options); // no use getting more than one answer

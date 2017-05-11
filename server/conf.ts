@@ -42,6 +42,8 @@ const conf = {
         startdate: new Date(),
         enddate: new Date(),
         duration: 0,
+
+        key: '', name: '', description: '',
     },
         
     ldap: {
