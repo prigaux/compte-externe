@@ -1,10 +1,21 @@
-<div>
+<fieldset>
   <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity">
     <radio-with-validity :values="profilename2descr" name="profilename" v-model="v.profilename" @validity="validity.profilename = $event"></radio-with-validity>
   </my-bootstrap-form-group>
 
-   <my-bootstrap-form-group name="barcode" :label="label.barcode" :validity="validity" v-if="attrs.barcode">
+  <my-bootstrap-form-group name="newCard" :label="label.newCard">
+    <label class="radio-inline" v-for="(descr, val) in { true: 'Créer une nouvelle carte', false: 'Enroller une carte existante'}">
+       <input type="radio" :name="newCard" :value="val" v-model="newCard" required>
+       {{descr}}
+    </label>
+  </my-bootstrap-form-group>
+ 
+   <my-bootstrap-form-group name="barcode" :label="label.barcode" :validity="validity" v-if="attrs.barcode && newCard !== 'true'">
      <input-with-validity name="barcode" v-model="v.barcode" type="number" v-auto-focus required @validity="validity.barcode = $event"></input-with-validity>
    </my-bootstrap-form-group>
 
-</div>
+   <my-bootstrap-form-group name="mifare" :label="label.mifare" :validity="validity" v-if="attrs.mifare && newCard !== 'true'">
+     <input-with-validity name="mifare" v-model="v.mifare" required @validity="validity.mifare = $event"></input-with-validity>
+   </my-bootstrap-form-group>
+
+</fieldset>

@@ -2,6 +2,7 @@
 
 var conf = {
     forceBrowserExit: false,
+    printCardUrl: (login) => `http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=${login}`,
     
     attr_labels: {
         supannCivilite: "Civilité",
@@ -21,7 +22,9 @@ var conf = {
         duration_month: "Durée du compte (en mois)",
         userPassword: "Mot de passe",
         userPassword2: "Confirmer le mot de passe",
+        newCard: "Carte",
         barcode: "Code barre",
+        mifare: "Code Mifare",
         profilename: "Type de compte",
     },
 

@@ -93,6 +93,11 @@ Vue.component('extern-attrs', Helpers.templateUrl({
 Vue.component('barcode-attrs', Helpers.templateUrl({
     templateUrl: 'templates/barcode-attrs.html',
     mixins: [attrsMixin],
+    data() {
+        return {
+            newCard: "true",
+        };
+    },
     computed: {
       profilename2descr() {
           let map = {};
