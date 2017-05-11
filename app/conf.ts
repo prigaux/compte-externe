@@ -31,6 +31,7 @@ export default {
         barcode: "Code barre",
         mifare: "Code Mifare",
         profilename: "Type de compte",
+        siret: "Etablissement",
         charter: "Charte",
     },
 
@@ -62,6 +63,7 @@ export default {
         userPassword: 'Veuillez choisir un mot de passe comportant au moins 8 caractères. Ce mot de passe doit contenir des lettres minuscules, des lettres majuscules et des chiffres.',
         phone: 'Le champ doit être un numéro de téléphone. Exemples : 01 02 03 04 05  ou  +41 66 555 44 33  ou  +886 1 1234 5678',
         frenchPostalCode: 'Le champ doit être un code postal. Exemple: 75013',
+        siret: 'Numéro SIRET invalide',
         forbiddenChars: (forbiddenChars) => (
             forbiddenChars.length == 1 ?
              `Le caractère « ${forbiddenChars} » n'est pas autorisé.` :

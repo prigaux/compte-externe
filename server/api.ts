@@ -317,14 +317,17 @@ router.get('/homonymes/:id', (req: req, res) => {
     respondJson(req, res, homonymes(req, req.params.id));
 });
 
-function search_structures(req: req) {
+function search_for_typeahead(req: req, search : (token: string, sizeLimit: number) => Promise<any>) {
     let token = req.query.token;
     if (!token) throw "missing token parameter";
     let sizeLimit = parseInt(req.query.maxRows) || 10;
-    return search_ldap.structures(token, sizeLimit);
+    return search(token, sizeLimit);
 }
 router.get('/structures', (req: req, res) => {
-    respondJson(req, res, search_structures(req));
+    respondJson(req, res, search_for_typeahead(req, search_ldap.structures));
+});
+router.get('/etablissements', (req: req, res) => {
+    respondJson(req, res, search_for_typeahead(req, search_ldap.etablissements));
 });
 
 export default router;

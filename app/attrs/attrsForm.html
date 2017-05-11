@@ -74,6 +74,13 @@
    
    <BarcodeAttrs v-model="v" :attrs="attrs" :submitted="submitted" :v_orig="v_orig" v-if="attrs.barcode || attrs.mifare"></BarcodeAttrs>
 
+    <my-bootstrap-form-group name="siret" multi="true" :label="label.siret" v-if="attrs.siret">
+       <div class="col-xs-3" :class="{'has-error': validity.submitted && !validity.siret.valid}">
+           <input-with-validity name="siret" v-model="v.siret" real-type="siret" placeholder="Numéro SIRET" :required="!attrs.siret.optional" :validity.sync="validity.siret"></input-with-validity>
+           <validation-errors name="siret" :validity="validity"></validation-errors>
+       </div>
+    </my-bootstrap-form-group>
+
   <my-bootstrap-form-group name="charter" :label="label.charter" :validity="validity"  v-if="attrs.userPassword">
     <div class="checkbox">
       <label>
@@ -83,7 +90,6 @@
     </div>
   </my-bootstrap-form-group>
 
-  
    <my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit" v-if="step_labels.okButton">
         <span class="glyphicon glyphicon-plus"></span>

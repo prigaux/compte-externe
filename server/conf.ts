@@ -12,6 +12,7 @@ const ldap_main = {
         base_groups: "ou=groups," + ldap_base,
         base_structures: "ou=structures," + ldap_base,
         base_rolesGeneriques: "ou=supannRoleGenerique,ou=tables," + ldap_base,
+        base_etablissements: "ou=supannEtablissement,ou=tables," + ldap_base,
 };
 
 const conf = {
@@ -35,6 +36,19 @@ const conf = {
             attrs: {
                 key: { ldapAttr: 'supannCodeEntite' }, 
                 name: { ldapAttr: 'ou' },
+            },
+        },
+        
+        etablissements: {
+            types: {
+                key: '', name: '', description: '',
+                postalAddress: '', siret: '',
+            },
+            attrs: {
+                key: { ldapAttr: 'dn' },
+                name: { ldapAttr: 'displayName' },
+                siret: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette("{SIRET}") },
+                postalAddress: { convert: ldap_convert.postalAddress },
             },
         },
         

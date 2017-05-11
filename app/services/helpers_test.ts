@@ -22,4 +22,27 @@ describe('service helpers', function() {
         });
         
     });
+
+    describe('checkLuhn', function(){
+
+        let validSirets = ['19911101400015', '19931238000017', '19751718800011', '19751721200019', '19781944400013', '19751719600014', '18004312700067', '19131842700017', '19931827000014', '19932056500492' ];
+
+        it('should work', () => {
+            expect(Helpers.checkLuhn("12345678901234")).toBeFalsy();
+
+            expect(Helpers.checkLuhn("484 404 132")).toBeTruthy();
+
+            expect(Helpers.checkLuhn("484 404 132 00025")).toBeTruthy();
+            expect(Helpers.checkLuhn("484 404 132 00026")).toBeFalsy();
+
+            expect(Helpers.checkLuhn("484 404 132")).toBeTruthy();
+
+            for (let siret of validSirets) {
+                expect(Helpers.checkLuhn(siret)).toBeTruthy("for siret " + siret);
+            }
+        });
+        
+        
+    });
+
 });

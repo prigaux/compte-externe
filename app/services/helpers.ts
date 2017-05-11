@@ -163,3 +163,30 @@ import { Dictionary } from '../services/ws';
     export const arrayContains = (superset, subset) => (
         subset.every(value => superset.indexOf(value) >= 0)
     );
+
+    export function checkLuhn(value: string, wantedLength?: number) {
+        // accept only digits, dashes or spaces
+        if (value.match(/[^0-9-\s]+/)) return false;
+
+        value = value.replace(/\D/g, "");
+
+        if (wantedLength && wantedLength !== value.length) return false;
+
+        let check = 0, even = false;
+
+        for (let n = value.length - 1; n >= 0; n--) {
+            let digit = parseInt(value.charAt(n));
+
+            if (even) {
+                digit *= 2
+                if (digit > 9) digit -= 9;
+            }
+
+            check += digit;
+            even = !even;
+        }
+
+        return (check % 10) == 0;
+    }
+
+

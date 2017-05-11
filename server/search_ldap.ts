@@ -28,6 +28,13 @@ export const structures = (token: string, sizeLimit: number) => {
     return ldap.searchMany(conf.ldap.base_structures, many, 'key', conf.ldap.structures.types, conf.ldap.structures.attrs, {sizeLimit}).then(ldap.remove_dns);
 };
 
+export const etablissements = (token: string, sizeLimit: number) => {
+    let words_filter = filters.fuzzy(['description', 'cn', 'displayName'], token);
+    let many = [filters.eq("supannEtablissement", <string> conf.ldap.etablissements.attrs.siret.convert.toLdap(token)), 
+                filters.and([ words_filter, "(supannEtablissement=*)"])];
+    return ldap.searchMany(conf.ldap.base_etablissements, many, 'key', conf.ldap.etablissements.types, conf.ldap.etablissements.attrs, {sizeLimit})
+};
+
 function suggested_mail(sn: string, givenName: string) {
     let s = remove_accents(sn);
     if (givenName) {

@@ -75,6 +75,9 @@ Vue.component('input-with-validity', {
             case 'frenchPostalCode':
                 if (validity.patternMismatch) msg = conf.error_msg.frenchPostalCode;
                 break;
+            case 'siret':
+                if (!Helpers.checkLuhn(this.$el.value, 14)) msg = conf.error_msg.siret;
+                break;
         }
         this._setCustomMsg(msg);
     }
