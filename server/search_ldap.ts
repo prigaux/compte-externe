@@ -11,12 +11,13 @@ const remove_accents = _.deburr;
 
 type entry = typeof conf.types;
 
+const attrTypes = (attrs: string[]) => _.pick(conf.types, attrs) as entry;
+
 export const searchPeople = (filter: ldap.filter, attrs: string[], options: ldap.Options) : Promise<entry[]> => {
-    let attrTypes = <entry> _.pick(conf.types, attrs);
     // TODO check attrs are in conf.types
     return ldap.search(conf.ldap.base_people,
                           filter,
-                          attrTypes,
+                          attrTypes(attrs),
                           conf.ldap.people.attrs,
                           options);
 };
@@ -25,7 +26,7 @@ export const structures = (token: string, sizeLimit: number) => {
     let words_filter = filters.fuzzy(['description', 'ou'], token);
     let many = [filters.eq("supannCodeEntite", token), 
                 filters.and([ words_filter, "(supannCodeEntite=*)"])];
-    let attrTypes_ = <entry> _.pick(conf.types, _.keys(conf.ldap.structures.attrs));
+    let attrTypes_ = attrTypes(_.keys(conf.ldap.structures.attrs));
     return ldap.searchMany(conf.ldap.base_structures, many, 'key', attrTypes_, conf.ldap.structures.attrs, {sizeLimit}).then(ldap.remove_dns);
 };
 
