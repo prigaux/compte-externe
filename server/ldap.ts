@@ -122,7 +122,7 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
         let val_ = convertAttrToLdap(attr, attrTypes[attr], conv.convert, val);
         if (attr_ in r) {
             if (!_.isArray(r[attr_])) r[attr_] = [ r[attr_] ];
-            r[attr_].push(val_);
+            r[attr_].push(...(val_ instanceof Array ? val_ : [val_]));
         } else {
             r[attr_] = val_;
         }
