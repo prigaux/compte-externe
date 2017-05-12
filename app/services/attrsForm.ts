@@ -32,6 +32,9 @@ const AttrsForm_mixin : vuejs.ComponentOption = {
               }
           });
       },
+      merge(homonyme) {
+        this.v.uid = homonyme.uid;
+      },
       reject() {
         Ws.remove(this.id).then(this.nextStep);
       }
