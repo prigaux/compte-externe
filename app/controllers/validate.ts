@@ -17,6 +17,7 @@ const Validate : vuejs.ComponentOption = {
                 this.finished = true;
             }
         }).catch(function (err) {
+            console.error(err);
             alert(err);
         });
     },
@@ -29,7 +30,8 @@ const Validate : vuejs.ComponentOption = {
             this.set(sv.v);
             
         }
-    }).catch(function (err) {
+    }).catch((err) => {
+        console.error(err);
         alert(err);
     });
   },
