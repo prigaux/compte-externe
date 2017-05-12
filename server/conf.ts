@@ -30,6 +30,7 @@ const conf = {
         supannCivilite: '',
         supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '',
         birthDay: new Date(), birthName: '',
+        homePhone: '',
         homePostalAddress: '',
         jpegPhoto: '',
         structureParrain: '',
@@ -39,6 +40,11 @@ const conf = {
 
         barcode: '',
         mifare: '',
+
+        eduPersonAffiliation: [],
+        eduPersonPrimaryAffiliation: '',
+        eduPersonEntitlement: '',
+        supannEtablissement: [],
 
         profilename: '',
         priority: 0,
