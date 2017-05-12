@@ -23,7 +23,8 @@
 
 
  <form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">
-   
+
+  <fieldset>  
    <my-bootstrap-form-group name="Shib_Identity_Provider" label="Etablissement" v-if="v.Shib_Identity_Provider">
      <input name="Shib_Identity_Provider" :value="v.Shib_Identity_Provider | formatIdpId" type="text" disabled class="form-control">
    </my-bootstrap-form-group>
@@ -35,6 +36,7 @@
    <my-bootstrap-form-group name="mail" label="Mail" v-if="v.mail">
      <input name="mail" v-model="v.mail" type="text" disabled form-control>
    </my-bootstrap-form-group>
+  </fieldset>
 
   <barcode-attrs v-model="v" :attrs="attrs" :submitted="submitted"></barcode-attrs>   
   <common-attrs v-model="v" :attrs="attrs" :submitted="submitted"></common-attrs>
