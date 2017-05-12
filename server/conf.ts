@@ -69,7 +69,7 @@ const conf = {
                 enddate: { convert: ldap_convert.date },
                 Shib_Identity_Provider: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette('{SAML}') },
                 eduPersonPrincipalName: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{EPPN}") },                
-                structureParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("ou", ldap_main.base_structures) },
+                structureParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("supannCodeEntite", ldap_main.base_structures) },
                 barcode: { ldapAttr: 'employeeNumber' },
                 mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
             },
