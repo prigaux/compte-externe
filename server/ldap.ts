@@ -151,10 +151,10 @@ export function searchSimple<T extends {}>(base: string, filter: filter, attrTyp
 
 // NB: it should be <T extends LdapEntry> but it is not well handled by typescript
 export function search<T extends {}>(base: string, filter: filter, attrTypes: T, attrsConvert: AttrsConvert, options: Options): Promise<T[]> {
-    if (!attrsConvert) attrsConvert = {}
-    let attrRemap = _.mapValues(attrsConvert, (c, attr) => c.ldapAttr || attr);
+    let wantedConvert = _.mapValues(attrTypes, (_type, attr) => attrsConvert && attrsConvert[attr] || {});
+    let attrRemap = _.mapValues(wantedConvert, (c, attr) => c.ldapAttr || attr);
     let attrRemapRev = _.invertBy(attrRemap);
-    let attributes = _.keys(attrTypes).map(k => attrRemap[k] || k);
+    let attributes = _.keys(attrRemapRev);
     let p = searchRaw(base, filter, attributes, options).then(l => 
           l.map(o => {
               delete o['controls'];
@@ -163,7 +163,7 @@ export function search<T extends {}>(base: string, filter: filter, attrTypes: T,
                 let attrs = attrRemapRev[attr] || [attr];
                 for (let attr_ of attrs) {
                     // then transform string|string[] into the types wanted
-                    let val_ = handleAttrType(attr_, attrTypes[attr_], attrsConvert[attr_] &&  attrsConvert[attr_].convert, val);
+                    let val_ = handleAttrType(attr_, attrTypes[attr_], wantedConvert[attr_] &&  wantedConvert[attr_].convert, val);
                     r[attr_] = val_;
                 }
               });              
