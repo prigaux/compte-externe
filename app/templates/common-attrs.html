@@ -37,6 +37,7 @@
     </div>   
   </my-bootstrap-form-group>
 
+<div v-if="attrs.homePostalAddress">
   <my-bootstrap-form-group name="address_line1" :label="label.address_line1" :validity="validity">
     <input-with-validity name="address_line1" v-model="v.homePostalAddress.line1" placeholder="Numéro, rue" required @validity="validity.address_line1 = $event"></input-with-validity>
   </my-bootstrap-form-group>
@@ -64,6 +65,7 @@
       </div>
     </div -->
   </my-bootstrap-form-group>
+</div>
 
   <my-bootstrap-form-group name="homePhone" :label="label.homePhone" :validity="validity">
     <input-with-validity name="homePhone" v-model="v.homePhone" real-type="phone" required @validity="validity.homePhone = $event"></input-with-validity>
