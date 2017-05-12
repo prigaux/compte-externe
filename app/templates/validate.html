@@ -1,8 +1,17 @@
 <div>
-<div v-if="!finished">
+
+  <div v-if="error">
+    Déjà validé ?
+    <p></p>
+    <pre>{{error}}</pre>
+  </div>
+  
+<div v-else-if="!finished">
    En cours...
 </div>
+
 <div v-else>
   Succès. La création de votre compte attend maintenant la modération. Vous serez prévenu par mail.
 </div>
+
 </div>

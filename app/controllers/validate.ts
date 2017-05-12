@@ -24,7 +24,7 @@ const Validate : vuejs.ComponentOption = {
   mounted() {
     axios.get(this.url).then(r => r.data).then((sv: SVRaw) => {
         if (sv.error) {
-            alert(sv);
+            this.error = sv.error;
         } else {
             this.set(sv.v);
             
