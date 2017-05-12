@@ -52,6 +52,7 @@ export const createCompte: simpleAction = (req, sv) => {
 
     let v_ldap = ldap.convertToLdap(conf.types, conf.ldap.people, sv.v);
     delete v_ldap['userPassword']; // handled by esup_activ_bo
+    delete v_ldap['duration']; // only useful to compute "enddate"
 
     return createCompteRaw(req, v_ldap).then(function (uid_and_login) {
         _.assign(sv.v, uid_and_login);
