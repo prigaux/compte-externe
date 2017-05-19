@@ -8,8 +8,7 @@
       {{v.structureParrainS.description}}
     </div>
     <div v-else>
-      <input-with-validity name="structureParrain" :value="v.structureParrainS" type="text" style="display: none" @validity="validity.structureParrain = $event"></input-with-validity>
-      <v-select v-model="v.structureParrainS" :options="structures_search_result" label="description" :on-search="structures_search"></v-select>
+      <typeahead name="structureParrain" v-model="v.structureParrainS" :options="structures_search" :minChars="3" :formatting="e => e.description" :editable="false" :validity.sync="validity.structureParrain"></typeahead>
     </div>
   </my-bootstrap-form-group>
 

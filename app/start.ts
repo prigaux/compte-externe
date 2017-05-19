@@ -32,8 +32,6 @@ const router = new VueRouter({
   routes,
 });
 
-Vue.component('v-select', VueSelect.VueSelect);
-
 if (conf.forceBrowserExit) {
     ForceBrowserExit.install(new RegExp("/awaiting-moderation/|/auto-created"), '/browser-exit');
 }

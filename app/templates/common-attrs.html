@@ -53,8 +53,7 @@
     </div>
     <div class="col-xs-7" :class="{'has-error': validity.submitted && !validity.town.valid}">
       <div>
-        <input-with-validity name="town" :value="v.homePostalAddress.town" type="text" style="display: none" required @validity="validity.town = $event"></input-with-validity>
-        <v-select v-model="v.homePostalAddress.town" :options="towns" :taggable="true" placeholder="Ville"></v-select>
+        <typeahead name="town" v-model="v.homePostalAddress.town" :options="towns" placeholder="Ville" :editable="false" :validity.sync="validity.town"></typeahead>
         <validation-errors name="town" :validity="validity"></validation-errors>
       </div>
     </div>

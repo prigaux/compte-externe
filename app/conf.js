@@ -59,7 +59,6 @@ var conf = {
                 "node_modules/axios/dist/axios.js",
                 "node_modules/vue/dist/vue.js",
                 "node_modules/vue-router/dist/vue-router.js",
-                "node_modules/vue-select/dist/vue-select.js",
                 "node_modules/diff/dist/diff.js",
             ],
         },
@@ -81,6 +80,7 @@ var conf = {
             "directives/various.js",
             "directives/validators.js",
             "directives/Bootstrap.js",
+            "directives/typeahead.js",
             "start.js",
         ],
         tests: [

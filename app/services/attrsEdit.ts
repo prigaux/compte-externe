@@ -74,21 +74,11 @@ Vue.component('extern-attrs', Helpers.templateUrl({
     data() {
         return {
             doGet: null,
-            structures_search_result: [],
         };
     },
     methods: {
-        structures_search(search, loading) {
-            loading(true);
-            Ws.structures_search(search).then(structures => {
-                loading(false);
-                this.structures_search_result = structures;
-            }).catch(err => {
-                loading(false);
-                throw err;
-            });
-        },
-    },
+        structures_search: Ws.structures_search,
+   },
 }));
 Vue.component('barcode-attrs', Helpers.templateUrl({
     templateUrl: 'templates/barcode-attrs.html',

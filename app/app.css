@@ -10,24 +10,16 @@ ins {
     text-decoration: none;
 }
 
-.has-error .v-select .dropdown-toggle {
-    border-color: #a94442;
-}
-
-.v-select input[type="search"] {
-    height: 32px !important;
-}
-.v-select .open-indicator {
-    bottom: 5px;
-}
-.v-select .selected-tag {
-    margin-top: 3px;
-}
-.v-select .no-options {
-    display: none;
-}
-
 fieldset {
     margin-bottom: 1em;
     border-bottom: 1px solid #e5e5e5;
+}
+
+.glyphicon-spinning {
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg); }
+    to { transform: scale(1) rotate(360deg); }
 }
