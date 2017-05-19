@@ -1,6 +1,6 @@
 <fieldset>
   <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity">
-    <radio-with-validity :values="profilename2descr" name="profilename" v-model="v.profilename" @validity="validity.profilename = $event"></radio-with-validity>
+    <radio-with-validity :values="profilename2descr" name="profilename" v-model="v.profilename" :validity.sync="validity.profilename"></radio-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="newCard" :label="label.newCard">
@@ -11,11 +11,11 @@
   </my-bootstrap-form-group>
  
    <my-bootstrap-form-group name="barcode" :label="label.barcode" :validity="validity" v-if="attrs.barcode && newCard !== 'true'">
-     <input-with-validity name="barcode" v-model="v.barcode" type="number" v-auto-focus required @validity="validity.barcode = $event"></input-with-validity>
+     <input-with-validity name="barcode" v-model="v.barcode" type="number" v-auto-focus required :validity.sync="validity.barcode"></input-with-validity>
    </my-bootstrap-form-group>
 
    <my-bootstrap-form-group name="mifare" :label="label.mifare" :validity="validity" v-if="attrs.mifare && newCard !== 'true'">
-     <input-with-validity name="mifare" v-model="v.mifare" required @validity="validity.mifare = $event"></input-with-validity>
+     <input-with-validity name="mifare" v-model="v.mifare" required :validity.sync="validity.mifare"></input-with-validity>
    </my-bootstrap-form-group>
 
 </fieldset>

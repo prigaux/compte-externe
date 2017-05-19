@@ -1,37 +1,37 @@
 <div>
 
   <my-bootstrap-form-group name="supannCivilite" :label="label.supannCivilite" :validity="validity">
-    <radio-with-validity :values="{'M.': 'M.', Mme: 'Mme'}" name="supannCivilite" v-model="v.supannCivilite" @validity="validity.supannCivilite = $event"></radio-with-validity>
+    <radio-with-validity :values="{'M.': 'M.', Mme: 'Mme'}" name="supannCivilite" v-model="v.supannCivilite" :validity.sync="validity.supannCivilite"></radio-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="givenName" :label="label.givenName" :validity="validity">
-    <input-with-validity name="givenName" v-model="v.givenName" type="text" :allowed-chars="allowedCharsInNames" required @validity="validity.givenName = $event"></input-with-validity>
+    <input-with-validity name="givenName" v-model="v.givenName" type="text" :allowed-chars="allowedCharsInNames" required :validity.sync="validity.givenName"></input-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="sn" :label="label.sn" :validity="validity">
-    <input-with-validity name="sn" v-model="v.sn" type="text" :allowed-chars="allowedCharsInNames" required @validity="validity.sn = $event"></input-with-validity>
+    <input-with-validity name="sn" v-model="v.sn" type="text" :allowed-chars="allowedCharsInNames" required :validity.sync="validity.sn"></input-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="birthName" :label="label.birthName" :validity="validity">
-    <input-with-validity name="birthName" v-model="v.birthName" type="text" :allowed-chars="allowedCharsInNames" @validity="validity.birthName = $event"></input-with-validity>
+    <input-with-validity name="birthName" v-model="v.birthName" type="text" :allowed-chars="allowedCharsInNames" :validity.sync="validity.birthName"></input-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="day" multi="true" :label="label.birthDay">
     <div class="col-xs-2" :class="{'has-error': validity.submitted && !validity.day.valid }">
       <div>
-        <input-with-validity name="day" v-model="v.birthDay.day" type="number" min="1" :max="maxDay" placeholder="Jour" required @validity="validity.day = $event"></input-with-validity>
+        <input-with-validity name="day" v-model="v.birthDay.day" type="number" min="1" :max="maxDay" placeholder="Jour" required :validity.sync="validity.day"></input-with-validity>
         <validation-errors name="day" :validity="validity"></validation-errors>
       </div>
     </div>
     <div class="col-xs-2" :class="{'has-error': validity.submitted && !validity.month.valid }">
       <div>
-        <input-with-validity name="month" v-model="v.birthDay.month" type="number" min="1" max="12" placeholder="Mois" required @validity="validity.month = $event"></input-with-validity>
+        <input-with-validity name="month" v-model="v.birthDay.month" type="number" min="1" max="12" placeholder="Mois" required :validity.sync="validity.month"></input-with-validity>
         <validation-errors name="month" :validity="validity"></validation-errors>
       </div>
     </div>
     <div class="col-xs-5" :class="{'has-error': validity.submitted && !validity.year.valid }">
       <div>
-        <input-with-validity name="year" v-model="v.birthDay.year" type="number" min="1900" :max="maxYear" placeholder="Année" required  @validity="validity.year = $event"></input-with-validity>
+        <input-with-validity name="year" v-model="v.birthDay.year" type="number" min="1900" :max="maxYear" placeholder="Année" required  :validity.sync="validity.year"></input-with-validity>
         <validation-errors name="year" :validity="validity"></validation-errors>
       </div>
     </div>   
@@ -39,7 +39,7 @@
 
 <div v-if="attrs.homePostalAddress">
   <my-bootstrap-form-group name="address_line1" :label="label.address_line1" :validity="validity">
-    <input-with-validity name="address_line1" v-model="v.homePostalAddress.line1" placeholder="Numéro, rue" required @validity="validity.address_line1 = $event"></input-with-validity>
+    <input-with-validity name="address_line1" v-model="v.homePostalAddress.line1" placeholder="Numéro, rue" required :validity.sync="validity.address_line1"></input-with-validity>
   </my-bootstrap-form-group>
   <my-bootstrap-form-group name="address_line2">
     <input-with-validity name="address_line2" v-model="v.homePostalAddress.line2" placeholder="complément d'adresse"></input-with-validity>
@@ -47,7 +47,7 @@
   <my-bootstrap-form-group name="postalCode" multi="true">
     <div class="col-md-offset-3 col-xs-2" :class="{'has-error': validity.submitted && !validity.postalCode.valid}">
       <div>
-        <input-with-validity name="postalCode" v-model="v.homePostalAddress.postalCode" real-type="frenchPostalCode" placeholder="Code postal" required @validity="validity.postalCode = $event"></input-with-validity>
+        <input-with-validity name="postalCode" v-model="v.homePostalAddress.postalCode" real-type="frenchPostalCode" placeholder="Code postal" required :validity.sync="validity.postalCode"></input-with-validity>
         <validation-errors name="postalCode" :validity="validity"></validation-errors>
       </div>
     </div>
@@ -59,7 +59,7 @@
     </div>
     <!-- -div class="col-xs-3" :class="{'has-error': validity.submitted && !validity.country.valid }">
       <div>
-        <input-with-validity name="country" v-model="v.homePostalAddress.country" placeholder="Pays" required @validity="v.validity = $event"></input-with-validity>
+        <input-with-validity name="country" v-model="v.homePostalAddress.country" placeholder="Pays" required :validity.sync="validity.country"></input-with-validity>
         <validation-errors name="country" :validity="validity"></validation-errors>
       </div>
     </div -->
@@ -67,7 +67,7 @@
 </div>
 
   <my-bootstrap-form-group name="homePhone" :label="label.homePhone" :validity="validity">
-    <input-with-validity name="homePhone" v-model="v.homePhone" real-type="phone" required @validity="validity.homePhone = $event"></input-with-validity>
+    <input-with-validity name="homePhone" v-model="v.homePhone" real-type="phone" required :validity.sync="validity.homePhone"></input-with-validity>
   </my-bootstrap-form-group>
 
 </div>

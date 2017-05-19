@@ -39,7 +39,7 @@ Vue.component('input-with-validity', {
         let s = JSON.stringify(validity);
         if (s !== this.prev) {
             this.prev = s;
-            this.$emit('validity', validity);
+            this.$emit('update:validity', validity);
         }          
     },
     _setPattern() {
