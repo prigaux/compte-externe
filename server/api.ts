@@ -121,7 +121,11 @@ function get(req: req, id: id) {
 function set(req: req, id: id, v: v) {
     return getRaw(req, id).then(sv => (
         setRaw(req, sv, v)
-    ));
+    )).then(svr => {
+        let r = <response> { success: true, ...svr.response };
+        if (svr.step) r.step = svr.step;
+        return r;
+    });
 }
 
 function advance_sv(req: req, sv: sv) {
@@ -167,10 +171,6 @@ function setRaw(req: req, sv: sv, v: v) {
         } else {
             return removeRaw(sv.id);
         }
-    }).then(svr => {
-        let r = <response> _.assign({success: true}, svr.response);
-        if (svr.step) r.step = svr.step;
-        return r;
     });
 }
 
