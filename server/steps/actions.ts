@@ -57,7 +57,9 @@ export const createCompte: simpleAction = (req, sv) => {
     return createCompteRaw(req, v_ldap).then(function (uid_and_login) {
         _.assign(sv.v, uid_and_login);
         let v = sv.v;
-        if (v.userPassword) {
+        if (v_ldap.uid) {
+            // we merged the account. ignore new password + no mail
+        } else if (v.userPassword) {
             esup_activ_bo.setPassword(v.uid, v.userPassword);
             // NB: if we have a password, it is a fast registration, so do not send a mail
         } else if (v.supannMailPerso) {

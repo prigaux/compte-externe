@@ -69,7 +69,7 @@ const Moderate : vuejs.ComponentOption = {
                 this.v.supannAliasLogin !== resp.login) {
                 alert("L'utilisateur a été créé, mais avec l'identifiant « " + resp.login + "». Il faut prévenir l'utilisateur");
             }
-            if (conf.printCardUrl && this.attrs.barcode && !this.v.barcode) {
+            if (conf.printCardUrl && this.attrs.barcode && !this.v.barcode && !this.v.uid) {
                 document.location.href = conf.printCardUrl(resp.login);
                 return;
             }
