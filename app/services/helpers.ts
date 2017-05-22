@@ -52,15 +52,15 @@ namespace Helpers {
         return o instanceof c && o;
     }
 
-    export function copy<T>(o : T) : T {
-        return assign({}, o);
+    export function copy<T>(o : T, opts = {}) : T {
+        return assign({}, o, opts);
     }
 
     // similar to ES6 Object.assign
-    export function assign<T1, T2>(o: T1, o2: T2): T1 & T2 {
+    export function assign<T1, T2>(o: T1, o2: T2, opts = {}): T1 & T2 {
         eachObject(o2, function (k, v) {
             o[k] = v;
-        });
+        }, opts);
         return <T1 & T2> o;
     }
 
@@ -71,9 +71,9 @@ namespace Helpers {
         }
     }
 
-    export function eachObject<T>(o : T, fn : (string, any, T) => any) {
+    export function eachObject<T>(o : T, fn : (string, any, T) => any, { allAttrs = false } = {}) {
         for(var k in o) {
-            if (o.hasOwnProperty(k))
+            if (allAttrs || o.hasOwnProperty(k))
                 fn(k, o[k], o);
         }
     }

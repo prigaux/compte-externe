@@ -33,7 +33,7 @@ Vue.component('input-with-validity', {
     checkValidity() {
         if (this.allowedChars) this._checkAllowedChars();
         if (this.realType) this._checkRealType();
-        let validity = Helpers.copy(this.$el.validity);
+        let validity = Helpers.copy(this.$el.validity, { allAttrs: true });
         validity.message = this.$el.validationMessage;
 
         let s = JSON.stringify(validity);
