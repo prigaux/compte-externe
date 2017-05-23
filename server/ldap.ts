@@ -120,6 +120,7 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
         let attr_ = conv.ldapAttr || attr;
         // transform to string|string[]
         let val_ = convertAttrToLdap(attr, attrTypes[attr], conv.convert, val);
+        if (val_ === '') return; // ignore empty string which can not be a valid LDAP string value
         if (attr_ in r) {
             if (!_.isArray(r[attr_])) r[attr_] = [ r[attr_] ];
             r[attr_].push(...(val_ instanceof Array ? val_ : [val_]));
