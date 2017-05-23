@@ -93,6 +93,13 @@ namespace Ws {
             return addr.toString();
         }
 
+        function _base64_to_jpeg_data_URL(base64: string): string {
+            return "data:image/jpeg;base64," + base64;
+        }
+        function _jpeg_data_URL_to_base64(data_URL: string): string {
+            return data_URL.replace(/^data:image\/jpeg;base64,/, '');
+        }
+
         export function fromWs(v: VRaw): V {
             var v_: V = <any> Helpers.copy(v);
             //v.birthDay = "19751002000000Z"; //"1975-10-02";
@@ -113,6 +120,9 @@ namespace Ws {
                     v_.structureParrainS = resp[0];
                 });
             }
+            if (v.jpegPhoto) {
+                v_.jpegPhoto = _base64_to_jpeg_data_URL(v.jpegPhoto);
+            }
             return v_;
         }
 
@@ -126,6 +136,9 @@ namespace Ws {
             }
             if (v.structureParrainS) {
                 v_.structureParrain = v.structureParrainS.key;
+            }
+            if (v.jpegPhoto) {
+                v_.jpegPhoto = _jpeg_data_URL_to_base64(v.jpegPhoto);
             }
             return v_;
         }
