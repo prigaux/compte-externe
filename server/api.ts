@@ -43,12 +43,16 @@ function action(req: req, sv: sv, action_name: string): Promise<svr> {
 function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
     _.each(attrs, (opt, key) => {
         let val = v[key];
+        if (opt.hidden || opt.readonly) {
+            /* security: client must NOT modify hidden/readonly information */
+            delete v[key];
+        }
         if (opt.max) {
             if (!(_.isNumber(val) && 0 <= val && val <= opt.max))
                 throw `constraint ${key}.max <= ${opt.max} failed for ${val}`;
         }
     });
-    return <v> _.assign(prev, removeHiddenAttrs(attrs, v));
+    return <v> _.assign(prev, v);
 }
 
 function removeHiddenAttrs(attrs: StepAttrsOption, v: v): v {
