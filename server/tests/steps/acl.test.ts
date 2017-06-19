@@ -30,7 +30,7 @@ describe('structureRoles', () => {
     });    
 
     it('should work', () => (
-        acl.structureRoles(v => v.code, "(supannRoleGenerique=*)")({ code: "DGH" }, 'uid').then(l => (
+        acl.structureRoles(v => v.structureParrain, "(supannRoleGenerique=*)")({ structureParrain: "DGH" }, 'uid').then(l => (
             assert.deepEqual(l, ['arigaux'])
         ))
     ));

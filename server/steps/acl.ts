@@ -22,13 +22,13 @@ export const user_id = (user_id: string): acl_search => {
     return create(filters.eq(attr, user_id));
 };
 
-export const autoModerateIf = (f: (v) => boolean): acl_search =>
+export const autoModerateIf = (f: (v: v) => boolean): acl_search =>
     (v, _attr) => Promise.resolve(f(v) ? ["_AUTO_MODERATE_"] : []);
 
 export const _rolesGeneriques = (rolesFilter: string) => {
     return ldap.searchThisAttr(conf.ldap.base_rolesGeneriques, rolesFilter, 'supannRoleGenerique', '')
 };
-export const structureRoles = (toCode: (v) => string, rolesFilter: string): acl_search => (
+export const structureRoles = (toCode: (v: v) => string, rolesFilter: string): acl_search => (
     (v, attr: string) => (    
         _rolesGeneriques(rolesFilter).then(roles => {
             console.log(rolesFilter);
