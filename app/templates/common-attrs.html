@@ -13,7 +13,7 @@
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="birthName" :label="label.birthName" :validity="validity">
-    <input-with-validity name="birthName" v-model="v.birthName" type="text" :allowed-chars="allowedCharsInNames" :validity.sync="validity.birthName"></input-with-validity>
+    <input-with-validity name="birthName" v-model="v.birthName" type="text" title="si différent du nom d'usage" :allowed-chars="allowedCharsInNames" :validity.sync="validity.birthName"></input-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="day" multi="true" :label="label.birthDay">
