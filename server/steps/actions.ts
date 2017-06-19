@@ -5,6 +5,7 @@ import mail = require('../mail');
 import ldap = require('../ldap');
 import utils = require('../utils');
 import search_ldap = require('../search_ldap');
+import acl_checker = require('../acl_checker');
 import esup_activ_bo = require('../esup_activ_bo');
 import conf = require('../conf');
 const filters = ldap.filters;
@@ -43,6 +44,10 @@ export const getShibOrCasAttrs: simpleAction = (req, _sv) => (
     (isCasUser(req) ? getCasAttrs : getShibAttrs)(req, _sv)
 )
 
+export const getExistingUser: simpleAction = (req, _sv)  => (
+    onePerson(filters.eq("uid", req.query.uid)).then(v => ({ v }))
+);
+
 export function chain(l_actions: simpleAction[]): action {
     return (req, sv_: sv) => {
         let sv: Promise<vr> = Promise.resolve(sv_);
@@ -54,6 +59,18 @@ export function chain(l_actions: simpleAction[]): action {
         return sv;
     };
 }
+
+export const aclChecker = (acls: acl_search[]) => (
+    (req, sv: sv) => (
+        acl_checker.moderators(acls, sv.v).then(moderators => {
+            if (!acl_checker.isAuthorized(moderators, req.user)) {
+                throw `Unauthorized`
+            }
+            return sv;
+        })
+    )
+) as simpleAction
+
 
 export const createCompte: simpleAction = (req, sv) => {
     if (!sv.v) throw "internal error: createCompte with no v";
