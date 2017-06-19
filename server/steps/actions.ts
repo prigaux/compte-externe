@@ -28,16 +28,16 @@ export const getShibAttrs: simpleAction = (req, _sv) => {
     return Promise.resolve({ v });
 };
 
-export const getCasAttrs: simpleAction = (req, _sv) => (
-    getShibAttrs(req, _sv).then(sv => {
-        if (!isCasUser(req)) throw `Unauthorized`;
-        let filter = filters.eq("eduPersonPrincipalName", sv.v.eduPersonPrincipalName);
-        return search_ldap.searchPeople(filter, ['supannAliasLogin', 'displayName'], {});
-    }).then(vs => vs && vs[0]).then((v: v) => {
+const onePerson = (filter) => ldap.searchOne(conf.ldap.base_people, filter, conf.types, conf.ldap.people.attrs, {})
+
+export const getCasAttrs: simpleAction = (req, _sv) => {
+    if (!isCasUser(req)) throw `Unauthorized`;
+    let filter = filters.eq("eduPersonPrincipalName", req.user.id);
+    return onePerson(filter).then((v: v) => {
         v.noInteraction = true;
         return { v };
-    })
-);
+    });
+}
 
 export function chain(l_actions: simpleAction[]): action {
     return (req, sv_: sv) => {
