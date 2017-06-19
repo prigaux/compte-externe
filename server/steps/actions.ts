@@ -39,6 +39,10 @@ export const getCasAttrs: simpleAction = (req, _sv) => {
     });
 }
 
+export const getShibOrCasAttrs: simpleAction = (req, _sv) => (
+    (isCasUser(req) ? getCasAttrs : getShibAttrs)(req, _sv)
+)
+
 export function chain(l_actions: simpleAction[]): action {
     return (req, sv_: sv) => {
         let sv: Promise<vr> = Promise.resolve(sv_);
