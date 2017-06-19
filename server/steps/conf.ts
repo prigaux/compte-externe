@@ -70,7 +70,7 @@ export const steps: steps = {
     },
 
     moderate: {
-        acls: [acl.autoModerateIf(v => v.autoCreate),
+        acls: [acl.autoModerateIf(v => v.noInteraction),
                acl.user_id('prigaux'),
                acl.user_id('fchevreau'),
                acl.user_id('branciar'),

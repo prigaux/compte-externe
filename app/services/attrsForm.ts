@@ -11,7 +11,9 @@ function AttrsForm_data() {
 const AttrsForm_mixin : vuejs.ComponentOption = {
 
     mounted() {
-        Ws.getInScope(this, this.id, this.expectedStep);
+        Ws.getInScope(this, this.id, this.expectedStep).then(() => {
+            if (this.v.noInteraction) this.send();
+        });
     },
 
     data: AttrsForm_data,
@@ -21,6 +23,9 @@ const AttrsForm_mixin : vuejs.ComponentOption = {
           console.log("submit");
           this.submitted = true;
           if (!event.target.checkValidity()) return;
+          this.send();
+      },
+      send() {
           Ws.set(this.id, this.v).then(resp => {
               if (resp.error === "no_moderators") {
                   alert(conf.error_msg.noModerators(this.v.structureParrainS.name));

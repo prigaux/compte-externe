@@ -34,7 +34,7 @@ export const getCasAttrs: simpleAction = (req, _sv) => (
         let filter = filters.eq("eduPersonPrincipalName", sv.v.eduPersonPrincipalName);
         return search_ldap.searchPeople(filter, ['supannAliasLogin', 'displayName'], {});
     }).then(vs => vs && vs[0]).then((v: v) => {
-        v.autoCreate = true;
+        v.noInteraction = true;
         return { v };
     })
 );
