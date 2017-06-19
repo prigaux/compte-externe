@@ -111,12 +111,17 @@ const createCompteRaw = (req, v: Dictionary<ldap_RawValue>) => {
     });
 }
 
-export const genLogin: simpleAction = (req, sv) => (
-    search_ldap.genLogin(sv.v.sn, sv.v.givenName).then(login => {
+export const genLogin: simpleAction = (req, sv) => {
+    let createResp = login => {
         let v = <v> _.assign({ supannAliasLogin: login }, sv.v);
         return { v, response: {login} };
-    })
-);
+    };
+    if (sv.v.uid) {
+        return Promise.resolve(sv.v.supannAliasLogin).then(createResp);
+    } else {
+        return search_ldap.genLogin(sv.v.sn, sv.v.givenName).then(createResp);
+    }
+};
 
 export const sendValidationEmail: action = (req, sv) => {
     let v = sv.v;
