@@ -87,7 +87,7 @@ function checkAcls(req: req, sv: sv) {
 }
 
 function first_sv(req: req): Promise<sv> {
-    let step = conf_steps.firstStep(req);
+    let step = conf_steps.firstStep(req.params.step, req);
     let empty_sv = { step, v: <v> {} };
     return action_pre(req, empty_sv);
 }

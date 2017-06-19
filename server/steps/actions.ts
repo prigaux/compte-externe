@@ -14,7 +14,13 @@ export const addAttrs = (v: Partial<v>) => (req, sv) => {
     return Promise.resolve(sv);
 }
 
+const isCasUser = (req) => {
+    let idp = req.header('Shib-Identity-Provider');
+    return idp && idp === conf.cas_idp;
+}
+
 export const getShibAttrs: simpleAction = (req, _sv) => {
+    if (!req.user) throw `Unauthorized`;
     let v = _.mapValues(conf.shibboleth.header_map, headerName => (
         req.header(headerName)
     )) as v;
@@ -24,6 +30,7 @@ export const getShibAttrs: simpleAction = (req, _sv) => {
 
 export const getCasAttrs: simpleAction = (req, _sv) => (
     getShibAttrs(req, _sv).then(sv => {
+        if (!isCasUser(req)) throw `Unauthorized`;
         let filter = filters.eq("eduPersonPrincipalName", sv.v.eduPersonPrincipalName);
         return search_ldap.searchPeople(filter, ['supannAliasLogin', 'displayName'], {});
     }).then(vs => vs && vs[0]).then((v: v) => {

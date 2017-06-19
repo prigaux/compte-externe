@@ -84,27 +84,7 @@ export const steps: steps = {
     },
 };
 
-function allowedFirstSteps(req: express.Request): string[] {
-    let l = ['extern'];
-    if (req.user) {
-        l.push('federation');
-        let idp = req.header('Shib-Identity-Provider');
-        if (idp && idp === main_conf.cas_idp)
-            l.push('cas');
-    }
-    return l;
-}
-
-export function firstStep(req: express.Request): string {
-    let wanted_step: string = req.params.step;
-    let allowed = allowedFirstSteps(req);
-    if (wanted_step) {
-        if (_.includes(allowed, wanted_step)) {
-            return wanted_step;
-        } else {
-            throw "step " + wanted_step + " not allowed";
-        }
-    } else {
-        return allowed[0];
-    }
+// allow remapping. The initial steps mostly comes from welcome-create.html
+export function firstStep(step: string, req: express.Request): string {
+    return step;
 }
