@@ -4,7 +4,7 @@ var wsgroupsURL = "https://wsgroups.univ-paris1.fr";
 
 var conf = {
     forceBrowserExit: false,
-    printCardUrl: (login) => `http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=${login}`,
+    printCardUrl: function (login) { return "http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=" + login; },
     wsgroupsURL,
     
     attr_labels: {

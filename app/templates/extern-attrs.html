@@ -8,7 +8,7 @@
       {{v.structureParrainS.description}}
     </div>
     <div v-else>
-      <typeahead name="structureParrain" v-model="v.structureParrainS" :options="structures_search" :minChars="3" :formatting="e => e.description" :editable="false" :validity.sync="validity.structureParrain"></typeahead>
+      <typeahead name="structureParrain" v-model="v.structureParrainS" :options="structures_search" :minChars="3" :formatting="function (e) { return e.description }" :editable="false" :validity.sync="validity.structureParrain"></typeahead>
     </div>
   </my-bootstrap-form-group>
 
