@@ -9,15 +9,11 @@ const maxLoginLength = 10;
 
 const remove_accents = _.deburr;
 
-type entry = typeof conf.types;
-
-const attrTypes = (attrs: string[]) => _.pick(conf.types, attrs) as entry;
-
-export const searchPeople = (filter: ldap.filter, attrs: string[], options: ldap.Options) : Promise<entry[]> => {
-    // TODO check attrs are in conf.types
+export const searchPeople = (filter: ldap.filter, attrs: string[], options: ldap.Options) => {
+    // TODO check attrs are in conf.ldap.people.types
     return ldap.search(conf.ldap.base_people,
                           filter,
-                          attrTypes(attrs),
+                          <typeof conf.ldap.people.types> _.pick(conf.ldap.people.types, attrs),
                           conf.ldap.people.attrs,
                           options);
 };
@@ -26,8 +22,7 @@ export const structures = (token: string, sizeLimit: number) => {
     let words_filter = filters.fuzzy(['description', 'ou'], token);
     let many = [filters.eq("supannCodeEntite", token), 
                 filters.and([ words_filter, "(supannCodeEntite=*)"])];
-    let attrTypes_ = attrTypes(_.keys(conf.ldap.structures.attrs));
-    return ldap.searchMany(conf.ldap.base_structures, many, 'key', attrTypes_, conf.ldap.structures.attrs, {sizeLimit}).then(ldap.remove_dns);
+    return ldap.searchMany(conf.ldap.base_structures, many, 'key', conf.ldap.structures.types, conf.ldap.structures.attrs, {sizeLimit}).then(ldap.remove_dns);
 };
 
 function suggested_mail(sn: string, givenName: string) {
@@ -85,9 +80,9 @@ function homonyme_scoring(birthDay: Date, known_birthDay: Date): number {
         sameMonth && sameDay ? 1 :
         0;
 }
-export type Homonyme = typeof conf.types & { score: number }
+export type Homonyme = typeof conf.ldap.people.types & { score: number }
 
-function homonymes_scoring(l: entry[], birthDay: Date): Homonyme[] {
+function homonymes_scoring(l: typeof conf.ldap.people.types[], birthDay: Date): Homonyme[] {
     let l_ = _.map(l, e => {
       let score = e.birthDay ? homonyme_scoring(e.birthDay, birthDay) : 0;
       return <Homonyme> _.merge({ score }, e);

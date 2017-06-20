@@ -24,49 +24,49 @@ const conf = {
         intercept: 'Admin <admin@univ.fr>',
         transport: sendmailTransport({}),
     },
-
-    types: {
-        uid: '', dn: '', cn: '', sn: '', displayName: '', givenName: '',
-        supannCivilite: '',
-        supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '',
-        birthDay: new Date(), birthName: '',
-        homePhone: '',
-        homePostalAddress: '',
-        jpegPhoto: '',
-        structureParrain: '',
-
-        Shib_Identity_Provider: '',
-        eduPersonPrincipalName: '',
-
-        barcode: '',
-        mifare: '',
-
-        eduPersonAffiliation: [],
-        eduPersonPrimaryAffiliation: '',
-        eduPersonEntitlement: '',
-        supannEtablissement: [],
-
-        profilename: '',
-        priority: 0,
-        startdate: new Date(),
-        enddate: new Date(),
-        duration: 0,
-
-        key: '', name: '', description: '',
-    },
-        
+       
     ldap: {
         ...ldap_main,
 
         structures: {
+            types: {
+                key: '', name: '', description: '',
+            },
             attrs: {
                 key: { ldapAttr: 'supannCodeEntite' }, 
                 name: { ldapAttr: 'ou' },
-                description: {},
             },
         },
         
         people: {
+            types: {
+                uid: '', dn: '', cn: '', sn: '', displayName: '', givenName: '',
+                supannCivilite: '',
+                supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '',
+                birthDay: new Date(), birthName: '',
+                homePhone: '',
+                homePostalAddress: '',
+                jpegPhoto: '',
+                structureParrain: '',
+
+                Shib_Identity_Provider: '',
+                eduPersonPrincipalName: '',
+
+                barcode: '',
+                mifare: '',
+
+                eduPersonAffiliation: [],
+                eduPersonPrimaryAffiliation: '',
+                eduPersonEntitlement: '',
+                supannEtablissement: [],
+
+                profilename: '',
+                priority: 0,
+                startdate: new Date(),
+                enddate: new Date(),
+                duration: 0,
+            },
+
             attrs : { 
                 homePostalAddress: { convert: ldap_convert.postalAddress },
                 birthDay: { ldapAttr: "up1BirthDay", convert: ldap_convert.datetime },

@@ -29,7 +29,7 @@ export const getShibAttrs: simpleAction = (req, _sv) => {
     return Promise.resolve({ v });
 };
 
-const onePerson = (filter) => ldap.searchOne(conf.ldap.base_people, filter, conf.types, conf.ldap.people.attrs, {})
+const onePerson = (filter) => ldap.searchOne(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, {})
 
 export const getCasAttrs: simpleAction = (req, _sv) => {
     if (!isCasUser(req)) throw `Unauthorized`;
@@ -78,7 +78,7 @@ export const createCompte: simpleAction = (req, sv) => {
     if (!sv.v.startdate) sv.v.startdate = new Date();
     if (!sv.v.enddate) sv.v.enddate = utils.addDays(sv.v.startdate, sv.v.duration);
 
-    let v_ldap = ldap.convertToLdap(conf.types, conf.ldap.people.attrs, sv.v);
+    let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, sv.v);
     delete v_ldap['userPassword']; // handled by esup_activ_bo
     delete v_ldap['duration']; // only useful to compute "enddate"
 

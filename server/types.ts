@@ -9,7 +9,7 @@ interface CurrentUser {
 type Mails = string[]
 
 type id = string
-type v = typeof conf.types & { noInteraction?: boolean }
+type v = typeof conf.ldap.people.types & { noInteraction?: boolean }
 type response = any
 type sv = {
   id?: id,
