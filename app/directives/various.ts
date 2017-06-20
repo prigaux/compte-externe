@@ -57,6 +57,18 @@ Vue.component('webcamLivePortrait', {
    },
 });
 
+Vue.component('autocomplete-user', {
+  template: `<input type="search">`,
+  mounted() {
+    let select = (event, ui) => {
+        this.$emit("select", ui.item);
+    };
+    let params = { select, wsParams: { allowInvalidAccounts: true } };
+    let searchURL = conf.wsgroupsURL + '/searchUserCAS';
+    window['jQuery'](this.$el)['autocompleteUser'](searchURL, params);
+  },
+})
+
 Vue.directive('auto-focus', {
     inserted(el : HTMLElement) { 
         el.focus();

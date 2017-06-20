@@ -5,9 +5,11 @@ const ModerateList : vuejs.ComponentOption = {
   templateUrl: 'templates/list.html',
   data: () => ({
     svs: null,
+    allow_reuse: undefined,
   }),
   mounted() {
       this.listRec({});
+      Ws.allowGet("new/reuse").then(allow_reuse => this.allow_reuse = allow_reuse);
   },
   computed: { 
       svsGroupedByStep() {
@@ -20,5 +22,8 @@ const ModerateList : vuejs.ComponentOption = {
             this.listRec({ poll: true });
         });
     },
+    reuse({ uid }) {
+        router.push("/reuse/" + uid);
+    }
   },
 };

@@ -8,6 +8,7 @@
 
 const _routes = {
     '/moderate/:id': Moderate,
+    '/reuse/:uid': Reuse,
     '/validate/:id': Validate,
     '/create/:kind': Create,
     '/moderate': ModerateList,

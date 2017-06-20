@@ -1,5 +1,10 @@
 <div>
 
+<div v-if="allow_reuse" style="margin-bottom: 2em">
+    <h4>Prolonger ou modifier un compte</h4>
+    <autocomplete-user class="form-control" placeholder="Rechercher une personne" @select="reuse"></autocomplete-user>
+</div>
+
 <h4>Modération</h4>
 
 <ul v-for="(svs_,step) in svsGroupedByStep">

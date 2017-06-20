@@ -85,3 +85,22 @@ const Moderate : vuejs.ComponentOption = {
         });
     },
 };
+
+const Reuse : vuejs.ComponentOption = {
+  name: "Reuse",
+  templateUrl: 'templates/reuse.html',
+  props: ['uid'],
+  mixins: [AttrsForm_mixin],
+
+  computed: {
+    id() { return 'new/reuse?uid=' + this.uid; },
+    expectedStep() { return null },
+  },
+
+  methods: {
+     nextStep(resp) {
+        router.push('/moderate');
+    },
+
+  },
+};

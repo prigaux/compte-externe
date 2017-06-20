@@ -1,8 +1,11 @@
 'use strict';
 
+var wsgroupsURL = "https://wsgroups.univ-paris1.fr";
+
 var conf = {
     forceBrowserExit: false,
     printCardUrl: (login) => `http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=${login}`,
+    wsgroupsURL,
     
     attr_labels: {
         supannCivilite: "Civilité",
@@ -60,6 +63,7 @@ var conf = {
                 "node_modules/vue/dist/vue.js",
                 "node_modules/vue-router/dist/vue-router.js",
                 "node_modules/diff/dist/diff.js",
+                wsgroupsURL + "/web-widget/autocompleteUser-resources.html.js",
             ],
         },
         css: [

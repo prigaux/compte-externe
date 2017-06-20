@@ -150,6 +150,13 @@ namespace Ws {
             return Promise.reject(err);
         }
 
+        export function allowGet(id: string) : Promise<boolean> {
+            let url = '/api/comptes/' + id;
+            return axios.get(url).then(resp => (
+                resp.data && !resp.data['error']
+            ));
+        }
+
         export function getInScope($scope, id: string, expectedStep: string) : Promise<void> {
             var url = '/api/comptes/' + id;
             return axios.get(url).then((resp) => {
