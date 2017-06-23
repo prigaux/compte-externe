@@ -3,7 +3,6 @@
 var wsgroupsURL = "https://wsgroups.univ-paris1.fr";
 
 var conf = {
-    forceBrowserExit: false,
     printCardUrl: function (login) { return "http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=" + login; },
     wsgroupsURL,
     
@@ -75,7 +74,6 @@ var conf = {
             "services/ws.js",
             "services/attrsEdit.js",
             "services/attrsForm.js",
-            "services/forceBrowserExit.js",
             "filters/various.js",
             "controllers/create.js",
             "controllers/validate.js",
