@@ -15,7 +15,7 @@
    </my-bootstrap-form-group>
 
    <my-bootstrap-form-group name="mifare" :label="label.mifare" :validity="validity" v-if="attrs.mifare && newCard !== 'true'">
-     <input-with-validity name="mifare" v-model="v.mifare" required :validity.sync="validity.mifare"></input-with-validity>
+     <input-with-validity type="text" name="mifare" :pattern="attrs.mifare.pattern" v-model="v.mifare" required :validity.sync="validity.mifare"></input-with-validity>
    </my-bootstrap-form-group>
 
 </fieldset>
