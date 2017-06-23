@@ -51,6 +51,11 @@ function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
             if (!(_.isNumber(val) && 0 <= val && val <= opt.max))
                 throw `constraint ${key}.max <= ${opt.max} failed for ${val}`;
         }
+        if (opt.pattern) {
+            let val_ = val !== undefined ? val : '';
+            if (!(_.isString(val_) && val_.match("^(" + opt.pattern + ")$")))
+                throw `constraint ${key}.pattern ${opt.pattern} failed for ${val}`;
+        }
     });
     return <v> _.assign(prev, v);
 }

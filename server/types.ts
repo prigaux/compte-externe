@@ -32,6 +32,7 @@ interface StepAttrOptionChoices {
 interface StepAttrOption {
   readonly?: boolean;
   hidden?: boolean;
+  pattern?: string;
   max?: number;
   choices?: StepAttrOptionChoices[];
 }

@@ -1,6 +1,6 @@
 Vue.component('input-with-validity', {
   template: "<input :name='name' :value='value' :type='type'>",
-  props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType'],
+  props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType', 'pattern'],
   data: () => ({ prev: undefined }),
   mounted() {
     let element = this.$el;
@@ -45,6 +45,7 @@ Vue.component('input-with-validity', {
         }          
     },
     _setPattern() {
+        if (this.pattern) this.$el.setAttribute('pattern', this.pattern);
         if (this.realType === 'phone') this.$el.setAttribute('pattern', conf.pattern.phone);
         if (this.realType === 'frenchPostalCode') this.$el.setAttribute('pattern', conf.pattern.frenchPostalCode);
     },
