@@ -233,7 +233,10 @@ function respondJson(req: req, res: express.Response, p: Promise<response>) {
 
 router.get('/comptes', (req, res) => {
     if (req.query.poll) {
-        bus.once('changed', () => {
+        // raise the limit above what we want
+        req.setTimeout(conf.poll_maxTime * 2, _ => res.json({ error: "internal error" }));
+
+        utils.bus_once(bus, 'changed', conf.poll_maxTime).then(() => {
             respondJson(req, res, listAuthorized(req));
         });
     } else {

@@ -34,6 +34,15 @@ export const eventBus = (): EventEmitter => {
     return bus;
 };
 
+export const bus_once = (bus: EventEmitter, event: string, maxTime: number) => (
+    Promise.race([ wait(maxTime), 
+                   new Promise(resolve => bus.once('changed', resolve)) ])
+);
+
+export const wait = (milliseconds: number) => (
+    new Promise(resolve => setTimeout(resolve, milliseconds))
+);
+
 
 import { spawn } from 'child_process';
 

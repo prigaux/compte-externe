@@ -126,6 +126,7 @@ const conf = {
 
     http_client_CAs: fs.readFileSync('/etc/ssl/certs/ca-certificates.crt').toString().split(/(?=-----BEGIN CERTIFICATE-----)/),
 
+    poll_maxTime: 4 * 60 * 1000, // 4 minutes
 };
 
 export = conf;
