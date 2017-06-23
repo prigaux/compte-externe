@@ -7,7 +7,7 @@ Vue.component('input-with-validity', {
 
     element.setAttribute('id', this.name);
     element.classList.add("form-control");
-    this._setPattern(this);
+    this._setPattern();
 
     element.addEventListener('input', () => {
         this.tellParent();
