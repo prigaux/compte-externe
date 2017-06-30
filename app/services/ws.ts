@@ -68,7 +68,7 @@ interface Structure {
 
 namespace Ws {
         export function structures_search(token : string, maxRows? : number) : Promise<Structure[]> {
-            return axios.get('/api/structures', { params: { token, maxRows } }).then((resp) => resp.data);
+            return axios.get('/api/structures', { params: { token, maxRows } }).then((resp) => resp.data as Structure[]);
         }
 
         function _fromJSONDate(date: string) {
