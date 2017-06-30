@@ -62,7 +62,7 @@ function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
 
 /* before sending to client, remove sensible information */
 function removeHiddenAttrs(attrs: StepAttrsOption, v: v): v {
-    return <v> _.omit(v, (val, key) => ( 
+    return <v> _.omit(v, (_val, key) => ( 
         !attrs[key] || attrs[key].hidden
     ));
 }

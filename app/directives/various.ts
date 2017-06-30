@@ -60,7 +60,7 @@ Vue.component('webcamLivePortrait', {
 Vue.component('autocomplete-user', {
   template: `<input type="search">`,
   mounted() {
-    let select = (event, ui) => {
+    let select = (_event, ui) => {
         this.$emit("select", ui.item);
     };
     let params = { select, wsParams: { allowInvalidAccounts: true } };

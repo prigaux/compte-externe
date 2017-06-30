@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,     
+    "alwaysStrict": true,
     "module": "commonjs"
   }
 }

@@ -1,4 +1,3 @@
-import _ = require('lodash');
 import ldap = require('ldapjs');
 import helpers = require('ldap-filter/lib/helpers');
 
@@ -36,7 +35,7 @@ const db = params.DNs;
 
 const server = ldap.createServer();
 
-function authorize(req, res, next) {
+function authorize(req, _res, next) {
   if (!req.dn.equals(params.dn) || req.credentials !== params.password) {
       //console.log(req.dn.toString(), '!==', params.dn, '||', req.credentials, '!==', params.password);
       return next(new ldap.InvalidCredentialsError());

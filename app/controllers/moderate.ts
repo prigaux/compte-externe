@@ -98,7 +98,7 @@ const Reuse : vuejs.ComponentOption = {
   },
 
   methods: {
-     nextStep(resp) {
+     nextStep(_resp) {
         router.push('/moderate');
     },
 

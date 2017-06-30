@@ -10,7 +10,7 @@ import esup_activ_bo = require('../esup_activ_bo');
 import conf = require('../conf');
 const filters = ldap.filters;
 
-export const addAttrs = (v: Partial<v>) => (req, sv) => {
+export const addAttrs = (v: Partial<v>) => (_req, sv) => {
     _.assign(sv.v, v);
     return Promise.resolve(sv);
 }
@@ -133,7 +133,7 @@ const createCompteRaw = (req, v: Dictionary<ldap_RawValue>) => {
     });
 }
 
-export const genLogin: simpleAction = (req, sv) => {
+export const genLogin: simpleAction = (_req, sv) => {
     let createResp = login => {
         let v = <v> _.assign({ supannAliasLogin: login }, sv.v);
         return { v, response: {login} };
@@ -145,7 +145,7 @@ export const genLogin: simpleAction = (req, sv) => {
     }
 };
 
-export const sendValidationEmail: action = (req, sv) => {
+export const sendValidationEmail: action = (_req, sv) => {
     let v = sv.v;
     console.log("action sendValidationEmail");
     mail.sendWithTemplate('validation.html', { conf, v, to: v.supannMailPerso, id: sv.id });
