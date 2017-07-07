@@ -95,7 +95,7 @@ Vue.component('radio-with-validity', {
     },
     checkValidity(v) {
         let validity = v ? { valid: true } : { valueMissing: true };
-        this.$emit('validity', validity);
+        this.$emit('update:validity', validity);
     },
   },
 });
