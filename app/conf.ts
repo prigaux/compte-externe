@@ -12,7 +12,8 @@ const conf = {
         sn: "Nom d'usage",
         birthName: "Nom de naissance",
         birthDay: "Date de naissance",
-        address_line1: "Adresse personnelle",
+        homePostalAddress: "Adresse personnelle",
+        address_lines: "",
         address_line2: "(complément)",
         postalCode: "Code postal",
         town: "Ville",
@@ -49,6 +50,13 @@ const conf = {
             `Le service ${structureName} n'a pas de responsables déclarés dans le logiciel SIHAM. Il faut que les responsables en fassent la demande vers l'application de gestion de compte de l'ENT`
         ),
     },        
+
+    countries: [
+        // sorted first 30 countries found in UP1 LDAP
+        "FRANCE", "EGYPTE", "ROUMANIE", "ITALIE", "ALLEMAGNE", "TURQUIE", "VIETNAM", "ETATS UNIS", "ESPAGNE", "CHINE POPULAIRE",
+        "MAROC", "BELGIQUE", "LUXEMBOURG", "ARGENTINE", "ALGERIE", "GRANDE BRETAGNE", "TOGO", "CANADA", "SUISSE", "BRESIL",
+        "GRECE", "TUNISIE", "RUSSIE", "COTE D'IVOIRE", "ILE MAURICE", "PAYS BAS", "POLOGNE", "GABON", "AUTRICHE", "REPUBLIQUE DOMINICAINE",
+    ],
 
     assets: {
         lib: {

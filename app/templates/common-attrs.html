@@ -38,8 +38,13 @@
   </my-bootstrap-form-group>
 
 <div v-if="attrs.homePostalAddress">
-  <my-bootstrap-form-group name="address_line1" :label="label.address_line1" :validity="validity">
-    <input-with-validity name="address_line1" v-model="v.homePostalAddress.line1" placeholder="Numéro, rue" required :validity.sync="validity.address_line1"></input-with-validity>
+  <my-bootstrap-form-group name="country" :label="label.homePostalAddress" :validity="validity">
+     <typeahead name="country" v-model="v.homePostalAddress.country" :options="countries" placeholder="Pays" :validity.sync="validity.country" required></typeahead>
+  </my-bootstrap-form-group>
+    
+ <div v-if="v.homePostalAddress.country === 'FRANCE'">
+  <my-bootstrap-form-group name="address_lines" :label="label.address_lines" :validity="validity">
+    <input-with-validity name="address_lines" v-model="v.homePostalAddress.lines" placeholder="Numéro, rue" :validity.sync="validity.address_lines" required></input-with-validity>
   </my-bootstrap-form-group>
   <my-bootstrap-form-group name="address_line2">
     <input-with-validity name="address_line2" v-model="v.homePostalAddress.line2" placeholder="complément d'adresse"></input-with-validity>
@@ -57,13 +62,13 @@
         <validation-errors name="town" :validity="validity"></validation-errors>
       </div>
     </div>
-    <!-- -div class="col-xs-3" :class="{'has-error': validity.submitted && !validity.country.valid }">
-      <div>
-        <input-with-validity name="country" v-model="v.homePostalAddress.country" placeholder="Pays" required :validity.sync="validity.country"></input-with-validity>
-        <validation-errors name="country" :validity="validity"></validation-errors>
-      </div>
-    </div -->
   </my-bootstrap-form-group>
+ </div>
+ <div v-else>
+   <my-bootstrap-form-group name="address_lines" :label="label.address_lines" :validity="validity">
+     <textarea-with-validity rows="5" v-model="v.homePostalAddress.lines" class="form-control" :validity.sync="validity.address_lines"></textarea-with-validity>
+   </my-bootstrap-form-group>
+ </div>
 </div>
 
   <my-bootstrap-form-group name="homePhone" :label="label.homePhone" :validity="validity">

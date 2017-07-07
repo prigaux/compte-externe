@@ -35,6 +35,7 @@ Vue.component('common-attrs', Helpers.templateUrl({
     data() {
         return {
             validity: { day: {}, month: {}, year: {} },
+            countries: conf.countries,
             towns: [],
         };
     },
@@ -56,7 +57,8 @@ Vue.component('common-attrs', Helpers.templateUrl({
       'v.homePostalAddress.postalCode'(postalCode: string) {
             this.towns = [];
             if (!postalCode || postalCode.length < 5) return;
-            var address = Helpers.cast(this.v && this.v.homePostalAddress, HomePostalAddressPrecise);
+            if (!this.v) return
+            let address = (this.v as V).homePostalAddress;
             if (address) {
                 Helpers.frenchPostalCodeToTowns(postalCode).then((towns) => {
                     this.towns = towns;

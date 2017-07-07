@@ -14,22 +14,10 @@ class MyDate {
     }
 }
 
-class HomePostalAddress {
-    constructor(public line1) { }
-    toString() {
-        return this.line1;
-    }
-}
-
-class HomePostalAddressPrecise extends HomePostalAddress {
-    constructor(public line1: string, public line2: string, public postalCode: string, public town: string, public country: string) {
-        super(line1);
-    }
-    toString() {
-        if (!this.postalCode && !this.town) return undefined;
-        return this.line1 + (this.line2 ? "\n" + this.line2 : '') + "\n" + this.postalCode + " " + this.town + "\n" + (this.country || 'FRANCE');
-    }
-}
+type HomePostalAddress =
+    { country: string, 
+      lines: string,
+      line2?: string, postalCode?: string, town?: string };
 
 interface VCommon {
     structureParrain?: string;
@@ -81,16 +69,26 @@ namespace Ws {
         }
 
         function _fromHomePostalAddress(addr: string): HomePostalAddress {
+            if (!addr) return { lines: '', line2: '', postalCode: '', town: '', country: "FRANCE" };
+
             let lines = addr.split(/\n/);
-            if (lines.length < 3) return new HomePostalAddress(addr);
-            if (lines.length === 3) lines.splice(1, 0, ''); // add empty line2
-            let [ line1, line2, pt, country ] = lines;
-            let pt_ = pt.match(/(\d+) (.*)/);
-            if (!pt_) return new HomePostalAddress(addr);
-            return new HomePostalAddressPrecise(line1,line2, pt_[1], pt_[2], country);
+            if (lines.length < 3) return { lines: addr, country: '' };
+            let country = lines.pop();
+            if (country.match(/^france$/i)) {
+                let pt = lines.pop();
+                let pt_ = pt.match(/(\d+) (.*)/);
+                if (!pt_) return { lines: lines.join("\n"), country };
+
+                let l1 = lines.shift();
+                let line2 = lines.join(" - "); // we want only 2 lines, group the remaining lines                
+                return { lines: l1, line2, postalCode: pt_[1], town: pt_[2], country: "FRANCE" };
+            } else {
+                return { lines: lines.join("\n"), country };
+            }
         }
         function _toHomePostalAddress(addr: HomePostalAddress) : string {
-            return addr.toString();
+            let pt = [ addr.postalCode, addr.town ].filter(e => e).join(" ");
+            return [ addr.lines, addr.line2, pt, addr.country || 'FRANCE' ].filter(s => s).join("\n")
         }
 
         function _base64_to_jpeg_data_URL(base64: string): string {
@@ -109,11 +107,7 @@ namespace Ws {
             if (!v_.birthDay) {
                 v_.birthDay = new MyDate(undefined, undefined, undefined);
             }
-            if (v.homePostalAddress) {
-                v_.homePostalAddress = _fromHomePostalAddress(v.homePostalAddress);
-            } else {
-                v_.homePostalAddress = new HomePostalAddressPrecise('', '', '', '', '');
-            }
+            v_.homePostalAddress = _fromHomePostalAddress(v.homePostalAddress);
             v_.structureParrainS = undefined;
             if (v.structureParrain) {
                 structures_search(v.structureParrain, 1).then((resp) => {
