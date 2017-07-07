@@ -93,9 +93,10 @@ var conf = {
     },
 };
 
+declare let module;
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = conf;
 } else {
     /* globals window */
-    window.conf = conf;
+    window['conf'] = conf;
 }
