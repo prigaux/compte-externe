@@ -100,7 +100,7 @@ export const homonymes = (sns: string[], givenNames: string[], birthDay: Date, a
     //console.log("homonymes", sns, givenNames, birthDay);
     return searchPeople(filter, attrs, { sizeLimit: 10 }).then(l => {
                               return homonymes_scoring(l, birthDay).filter(e => (
-                                  e['score'] > 0
+                                  e.score > 0
                               ));
                           });
 };
