@@ -3,6 +3,7 @@ function computeComparisons(v, homonyme) {
         Helpers.eachObject(homonyme, (attr, val) => {
             if (attr === 'uid' || attr === 'dn' || attr === 'score') return; 
             var val2 = "" + (val || '');
+            if (!(attr in v)) return;
             var val1 = "" + (v[attr] || '');
             if (val1 !== val2) {
                 r.push({ attr, cmp: Helpers.formatDifferences(val1, val2) });

@@ -38,7 +38,11 @@ const AttrsForm_mixin : vuejs.ComponentOption = {
           });
       },
       merge(homonyme) {
-        this.v.uid = homonyme.uid;
+          // especially for "uid" attr, but also "mifare", "barcode"
+          Helpers.eachObject(homonyme, (attr, val) => {
+            if (attr === "score") return;
+            if (val && !this.v[attr]) { console.log("adding " + attr + " = " + val); this.v[attr] = val; }
+          });
       },
       reject() {
         Ws.remove(this.id).then(this.nextStep);
