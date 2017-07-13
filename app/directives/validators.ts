@@ -18,8 +18,10 @@ Vue.component('input-with-validity', {
   },
   watch: {
     value(v) {
-        this.$el.value = v; // do it now to update validity
-        this.checkValidity();
+        if (v !== this.$el.value) {
+            this.$el.value = v; // do it now to update validity. but do not do it if unchanged otherwise it breaks cursor position for some browsers
+            this.checkValidity();
+        }
     },
     sameAs(v) {
         this.$el.setAttribute('pattern', Helpers.escapeRegexp(v));
