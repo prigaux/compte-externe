@@ -3,9 +3,11 @@
 Vue.component("validation-errors", {
     props: ['name', 'validity'],
     template: `
+   <transition name="fade">
     <span v-if="!validity_.valid">    
        <span class="help-block">{{validity_.message}}</span>
     </span>
+   </transition>
     `,
     computed: {
         validity_() {
