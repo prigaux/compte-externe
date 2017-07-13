@@ -160,7 +160,10 @@ namespace Ws {
                     alert(sv.error);
                 } else {
                     if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
-                    if (sv.v) sv.v = fromWs(sv.v);
+                    if (sv.v) {
+                        sv.v = fromWs(sv.v);
+                        sv.v_orig = Helpers.copy(sv.v);
+                    }
                     sv.modifyTimestamp = _fromJSONDate(sv.modifyTimestamp);
                     Helpers.eachObject(sv.attrs, (attr) => sv.v[attr] = sv.v[attr]); // ensure key exists for Vuejs setters
                     Helpers.assign($scope, sv);

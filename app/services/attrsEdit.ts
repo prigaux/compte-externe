@@ -12,7 +12,7 @@ function attrs_data(vm) {
 }
 
 let attrsMixin : vuejs.ComponentOption = {
-    props: ['v', 'attrs', 'submitted'],
+    props: ['v', 'v_orig', 'attrs', 'submitted'],
     model: { prop: 'v', event: 'change' },
     data: function() { return attrs_data(this); },
     watch: {
@@ -86,9 +86,29 @@ Vue.component('barcode-attrs', Helpers.templateUrl({
     templateUrl: 'templates/barcode-attrs.html',
     mixins: [attrsMixin],
     data() {
+        let allow_unchanged = this.v_orig && this.v_orig.mifare;
         return {
-            newCard: "true",
+            cardChoice: allow_unchanged ? "unchanged" : "print",
+            cardChoices: { 
+              print: 'Créer une nouvelle carte', enroll: 'Enroller une carte existante', 
+              ...allow_unchanged && { unchanged: 'Pas de modification de carte' },
+            },
         };
+    },
+    watch: {
+        cardChoice(choice) {
+            switch (choice) {
+                case "print":
+                case "enroll":
+                    this.v.barcode = "";
+                    this.v.mifare = "";
+                    break;
+                case "unchanged":
+                    this.v.barcode = this.v_orig.barcode;
+                    this.v.mifare = this.v_orig.mifare;
+                    break;                
+            }
+        },
     },
     computed: {
       profilename2descr() {

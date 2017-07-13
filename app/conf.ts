@@ -25,7 +25,7 @@ const conf = {
         duration_month: "Durée du compte (en mois)",
         userPassword: "Mot de passe",
         userPassword2: "Confirmer le mot de passe",
-        newCard: "Carte",
+        cardChoice: "Carte",
         barcode: "Code barre",
         mifare: "Code Mifare",
         profilename: "Type de compte",

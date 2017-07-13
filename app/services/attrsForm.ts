@@ -3,6 +3,7 @@ function AttrsForm_data() {
       label: conf.attr_labels,
       attrs: <StepAttrsOption> undefined,
       v: <V> undefined,
+      v_orig: <V> undefined,
       errorMessages: {},
       submitted: false,
     };    
