@@ -85,6 +85,9 @@ let typeaheadComponent = {
         return
       }
 
+      if (!this.options) {
+          return;
+      }
       if (typeof this.options !== "function") {
         this.setOptions(this.options.filter(this.matcher));
         return;
