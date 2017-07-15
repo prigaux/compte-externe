@@ -168,15 +168,19 @@ namespace Ws {
             }, _handleErr);
         }
 
-        export function listInScope($scope, params) : Promise<void> {
-            return axios.get('/api/comptes', { params }).then((resp) => {
-                var svs = <any>resp.data;
+        export function listInScope($scope, params, cancelToken) : Promise<"ok" | "cancel"> {
+            return axios.get('/api/comptes', { params, cancelToken }).then((resp) => {
+                var svs = resp.data;
                 if (svs.error) {
                     $scope.err = svs;
                 } else {
                     $scope.svs = svs;
                 }
+                return "ok";
             }, (resp) => {
+                if (axios.isCancel(resp)) {
+                    return "cancel";
+                }
                 var err = resp.data;
                 alert(err || "server is down, please retry later");
                 return Promise.reject(err);

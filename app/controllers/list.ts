@@ -11,6 +11,9 @@ const ModerateList : vuejs.ComponentOption = {
       this.listRec({});
       Ws.allowGet("new/reuse").then(allow_reuse => this.allow_reuse = allow_reuse);
   },
+  beforeDestroy() {
+    if (this.cancelP) this.cancelP.cancel("");
+  },
   computed: { 
       svsGroupedByStep() {
          return this.svs ? Helpers.groupBy(this.svs, sv => sv.step) : undefined;
@@ -18,8 +21,12 @@ const ModerateList : vuejs.ComponentOption = {
   },
   methods: {
     listRec(params) {
-        Ws.listInScope(this, params).then(() => {
-            this.listRec({ poll: true });
+        this.cancelP = axios.CancelToken.source();
+
+        Ws.listInScope(this, params, this.cancelP.token).then(rc => {
+            if (rc !== "cancel") {
+                this.listRec({ poll: true });
+            }
         });
     },
     reuse({ uid }) {
