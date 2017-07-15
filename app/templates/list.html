@@ -11,10 +11,10 @@
   {{step}} :
   <li v-for="sv in svs_">
   le {{sv.modifyTimestamp | date('dd/MM/yyyy à HH:mm')}} : 
-   <a :href="'/moderate/' + sv.id">
+   <router-link :to="'/moderate/' + sv.id">
      {{sv.v.sn || 'inconnu'}}
      {{sv.v.givenName || 'inconnu'}}
-   </a>
+   </router-link>
 </li>
 </ul>
 
