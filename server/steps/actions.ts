@@ -86,17 +86,20 @@ export const createCompte: simpleAction = (req, sv) => {
 
     return createCompteRaw(req, v_ldap).then(function (uid_and_login) {
         _.assign(sv.v, uid_and_login);
-        let v = sv.v;
+        return sv.v;
+    }).tap((v) => {
         if (v_ldap.uid) {
             // we merged the account. ignore new password + no mail
         } else if (v.userPassword) {
-            esup_activ_bo.setPassword(v.uid, v.userPassword);
+            return esup_activ_bo.setPassword(v.uid, v.userPassword);
             // NB: if we have a password, it is a fast registration, so do not send a mail
         } else if (v.supannMailPerso) {
             mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v });
         }
-        return { v, response: {login: v.supannAliasLogin} };
-    });
+        return null;
+    }).then((v) => (
+        { v, response: {login: v.supannAliasLogin} }
+    ));
 };
 
 const createCompteRaw = (req, v: Dictionary<ldap_RawValue>) => {
