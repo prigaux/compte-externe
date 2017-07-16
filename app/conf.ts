@@ -3,7 +3,7 @@
 const wsgroupsURL = "https://wsgroups.univ-paris1.fr";
 
 const conf = {
-    printCardUrl: (login) => `http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=${login}`,
+    printCardUrl: undefined, //(login) => `http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=${login}`,
     wsgroupsURL,
     
     attr_labels: {
