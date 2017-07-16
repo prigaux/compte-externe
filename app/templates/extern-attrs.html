@@ -24,9 +24,14 @@
 
       <div v-if="v.jpegPhoto">
           <img :src="v.jpegPhoto">
-          <a href="#" @click.prevent="v.jpegPhoto = ''">Changer la photo</a>
+          <a href="#" @click.prevent="v.jpegPhoto = ''" v-if="!attrs.jpegPhoto.readonly">
+              Changer la photo
+          </a>
       </div>
-      <div v-if="!v.jpegPhoto">
+      <div v-else-if="attrs.jpegPhoto.readonly">
+          aucune
+      </div>
+      <div v-else>
           <webcam-live-portrait width="240" height="300" :doget="doGet" @image="v.jpegPhoto = $event"></webcam-live-portrait>
           <a href="#" @click.prevent="doGet = [0]">Prendre une photo</a>
       </div>
