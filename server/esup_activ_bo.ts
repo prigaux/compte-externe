@@ -51,6 +51,7 @@ function get_fault(xml) {
 
 // returns a code which allows setPassword
 function _validateAccount(uid: string): Promise<string> {
+    console.log("esup_activ_bo._validateAccount " + uid);
     let params = { uid };
     return soap("validateAccount.xml", params).then(xml => {
         //console.dir(xml, { depth: null });
@@ -68,6 +69,7 @@ function _validateAccount(uid: string): Promise<string> {
 
 // returns a code which allows setPassword
 function _setPassword(uid: string, code: string, password: string) {
+    console.log("esup_activ_bo._setPassword " + uid + " using code " + code);
     let params = { id: uid, code, password };
     return soap("setPassword.xml", params).then(xml => {
         console.dir(xml, { depth: null });
