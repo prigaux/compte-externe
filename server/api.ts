@@ -192,7 +192,7 @@ function remove(req: req, id: id) {
         // acls are checked => removing is allowed
         mayNotifyModerators(req, sv, 'rejected');
         return removeRaw(sv.id);
-    });
+    }).then(_ => ({ success: true }));
 }
 
 function listAuthorized(req: req) {
