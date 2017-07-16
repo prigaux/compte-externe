@@ -85,6 +85,7 @@ export const createCompte: simpleAction = (req, sv) => {
     delete v_ldap.duration; // only useful to compute "enddate"
 
     return createCompteRaw(req, v_ldap).then(function (uid_and_login) {
+        console.log("createCompteRaw returned", uid_and_login);
         _.assign(sv.v, uid_and_login);
         return sv.v;
     }).tap((v) => {
@@ -120,6 +121,7 @@ const createCompteRaw = (req, v: Dictionary<ldap_RawValue>) => {
             console.error(e);
             throw "createCompte error:" + data;
         }
+        if (resp.err) console.error("createCompte returned", resp);
         if (resp.err && resp.err[0].attr === "supannAliasLogin") {
             // gasp, the generated supannAliasLogin is already in use,
             // retry without supannAliasLogin
@@ -132,7 +134,7 @@ const createCompteRaw = (req, v: Dictionary<ldap_RawValue>) => {
             let uid = m[1];
             return { uid, supannAliasLogin: v['supannAliasLogin'] || uid };
         } else {
-            console.error("createCompte should return dn", resp);
+            console.error("createCompte should return dn");
             throw resp.err ? JSON.stringify(resp.err) : "createCompte should return dn";
         }
     });
