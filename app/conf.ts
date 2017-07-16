@@ -70,6 +70,7 @@ const conf = {
                 "node_modules/vue/dist/vue.js",
                 "node_modules/vue-router/dist/vue-router.js",
                 "node_modules/diff/dist/diff.js",
+                "node_modules/promise-polyfill/promise.js",
                 wsgroupsURL + "/web-widget/autocompleteUser-resources.html.js",
             ],
         },
