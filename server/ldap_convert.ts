@@ -43,7 +43,7 @@ export function withEtiquette(etiquette: string): ldap_conversion {
             return null;
         },
         toLdap: (s: string): string => (
-            etiquette + s
+            s ? etiquette + s : ''
         ),
     };
 }
@@ -57,7 +57,7 @@ export function dn(attrName: string, base: string): ldap_conversion {
             return m && m[1];
         },
         toLdap: (s: string): string => (
-            attrName + "=" + s + "," + base
+            s ? attrName + "=" + s + "," + base : ''
         )
     }
 }
