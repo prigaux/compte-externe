@@ -59,6 +59,10 @@ let typeaheadComponent = {
     }
   },
 
+  mounted() {
+    this.checkValidity(this.query);
+  },
+
   watch: {
     value(v) {
         this.query = this.formatting(v);
