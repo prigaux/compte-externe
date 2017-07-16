@@ -8,8 +8,9 @@ const Create : vuejs.ComponentOption = {
   },
 
   computed: {
-    id() { return 'new/' + this.kind; },
-    expectedStep() { return this.kind },
+    kind_() { return this.kind === 'cas' ? 'federation' : this.kind },
+    id() { return 'new/' + this.kind_; },
+    expectedStep() { return this.kind_ },
   },
 
   mixins: [AttrsForm_mixin],  
