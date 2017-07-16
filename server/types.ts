@@ -10,7 +10,7 @@ type Mails = string[]
 
 type id = string
 type v = typeof conf.ldap.people.types & { noInteraction?: boolean }
-type response = any
+type response = { [index: string]: any };
 type sv = {
   id?: id,
   step: string,
@@ -19,6 +19,7 @@ type sv = {
   attrs?: StepAttrsOption,
 }
 
+type r = response & { success: boolean, step?: string }
 type vr = {v: v; response?: response }
 type svr = sv & { response?: response }
 type simpleAction = (req: any, sv: {v: v}) => Promise<vr>

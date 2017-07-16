@@ -122,13 +122,13 @@ function set(req: req, id: id, v: v) {
     return getRaw(req, id).then(sv => (
         setRaw(req, sv, v)
     )).then(svr => {
-        let r = <response> { success: true, ...svr.response };
+        let r = <r> { success: true, ...svr.response };
         if (svr.step) r.step = svr.step;
         return r;
     });
 }
 
-function advance_sv(req: req, sv: sv) {
+function advance_sv(req: req, sv: sv) : Promise<svr> {
     return action_post(req, sv).then(svr => {
         svr.step = step(svr).next;
         if (svr.step) {
@@ -158,7 +158,7 @@ function advance_sv(req: req, sv: sv) {
 // 3. advance to new step
 // 4. call action_pre
 // 5. save to DB or remove from DB if one action returned null
-function setRaw(req: req, sv: sv, v: v) {
+function setRaw(req: req, sv: sv, v: v) : Promise<svr> {
     if (!sv.id) {
         // do not really on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
         sv.id = db.new_id();
