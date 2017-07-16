@@ -101,6 +101,8 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: 
 function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v): RawValue {
         if (conversion) {
             return conversion.toLdap(v);
+        } else if (_.isArray(attrType)) {
+            return v; // we know it's an array, that's a valid RawValue
         } else if (_.isString(attrType)) {
             return v;
         } else if (_.isNumber(attrType)) {
