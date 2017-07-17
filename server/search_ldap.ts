@@ -9,10 +9,11 @@ const maxLoginLength = 10;
 
 const remove_accents = _.deburr;
 
-export const searchPeople = (filter: ldap.filter, options: ldap.Options) => {
+export const searchPeople = (filter: ldap.filter, attrs: string[], options: ldap.Options) => {
+    // TODO check attrs are in conf.ldap.people.types
     return ldap.search(conf.ldap.base_people,
                           filter,
-                          conf.ldap.people.types,
+                          <typeof conf.ldap.people.types> _.pick(conf.ldap.people.types, attrs),
                           conf.ldap.people.attrs,
                           options);
 };
@@ -97,7 +98,7 @@ export const homonymes = (sns: string[], givenNames: string[], birthDay: Date, a
         //console.log("homonymes filter", filter);
     }
     //console.log("homonymes", sns, givenNames, birthDay);
-    return searchPeople(filter, { sizeLimit: 10 }).then(l => {
+    return searchPeople(filter, attrs, { sizeLimit: 10 }).then(l => {
                               return homonymes_scoring(l, birthDay).filter(e => (
                                   e.score > 0
                               ));
