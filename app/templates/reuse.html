@@ -2,6 +2,9 @@
 
  <h4 style="margin-top: 2em">Ré-inscription du compte {{v.displayName}}</h4>
 
+ <div v-if="isMember" class="alert alert-danger">
+     {{v.givenName}} {{v.sn}} est {{conf.affiliation_labels[v.eduPersonPrimaryAffiliation]}}
+ </div>
 
  <form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">
 

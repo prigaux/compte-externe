@@ -51,6 +51,14 @@ const conf = {
         ),
     },        
 
+    affiliation_labels: {
+        staff: "personnel Biatss",
+        teacher: "enseignant",
+        researcher: "chercheur",
+        student: "étudiant",
+        alum: "ancien étudiant",
+    },
+
     countries: [
         // sorted first 30 countries found in UP1 LDAP
         "FRANCE", "EGYPTE", "ROUMANIE", "ITALIE", "ALLEMAGNE", "TURQUIE", "VIETNAM", "ETATS UNIS", "ESPAGNE", "CHINE POPULAIRE",

@@ -96,6 +96,11 @@ const Reuse : MyComponentOptions<any> = {
   computed: {
     id() { return 'new/reuse?uid=' + this.uid; },
     expectedStep() { return null },
+    conf() { return conf },
+    isMember() { 
+        let aff = this.v.eduPersonAffiliation;
+        return aff && aff.indexOf('member') >= 0;
+    },
   },
 
   methods: {
