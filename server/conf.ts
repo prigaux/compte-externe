@@ -78,6 +78,7 @@ const conf = {
                 structureParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("supannCodeEntite", ldap_main.base_structures) },
                 barcode: { ldapAttr: 'employeeNumber' },
                 mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
+                jpegPhoto: { convert: ldap_convert.base64 },
             },
             sns: ['sn'],
             givenNames: ['givenName'],
