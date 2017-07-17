@@ -21,8 +21,9 @@ type AttrConvert = { convert?: ldap_conversion, ldapAttr?: string }
 export type AttrsConvert = Dictionary<AttrConvert>
 
 type RawValue = ldap_RawValue;
+type RawValueB = Buffer | Buffer[]
 
-export function searchRaw(base: string, filter: filter, attributes: string[], options: Options): Promise<Dictionary<RawValue>[]> {
+export function searchRaw(base: string, filter: filter, attributes: string[], options: Options): Promise<Dictionary<RawValueB>[]> {
     if (attributes.length === 0) {
         // workaround asking nothing and getting everything. Bug in ldapjs???
         attributes = ['objectClass'];
@@ -34,7 +35,7 @@ export function searchRaw(base: string, filter: filter, attributes: string[], op
             if (err) reject(err);
 
             res.on('searchEntry', entry => {
-                l.push(entry.object);
+                l.push(entry.raw);
             });
             res.on('searchReference', referral => {
                 console.log('referral: ' + referral.uris.join());
@@ -56,10 +57,10 @@ export function searchRaw(base: string, filter: filter, attributes: string[], op
             });
         });
     });
-    return <Promise<Dictionary<RawValue>[]>> p;
+    return <Promise<Dictionary<RawValueB>[]>> p;
 }
 
-function singleValue(attr: string, v: RawValue) {
+function singleValue(attr: string, v: RawValueB) {
   if (_.isArray(v)) {
     if (v.length > 1) console.warn(`attr ${attr} is multi-valued`);
     return v[0];
@@ -68,39 +69,47 @@ function singleValue(attr: string, v: RawValue) {
   }
 }
 
+const arrayB_to_stringB = (v: RawValueB) => (
+    (_.isArray(v) ? v : [v]).map(e => e && e.toString())
+);
+
 // ldapjs return either a value if there is only one attribute value,
 // or an array of values if multiple value
 // this is problematic since depending on the values in LDAP, the type can change.
 // ensure we always have arrays
 // https://github.com/mcavage/node-ldapjs/issues/233
-function handleAttrType(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v: RawValue): LdapAttrValue {
-    if (conversion && conversion.fromLdapMulti) {
-        return conversion.fromLdapMulti(_.isArray(v) ? v : [v]);
+function handleAttrType(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v: RawValueB): LdapAttrValue {
+    if (conversion && conversion.fromLdapMultiB) {
+        return conversion.fromLdapMultiB(_.isArray(v) ? v : [v]);
+    } else if (conversion && conversion.fromLdapMulti) {
+        return conversion.fromLdapMulti(arrayB_to_stringB(v));
     } else if (_.isArray(attrType)) {
-        return _.isArray(v) ? v : [v];
+        return arrayB_to_stringB(v);
     } else {
         let s = singleValue(attr, v);
         return convertAttrFromLdap(attr, attrType, conversion, s);
     }
 }
 
-function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, s: string) {
-        if (conversion) {
-            return conversion.fromLdap(s);
+function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, s: Buffer) {
+        if (conversion && conversion.fromLdapB) {
+            return conversion.fromLdapB(s);
+        } else if (conversion && conversion.fromLdap) {
+            return conversion.fromLdap(s && s.toString());
         } else if (_.isString(attrType)) {
-            return s;
+            return s && s.toString();
         } else if (_.isNumber(attrType)) {
-            return parseInt(s);
+            return s && parseInt(s.toString());
         } else if (attr === 'dn' || attr === 'objectClass') {
-            return s;
+            return s && s.toString();
         } else {
             throw `unknown type for attribute ${attr}`;
         }
 }
 
-function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v): RawValue {
+function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v, opts: { toJson?: boolean }): RawValue {
         if (conversion) {
-            return conversion.toLdap(v);
+            return opts.toJson && conversion.toLdapJson ? conversion.toLdapJson(v) : conversion.toLdap(v);
         } else if (_.isArray(attrType)) {
             return v; // we know it's an array, that's a valid RawValue
         } else if (_.isString(attrType)) {
@@ -117,13 +126,13 @@ function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ld
         }
 }
 
-export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert, v: T): Dictionary<RawValue> {
+export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert, v: T, opts : { toJson?: boolean }): Dictionary<RawValue> {
     let r = {};
     _.forEach(v, (val, attr) => {
         let conv = attrsConvert[attr] || {};
         let attr_ = conv.ldapAttr || attr;
         // transform to string|string[]
-        let val_ = convertAttrToLdap(attr, attrTypes[attr], conv.convert, val);
+        let val_ = convertAttrToLdap(attr, attrTypes[attr], conv.convert, val, opts);
         if (val_ === '') return; // ignore empty string which can not be a valid LDAP string value
         if (attr_ in r) {
             if (!_.isArray(r[attr_])) r[attr_] = [ r[attr_] ];

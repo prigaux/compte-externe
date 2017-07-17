@@ -58,7 +58,7 @@ describe('ldap', () => {
                 assert.equal(e.birthDay.toISOString(), new Date('1975-10-02').toISOString());                
                 assert.equal(ldap_convert.datetime.toLdap(e.birthDay), '19751002000000Z');
 
-                let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e);
+                let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e, {});
                 assert.deepEqual(rawLdapValue, { sn: "rigaux", up1BirthDay: '19751002000000Z', dn: 'uid=prigaux, ou=people, dc=univ, dc=fr' });
             })
         });
@@ -79,13 +79,13 @@ describe('ldap', () => {
         it("should convert toLdap", () => {
             let attrTypes = {idpId: ''}
             let e = { idpId: "https://univ-test.fr" }
-            let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e);
+            let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e, {});
             assert.deepEqual(rawLdapValue['supannEtablissement'], "{SAML}https://univ-test.fr");
         });
         it("should convert toLdap (complex)", () => {
             let attrTypes = {idpId: '', mifare: '', supannEtablissement: []}
             let e = { idpId: "https://univ-test.fr", mifare: 'mifare_id', supannEtablissement: ["{UAI}0751717J"] };
-            let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e);
+            let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e, {});
             assert.deepEqual(rawLdapValue['supannEtablissement'], ["{SAML}https://univ-test.fr", "{MIFARE}mifare_id", "{UAI}0751717J" ]);
         });
         it("should work with ldap.read (simple)", () => {
@@ -94,7 +94,7 @@ describe('ldap', () => {
                 assert.equal(e.idpId, "https://univ-test.fr");
                 assert.equal("mifare" in e, false);
 
-                let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e);
+                let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e, {});
                 assert.deepEqual(rawLdapValue['supannEtablissement'], "{SAML}https://univ-test.fr");
             });
         });

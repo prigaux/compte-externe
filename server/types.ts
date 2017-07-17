@@ -63,7 +63,10 @@ type ldap_RawValue = string | string[]
 type ldap_conversion = {
     fromLdap?(s: string): any;
     fromLdapMulti?(l: string[]): any;
-    toLdap(any): ldap_RawValue;
+    fromLdapB?(s: Buffer): any;
+    fromLdapMultiB?(l: Buffer[]): any;
+    toLdap(v: any): ldap_RawValue;
+    toLdapJson?(v: any): ldap_RawValue;
 }
 
 }

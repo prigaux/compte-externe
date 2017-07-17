@@ -61,3 +61,15 @@ export function dn(attrName: string, base: string): ldap_conversion {
         )
     }
 }
+
+export const base64: ldap_conversion = {
+        fromLdapB: (s: Buffer): string => (
+            s && s.toString('base64')
+        ),
+        toLdapJson: (s: string): string => {
+            return s;
+        },
+        toLdap: (_s: string): string => {
+            throw "not handled correctly by ldapjs";
+        }
+}
