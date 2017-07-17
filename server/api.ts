@@ -62,7 +62,7 @@ function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
 
 /* before sending to client, remove sensible information */
 function removeHiddenAttrs(attrs: StepAttrsOption, v: v): v {
-    return <v> _.omit(v, (_val, key) => ( 
+    return <v> _.omitBy(v, (_val, key) => ( 
         !attrs[key] || attrs[key].hidden
     ));
 }
@@ -111,7 +111,7 @@ function getRaw(req: req, id: id): Promise<sv> {
 
 function get(req: req, id: id) {
     return getRaw(req, id).then(sv_removeHiddenAttrs).then(sv => {
-        sv.attrs = <StepAttrsOption> _.omit(step(sv).attrs, val => (
+        sv.attrs = <StepAttrsOption> _.omitBy(step(sv).attrs, val => (
             val.hidden
         ));
         return sv;
