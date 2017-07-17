@@ -5,8 +5,6 @@ server/**/*.js.map
 logs/*
 !.gitkeep
 node_modules/
-app/typings/
-server/typings/
 .tscache
 tmp
 .DS_Store
