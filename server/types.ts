@@ -1,3 +1,4 @@
+import express = require('express');
 import conf = require('./conf');
 
 declare global {
@@ -6,6 +7,8 @@ interface CurrentUser {
   id: string;
   mail: string;
 }
+type req = express.Request & { user: CurrentUser };
+
 type Mails = string[]
 
 type id = string

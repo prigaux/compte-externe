@@ -5,14 +5,14 @@ import express = require('express');
 import conf = require('./conf');
 import { EventEmitter } from 'events';
 
-export const express_auth = (req: express.Request, _res: express.Response, next): void => {
+export const express_auth = (req: req, _res: express.Response, next): void => {
   let user_id = req.header('REMOTE_USER');
   let mail = req.header('mail');
   if (user_id) req.user = { id: user_id, mail };
   next();
 };
 
-export const index_html = (_req: express.Request, res: express.Response, _next): void => {
+export const index_html = (_req: req, res: express.Response, _next): void => {
     let fs = require('fs');
     let Mustache = require('mustache');
     let client_conf = require('../app/conf');    

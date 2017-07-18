@@ -11,8 +11,6 @@ import conf = require('./conf');
 import conf_steps = require('./steps/conf');
 require('./helpers');
 
-type req = express.Request;
-
 const router = express.Router();
 
 const bus = utils.eventBus();
@@ -236,7 +234,7 @@ function respondJson(req: req, res: express.Response, p: Promise<response>) {
     });
 }
 
-router.get('/comptes', (req, res) => {
+router.get('/comptes', (req : req, res) => {
     if (req.query.poll) {
         // raise the limit above what we want
         req.setTimeout(conf.poll_maxTime * 2, _ => res.json({ error: "internal error" }));
@@ -249,27 +247,27 @@ router.get('/comptes', (req, res) => {
     }
 });
 
-router.get('/comptes/new/:step', (req, res) => {
+router.get('/comptes/new/:step', (req : req, res) => {
     respondJson(req, res, get(req, 'new'));
 });
 
-router.get('/comptes/:id', (req, res) => {
+router.get('/comptes/:id', (req : req, res) => {
     respondJson(req, res, get(req, req.params.id));
 });
 
-router.put('/comptes/new/:step', (req, res) => {
+router.put('/comptes/new/:step', (req: req, res) => {
     respondJson(req, res, set(req, 'new', body_to_v(req.body)));
 });
 
-router.put('/comptes/:id', (req, res) => {
+router.put('/comptes/:id', (req: req, res) => {
     respondJson(req, res, set(req, req.params.id, body_to_v(req.body)));
 });
 
-router.delete('/comptes/:id', (req, res) => {
+router.delete('/comptes/:id', (req: req, res) => {
     respondJson(req, res, remove(req, req.params.id));
 });
 
-router.get('/homonymes/:id', (req, res) => {
+router.get('/homonymes/:id', (req: req, res) => {
     respondJson(req, res, homonymes(req, req.params.id));
 });
 
@@ -279,7 +277,7 @@ function search_structures(req: req) {
     let sizeLimit = parseInt(req.query.maxRows) || 10;
     return search_ldap.structures(token, sizeLimit);
 }
-router.get('/structures', (req, res) => {
+router.get('/structures', (req: req, res) => {
     respondJson(req, res, search_structures(req));
 });
 
