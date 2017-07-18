@@ -21,7 +21,7 @@ function may_crop_portrait(canvas, { width, height }) {
 }
 
 
-Vue.component('webcamLivePortrait', {
+Vue.component('webcamLivePortrait', <ComponentOptions<any>> {
     template: `
     <div style="display: inline-block; position: relative;">
       <div style="height: 0">

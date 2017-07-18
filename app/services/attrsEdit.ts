@@ -11,7 +11,7 @@ function attrs_data(vm) {
     return { label: conf.attr_labels, validity };
 }
 
-let attrsMixin : vuejs.ComponentOption = {
+let attrsMixin : ComponentOptions<any> = {
     props: ['v', 'v_orig', 'attrs', 'submitted'],
     model: { prop: 'v', event: 'change' },
     data: function() { return attrs_data(this); },

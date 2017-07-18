@@ -1,4 +1,4 @@
-Vue.component('input-with-validity', {
+Vue.component('input-with-validity', <ComponentOptions<any>> {
   template: "<input :name='name' :value='value' :type='type'>",
   props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType', 'pattern'],
   data: () => ({ prev: undefined }),
@@ -72,7 +72,7 @@ Vue.component('input-with-validity', {
   },
 });
 
-Vue.component('radio-with-validity', {
+Vue.component('radio-with-validity', <ComponentOptions<any>> {
   template: `
   <span>
     <label class="radio-inline" v-for="(descr, val) in values">
@@ -100,7 +100,7 @@ Vue.component('radio-with-validity', {
   },
 });
 
-Vue.component('textarea-with-validity', {
+Vue.component('textarea-with-validity', <ComponentOptions<any>> {
   template: `<textarea :value="value" @input="onchange" required></textarea>`,
   props: ['value'],
   mounted() {

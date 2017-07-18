@@ -12,7 +12,7 @@ function computeComparisons(v, homonyme) {
         return r;
 }
 
-const CompareUsers : vuejs.ComponentOption = {
+const CompareUsers : ComponentOptions<any> = {
     props: ['v', 'homonyme'],
     computed: {
         comparisons() {
@@ -45,7 +45,7 @@ const CompareUsers : vuejs.ComponentOption = {
 };
 
 
-const Moderate : vuejs.ComponentOption = {
+const Moderate : MyComponentOptions<any> = {
   name: "Moderate",
   templateUrl: 'templates/moderate.html',
   props: ['id'],
@@ -87,7 +87,7 @@ const Moderate : vuejs.ComponentOption = {
     },
 };
 
-const Reuse : vuejs.ComponentOption = {
+const Reuse : MyComponentOptions<any> = {
   name: "Reuse",
   templateUrl: 'templates/reuse.html',
   props: ['uid'],

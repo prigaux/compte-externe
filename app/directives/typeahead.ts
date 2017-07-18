@@ -1,6 +1,6 @@
 /* inspired from https://github.com/pespantelis/vue-typeahead */
 
-let typeaheadComponent = {
+let typeaheadComponent : ComponentOptions<any> = {
     template: `
   <div>
    <div :class="{ 'input-group': loading }">
@@ -172,7 +172,7 @@ let typeaheadComponent = {
 };
 
 // specialization
-Vue.component("typeahead", {
+Vue.component("typeahead", <ComponentOptions<any>> {
     mixins: [typeaheadComponent],
     data: () => ({
         noResultsMsg: "Aucun résultat",

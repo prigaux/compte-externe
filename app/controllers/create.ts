@@ -1,4 +1,4 @@
-const Create : vuejs.ComponentOption = {
+const Create : MyComponentOptions<any> = {
   templateUrl: 'templates/create.html',
   props: ['kind'],
   data() {

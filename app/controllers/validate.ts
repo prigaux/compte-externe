@@ -1,6 +1,6 @@
 'use strict';
 
-const Validate : vuejs.ComponentOption = {
+const Validate : MyComponentOptions<any> = {
   templateUrl: 'templates/validate.html',
   props: ['id'],
   data() {

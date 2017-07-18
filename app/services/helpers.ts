@@ -93,7 +93,7 @@ namespace Helpers {
         return m && m[1];
     }
 
-    export function templateUrl(vmOpts : vuejs.ComponentOption) {
+    export function templateUrl(vmOpts : MyComponentOptions<any>) {
         return () =>
             axios.get(vmOpts['templateUrl']).then(resp => resp.data).then((template : string) => {
                 vmOpts.template = template;

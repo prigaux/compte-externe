@@ -1,6 +1,6 @@
 'use strict';
 
-const ModerateList : vuejs.ComponentOption = {
+const ModerateList : MyComponentOptions<any> = {
   name: 'ModerateList',
   templateUrl: 'templates/list.html',
   data: () => ({

@@ -9,7 +9,7 @@ function AttrsForm_data() {
     };    
 }
 
-const AttrsForm_mixin : vuejs.ComponentOption = {
+const AttrsForm_mixin : ComponentOptions<any> = {
 
     mounted() {
         Ws.getInScope(this, this.id, this.expectedStep).then(() => {
