@@ -15,6 +15,12 @@ const router = express.Router();
 
 const bus = utils.eventBus();
 
+function normalize_step(step: step, _name: string) {
+    _.each(step.attrs, (opts) => {
+        if (opts.toUserOnly) opts.readonly = true;    
+    });
+}
+_.each(conf_steps.steps, normalize_step);
 
 function step(sv: sv): step {
     return conf_steps.steps[sv.step];
@@ -44,6 +50,10 @@ function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
         if (opt.hidden || opt.readonly) {
             /* security: client must NOT modify hidden/readonly information */
             delete v[key];
+        }
+        if (opt.toUserOnly) {
+            /* the attr was sent to the user, but we do not propagate it to next steps (eg: display it to the user, but do not propagate to createCompte step) */
+            delete prev[key];
         }
         if (opt.max) {
             if (!(_.isNumber(val) && 0 <= val && val <= opt.max))
