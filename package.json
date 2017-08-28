@@ -59,6 +59,7 @@
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.0",
     "live-reload": "^1.1.0",
+    "mocha": "^3.5.0",
     "nodemon": "^1.11.0",
     "phantomjs": "^1.9.17",
     "source-map-support": "^0.3.3"
