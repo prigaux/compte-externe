@@ -63,9 +63,7 @@ export function chain(l_actions: simpleAction[]): action {
 export const aclChecker = (acls: acl_search[]) => (
     (req, sv: sv) => (
         acl_checker.moderators(acls, sv.v).then(moderators => {
-            if (!acl_checker.isAuthorized(moderators, req.user)) {
-                throw `Unauthorized`
-            }
+            acl_checker.checkAuthorized(moderators, req.user);
             return sv;
         })
     )

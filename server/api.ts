@@ -91,12 +91,8 @@ function mayNotifyModerators(req: req, sv: sv, notifyKind: string) {
 }
 
 function checkAcls(req: req, sv: sv) {
-    let ok = acl_checker.isAuthorized(sv.moderators, req.user);
-    if (ok) {
-        console.log("authorizing", req.user, "for step", sv.step);
-    } else {
-        throw "unauthorised";
-    }
+    acl_checker.checkAuthorized(sv.moderators, req.user);
+    console.log("authorizing", req.user, "for step", sv.step);
 }
 
 function first_sv(req: req): Promise<sv> {

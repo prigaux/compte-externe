@@ -2,9 +2,16 @@
 
 import _ = require('lodash');
 
-export const isAuthorized = (moderators: string[], user: CurrentUser) => (
-    !moderators || user && user.mail && _.includes(moderators, user.mail)
-);
+export const checkAuthorized = (moderators: string[], user: CurrentUser) => {
+    if (!moderators) {
+        // no moderation
+        // useful for initial steps + email address validation (the id has been sent in a mail)
+    } else if (!user) {
+        throw "Unauthorized"
+    } else if (!user.mail || !_.includes(moderators, user.mail)) {
+        throw "Forbidden"
+    }
+};
 
 export const moderators = (acls: acl_search[], v: v): Promise<string[]> => {
     if (!acls) return <Promise<string[]>> Promise.resolve(undefined);
