@@ -1,4 +1,4 @@
-import { AxiosStatic } from 'axios';
+import { AxiosStatic, AxiosError as _AxiosError } from 'axios';
 
 import _Vue, { ComponentOptions as _ComponentOptions } from 'vue';
 import _VueRouter from 'vue-router';
@@ -10,6 +10,7 @@ declare global {
     type ComponentOptions<V extends _Vue> = _ComponentOptions<V>;
     type MyComponentOptions<V extends _Vue> = ComponentOptions<V> & { templateUrl: string }
     const axios : AxiosStatic
+    type AxiosError = _AxiosError
 }
 
 

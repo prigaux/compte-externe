@@ -137,11 +137,32 @@ namespace Ws {
             return v_;
         }
 
-        function _handleErr(resp) {
-            var err = resp.data;
-            console.error(err);
-            alert(err);
-            return Promise.reject(err);
+        let restarting = false;
+
+        function _handleErr(err : AxiosError) {
+            if (restarting) return Promise.reject("restarting");
+
+            if (!err.response) {
+                // axios "Network Error" case, no useful information
+                console.error(err);
+                const msg = "server is down, please retry later";
+                alert(msg);
+                return Promise.reject(msg);
+            }
+
+            let resp = err.response;
+            if (resp.status === 401) {
+                console.log("must relog");
+                restarting = true;
+                document.location.href = document.location.href;
+                return Promise.reject("restarting...");
+            } else {
+                const msg = resp.data && resp.data.error || err.message;
+                console.error(resp || err)
+                alert(msg);
+                router.replace("/");
+                return Promise.reject(msg);
+            }
         }
 
         export function allowGet(id: string) : Promise<boolean> {
@@ -155,10 +176,6 @@ namespace Ws {
             var url = '/api/comptes/' + id;
             return axios.get(url).then((resp) => {
                 var sv = <any>resp.data;
-                if (sv.error) {
-                    console.error("error accessing ", url, ":", sv.error, sv.stack);
-                    alert(sv.error);
-                } else {
                     if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
                     if (sv.v) {
                         sv.v = fromWs(sv.v);
@@ -167,26 +184,19 @@ namespace Ws {
                     sv.modifyTimestamp = _fromJSONDate(sv.modifyTimestamp);
                     Helpers.eachObject(sv.attrs, (attr) => sv.v[attr] = sv.v[attr]); // ensure key exists for Vuejs setters
                     Helpers.assign($scope, sv);
-                }
             }, _handleErr);
         }
 
         export function listInScope($scope, params, cancelToken) : Promise<"ok" | "cancel"> {
             return axios.get('/api/comptes', { params, cancelToken }).then((resp) => {
                 var svs = resp.data;
-                if (svs.error) {
-                    $scope.err = svs;
-                } else {
-                    $scope.svs = svs;
-                }
+                $scope.svs = svs;
                 return "ok";
-            }, (resp) => {
-                if (axios.isCancel(resp)) {
+            }, (err) => {
+                if (axios.isCancel(err)) {
                     return "cancel";
                 }
-                var err = resp.data;
-                alert(err || "server is down, please retry later");
-                return Promise.reject(err);
+                return _handleErr(err);
             });
         }
 

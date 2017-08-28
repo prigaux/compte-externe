@@ -31,8 +31,6 @@ const AttrsForm_mixin : ComponentOptions<any> = {
               if (resp.error === "no_moderators") {
                   alert(conf.error_msg.noModerators(this.v.structureParrainS.name));
                   this.v.structureParrainS = undefined;
-              } else if (resp.error) {
-                  alert(resp.error);
               } else {
                 return this.nextStep(resp);
               }

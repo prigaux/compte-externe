@@ -236,6 +236,7 @@ function respondJson(req: req, res: express.Response, p: Promise<response>) {
         res.json(r || {});
     }, err => {
         console.error(logPrefix, err + err.stack);
+        res.status(err === "Unauthorized" ? 401 : err === "Forbidden" ? 403 : 500);
         res.json({error: "" + err, stack: err.stack});
     });
 }
