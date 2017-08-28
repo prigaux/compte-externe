@@ -200,6 +200,7 @@ function remove(req: req, id: id) {
 }
 
 function listAuthorized(req: req) {
+    if (!req.user) return Promise.reject("Unauthorized");
     return db.listByModerator(req.user).then(svs => (
         _.map(svs, sv_removeHiddenAttrs)
     ));
