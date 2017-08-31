@@ -9,6 +9,8 @@ export const checkAuthorized = (moderators: string[], user: CurrentUser) => {
     } else if (!user) {
         throw "Unauthorized"
     } else if (!user.mail || !_.includes(moderators, user.mail)) {
+        if (!user.mail) console.error("no user mail!?");
+        else console.log(user.mail + " is not in " + JSON.stringify(moderators));
         throw "Forbidden"
     }
 };
