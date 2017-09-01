@@ -106,11 +106,12 @@ describe('ldap', () => {
             });
         });
         it("should work with in ldap.read (complex)", () => {
-            let attrTypes = {idpId: '', mifare: '', supannEtablissement: []}
+            let attrTypes = {idpId: '', mifare: '', supannEtablissement: [], supannEtuAnneeInscription: [0]}
             return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrsConvert).then(e => {
                 assert.equal(e.idpId, "https://univ-test.fr");
                 assert.equal(e.mifare, "mifare_id");
                 assert.deepEqual(e.supannEtablissement, ["{UAI}0751717J", "{SAML}https://univ-test.fr", "{MIFARE}mifare_id"]);
+                assert.deepEqual(e.supannEtuAnneeInscription, [2016, 2017]);
             });
         });
         

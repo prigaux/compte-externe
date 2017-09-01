@@ -14,7 +14,7 @@ client.bind(conf.ldap.dn, conf.ldap.password, err => {
 
 export type filter = string
 export type Options = ldapjs.Options
-export type LdapAttrValue = string | number | Date | string[];
+export type LdapAttrValue = string | number | Date | string[] | number[];
 export type LdapEntry = Dictionary<LdapAttrValue>;
 
 type AttrConvert = { convert?: ldap_conversion, ldapAttr?: string }
@@ -84,7 +84,12 @@ function handleAttrType(attr: string, attrType: LdapAttrValue, conversion: ldap_
     } else if (conversion && conversion.fromLdapMulti) {
         return conversion.fromLdapMulti(arrayB_to_stringB(v));
     } else if (_.isArray(attrType)) {
-        return arrayB_to_stringB(v);
+        let l = arrayB_to_stringB(v);
+        if (_.isNumber(attrType[0])) {
+            return l.map(s => parseInt(s));
+        } else {
+            return l;
+        }
     } else {
         let s = singleValue(attr, v);
         return convertAttrFromLdap(attr, attrType, conversion, s);
