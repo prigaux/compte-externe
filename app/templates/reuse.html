@@ -4,6 +4,9 @@
 
  <div v-if="isMember" class="alert alert-danger">
      {{v.givenName}} {{v.sn}} est {{conf.affiliation_labels[v.eduPersonPrimaryAffiliation]}}
+     <span v-if="anneeInscription">
+         {{anneeInscription}}/{{anneeInscription+1}}
+     </span>
  </div>
 
  <form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">

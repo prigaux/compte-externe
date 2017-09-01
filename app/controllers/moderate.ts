@@ -101,6 +101,10 @@ const Reuse : MyComponentOptions<any> = {
         let aff = this.v.eduPersonAffiliation;
         return aff && aff.indexOf('member') >= 0;
     },
+    anneeInscription() {
+        let annees = this.v.supannEtuAnneeInscription;
+        return annees && Math.max(...annees);
+    },
   },
 
   methods: {

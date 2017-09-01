@@ -59,6 +59,7 @@ const conf = {
                 eduPersonPrimaryAffiliation: '',
                 eduPersonEntitlement: '',
                 supannEtablissement: [],
+                supannEtuAnneeInscription: [0],
 
                 profilename: '',
                 priority: 0,
