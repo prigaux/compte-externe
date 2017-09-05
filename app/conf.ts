@@ -34,7 +34,7 @@ const conf = {
     title: "Gestion de comptes",
 
     pattern: {
-        phone: "(\\s*[0-9]\\s*){10}",
+        phone: "(0|\\+33)(\\s*[0-9]\\s*){9}",
         frenchPostalCode: "\\s*[0-9]{5}\\s*",
     },
     error_msg: {
