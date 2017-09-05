@@ -86,16 +86,18 @@ Vue.component('barcode-attrs', Helpers.templateUrl({
     templateUrl: 'templates/barcode-attrs.html',
     mixins: [attrsMixin],
     data() {
-        let allow_unchanged = this.v_orig && this.v_orig.mifare;
-        return {
-            cardChoice: allow_unchanged ? "unchanged" : "print",
-            cardChoices: { 
-              print: 'Créer une nouvelle carte', enroll: 'Enroller une carte existante', 
-              ...allow_unchanged && { unchanged: 'Pas de modification de carte' },
-            },
-        };
+        return { cardChoice: undefined };
+    },
+    mounted() {
+        this.cardChoice = this.defaultCardChoice;
     },
     watch: {
+        allow_unchanged(allow) {
+            if (allow) {
+                // homonyme merge can allow_unchanged when it was not before, so use it by default
+                this.cardChoice = this.defaultCardChoice;
+            }
+        },
         cardChoice(choice) {
             switch (choice) {
                 case "print":
@@ -111,6 +113,19 @@ Vue.component('barcode-attrs', Helpers.templateUrl({
         },
     },
     computed: {
+      allow_unchanged() {
+        return this.v_orig && this.v_orig.mifare;
+      },
+      defaultCardChoice() {
+        return this.allow_unchanged ? "unchanged" : "print";
+      },
+      cardChoices() { 
+        return {
+            print: 'Créer une nouvelle carte', 
+            enroll: 'Enroller une carte existante', 
+            ...this.allow_unchanged && { unchanged: 'Pas de modification de carte' },
+        };
+      },
       profilename2descr() {
           let map = {};
           let attr = this.attrs.profilename;

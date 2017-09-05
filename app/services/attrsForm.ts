@@ -40,9 +40,14 @@ const AttrsForm_mixin : ComponentOptions<any> = {
           // especially for "uid" attr, but also "mifare", "barcode"
           Helpers.eachObject(homonyme, (attr, val) => {
             if (attr === "score") return;
-            if (val && !this.v[attr]) { console.log("adding " + attr + " = " + val); this.v[attr] = val; }
+            if (val && !this.v[attr]) { 
+                console.log("adding " + attr + " = " + val); 
+                this.v[attr] = val;
+                this.v_orig[attr] = val;
+            }
           });
-      },
+          this.v_orig = Helpers.copy(this.v_orig); // make it clear for Vuejs that v_orig has been updated
+        },
       reject() {
         Ws.remove(this.id).then(this.nextStep);
       }
