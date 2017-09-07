@@ -76,7 +76,9 @@ export const createCompte: simpleAction = (req, sv) => {
     if (!sv.v.startdate) sv.v.startdate = new Date();
     if (!sv.v.enddate) {
         if (!sv.v.duration) throw "no duration nor enddate";
-        sv.v.enddate = utils.addDays(sv.v.startdate, sv.v.duration);
+        // "enddate" is *expiration* date and is rounded down to midnight (by ldap_convert.date.toLdap)
+        // so adding a full 23h59m to help 
+        sv.v.enddate = utils.addDays(sv.v.startdate, sv.v.duration + 0.9999);
     }
     let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, sv.v, { toJson: true });
     delete v_ldap.userPassword; // handled by esup_activ_bo
