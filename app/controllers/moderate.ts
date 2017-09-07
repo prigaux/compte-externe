@@ -44,20 +44,7 @@ const CompareUsers : ComponentOptions<any> = {
    `,
 };
 
-
-const Moderate : MyComponentOptions<any> = {
-  name: "Moderate",
-  templateUrl: 'templates/moderate.html',
-  props: ['id'],
-  data() {
-      return { 
-        homonymes: [],
-      };
-  },
-
-  components: { 'compare-users': CompareUsers },
-  mixins: [AttrsForm_mixin],
-
+const Moderate_mixin : ComponentOptions<any> = {
   computed: {
     expectedStep() { return null },
   },
@@ -79,6 +66,21 @@ const Moderate : MyComponentOptions<any> = {
     },
 
   },
+};
+       
+
+const Moderate : MyComponentOptions<any> = {
+  name: "Moderate",
+  templateUrl: 'templates/moderate.html',
+  props: ['id'],
+  data() {
+      return { 
+        homonymes: [],
+      };
+  },
+
+  components: { 'compare-users': CompareUsers },
+  mixins: [AttrsForm_mixin, Moderate_mixin],
 
     mounted() {
         Ws.homonymes(this.id).then(l => {
@@ -91,11 +93,10 @@ const Reuse : MyComponentOptions<any> = {
   name: "Reuse",
   templateUrl: 'templates/reuse.html',
   props: ['uid'],
-  mixins: [AttrsForm_mixin],
+  mixins: [AttrsForm_mixin, Moderate_mixin],
 
   computed: {
     id() { return 'new/reuse?uid=' + this.uid; },
-    expectedStep() { return null },
     conf() { return conf },
     isMember() { 
         let aff = this.v.eduPersonAffiliation;
@@ -105,12 +106,5 @@ const Reuse : MyComponentOptions<any> = {
         let annees = this.v.supannEtuAnneeInscription;
         return annees && Math.max(...annees);
     },
-  },
-
-  methods: {
-     nextStep(_resp) {
-        router.push('/moderate');
-    },
-
   },
 };
