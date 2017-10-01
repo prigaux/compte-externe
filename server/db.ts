@@ -1,6 +1,7 @@
 'use strict';
 
 import _ = require('lodash');
+import util = require('util');
 import mongodb = require('mongodb');
 import conf = require('./conf');
 
@@ -71,7 +72,7 @@ export const remove = (id: id) => (
 
 export const save = (sv: sv) => (
         toPromise(onResult => {
-            console.log("saving in DB:", sv);
+            console.log("saving in DB:", util.inspect(sv).replace(/userPassword: '(.*)'/, "userPassword: 'xxx'"));
             let sv_ = toDB(sv);
             sv_['modifyTimestamp'] = new Date();
             svs().updateOne({ _id: sv_['_id'] }, sv_, {upsert: true}, onResult);
