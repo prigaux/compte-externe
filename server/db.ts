@@ -75,7 +75,7 @@ export const save = (sv: sv) => (
             console.log("saving in DB:", util.inspect(sv).replace(/userPassword: '(.*)'/, "userPassword: 'xxx'"));
             let sv_ = toDB(sv);
             sv_['modifyTimestamp'] = new Date();
-            svs().updateOne({ _id: sv_['_id'] }, sv_, {upsert: true}, onResult);
+            svs().replaceOne({ _id: sv_['_id'] }, sv_, {upsert: true}, onResult);
         }).then((_result) => (
             sv
         ))
