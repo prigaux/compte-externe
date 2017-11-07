@@ -11,6 +11,8 @@ import * as conf from './conf';
 import * as conf_steps from './steps/conf';
 require('./helpers');
 
+require('promise.prototype.finally').shim();
+
 const router = express.Router();
 
 const bus = utils.eventBus();
@@ -193,6 +195,10 @@ function advance_sv(req: req, sv: sv) : Promise<svr> {
     });
 }
 
+const checkSetLock = (sv) : Promise<any> => (
+    sv.lock ? Promise.reject("locked") : sv.id ? db.setLock(sv.id, true) : Promise.resolve()
+);
+
 // 1. merge allow new v attrs into sv
 // 2. call action_post
 // 3. advance to new step
@@ -200,14 +206,16 @@ function advance_sv(req: req, sv: sv) : Promise<svr> {
 // 5. save to DB or remove from DB if one action returned null
 function setRaw(req: req, sv: sv, v: v) : Promise<svr> {
     sv.v = mergeAttrs(step(sv).attrs, sv.v, v);
-    return advance_sv(req, sv).tap(svr => {
+    return checkSetLock(sv).then(_ => (
+        advance_sv(req, sv)
+    )).tap(svr => {
         let sv = <sv> _.omit(svr, 'response');
         if (sv.step) {
             return saveRaw(req, sv);
         } else {
             return removeRaw(sv.id);
         }
-    });
+    }).finally(() => db.setLock(sv.id, false))
 }
 
 function saveRaw(req: req, sv: sv) {

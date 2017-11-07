@@ -24,6 +24,7 @@ type sv = {
   v: v,
   moderators?: Mails,
   attrs?: StepAttrsOption,
+  lock?: boolean,
 }
 
 type r = response & { success: boolean, step?: string, labels?: StepLabels }

@@ -12,6 +12,8 @@ declare namespace Express {
 interface Promise<T> {
     tap<U>(onFulFill: (value: T) => Promise<U>): Promise<T>;
     tap<U>(onFulfill: (value: T) => U): Promise<T>;
+
+    finally<U>(onFulfill: () => void): Promise<U>;
     _ensureTypeSafety: T;
 }
 

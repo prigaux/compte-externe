@@ -52,6 +52,12 @@ export const get = (id: id) => (
         }).then(fromDB)
     );
 
+export const setLock = (id: id, lock: boolean) => (
+    toPromise(onResult => {
+        svs().updateOne({ _id: _id(id) }, { $set: { lock } }, onResult);
+    })
+);
+
     // lists svs, sorted by steps + recent one at the beginning
 export const listByModerator = (user: CurrentUser) : Promise<sv[]> => {
         let mail = user && user.mail;
