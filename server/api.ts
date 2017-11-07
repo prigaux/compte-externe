@@ -164,6 +164,10 @@ function set(req: req, id: id, wanted_step: string, v: v) {
 }
 
 function advance_sv(req: req, sv: sv) : Promise<svr> {
+    if (!sv.id) {
+        // do not rely on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
+        sv.id = db.new_id();
+    }
     return action_post(req, sv).then(svr => {
         const nextStep = step(svr).next;
         svr.step = typeof nextStep === "function" ? nextStep(svr.v) : nextStep;
@@ -195,10 +199,6 @@ function advance_sv(req: req, sv: sv) : Promise<svr> {
 // 4. call action_pre
 // 5. save to DB or remove from DB if one action returned null
 function setRaw(req: req, sv: sv, v: v) : Promise<svr> {
-    if (!sv.id) {
-        // do not rely on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
-        sv.id = db.new_id();
-    }
     sv.v = mergeAttrs(step(sv).attrs, sv.v, v);
     return advance_sv(req, sv).tap(svr => {
         let sv = <sv> _.omit(svr, 'response');
