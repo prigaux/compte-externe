@@ -27,18 +27,6 @@ function toDB(sv: sv) {
     return sv_;
 }
 
-function toPromise<T>(f: (cb: (err: T, result: T) => void) => void): Promise<T> {
-    return <Promise<T>> new Promise((resolve, reject) => {
-        f((err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(result);
-            }
-        });
-    });
-}
-
 let real_svs: mongodb.Collection = null;
 
 function svs() {
@@ -47,15 +35,11 @@ function svs() {
 }
 
 export const get = (id: id) => (
-        toPromise(onResult => {
-            svs().findOne({ _id: _id(id) }, onResult);
-        }).then(fromDB)
-    );
+    svs().findOne({ _id: _id(id) }).then(fromDB)
+);
 
 export const setLock = (id: id, lock: boolean) => (
-    toPromise(onResult => {
-        svs().updateOne({ _id: _id(id) }, { $set: { lock } }, onResult);
-    })
+    svs().updateOne({ _id: _id(id) }, { $set: { lock } })
 );
 
     // lists svs, sorted by steps + recent one at the beginning
@@ -63,29 +47,23 @@ export const listByModerator = (user: CurrentUser) : Promise<sv[]> => {
         let mail = user && user.mail;
         if (!mail) return Promise.resolve([]);
         
-        return toPromise(onResult => {
-            svs().find({ moderators: mail }).sort({ step: 1, modifyTimestamp: -1 }).toArray(onResult);
-        }).then(svs => (
+        return (
+            svs().find({ moderators: mail }).sort({ step: 1, modifyTimestamp: -1 }).toArray()
+        ).then(svs => (
             _.map(svs, fromDB)
         ));
     };
 
 export const remove = (id: id) => (
-        toPromise(onResult => {
-            svs().remove({ _id: _id(id) }, onResult);
-        })
-    );
+    svs().remove({ _id: _id(id) })
+);
 
-export const save = (sv: sv) => (
-        toPromise(onResult => {
+export const save = (sv: sv) => {
             console.log("saving in DB:", util.inspect(sv).replace(/userPassword: '(.*)'/, "userPassword: 'xxx'"));
             let sv_ = toDB(sv);
             sv_['modifyTimestamp'] = new Date();
-            svs().replaceOne({ _id: sv_['_id'] }, sv_, {upsert: true}, onResult);
-        }).then((_result) => (
-            sv
-        ))
-    );
+            return svs().replaceOne({ _id: sv_['_id'] }, sv_, {upsert: true}).then(_ => sv);
+};
 
 export function init(callback) {
   mongodb.MongoClient.connect(conf.mongodb.url, (error, client) => {
