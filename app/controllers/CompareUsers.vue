@@ -27,7 +27,7 @@ import * as Ws from '../services/ws';
 function computeComparisons(v, homonyme) {   
         let r = [];
         Helpers.eachObject(homonyme, (attr, val) => {
-            if (attr === 'uid' || attr === 'dn' || attr === 'score' || attr === 'jpegPhoto' || attr === 'eduPersonAffiliation') return; 
+            if (attr === 'uid' || attr === 'supannAliasLogin' || attr === 'dn' || attr === 'score' || attr === 'jpegPhoto' || attr === 'eduPersonAffiliation') return; 
             var val2 = "" + (val || '');
             if (!(attr in v)) return;
             var val1 = "" + (v[attr] || '');
