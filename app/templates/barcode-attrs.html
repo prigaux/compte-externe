@@ -3,7 +3,7 @@
     <radio-with-validity :values="profilename2descr" name="profilename" v-model="v.profilename" :validity.sync="validity.profilename"></radio-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="cardChoice" :label="label.cardChoice">
+  <my-bootstrap-form-group name="cardChoice" :label="label.cardChoice" v-if="attrs.barcode">
     <label class="radio-inline" v-for="(descr, val) in cardChoices">
        <input type="radio" :name="cardChoice" :value="val" v-model="cardChoice" required>
        {{descr}}
