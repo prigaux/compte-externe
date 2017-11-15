@@ -185,7 +185,7 @@ export const genLogin: simpleAction = (_req, sv) => {
     if (sv.v.uid) {
         return Promise.resolve(sv.v.supannAliasLogin).then(createResp);
     } else {
-        return search_ldap.genLogin(sv.v.sn, sv.v.givenName).then(createResp);
+        return search_ldap.genLogin(sv.v.birthName || sv.v.sn, sv.v.givenName).then(createResp);
     }
 };
 
