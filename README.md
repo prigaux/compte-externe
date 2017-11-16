@@ -31,6 +31,7 @@ With current sv.step:
 * ```.action_post``` is called with params (req, sv)
 * ```.notify.accepted``` template is mailed to sv.moderators
 * ```.next``` step is the new sv.step
+
 If sv.step is not null, with new sv.step:
 * ```.action_pre``` is called with params (req, sv)
 * ```.acls``` is used to compute sv.moderators
