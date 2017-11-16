@@ -12,26 +12,36 @@ npm install
 
 # Steps Workflow
 
-## ```PUT /comptes/new/:step```
+## ```PUT /comptes/```
+
+### ```PUT /comptes/new/:step```
 
 Create empty sv with sv.step = :step
-* ```.action_pre``` is called with params (req, sv)
-* ```.acls``` is used to compute sv.moderators
-  * special ```_AUTO_MODERATE_``` moderator implies going straight to next step
-* ```.notify.added``` template is mailed to sv.moderators
+* ```.action_pre``` is called with params (req, empty sv)
 
-## ```PUT /comptes/:id```
+### ```PUT /comptes/:id```
+
+Read sv from database
+* sv.moderators are checked against authenticated user
+
+### common actions
 
 With current sv.step:
-* sv.moderators are checked against authenticated user
 * ```.attrs``` is used to update sv.v using PUT body
 * ```.action_post``` is called with params (req, sv)
 * ```.notify.accepted``` template is mailed to sv.moderators
 * ```.next``` step is the new sv.step
-With new sv.step, it goes on alike ```PUT /comptes/new/:step```
+If sv.step is not null, with new sv.step:
+* ```.action_pre``` is called with params (req, sv)
+* ```.acls``` is used to compute sv.moderators
+  * special ```_AUTO_MODERATE_``` moderator implies going straight to next step
+* ```.notify.added``` template is mailed to sv.moderators (if 
 
-## ```DELETE /comptes/:id```
- 
+It returns { success: true, step: xxx, ... action_pre || action_post response }
+
+## ```DELETE /comptes/```
+
+Read sv from database
 * sv.moderators are checked against authenticated user
 * ```.notify.rejected``` template is mailed to sv.moderators
 
