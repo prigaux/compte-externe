@@ -17,6 +17,7 @@ npm install
 ### ```PUT /comptes/new/:step```
 
 Create empty sv with sv.step = :step
+* ```.acls``` is computed and checked against authenticated user
 * ```.action_pre``` is called with params (req, empty sv)
 
 ### ```PUT /comptes/:id```
