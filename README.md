@@ -14,10 +14,12 @@ npm install
 
 ## ```PUT /comptes/```
 
-If "new/:step":
+If ```PUT /comptes/new/:step```
 * create empty sv with sv.step = :step
 * ```.action_pre``` is called with params (req, empty sv)
-Otherwise read sv from database
+
+If ```PUT /comptes/:id```
+* read sv from database
 
 With current sv.step:
 * ```.acls``` is used to compute/update sv.moderators + checked against authenticated user
