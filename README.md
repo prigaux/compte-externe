@@ -12,6 +12,8 @@ npm install
 
 # Steps Workflow
 
+NB: any exception (thrown in ```action_pre``` for example) will stop current request and leave the database unchanged.
+
 ## ```GET /comptes/```
 
 If ```GET /comptes/new/:step```
