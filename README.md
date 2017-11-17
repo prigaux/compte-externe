@@ -22,7 +22,7 @@ If ```PUT /comptes/:id```
 * read sv from database
 
 With current sv.step:
-* ```.acls``` is used to compute/update sv.moderators + checked against authenticated user
+* ```.acls``` is used to compute/update sv.moderators which is checked against authenticated user
 * ```.attrs``` is used to update sv.v using PUT body
 * ```.action_post``` is called with params (req, sv)
 * ```.notify.accepted``` template is mailed to sv.moderators
