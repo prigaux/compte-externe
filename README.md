@@ -12,6 +12,20 @@ npm install
 
 # Steps Workflow
 
+## ```GET /comptes/```
+
+If ```GET /comptes/new/:step```
+* create empty sv with sv.step = :step
+* ```.action_pre``` is called with params (req, empty sv)
+
+If ```GET /comptes/:id```
+* read sv from database
+
+With current sv.step:
+* ```.acls``` is used to compute/update sv.moderators which is checked against authenticated user
+
+It returns { step, attrs, v }
+
 ## ```PUT /comptes/```
 
 If ```PUT /comptes/new/:step```
