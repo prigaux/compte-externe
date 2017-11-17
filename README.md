@@ -14,20 +14,13 @@ npm install
 
 ## ```PUT /comptes/```
 
-### ```PUT /comptes/new/:step```
-
-Create empty sv with sv.step = :step
-* ```.acls``` is computed and checked against authenticated user
+If "new/:step":
+* create empty sv with sv.step = :step
 * ```.action_pre``` is called with params (req, empty sv)
-
-### ```PUT /comptes/:id```
-
-Read sv from database
-* sv.moderators are checked against authenticated user
-
-### common actions
+Otherwise read sv from database
 
 With current sv.step:
+* ```.acls``` is used to compute/update sv.moderators + checked against authenticated user
 * ```.attrs``` is used to update sv.v using PUT body
 * ```.action_post``` is called with params (req, sv)
 * ```.notify.accepted``` template is mailed to sv.moderators
