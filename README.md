@@ -48,7 +48,10 @@ If sv.step is not null, with new sv.step:
 * ```.action_pre``` is called with params (req, sv)
 * ```.acls``` is used to compute sv.moderators
   * special ```_AUTO_MODERATE_``` moderator implies going straight to next step
-* ```.notify.added``` template is mailed to sv.moderators (if 
+* sv is saved in database
+* ```.notify.added``` template is mailed to sv.moderators
+
+If sv.step is null, sv is removed from database
 
 It returns { success: true, step: xxx, ... action_pre || action_post response }
 
