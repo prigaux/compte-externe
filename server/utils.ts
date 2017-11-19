@@ -67,7 +67,7 @@ export function popen(inText: string, cmd: string, params: string[]): Promise<st
 }
 
 export const addDays = (date : Date, days : number) => {
-    let r = new Date(date);
+    let r = date;
     r.setDate(r.getDate() + days);
     return r;
 }

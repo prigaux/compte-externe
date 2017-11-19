@@ -225,7 +225,7 @@ function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
         return search_ldap.homonymes(
             sns,
             givenNames,
-            new Date(sv.v.birthDay),
+            sv.v.birthDay,
             _.keys(step(sv).attrs));
     });
 }
