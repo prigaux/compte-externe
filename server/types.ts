@@ -7,7 +7,7 @@ interface CurrentUser {
   id: string;
   mail: string;
 }
-type req = express.Request & { user: CurrentUser };
+type req = express.Request;
 
 type Mails = string[]
 

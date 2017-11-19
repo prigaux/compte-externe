@@ -2,6 +2,12 @@ declare interface Dictionary<T> {
   [index: string]: T;
 }
 
+declare namespace Express {
+    export interface Request {
+       user?: CurrentUser;
+    }
+ }
+
 // added in helpers.ts
 interface Promise<T> {
     tap<U>(onFulFill: (value: T) => Promise<U>): Promise<T>;
