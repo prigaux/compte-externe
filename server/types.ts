@@ -1,4 +1,5 @@
 import express = require('express');
+import mongodb = require('mongodb');
 import conf = require('./conf');
 
 declare global {
@@ -15,6 +16,9 @@ type id = string
 type v = typeof conf.ldap.people.types & { noInteraction?: boolean }
 type response = { [index: string]: any };
 type sv = {
+  _id?: mongodb.ObjectID;
+  modifyTimestamp?: Date;
+
   id?: id,
   step: string,
   v: v,
