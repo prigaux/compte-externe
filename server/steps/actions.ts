@@ -61,10 +61,10 @@ export function chain(l_actions: simpleAction[]): action {
 }
 
 export const aclChecker = (acls: acl_search[]) => (
-    (req, sv: sv) => (
-        acl_checker.moderators(acls, sv.v).then(moderators => {
+    (req, { v }) => (
+        acl_checker.moderators(acls, v).then(moderators => {
             acl_checker.checkAuthorized(moderators, req.user);
-            return sv;
+            return { v };
         })
     )
 ) as simpleAction

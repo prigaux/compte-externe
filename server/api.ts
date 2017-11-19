@@ -210,7 +210,7 @@ const body_to_v = (o) => (
     _.mapValues(o, (val, attr) => {
         let attrType = conf.ldap.people.types[attr];
         return _.isDate(attrType) ? new Date(val) : val;
-    })
+    }) as v
 );
 
 let _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(<{}> v, attrs));

@@ -58,8 +58,9 @@ Vue.component('common-attrs', Helpers.templateUrl({
             this.towns = [];
             if (!postalCode || postalCode.length < 5) return;
             if (!this.v) return
-            let address = (this.v as V).homePostalAddress;
-            if (address) {
+            let v = this.v as V;
+            if (v.homePostalAddress) {
+                let address = v.homePostalAddress;
                 Helpers.frenchPostalCodeToTowns(postalCode).then((towns) => {
                     this.towns = towns;
                     if (towns && towns.length === 1) {
