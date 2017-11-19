@@ -12,7 +12,7 @@ function computeComparisons(v, homonyme) {
         return r;
 }
 
-const CompareUsers : ComponentOptions<any> = {
+const CompareUsers = {
     props: ['v', 'homonyme'],
     computed: {
         comparisons() {

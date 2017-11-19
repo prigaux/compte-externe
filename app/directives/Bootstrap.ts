@@ -1,6 +1,6 @@
 'use strict';
 
-Vue.component("validation-errors", <ComponentOptions<Vue & { name: string, validity: any }>> {
+Vue.component("validation-errors", {
     props: ['name', 'validity'],
     template: `
    <transition name="fade">
@@ -16,7 +16,7 @@ Vue.component("validation-errors", <ComponentOptions<Vue & { name: string, valid
     },
 });
 
-Vue.component("my-bootstrap-form-group", <ComponentOptions<Vue & { label: string, multi: boolean }>> {
+Vue.component("my-bootstrap-form-group", {
     props: ['name', 'label', 'multi', 'validity', 'hideErrors'],
     template: `
             <div class='form-group' :class="{'has-error': validity && validity.submitted && !validity[name].valid }">
