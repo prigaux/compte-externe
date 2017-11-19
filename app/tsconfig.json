@@ -3,6 +3,7 @@
     // ... other options omitted
     "allowSyntheticDefaultImports": true,
     "alwaysStrict": true,
+    "strictFunctionTypes": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
