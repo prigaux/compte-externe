@@ -35,7 +35,7 @@ let typeaheadComponent : ComponentOptions<any> = {
   </div>`,
 
   props: {
-      value: {},
+      value: { default: null /* help typescript */ },
       options: { type: [Array, Function] }, // either an Array (that will be filtered by matcher) or a function (String => Promise<T>)
       minChars: { type: Number, default: 0 },
       limit: { type: Number, default: 10 },
