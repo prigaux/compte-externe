@@ -122,7 +122,7 @@ namespace Ws {
 
         export function toWs(v: V): VRaw {
             var v_: VRaw = <any>Helpers.copy(v);
-            if (v.birthDay) {
+            if (v.birthDay && v.birthDay.year) {
                 v_.birthDay = v.birthDay.toDate().toJSON();
             }
             if (v.homePostalAddress) {
