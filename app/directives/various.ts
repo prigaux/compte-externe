@@ -1,4 +1,5 @@
-'use strict';
+import Vue from "vue";
+import conf from '../conf';
 
 function toCanvas(video_elt) {
     let canvas = document.createElement("canvas");
@@ -21,7 +22,7 @@ function may_crop_portrait(canvas, { width, height }) {
 }
 
 
-Vue.component('webcamLivePortrait', <ComponentOptions<any>> {
+Vue.component('webcamLivePortrait', {
     template: `
     <div style="display: inline-block; position: relative;">
       <div style="height: 0">

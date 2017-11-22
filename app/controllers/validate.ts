@@ -1,7 +1,10 @@
-'use strict';
+import Vue from 'vue';
+import axios from 'axios';
+import { SVRaw } from '../services/ws';
+import template from '../templates/validate.html';
 
-const Validate : MyComponentOptions<any> = {
-  templateUrl: 'templates/validate.html',
+export const Validate = Vue.extend({
+  template,
   props: ['id'],
   data() {
       return { finished: false, error: undefined };
@@ -35,4 +38,4 @@ const Validate : MyComponentOptions<any> = {
         alert(err);
     });
   },
-};
+});

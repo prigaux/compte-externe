@@ -1,4 +1,8 @@
 {
+    "include": [
+        "**/*.ts",
+        "../app/conf.ts"
+    ],
   "compilerOptions": {
     "sourceMap": true,
     "noUnusedLocals": true,

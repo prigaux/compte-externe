@@ -1,7 +1,5 @@
-'use strict';
+import Vue from "vue";
 
-(function () {
-                                                
 var colors = [ "red", "#ffd801", "orange", "#3bce08", "#3bce08" ];
 var msgs = [ "Très faible", "Faible", "Moyen", "Fort", "Très fort" ];
 
@@ -78,5 +76,3 @@ Vue.directive("passwordStrength", function() {
 
     };
 });
-
-}());

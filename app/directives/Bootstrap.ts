@@ -1,4 +1,4 @@
-'use strict';
+import Vue from "vue";
 
 Vue.component("validation-errors", {
     props: ['name', 'validity'],

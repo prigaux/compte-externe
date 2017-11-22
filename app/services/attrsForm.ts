@@ -1,3 +1,9 @@
+import Vue from "vue";
+import conf from '../conf';
+import * as Helpers from '../services/helpers';
+import * as Ws from '../services/ws';
+import { V, StepAttrsOption } from '../services/ws';
+
 function AttrsForm_data() {
     return {
       label: conf.attr_labels,
@@ -9,7 +15,7 @@ function AttrsForm_data() {
     };    
 }
 
-const AttrsForm_mixin : ComponentOptions<any> = {
+export const AttrsForm_mixin = Vue.extend({
 
     mounted() {
         Ws.getInScope(this, this.id, this.expectedStep).then(() => {
@@ -52,5 +58,5 @@ const AttrsForm_mixin : ComponentOptions<any> = {
         Ws.remove(this.id).then(this.nextStep);
       }
     },
-};
+});
 

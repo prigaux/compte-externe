@@ -2,7 +2,7 @@
 
 const wsgroupsURL = "https://wsgroups.univ-paris1.fr";
 
-const conf = {
+export default {
     printCardUrl: undefined, //(login) => `http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=${login}`,
     wsgroupsURL,
     
@@ -77,10 +77,6 @@ const conf = {
                 'node_modules/bootstrap/dist/css/bootstrap.css',
             ],
             js: [
-                "node_modules/axios/dist/axios.js",
-                "node_modules/vue/dist/vue.js",
-                "node_modules/vue-router/dist/vue-router.js",
-                "node_modules/diff/dist/diff.js",
                 "node_modules/promise-polyfill/promise.js",
                 wsgroupsURL + "/web-widget/autocompleteUser-resources.html.js",
             ],
@@ -88,35 +84,6 @@ const conf = {
         css: [
             'app.css'
         ],
-        js: [
-            "conf.js",
-            "services/helpers.js",
-            "services/ws.js",
-            "services/attrsEdit.js",
-            "services/attrsForm.js",
-            "filters/various.js",
-            "controllers/create.js",
-            "controllers/validate.js",
-            "controllers/moderate.js",
-            "controllers/list.js",
-            "directives/various.js",
-            "directives/validators.js",
-            "directives/Bootstrap.js",
-            "directives/typeahead.js",
-            "start.js",
-        ],
-        tests: [
-            // NB: only used by karma, wildcards allowed
-            "directives/*_test.js",
-            "services/*_test.js",
-        ],
     },
 };
 
-declare let module;
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = conf;
-} else {
-    /* globals window */
-    window['conf'] = conf;
-}

@@ -1,5 +1,11 @@
-const Create : MyComponentOptions<any> = {
-  templateUrl: 'templates/create.html',
+import Vue from 'vue';
+import { router } from '../router';
+import { AttrsForm_mixin } from '../services/attrsForm';
+import template from '../templates/create.html';
+
+
+export const Create = Vue.extend({
+  template,
   props: ['kind'],
   data() {
       return { 
@@ -31,4 +37,4 @@ const Create : MyComponentOptions<any> = {
         }
     }
   },
-};
+});

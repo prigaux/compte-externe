@@ -1,4 +1,5 @@
-'use strict';
+import * as Ws from '../services/ws';
+import * as Helpers from './helpers';
 
 let raw = (o) => Helpers.assign({}, o);
 

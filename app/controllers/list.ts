@@ -1,8 +1,13 @@
-'use strict';
+import Vue from 'vue';
+import axios from 'axios';
+import { router } from '../router';
+import * as Helpers from '../services/helpers';
+import * as Ws from '../services/ws';
+import template from '../templates/list.html';
 
-const ModerateList : MyComponentOptions<any> = {
+export const ModerateList = Vue.extend({
   name: 'ModerateList',
-  templateUrl: 'templates/list.html',
+  template,
   data: () => ({
     svs: null,
     allow_reuse: undefined,
@@ -33,4 +38,4 @@ const ModerateList : MyComponentOptions<any> = {
         router.push("/reuse/" + uid);
     }
   },
-};
+});

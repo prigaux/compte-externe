@@ -1,6 +1,8 @@
-app/**/*.js
+app/build.js
+app/build.js.map
+app/conf.js
+app/conf.js.map
 server/**/*.js
-app/**/*.js.map
 server/**/*.js.map
 logs/*
 !.gitkeep

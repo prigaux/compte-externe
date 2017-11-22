@@ -1,3 +1,15 @@
+import Vue from "vue";
+import conf from '../conf';
+import { V } from '../services/ws';
+import * as Ws from '../services/ws';
+import * as Helpers from '../services/helpers'; 
+
+import template_common_attrs from '../templates/common-attrs.html';
+import template_extern_attrs from '../templates/extern-attrs.html';
+import template_barcode_attrs from '../templates/barcode-attrs.html';
+import template_password_attrs from '../templates/password-attrs.html';
+
+
 const accentsRange = '\u00C0-\u00FC';
 const month2maxDay = [undefined,
         31, 29, 31, 30, 31, 30,
@@ -11,7 +23,7 @@ function attrs_data(vm) {
     return { label: conf.attr_labels, validity };
 }
 
-let attrsMixin : ComponentOptions<any> = {
+let attrsMixin = Vue.extend({
     props: ['v', 'v_orig', 'attrs', 'submitted'],
     model: { prop: 'v', event: 'change' },
     data: function() { return attrs_data(this); },
@@ -27,10 +39,10 @@ let attrsMixin : ComponentOptions<any> = {
             },
         },
     },
-};
+});
 
-Vue.component('common-attrs', Helpers.templateUrl({
-    templateUrl: 'templates/common-attrs.html',
+Vue.component('common-attrs', {
+    template: template_common_attrs,
     mixins: [attrsMixin],
     data() {
         return {
@@ -70,9 +82,9 @@ Vue.component('common-attrs', Helpers.templateUrl({
             }
       },
     },
-}));
-Vue.component('extern-attrs', Helpers.templateUrl({
-    templateUrl: 'templates/extern-attrs.html',
+});
+Vue.component('extern-attrs', {
+    template: template_extern_attrs,
     mixins: [attrsMixin],
     data() {
         return {
@@ -82,9 +94,9 @@ Vue.component('extern-attrs', Helpers.templateUrl({
     methods: {
         structures_search: Ws.structures_search,
    },
-}));
-Vue.component('barcode-attrs', Helpers.templateUrl({
-    templateUrl: 'templates/barcode-attrs.html',
+});
+Vue.component('barcode-attrs', {
+    template: template_barcode_attrs,
     mixins: [attrsMixin],
     data() {
         return { cardChoice: undefined };
@@ -134,9 +146,9 @@ Vue.component('barcode-attrs', Helpers.templateUrl({
           return map;
       },
     },
-}));
-Vue.component('password-attrs', Helpers.templateUrl({
-    templateUrl: 'templates/password-attrs.html',
+});
+Vue.component('password-attrs', {
+    template: template_password_attrs,
     mixins: [attrsMixin],
     data() {
         return {
@@ -151,4 +163,4 @@ Vue.component('password-attrs', Helpers.templateUrl({
           return conf.error_msg;
       },
     },
-}));
+});

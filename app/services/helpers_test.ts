@@ -1,4 +1,4 @@
-'use strict';
+import * as Helpers from './helpers';
 
 describe('service helpers', function() {
 

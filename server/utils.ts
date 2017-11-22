@@ -4,6 +4,7 @@ import _ = require('lodash');
 import express = require('express');
 import csvtojson = require('csvtojson');
 import conf = require('./conf');
+import client_conf from '../app/conf'; // ES6 syntax needed for default export
 import { EventEmitter } from 'events';
 
 export const express_auth = (req: req, _res: express.Response, next): void => {
@@ -28,7 +29,6 @@ export function respondJson(req: req, res: express.Response, p: Promise<response
 export const index_html = (_req: req, res: express.Response, _next): void => {
     let fs = require('fs');
     let Mustache = require('mustache');
-    let client_conf = require('../app/conf');    
     let tconf = _.merge({ livereload: process.env.NODE_ENV !== 'production', mainUrl: conf.mainUrl }, client_conf);
     fs.readFile(__dirname + "/../app/index.html", (err, data) => {
         if (err) {

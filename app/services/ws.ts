@@ -1,3 +1,7 @@
+import axios, { AxiosError } from 'axios';
+import { router } from '../router';
+import * as Helpers from './helpers';
+
 function padLeft(s: string | number, width: number) {
     let n = s + '';
     return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
@@ -24,29 +28,29 @@ interface VCommon {
     supannAliasLogin?: string;
     jpegPhoto?: string;
 }
-interface VRaw extends VCommon {
+export interface VRaw extends VCommon {
     birthDay?: string;
     homePostalAddress?: string;
 }
-interface V extends VCommon {
+export interface V extends VCommon {
     birthDay?: MyDate;
     homePostalAddress?: HomePostalAddress;
     structureParrainS: { key: string, name: string, description: string };
 }
-interface SVRaw {
+export interface SVRaw {
     v: VRaw;
     step: string;
     error?: string;
 }
 
-interface StepAttrOption {
+export interface StepAttrOption {
   readonly?: boolean;
   hidden?: boolean;
 }
-interface Dictionary<T> {
+export interface Dictionary<T> {
   [index: string]: T;
 }
-type StepAttrsOption = Dictionary<StepAttrOption>;
+export type StepAttrsOption = Dictionary<StepAttrOption>;
 
 interface Structure {
     key: string;
@@ -54,7 +58,6 @@ interface Structure {
     description: string;
 }
 
-namespace Ws {
         export function structures_search(token : string, maxRows? : number) : Promise<Structure[]> {
             return axios.get('/api/structures', { params: { token, maxRows } }).then((resp) => resp.data as Structure[]);
         }
@@ -220,4 +223,3 @@ namespace Ws {
                 (resp) => resp.data,
                 _handleErr);
         }
-}

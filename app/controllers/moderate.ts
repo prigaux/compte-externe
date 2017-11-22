@@ -1,3 +1,14 @@
+import Vue from "vue";
+import conf from '../conf';
+import * as Helpers from '../services/helpers';
+import { AttrsForm_mixin } from '../services/attrsForm';
+import * as Ws from '../services/ws';
+import { router } from '../router';
+
+import template_reuse from '../templates/reuse.html';
+import template_moderate from '../templates/moderate.html';
+
+
 function computeComparisons(v, homonyme) {   
         let r = [];
         Helpers.eachObject(homonyme, (attr, val) => {
@@ -12,7 +23,7 @@ function computeComparisons(v, homonyme) {
         return r;
 }
 
-const CompareUsers = {
+export const CompareUsers = Vue.extend({
     props: ['v', 'homonyme'],
     computed: {
         comparisons() {
@@ -42,9 +53,9 @@ const CompareUsers = {
    </div>
   </div>
    `,
-};
+});
 
-const Moderate_mixin : ComponentOptions<any> = {
+export const Moderate_mixin = Vue.extend({
   computed: {
     expectedStep() { return null },
   },
@@ -66,12 +77,12 @@ const Moderate_mixin : ComponentOptions<any> = {
     },
 
   },
-};
+});
        
 
-const Moderate : MyComponentOptions<any> = {
+export const Moderate = {
   name: "Moderate",
-  templateUrl: 'templates/moderate.html',
+  template: template_moderate,
   props: ['id'],
   data() {
       return { 
@@ -89,9 +100,9 @@ const Moderate : MyComponentOptions<any> = {
     },
 };
 
-const Reuse : MyComponentOptions<any> = {
+export const Reuse = {
   name: "Reuse",
-  templateUrl: 'templates/reuse.html',
+  template: template_reuse,
   props: ['uid'],
   mixins: [AttrsForm_mixin, Moderate_mixin],
 

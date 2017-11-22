@@ -1,4 +1,5 @@
-'use strict';
+import Vue from "vue";
+import * as Helpers from '../services/helpers';
 
 Vue.filter('formatIdpId', function (s) {
         s = s.replace(/^https?:\/\//, '');

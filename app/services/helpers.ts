@@ -1,4 +1,6 @@
-namespace Helpers {
+import axios from 'axios';
+import * as JsDiff from 'diff';
+import { Dictionary } from '../services/ws';
 
     const entityMap = {
         "&": "&amp;",
@@ -93,14 +95,6 @@ namespace Helpers {
         return m && m[1];
     }
 
-    export function templateUrl(vmOpts : MyComponentOptions<any>) {
-        return () =>
-            axios.get(vmOpts['templateUrl']).then(resp => resp.data).then((template : string) => {
-                vmOpts.template = template;
-                return vmOpts;
-            })
-    }
-
     export function memoize(func, hasher) {
         var memo = {};
         return function() {
@@ -135,11 +129,11 @@ namespace Helpers {
         return format.split(/(yyyy|MM|dd|HH|mm|ss)/).map(function (item) {
             switch (item) {
                 case 'yyyy': return date_.getFullYear();
-                case 'MM': return Helpers.padStart(date_.getMonth() + 1, 2, '0');
-                case 'dd': return Helpers.padStart(date_.getDate(), 2, '0');
-                case 'HH': return Helpers.padStart(date_.getHours(), 2, '0');
-                case 'mm': return Helpers.padStart(date_.getMinutes(), 2, '0');
-                case 'ss': return Helpers.padStart(date_.getSeconds(), 2, '0');
+                case 'MM': return padStart(date_.getMonth() + 1, 2, '0');
+                case 'dd': return padStart(date_.getDate(), 2, '0');
+                case 'HH': return padStart(date_.getHours(), 2, '0');
+                case 'mm': return padStart(date_.getMinutes(), 2, '0');
+                case 'ss': return padStart(date_.getSeconds(), 2, '0');
                 default: return item;
             }
         }).join('');   
@@ -148,6 +142,3 @@ namespace Helpers {
     export function escapeRegexp(s : string) {
         return ('' + s).replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
     }
-}
-
-
