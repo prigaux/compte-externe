@@ -14,6 +14,7 @@ require('./helpers');
 const router = express.Router();
 
 const bus = utils.eventBus();
+const respondJson = utils.respondJson;
 
 function normalize_step(step: step, _name: string) {
     _.each(step.attrs, (opts) => {
@@ -227,18 +228,6 @@ function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
             givenNames,
             sv.v.birthDay,
             _.keys(step(sv).attrs));
-    });
-}
-
-function respondJson(req: req, res: express.Response, p: Promise<response>) {
-    let logPrefix = req.method + " " + req.path + ":";
-    p.then(r => {
-        //console.log(logPrefix, r);
-        res.json(r || {});
-    }, err => {
-        console.error(logPrefix, err + err.stack);
-        res.status(err === "Unauthorized" ? 401 : err === "Forbidden" ? 403 : 500);
-        res.json({error: "" + err, stack: err.stack});
     });
 }
 

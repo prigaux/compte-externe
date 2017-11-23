@@ -12,6 +12,18 @@ export const express_auth = (req: req, _res: express.Response, next): void => {
   next();
 };
 
+export function respondJson(req: req, res: express.Response, p: Promise<response>) {
+    let logPrefix = req.method + " " + req.path + ":";
+    p.then(r => {
+        //console.log(logPrefix, r);
+        res.json(r || {});
+    }, err => {
+        console.error(logPrefix, err + err.stack);
+        res.status(err === "Unauthorized" ? 401 : err === "Forbidden" ? 403 : 500);
+        res.json({error: "" + err, stack: err.stack});
+    });
+}
+
 export const index_html = (_req: req, res: express.Response, _next): void => {
     let fs = require('fs');
     let Mustache = require('mustache');
