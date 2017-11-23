@@ -145,7 +145,7 @@ const createCompteRaw = (req, v: Dictionary<ldap_RawValue>) => {
             return { uid, supannAliasLogin: v['supannAliasLogin'] || uid };
         } else {
             console.error("createCompte should return dn");
-            throw resp.err ? JSON.stringify(resp.err) : "createCompte should return dn";
+            throw resp.err ? JSON.stringify(resp.err[0]) : "createCompte should return dn";
         }
     });
 }
