@@ -90,3 +90,7 @@ export const nextDate = (pattern : string, date: Date) => {
     if (r.getTime() < date.getTime()) r.setFullYear(r.getFullYear() + 1);
     return r;
 }
+
+export const equalsIgnoreCase = (a: string, b: string) => (
+    a.toLowerCase() === b.toLowerCase()
+)
