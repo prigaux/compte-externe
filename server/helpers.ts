@@ -6,7 +6,9 @@ import simpleGet = require('simple-get');
 import conf = require('./conf');
 
 if (Promise.prototype.tap === undefined) {
-    // NB: "f" can modify the result in case it throws an exception or return a rejected promise 
+    // https://github.com/kriskowal/q/wiki/API-Reference#promisetaponfulfilled
+    // NB: "f" can modify the result in case it throws an exception or return a rejected promise
+    // (cf https://github.com/petkaantonov/bluebird/blob/master/test/mocha/tap.js#L39-L46 )
     Promise.prototype.tap = function (f) {
         return this.then(v => {
             let p = f(v);
