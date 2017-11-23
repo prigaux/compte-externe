@@ -94,8 +94,14 @@ function mayNotifyModerators(req: req, sv: sv, notifyKind: string) {
 }
 
 function checkAcls(req: req, sv: sv) {
-    acl_checker.checkAuthorized(sv.moderators, req.user);
-    console.log("authorizing", req.user, "for step", sv.step);
+    return acl_checker.moderators(step(sv).acls, sv.v).then(moderators => {
+        // updating moderators
+        sv.moderators = moderators;
+        return sv;
+    }).tap(sv => {
+        acl_checker.checkAuthorized(sv.moderators, req.user);
+        console.log("authorizing", req.user, "for step", sv.step);
+    });
 }
 
 function first_sv(req: req): Promise<sv> {
