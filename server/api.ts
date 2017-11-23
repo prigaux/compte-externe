@@ -111,15 +111,16 @@ function first_sv(req: req): Promise<sv> {
 }
 
 function getRaw(req: req, id: id): Promise<sv> {
+    let svP;
     if (id === 'new') {
-        return first_sv(req);
+        svP = first_sv(req);
     } else {
-        return db.get(id).tap(sv => {
+        svP = db.get(id).tap(sv => {
             if (!sv) throw "invalid id " + id;
             if (!sv.step) throw "internal error: missing step for id " + id;
-            checkAcls(req, sv);
         });
     }
+    return svP.tap(sv => checkAcls(req, sv));
 }
 
 function get(req: req, id: id) {
