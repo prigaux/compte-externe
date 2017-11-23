@@ -79,8 +79,15 @@ export const aclChecker = (acls: acl_search[]) => (
     )
 ) as simpleAction
 
+type createCompteOptions = {
+    dupcreate: "ignore"|"warn"|"err";
+}
 
-export const createCompte: simpleAction = (req, sv) => {
+export const createCompte: simpleAction = (_req, sv) => (
+    createCompte_(sv, { dupcreate: "ignore" })
+);
+    
+const createCompte_ = (sv, opts : createCompteOptions) => {
     if (!sv.v) throw "internal error: createCompte with no v";
 
     if (!sv.v.startdate) sv.v.startdate = new Date();
@@ -94,7 +101,7 @@ export const createCompte: simpleAction = (req, sv) => {
     delete v_ldap.userPassword; // handled by esup_activ_bo
     delete v_ldap.duration; // only useful to compute "enddate"
 
-    return createCompteRaw(req, v_ldap).then(function (uid_and_login) {
+    return createCompteRaw(v_ldap, opts).then(function (uid_and_login) {
         console.log("createCompteRaw returned", uid_and_login);
         _.assign(sv.v, uid_and_login);
         return sv.v;
@@ -113,11 +120,15 @@ export const createCompte: simpleAction = (req, sv) => {
     ));
 };
 
-const createCompteRaw = (req, v: Dictionary<ldap_RawValue>) => {
+// NB: crejsonldap performance:
+// - 200ms minimal response time
+// - 200ms ssh overhead
+// - 14MB RSS memory usage
+const createCompteRaw = (v: Dictionary<ldap_RawValue>, opts : createCompteOptions) => {
     let { profilename, priority, startdate, enddate, ...attrs } = v;
     
     let param = JSON.stringify({
-        id: ["uid"], create: true, dupcreate: "ignore",
+        id: ["uid"], create: true, ...opts,
         users: [
             { profilename, priority, startdate, enddate, attrs } ],
     });
@@ -136,7 +147,7 @@ const createCompteRaw = (req, v: Dictionary<ldap_RawValue>) => {
             // gasp, the generated supannAliasLogin is already in use,
             // retry without supannAliasLogin
             delete v['supannAliasLogin'];
-            return createCompteRaw(req, v);
+            return createCompteRaw(v, opts);
         }
             
         let m = resp.dn && resp.dn.match(/uid=(.*?),/);
