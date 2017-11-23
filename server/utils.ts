@@ -2,6 +2,7 @@
 
 import _ = require('lodash');
 import express = require('express');
+import csvtojson = require('csvtojson');
 import conf = require('./conf');
 import { EventEmitter } from 'events';
 
@@ -39,6 +40,27 @@ export const index_html = (_req: req, res: express.Response, _next): void => {
     });
 };
 
+
+
+const parse_csv = (csv: string): Promise<{ fields: string[], lines: {}[] }> => (
+    new Promise((resolve, reject) => {
+        const convert = csvtojson({ 
+            delimiter: "auto", // relies on the delimiter most present in headers. Since field names should not contain any known delimiters (,|\t;:), it is ok!
+            checkColumn: true,
+        });      
+        let fields;
+        convert.fromString(csv)
+          .on('header', header => fields = header)
+          .on('end_parsed', lines => resolve({ fields, lines }))
+          .on('error', err => {
+            console.log("parse_csv failed on\n", csv);
+            reject(err);
+        });
+    })
+);
+export const csv2json = (req: req, res): void => (
+    respondJson(req, res, parse_csv(req.body))
+);
 
 export const eventBus = (): EventEmitter => {
     let bus = new EventEmitter();

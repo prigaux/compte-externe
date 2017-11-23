@@ -16,13 +16,19 @@ const staticFilesOptions = { maxAge: process.env.NODE_ENV === 'production' ? 60 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/app/favicon.ico'));
 app.use(logger(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
-app.use(bodyParser.json({type: '*/*'})); // do not bother checking, everything we will get is JSON :)
-app.use(bodyParser.urlencoded({ extended: false }));
 app.get("/", utils.index_html);
 app.use(express.static(path.join(__dirname, '../app'), staticFilesOptions));
 app.use("/node_modules", express.static(path.join(__dirname, '../node_modules'), staticFilesOptions));
 app.use(utils.express_auth);
-app.use('/api', api);
+
+app.use('/csv2json', 
+     bodyParser.text({type: '*/*'}), 
+     utils.csv2json);
+
+app.use('/api',
+     bodyParser.json({type: '*/*'}), // do not bother checking, everything we will get is JSON :)
+     bodyParser.urlencoded({ extended: false }),
+     api);
 
 // catch-all that should be replaced with list of angularjs routes
 app.all("/*", utils.index_html);
