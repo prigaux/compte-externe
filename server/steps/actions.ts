@@ -83,6 +83,28 @@ type createCompteOptions = {
     dupcreate: "ignore"|"warn"|"err";
 }
 
+export const createCompteSafe: simpleAction = (_req, sv) => {
+    // first lookup exact match in LDAP
+    let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, sv.v, {});    
+    let attrs_exact_match = [ 'sn', 'givenName', 'supannMailPerso', 'birthDay' ];
+    let filters_ = attrs_exact_match.filter(attr => attr in v_ldap).map(attr => filters.eq(attr, v_ldap[attr] as string));
+    if (filters_.length < 3) throw "refusing to create account with so few attributes. Expecting at least 3 of " + attrs_exact_match.join(',');
+    return onePerson(filters.and(filters_)).then(v => {  
+        if (v) {
+            return { v, response: { ignored: true } };
+        }
+        // no exact match, calling crejsonldap with homonyme detection
+        return createCompte_(sv, { dupcreate: "err" }).catch(errS => {
+            const err = JSON.parse(errS);
+            if (err.code === 'homo') {
+                return { v: sv.v, response: { in_moderation: true } };
+             } else {
+                 throw errS;
+             }
+        });
+    });
+}
+
 export const createCompte: simpleAction = (_req, sv) => (
     createCompte_(sv, { dupcreate: "ignore" })
 );
