@@ -137,7 +137,8 @@ function set(req: req, id: id, v: v) {
 
 function advance_sv(req: req, sv: sv) : Promise<svr> {
     return action_post(req, sv).then(svr => {
-        svr.step = step(svr).next;
+        const nextStep = step(svr).next;
+        svr.step = typeof nextStep === "function" ? nextStep(svr.v) : nextStep;
         if (svr.step) {
             return action_pre(req, svr);
         } else {

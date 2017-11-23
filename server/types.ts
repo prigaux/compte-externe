@@ -55,7 +55,7 @@ interface StepNotify {
 type step = {
   acls?: acl_search[];
   attrs: StepAttrsOption;
-  next?: string;
+  next?: string | ((v) => string);
   notify?: StepNotify;
   action_pre?: action;
   action_post?: action;
