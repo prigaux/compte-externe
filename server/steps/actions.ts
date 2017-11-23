@@ -15,6 +15,16 @@ export const addAttrs = (v: Partial<v>) => (_req, sv) => {
     return Promise.resolve(sv);
 }
 
+type profileValues = StepAttrOptionChoices & { fv: () => Partial<v> }
+
+export const addProfileAttrs = (profiles: profileValues[]) => (_req, sv) => {
+    _.defaults(sv.v, { profilename: profiles[0].key });
+    let profile = _.find(profiles, p => p.key === sv.v.profilename);
+    if (!profile) throw "invalid profile " + sv.v.profilename;
+    _.assign(sv.v, profile.fv());
+    return Promise.resolve(sv);
+}
+
 const isCasUser = (req) => {
     let idp = req.header('Shib-Identity-Provider');
     return idp && idp === conf.cas_idp;
