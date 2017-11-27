@@ -40,7 +40,7 @@ function suggested_mail(sn: string, givenName: string) {
     return s;
 }
 
-function homonymes_filter(sns: string[], givenNames: string[]): ldap.filter {
+function homonymes_filter(sns: string[], givenNames: string[], supannMailPerso?: string): ldap.filter {
 
     function cn_filter() {
         return filters.alike_no_accents('cn', sns[0] + '*' + (givenNames[0] || ""));
@@ -63,6 +63,9 @@ function homonymes_filter(sns: string[], givenNames: string[]): ldap.filter {
     let l = [ cn_filter(),
               sn_givenName_filter(), 
               mail_filter() ];
+    if (supannMailPerso) {
+        l.push(filters.eq('supannMailPerso', supannMailPerso));
+    }
     //console.log("homonymes_filter", l);
     return filters.or(l);
 }
@@ -90,9 +93,9 @@ function homonymes_scoring(l: typeof conf.ldap.people.types[], birthDay: Date): 
     return _.sortBy(l_, 'score').reverse();
 }
 
-export const homonymes = (sns: string[], givenNames: string[], birthDay: Date, attrs: string[]) : Promise<Homonyme[]> => {
+export const homonymes = (sns: string[], givenNames: string[], birthDay: Date, supannMailPerso: string, attrs: string[]) : Promise<Homonyme[]> => {
     attrs.push('uid', 'dn'); // we want the dn & uid to id the homonymes
-    let filter = homonymes_filter(sns, givenNames);
+    let filter = homonymes_filter(sns, givenNames, supannMailPerso);
     if (conf.ldap.people.homonymes_restriction) {
         filter = filters.and([filter, conf.ldap.people.homonymes_restriction]);
         //console.log("homonymes filter", filter);
