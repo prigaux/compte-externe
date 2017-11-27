@@ -178,7 +178,7 @@ export const AttrsForm = Vue.extend({
           // especially for "uid" attr, but also "mifare", "barcode"
           Helpers.eachObject(homonyme, (attr, val) => {
             if (attr === "score") return;
-            if (val && !this.v[attr]) { 
+            if (val && (!this.v[attr] || attr === 'supannAliasLogin')) {
                 console.log("adding " + attr + " = " + val); 
                 this.v[attr] = val;
                 this.v_orig[attr] = val;
