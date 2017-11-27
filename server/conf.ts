@@ -83,7 +83,7 @@ const conf = {
             },
             sns: ['sn'],
             givenNames: ['givenName'],
-            homonymes_restriction: '(&(eduPersonAffiliation=*)(!(eduPersonAffiliation=student)))',
+            homonymes_restriction: '(objectClass=inetOrgPerson)',
         },
 
         group_cn_to_memberOf: cn => (

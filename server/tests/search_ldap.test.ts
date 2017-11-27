@@ -125,7 +125,8 @@ describe('homonymes', () => {
     describe('use test ldap', () => {
         let search_ldap: search_ldap;
         before(() => (
-            test_ldap.create().then(() => {
+            test_ldap.create().then(({ conf }) => {
+                conf.ldap.people.homonymes_restriction = '(&(eduPersonAffiliation=*)(!(eduPersonAffiliation=student)))';
                 search_ldap = require_fresh('../search_ldap');
             })
         ));
