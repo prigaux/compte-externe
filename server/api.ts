@@ -24,7 +24,9 @@ function normalize_step(step: step, _name: string) {
 _.each(conf_steps.steps, normalize_step);
 
 function step(sv: sv): step {
-    return conf_steps.steps[sv.step];
+    let r = conf_steps.steps[sv.step];
+    if (!r) throw "invalid step " + sv.step;
+    return r;
 }
 
 function action_pre(req: req, sv: sv) {
