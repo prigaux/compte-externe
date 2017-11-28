@@ -1,5 +1,5 @@
 <fieldset>
-  <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity">
+  <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity" v-if="attrs.profilename">
     <radio-with-validity :values="profilename2descr" name="profilename" v-model="v.profilename" :validity.sync="validity.profilename"></radio-with-validity>
   </my-bootstrap-form-group>
 

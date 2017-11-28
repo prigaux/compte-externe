@@ -1,5 +1,5 @@
 <div>
-  <my-bootstrap-form-group name="supannMailPerso" :label="label.supannMailPerso" :validity="validity">
+  <my-bootstrap-form-group name="supannMailPerso" :label="label.supannMailPerso" :validity="validity" v-if="attrs.supannMailPerso">
     <input-with-validity name="supannMailPerso" v-model="v.supannMailPerso" type="email" required :validity.sync="validity.supannMailPerso"></input-with-validity>
   </my-bootstrap-form-group>
 

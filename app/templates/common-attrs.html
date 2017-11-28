@@ -1,22 +1,22 @@
 <div>
 
-  <my-bootstrap-form-group name="supannCivilite" :label="label.supannCivilite" :validity="validity">
+  <my-bootstrap-form-group name="supannCivilite" :label="label.supannCivilite" :validity="validity" v-if="attrs.supannCivilite">
     <radio-with-validity :values="{'M.': 'M.', Mme: 'Mme'}" name="supannCivilite" v-model="v.supannCivilite" :validity.sync="validity.supannCivilite"></radio-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="givenName" :label="label.givenName" :validity="validity">
+  <my-bootstrap-form-group name="givenName" :label="label.givenName" :validity="validity" v-if="attrs.givenName">
     <input-with-validity name="givenName" v-model="v.givenName" type="text" :allowed-chars="allowedCharsInNames" required :validity.sync="validity.givenName"></input-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="sn" :label="label.sn" :validity="validity">
+  <my-bootstrap-form-group name="sn" :label="label.sn" :validity="validity" v-if="attrs.sn">
     <input-with-validity name="sn" v-model="v.sn" type="text" :allowed-chars="allowedCharsInNames" required :validity.sync="validity.sn"></input-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="birthName" :label="label.birthName" :validity="validity">
+  <my-bootstrap-form-group name="birthName" :label="label.birthName" :validity="validity" v-if="attrs.birthName">
     <input-with-validity name="birthName" v-model="v.birthName" type="text" title="si différent du nom d'usage" :allowed-chars="allowedCharsInNames" :validity.sync="validity.birthName"></input-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="day" multi="true" :label="label.birthDay">
+  <my-bootstrap-form-group name="day" multi="true" :label="label.birthDay" v-if="attrs.birthDay">
     <div class="col-xs-2" :class="{'has-error': validity.submitted && !validity.day.valid }">
       <div>
         <input-with-validity name="day" v-model="v.birthDay.day" type="number" min="1" :max="maxDay" placeholder="Jour" required :validity.sync="validity.day"></input-with-validity>
@@ -71,7 +71,7 @@
  </div>
 </div>
 
-  <my-bootstrap-form-group name="homePhone" :label="label.homePhone" :validity="validity">
+  <my-bootstrap-form-group name="homePhone" :label="label.homePhone" :validity="validity" v-if="attrs.homePhone">
     <input-with-validity name="homePhone" v-model="v.homePhone" real-type="phone" required :validity.sync="validity.homePhone"></input-with-validity>
   </my-bootstrap-form-group>
 
