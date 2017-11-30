@@ -116,3 +116,8 @@ export const nextDate = (pattern : string, date: Date) => {
 export const equalsIgnoreCase = (a: string, b: string) => (
     a.toLowerCase() === b.toLowerCase()
 )
+
+export function mergeSteps(initialSteps: steps, nextSteps: steps): steps {
+    _.forEach(initialSteps, (step, _name) => step.initialStep = true);
+    return { ...initialSteps, ...nextSteps };
+}
