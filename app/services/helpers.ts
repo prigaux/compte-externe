@@ -95,14 +95,6 @@ import { Dictionary } from '../services/ws';
         return m && m[1];
     }
 
-    export function memoize(func, hasher) {
-        var memo = {};
-        return function() {
-            var key = hasher.apply(this, arguments);
-            return key in memo ? memo[key] : (memo[key] = func.apply(this, arguments));
-        };
-    }
-
     export function groupBy<T>(items : T[], getter : (T) => string) : Dictionary<T[]> {
         var result = {};
         items.forEach(function (elm) {
