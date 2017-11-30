@@ -134,3 +134,13 @@ import { Dictionary } from '../services/ws';
     export function escapeRegexp(s : string) {
         return ('' + s).replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
     }
+
+    export function filter(collection, predicate) {
+        if (Array.isArray(collection)) return collection.filter(predicate);
+
+        let r = {};
+        for (let k in collection) {
+            if (predicate(collection[k], k)) r[k] = collection[k];
+        }
+        return r;
+    }

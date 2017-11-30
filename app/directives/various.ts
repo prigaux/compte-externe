@@ -21,3 +21,13 @@ Vue.directive('auto-focus', {
         el.focus();
     }
 })
+
+// emits 'change' event
+Vue.component('input-file', {
+    template: "<input @change='read' type='file'>",
+    methods: {
+        read: function (e) {
+            this.$emit('change', e.target.files[0] as File);
+        },
+    },
+});

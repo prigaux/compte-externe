@@ -130,6 +130,10 @@ function get(req: req, id: id) {
     ));
 }
 
+function set_new_many(req: req, vs: v[]) {
+    return Promise.all(vs.map(v => set(req, 'new', v).catch(error => (console.log(error), { error }))));
+}
+
 function set(req: req, id: id, v: v) {
     return getRaw(req, id).then(sv => (
         setRaw(req, sv, v)
@@ -292,6 +296,10 @@ router.get('/comptes/:id', (req : req, res) => {
 
 router.put('/comptes/new/:step', (req: req, res) => {
     respondJson(req, res, set(req, 'new', body_to_v(req.body)));
+});
+
+router.put('/comptes/new_many/:step', (req: req, res) => {
+    respondJson(req, res, set_new_many(req, req.body.map(body_to_v)));
 });
 
 router.put('/comptes/:id', (req: req, res) => {

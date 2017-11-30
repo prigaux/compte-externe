@@ -43,7 +43,11 @@ export const AttrsForm_mixin = Vue.extend({
           console.log("submit");
           this.submitted = true;
           if (!event.target.checkValidity()) return;
-          this.send();
+          if (this.to_import) {
+            this.send_new_many();
+          } else {
+            this.send();
+          }
       },
       send() {
           Ws.set(this.id, this.v).then(resp => {

@@ -81,6 +81,10 @@ const api_url = conf.base_pathname + 'api';
             var m = date.match(/^([0-9]{4})([0-9]{2})([0-9]{2})[0-9]{6}Z?$/);
             return m && new MyDate(parseInt(m[1]), parseInt(m[2]), parseInt(m[3]));
         }
+        function _fromFrenchDate(date: string) {
+            var m = date.match(/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/);
+            return m && new MyDate(parseInt(m[3]), parseInt(m[2]), parseInt(m[1]));
+        }
 
         function _fromHomePostalAddress(addr: string): HomePostalAddress {
             if (!addr) return { lines: '', line2: '', postalCode: '', town: '', country: "FRANCE" };
@@ -230,9 +234,29 @@ const api_url = conf.base_pathname + 'api';
                 _handleErr);
         }
 
+        export function new_many(step: string, vs: V[]) {
+            var url = api_url + '/comptes/new_many/' + step;
+            var vs_ = vs.map(toWs);
+            return axios.put(url, vs_).then(
+                (resp) => resp.data,
+                _handleErr);
+        }
+
         export function remove(id: string) {
             var url = api_url + '/comptes/' + id;
             return axios.delete(url).then( 
                 (resp) => resp.data,
+                _handleErr);
+        }
+
+        export function csv2json(file: File) : Promise<{ fields: string[], lines: {}[] }> {
+            return axios.post(conf.base_pathname + 'csv2json', file).then(
+                (resp) => {
+                    let o = resp.data;
+                    o.lines.forEach(v => {
+                        if (v.birthDay) v.birthDay = _fromFrenchDate(v.birthDay) || _fromLDAPDate(v.birthDay) || "date invalide";
+                    });
+                    return o;
+                },
                 _handleErr);
         }
