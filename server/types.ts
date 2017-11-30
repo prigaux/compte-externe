@@ -47,15 +47,25 @@ interface StepAttrOption {
 }
 type StepAttrsOption = Dictionary<StepAttrOption>;
 
+interface StepLabels {
+    title?: string;
+    okButton?: string;
+    cancelButton?: string;
+}
+
 interface StepNotify {
   added?: string;
   rejected?: string;
   accepted?: string;    
 }
 type step = {
+  labels: StepLabels;
   acls?: acl_search[];
 
   initialStep?: boolean;
+
+  attrs_pre?: Dictionary<{}>; // passed to /api/comptes/xxx as query arguments
+  allow_many?: boolean; 
   
   attrs: StepAttrsOption;
   next?: string | ((v) => string);

@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import * as Helpers from './services/helpers'; 
 import { router } from './router';
+import GlobalMixin from './GlobalMixin';
 
 import "./filters/various";
 import "./directives/various";
@@ -23,6 +24,7 @@ router.afterEach((to, _from) => {
     }
 });
 
+Vue.mixin(GlobalMixin);
 Vue.use(VueRouter)
 
 new Vue({ 

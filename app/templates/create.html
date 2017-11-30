@@ -1,7 +1,13 @@
 <div class="normalContent" v-if="v">
- 
- <h4 style="margin-top: 2em">Création de compte</h4>
 
+ <div v-if="isMember" class="alert alert-danger">
+     {{v.givenName}} {{v.sn}} est {{conf.affiliation_labels[v.eduPersonPrimaryAffiliation]}}
+     <span v-if="anneeInscription">
+         {{anneeInscription}}/{{anneeInscription+1}}
+     </span>
+ </div>
+           
+               
  <form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">
 
    <common-attrs v-model="v" :attrs="attrs" :submitted="submitted"></common-attrs>
@@ -12,8 +18,14 @@
    <my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit">
         <span class="glyphicon glyphicon-plus"></span>
-        Demander la création</button>
-   </my-bootstrap-form-group>
+        <span v-html="step.labels.okButton"></span>
+      </button>
+
+      <button class="btn btn-primary" @click.prevent="reject()" v-if="step.labels.cancelButton">
+        <span class="glyphicon glyphicon-trash"></span>
+        <span v-html="step.labels.cancelButton"></span>
+      </button>
+    </my-bootstrap-form-group>
 
  </form>
 

@@ -1,14 +1,12 @@
 <div>
 
-<div v-if="allow_reuse" style="margin-bottom: 2em">
-    <h4>Prolonger ou modifier un compte</h4>
-    <autocomplete-user class="form-control" placeholder="Rechercher une personne" @select="reuse"></autocomplete-user>
+<div v-for="step in initialSteps" v-if="initialSteps">
+    <InitialStep :step="step"></InitialStep>
 </div>
 
-<h4>Modération</h4>
-
-<ul v-for="(svs_,step) in svsGroupedByStep">
-  {{step}} :
+<div v-for="(svs_,step) in svsGroupedByStep">      
+ <h4 v-if="svs_[0].labels" v-html="svs_[0].labels.title"></h4>
+ <ul>
   <li v-for="sv in svs_">
   le {{sv.modifyTimestamp | date('dd/MM/yyyy à HH:mm')}} : 
    <router-link :to="'/moderate/' + sv.id">
@@ -17,6 +15,7 @@
    </router-link>
 </li>
 </ul>
+</div>
 
 <div v-if="svs && svs.length === 0">
   Rien à modérer

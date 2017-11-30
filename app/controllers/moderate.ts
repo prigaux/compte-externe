@@ -5,7 +5,6 @@ import * as Ws from '../services/ws';
 import { router } from '../router';
 import CompareUsers from './CompareUsers.vue';
 
-import template_reuse from '../templates/reuse.html';
 import template_moderate from '../templates/moderate.html';
 
 
@@ -52,24 +51,4 @@ export const Moderate = {
             this.homonymes = l;
         });
     },
-};
-
-export const Reuse = {
-  name: "Reuse",
-  template: template_reuse,
-  props: ['uid'],
-  mixins: [AttrsForm_mixin, Moderate_mixin],
-
-  computed: {
-    id() { return 'new/reuse?uid=' + this.uid; },
-    conf() { return conf },
-    isMember() { 
-        let aff = this.v.eduPersonAffiliation;
-        return aff && aff.indexOf('member') >= 0;
-    },
-    anneeInscription() {
-        let annees = this.v.supannEtuAnneeInscription;
-        return annees && Math.max(...annees);
-    },
-  },
 };

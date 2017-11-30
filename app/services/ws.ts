@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import { pick } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
@@ -51,6 +52,12 @@ export interface Dictionary<T> {
   [index: string]: T;
 }
 export type StepAttrsOption = Dictionary<StepAttrOption>;
+
+export interface InitialSteps {
+    attrs: StepAttrsOption;
+    attrs_pre: Dictionary<{}>;
+    allow_many: boolean;
+}
 
 interface Structure {
     key: string;
@@ -172,10 +179,9 @@ const api_url = conf.base_pathname + 'api';
             }
         }
 
-        export function allowGet(id: string) : Promise<boolean> {
-            let url = '/api/comptes/' + id;
-            return axios.get(url).then(resp => (
-                resp.data && !resp.data['error']
+        export function initialSteps() : Promise<InitialSteps> {
+            return axios.get(api_url + '/initialSteps').then(resp => (
+                resp.data
             ));
         }
 
@@ -190,7 +196,9 @@ const api_url = conf.base_pathname + 'api';
                     }
                     sv.modifyTimestamp = _fromJSONDate(sv.modifyTimestamp);
                     Helpers.eachObject(sv.attrs, (attr) => sv.v[attr] = sv.v[attr]); // ensure key exists for Vuejs setters
-                    Helpers.assign($scope, sv);
+                    $scope.v = sv.v;
+                    $scope.attrs = sv.attrs;
+                    $scope.step = pick(sv, ['allow_many', 'labels']);
             }, _handleErr);
         }
 

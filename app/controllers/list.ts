@@ -1,20 +1,21 @@
 import Vue from 'vue';
 import axios from 'axios';
-import { router } from '../router';
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import template from '../templates/list.html';
+import InitialStep from './InitialStep.vue';
 
 export const ModerateList = Vue.extend({
   name: 'ModerateList',
   template,
+  components: { InitialStep },
   data: () => ({
     svs: null,
-    allow_reuse: undefined,
+    initialSteps: undefined,
   }),
   mounted() {
       this.listRec({});
-      Ws.allowGet("new/reuse").then(allow_reuse => this.allow_reuse = allow_reuse);
+      Ws.initialSteps().then(val => this.initialSteps = val);
   },
   beforeDestroy() {
     if (this.cancelP) this.cancelP.cancel("");
@@ -34,8 +35,5 @@ export const ModerateList = Vue.extend({
             }
         });
     },
-    reuse({ uid }) {
-        router.push("/reuse/" + uid);
-    }
   },
 });

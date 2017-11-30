@@ -7,6 +7,7 @@ import { V, StepAttrsOption } from '../services/ws';
 function AttrsForm_data() {
     return {
       label: conf.attr_labels,
+      step: undefined,
       attrs: <StepAttrsOption> undefined,
       v: <V> undefined,
       v_orig: <V> undefined,
@@ -24,6 +25,18 @@ export const AttrsForm_mixin = Vue.extend({
     },
 
     data: AttrsForm_data,
+
+    computed: {
+        // for reuse steps:
+        isMember() { 
+            let aff = this.v.eduPersonAffiliation;
+            return aff && aff.indexOf('member') >= 0;
+        },
+        anneeInscription() {
+            let annees = this.v.supannEtuAnneeInscription;
+            return annees && Math.max(...annees);
+        },
+    },
 
     methods: {
       submit(event) {

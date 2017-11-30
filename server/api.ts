@@ -125,12 +125,9 @@ function getRaw(req: req, id: id): Promise<sv> {
 }
 
 function get(req: req, id: id) {
-    return getRaw(req, id).then(sv_removeHiddenAttrs).then(sv => {
-        sv.attrs = <StepAttrsOption> _.omitBy(step(sv).attrs, val => (
-            val.hidden
-        ));
-        return sv;
-    });
+    return getRaw(req, id).then(sv_removeHiddenAttrs).then(sv => (
+        { ...sv, ...exportStep(step(sv)) }
+    ));
 }
 
 function set(req: req, id: id, v: v) {
@@ -214,7 +211,9 @@ function remove(req: req, id: id) {
 function listAuthorized(req: req) {
     if (!req.user) return Promise.reject("Unauthorized");
     return db.listByModerator(req.user).then(svs => (
-        _.map(svs, sv_removeHiddenAttrs)
+        _.map(svs, sv => (
+            { ...sv_removeHiddenAttrs(sv), ...exportStep(step(sv)) }
+        ))
     ));
 }
 
@@ -243,6 +242,33 @@ function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
     });
 }
 
+const exportStep = (step) : Partial<step> => (
+    {
+        attrs: <StepAttrsOption> _.omitBy(step.attrs, val => val.hidden),
+        labels: step.labels,
+        attrs_pre: step.attrs_pre,
+        allow_many: step.allow_many,
+    }
+);
+const exportInitialSteps = (steps: string[]) : Partial<step>[] => (
+    _.map(steps, step => ({ ...exportStep(conf_steps.steps[step]), id: step }))
+);
+const initialSteps = (req: req) => (
+    Promise.all(Object.keys(conf_steps.steps).map(stepName => {
+        const step = conf_steps.steps[stepName];
+        if (step.initialStep) {            
+            const empty_sv = { step: stepName, v: <v> {} };
+            return checkAcls(req, empty_sv).then(_ => [stepName]).catch(_ => []);
+        } else {
+            return [];
+        }
+    })).then(_.flatten).then(exportInitialSteps)
+);
+
+router.get('/initialSteps', (req : req, res) => {
+    respondJson(req, res, initialSteps(req));
+});
+    
 router.get('/comptes', (req : req, res) => {
     if (req.query.poll) {
         // raise the limit above what we want

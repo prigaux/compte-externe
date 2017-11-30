@@ -2,7 +2,7 @@ import VueRouter from "vue-router";
 import conf from './conf';
 import * as Helpers from './services/helpers'; 
 import { Create } from './controllers/create';
-import { Moderate, Reuse } from './controllers/moderate';
+import { Moderate } from './controllers/moderate';
 import { Validate } from './controllers/validate';
 import { ModerateList } from './controllers/list';
 
@@ -16,7 +16,6 @@ console.log(template_welcome);
 
 const _routes = {
     '/moderate/:id': Moderate,
-    '/reuse/:uid': Reuse,
     '/validate/:id': Validate,
     '/create/:kind': Create,
     '/moderate': ModerateList,
