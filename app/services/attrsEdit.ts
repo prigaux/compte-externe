@@ -6,6 +6,7 @@ import * as Helpers from '../services/helpers';
 import MixinAttrs from '../attrs/MixinAttrs.vue';
 import PasswordAttrs from '../attrs/PasswordAttrs.vue';
 import BarcodeAttrs from '../attrs/BarcodeAttrs.vue';
+import jpegPhotoAttr from '../attrs/jpegPhotoAttr.vue';
 
 import template_common_attrs from '../templates/common-attrs.html';
 import template_extern_attrs from '../templates/extern-attrs.html';
@@ -63,14 +64,10 @@ Vue.component('common-attrs', {
 Vue.component('extern-attrs', {
     template: template_extern_attrs,
     mixins: [MixinAttrs],
-    data() {
-        return {
-            doGet: null,
-        };
-    },
     methods: {
         structures_search: Ws.structures_search,
    },
 });
+Vue.component('jpegPhotoAttr', jpegPhotoAttr);
 Vue.component('barcode-attrs', BarcodeAttrs);
 Vue.component('password-attrs', PasswordAttrs);
