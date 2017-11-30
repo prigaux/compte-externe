@@ -185,9 +185,9 @@ const api_url = conf.base_pathname + 'api';
             ));
         }
 
-        export function getInScope($scope, id: string, expectedStep: string) : Promise<void> {
+        export function getInScope($scope, id: string, params, expectedStep: string) : Promise<void> {
             var url = api_url + '/comptes/' + id;
-            return axios.get(url).then((resp) => {
+            return axios.get(url, { params }).then((resp) => {
                 var sv = <any>resp.data;
                     if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
                     if (sv.v) {
@@ -196,6 +196,7 @@ const api_url = conf.base_pathname + 'api';
                     }
                     sv.modifyTimestamp = _fromJSONDate(sv.modifyTimestamp);
                     Helpers.eachObject(sv.attrs, (attr) => sv.v[attr] = sv.v[attr]); // ensure key exists for Vuejs setters
+                    Helpers.assign(sv.v, params);
                     $scope.v = sv.v;
                     $scope.attrs = sv.attrs;
                     $scope.step = pick(sv, ['allow_many', 'labels']);

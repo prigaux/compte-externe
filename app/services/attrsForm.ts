@@ -19,7 +19,7 @@ function AttrsForm_data() {
 export const AttrsForm_mixin = Vue.extend({
 
     mounted() {
-        Ws.getInScope(this, this.id, this.expectedStep).then(() => {
+        Ws.getInScope(this, this.id, this.$route.query, this.expectedStep).then(() => {
             if (this.v.noInteraction) this.send();
         });
     },
