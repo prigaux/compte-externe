@@ -1,4 +1,5 @@
 import VueRouter from "vue-router";
+import conf from './conf';
 import * as Helpers from './services/helpers'; 
 import { Create } from './controllers/create';
 import { Moderate, Reuse } from './controllers/moderate';
@@ -34,5 +35,6 @@ Helpers.eachObject(_routes, (path, component) => {
 
 export const router = new VueRouter({
   mode: 'history',
+  base: conf.base_pathname,
   routes,
 });

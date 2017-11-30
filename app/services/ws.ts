@@ -58,8 +58,12 @@ interface Structure {
     description: string;
 }
 
+import conf from '../conf';
+
+const api_url = conf.base_pathname + 'api';
+
         export function structures_search(token : string, maxRows? : number) : Promise<Structure[]> {
-            return axios.get('/api/structures', { params: { token, maxRows } }).then((resp) => resp.data as Structure[]);
+            return axios.get(api_url + '/structures', { params: { token, maxRows } }).then((resp) => resp.data as Structure[]);
         }
 
         function _fromJSONDate(date: string) {
@@ -176,7 +180,7 @@ interface Structure {
         }
 
         export function getInScope($scope, id: string, expectedStep: string) : Promise<void> {
-            var url = '/api/comptes/' + id;
+            var url = api_url + '/comptes/' + id;
             return axios.get(url).then((resp) => {
                 var sv = <any>resp.data;
                     if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
@@ -191,7 +195,7 @@ interface Structure {
         }
 
         export function listInScope($scope, params, cancelToken) : Promise<"ok" | "cancel"> {
-            return axios.get('/api/comptes', { params, cancelToken }).then((resp) => {
+            return axios.get(api_url + '/comptes', { params, cancelToken }).then((resp) => {
                 var svs = resp.data;
                 $scope.svs = svs;
                 return "ok";
@@ -204,13 +208,13 @@ interface Structure {
         }
 
         export function homonymes(id) {
-            return axios.get('/api/homonymes/' + id).then((resp) =>
+            return axios.get(api_url + '/homonymes/' + id).then((resp) =>
                 (<any>resp.data)
                 , _handleErr);
         }
 
         export function set(id: string, v: V) {
-            var url = '/api/comptes/' + id;
+            var url = api_url + '/comptes/' + id;
             var v_ = toWs(v);
             return axios.put(url, v_).then(
                 (resp) => resp.data,
@@ -218,7 +222,7 @@ interface Structure {
         }
 
         export function remove(id: string) {
-            var url = '/api/comptes/' + id;
+            var url = api_url + '/comptes/' + id;
             return axios.delete(url).then( 
                 (resp) => resp.data,
                 _handleErr);

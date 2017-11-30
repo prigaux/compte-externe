@@ -26,6 +26,8 @@ export function respondJson(req: req, res: express.Response, p: Promise<response
     });
 }
 
+if (!client_conf.base_pathname.match(/\/$/)) throw "base_pathname in app/conf.ts must have a trailing slash";
+
 export const index_html = (_req: req, res: express.Response, _next): void => {
     let fs = require('fs');
     let Mustache = require('mustache');
