@@ -1,8 +1,7 @@
 import VueRouter from "vue-router";
 import conf from './conf';
 import * as Helpers from './services/helpers'; 
-import { Create } from './controllers/create';
-import { Moderate } from './controllers/moderate';
+import { AttrsForm } from './services/attrsForm';
 import { Validate } from './controllers/validate';
 import { ModerateList } from './controllers/list';
 
@@ -15,9 +14,9 @@ import template_awaiting_moderation from './templates/awaiting-moderation.html';
 console.log(template_welcome);
 
 const _routes = {
-    '/moderate/:id': Moderate,
+    '/moderate/:wanted_id': AttrsForm,
     '/validate/:id': Validate,
-    '/create/:kind': Create,
+    '/create/:initialStep': AttrsForm,
     '/moderate': ModerateList,
     '/': { template: template_welcome },
     '/create': { template: template_welcome_create },

@@ -19,10 +19,27 @@
          {{anneeInscription}}/{{anneeInscription+1}}
      </span>
  </div>
-           
+
+  <div v-if="check_homonyms">
+      <Homonyms :v="v" :id="id" @merge="merge"></Homonyms>
+  </div>
                
  <form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">
 
+   <fieldset>  
+    <my-bootstrap-form-group name="Shib_Identity_Provider" label="Etablissement" v-if="v.Shib_Identity_Provider">
+      <input name="Shib_Identity_Provider" :value="v.Shib_Identity_Provider | formatIdpId" type="text" disabled class="form-control">
+    </my-bootstrap-form-group>
+ 
+    <my-bootstrap-form-group name="eduPersonPrincipalName" label="Identifiant dans l'établissement" v-if="v.eduPersonPrincipalName">
+      <input name="eduPersonPrincipalName" v-model="v.eduPersonPrincipalName" type="text" disabled form-control>
+    </my-bootstrap-form-group>
+ 
+    <my-bootstrap-form-group name="mail" label="Mail" v-if="v.mail">
+      <input name="mail" v-model="v.mail" type="text" disabled form-control>
+    </my-bootstrap-form-group>
+   </fieldset>
+    
    <common-attrs v-model="v" :attrs="other_attrs" :submitted="submitted"></common-attrs>
    <extern-attrs v-model="v" :attrs="other_attrs" :submitted="submitted"></extern-attrs>
    <password-attrs v-model="v" :attrs="other_attrs" :submitted="submitted"></password-attrs>
