@@ -157,7 +157,7 @@ const api_url = conf.base_pathname + 'api';
 
         let restarting = false;
 
-        function _handleErr(err : AxiosError) {
+        function _handleErr(err : AxiosError, $scope = null) {
             if (restarting) return Promise.reject("restarting");
 
             if (!err.response) {
@@ -169,11 +169,11 @@ const api_url = conf.base_pathname + 'api';
             }
 
             let resp = err.response;
-            if (resp.status === 401) {
-                console.log("must relog");
+            if (resp.status === 401 && $scope && $scope.$route.path !== '/login') {
+                console.log("must relog", resp.headers.toString());
                 restarting = true;
-                document.location.href = document.location.href;
-                return Promise.reject("restarting...");
+                document.location.href = conf.base_pathname + 'login/' + ($scope.$route.query.idp || 'local') + '?then=' + encodeURIComponent($scope.$route.fullPath);
+                return Promise.reject("logging...");
             } else {
                 const msg = resp.data && resp.data.error || err.message;
                 console.error(resp || err)
@@ -203,7 +203,7 @@ const api_url = conf.base_pathname + 'api';
                     $scope.v = sv.v;
                     $scope.attrs = sv.attrs;
                     $scope.step = pick(sv, ['allow_many', 'labels']);
-            }, _handleErr);
+            }, err => _handleErr(err, $scope));
         }
 
         export function listInScope($scope, params, cancelToken) : Promise<"ok" | "cancel"> {
@@ -215,7 +215,7 @@ const api_url = conf.base_pathname + 'api';
                 if (axios.isCancel(err)) {
                     return "cancel";
                 }
-                return _handleErr(err);
+                return _handleErr(err, $scope);
             });
         }
 

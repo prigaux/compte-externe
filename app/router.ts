@@ -9,6 +9,7 @@ import template_welcome from './templates/welcome.html'
 console.log(template_welcome);
 
 const _routes = {
+    '/login/:kind?': { render(_h) { router.replace(this.$route.query.then) } }, // TODO, use vue-router redirect
     '/steps/:kind?': ModerateList,
     '/:stepName/:wanted_id?': AttrsForm,
     '/': { template: template_welcome },
