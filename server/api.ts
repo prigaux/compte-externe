@@ -88,7 +88,8 @@ function mayNotifyModerators(req: req, sv: sv, notifyKind: string) {
     if (!notify) return;
     let mails = sv.moderators;
     if (mails.length) {
-        let params = _.merge({ to: mails.join(', '), moderator: req.user, conf }, sv);
+        const sv_url = conf.mainUrl + "/" + sv.step + "/" + sv.id;
+        let params = _.merge({ to: mails.join(', '), moderator: req.user, conf, sv_url }, sv);
         mail.sendWithTemplate(notify[notifyKind], params);
     }
 }
@@ -104,38 +105,42 @@ function checkAcls(req: req, sv: sv) {
     });
 }
 
-function first_sv(req: req): Promise<sv> {
-    let stepName = conf_steps.firstStep(req.params.step, req);
+function first_sv(req: req, wanted_step: string): Promise<sv> {
+    let stepName = conf_steps.firstStep(wanted_step, req);
     let empty_sv = { step: stepName, v: <v> {} };
     if (!step(empty_sv).initialStep) throw `${stepName} is not a valid initial step`;
     return action_pre(req, empty_sv);
 }
 
-function getRaw(req: req, id: id): Promise<sv> {
+function getRaw(req: req, id: id, wanted_step: string): Promise<sv> {
     let svP;
     if (id === 'new') {
-        svP = first_sv(req);
+        svP = first_sv(req, wanted_step);
     } else {
         svP = db.get(id).tap(sv => {
             if (!sv) throw "invalid id " + id;
             if (!sv.step) throw "internal error: missing step for id " + id;
+            if (wanted_step && sv.step !== wanted_step) {
+                console.error("user asked for step " + wanted_step + ", but sv is in state " + sv.step);
+                throw "Bad Request";
+            }
         });
     }
     return svP.tap(sv => checkAcls(req, sv));
 }
 
-function get(req: req, id: id) {
-    return getRaw(req, id).then(sv_removeHiddenAttrs).then(sv => (
+function get(req: req, id: id, wanted_step: string) {
+    return getRaw(req, id, wanted_step).then(sv_removeHiddenAttrs).then(sv => (
         { ...sv, ...exportStep(step(sv)) }
     ));
 }
 
-function set_new_many(req: req, vs: v[]) {
-    return Promise.all(vs.map(v => set(req, 'new', v).catch(error => (console.log(error), { error }))));
+function set_new_many(req: req, wanted_step: string, vs: v[]) {
+    return Promise.all(vs.map(v => set(req, 'new', wanted_step, v).catch(error => (console.log(error), { error }))));
 }
 
-function set(req: req, id: id, v: v) {
-    return getRaw(req, id).then(sv => (
+function set(req: req, id: id, wanted_step: string, v: v) {
+    return getRaw(req, id, wanted_step).then(sv => (
         setRaw(req, sv, v)
     )).then(svr => {
         let r = <r> { success: true, ...svr.response };
@@ -204,8 +209,8 @@ function removeRaw(id: id) {
     });
 }
 
-function remove(req: req, id: id) {
-    return getRaw(req, id).then(sv => {
+function remove(req: req, id: id, wanted_step: string) {
+    return getRaw(req, id, wanted_step).then(sv => {
         // acls are checked => removing is allowed
         mayNotifyModerators(req, sv, 'rejected');
         return removeRaw(sv.id);
@@ -231,7 +236,7 @@ const body_to_v = (o) => (
 let _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(<{}> v, attrs));
 
 function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
-    return getRaw(req, id).then(sv => {
+    return getRaw(req, id, undefined).then(sv => {
         // acls are checked => removing is allowed
         let sns = _merge_at(sv.v, conf.ldap.people.sns);
         let givenNames = _merge_at(sv.v, conf.ldap.people.givenNames);
@@ -286,28 +291,20 @@ router.get('/comptes', (req : req, res) => {
     }
 });
 
-router.get('/comptes/new/:step', (req : req, res) => {
-    respondJson(req, res, get(req, 'new'));
-});
-
-router.get('/comptes/:id', (req : req, res) => {
-    respondJson(req, res, get(req, req.params.id));
-});
-
-router.put('/comptes/new/:step', (req: req, res) => {
-    respondJson(req, res, set(req, 'new', body_to_v(req.body)));
+router.get('/comptes/:id/:step', (req : req, res) => {
+    respondJson(req, res, get(req, req.params.id, req.params.step));
 });
 
 router.put('/comptes/new_many/:step', (req: req, res) => {
-    respondJson(req, res, set_new_many(req, req.body.map(body_to_v)));
+    respondJson(req, res, set_new_many(req, req.params.step, req.body.map(body_to_v)));
 });
 
-router.put('/comptes/:id', (req: req, res) => {
-    respondJson(req, res, set(req, req.params.id, body_to_v(req.body)));
+router.put('/comptes/:id/:step?', (req: req, res) => {
+    respondJson(req, res, set(req, req.params.id, req.params.step, body_to_v(req.body)));
 });
 
-router.delete('/comptes/:id', (req: req, res) => {
-    respondJson(req, res, remove(req, req.params.id));
+router.delete('/comptes/:id/:step?', (req: req, res) => {
+    respondJson(req, res, remove(req, req.params.id, req.params.step));
 });
 
 router.get('/homonymes/:id', (req: req, res) => {

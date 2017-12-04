@@ -20,7 +20,7 @@ If ```GET /comptes/new/:step```
 * create empty sv with sv.step = :step
 * ```.action_pre``` is called with params (req, empty sv)
 
-If ```GET /comptes/:id```
+If ```GET /comptes/:id/:step```
 * read sv from database
 
 With current sv.step:
@@ -34,7 +34,7 @@ If ```PUT /comptes/new/:step```
 * create empty sv with sv.step = :step
 * ```.action_pre``` is called with params (req, empty sv)
 
-If ```PUT /comptes/:id```
+If ```PUT /comptes/:id/:step```
 * read sv from database
 
 With current sv.step:

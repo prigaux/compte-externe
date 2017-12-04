@@ -190,10 +190,9 @@ const api_url = conf.base_pathname + 'api';
         }
 
         export function getInScope($scope, id: string, params, expectedStep: string) : Promise<void> {
-            var url = api_url + '/comptes/' + id;
+            var url = api_url + '/comptes/' + id + "/" + expectedStep;
             return axios.get(url, { params }).then((resp) => {
                 var sv = <any>resp.data;
-                    if (expectedStep && sv.step !== expectedStep) alert("expecting " + expectedStep + " got " + sv.step);
                     if (sv.v) {
                         sv.v = fromWs(sv.v);
                         sv.v_orig = Helpers.copy(sv.v);
@@ -226,8 +225,8 @@ const api_url = conf.base_pathname + 'api';
                 , _handleErr);
         }
 
-        export function set(id: string, v: V) {
-            var url = api_url + '/comptes/' + id;
+        export function set(id: string, step: string, v: V) {
+            var url = api_url + '/comptes/' + id + "/" + step;
             var v_ = toWs(v);
             return axios.put(url, v_).then(
                 (resp) => resp.data,
@@ -242,8 +241,8 @@ const api_url = conf.base_pathname + 'api';
                 _handleErr);
         }
 
-        export function remove(id: string) {
-            var url = api_url + '/comptes/' + id;
+        export function remove(id: string, step: string) {
+            var url = api_url + '/comptes/' + id + "/" + step;
             return axios.delete(url).then( 
                 (resp) => resp.data,
                 _handleErr);

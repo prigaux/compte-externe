@@ -9,7 +9,7 @@
  <ul>
   <li v-for="sv in svs_">
   le {{sv.modifyTimestamp | date('dd/MM/yyyy à HH:mm')}} : 
-   <router-link :to="'/moderate/' + sv.id">
+   <router-link :to="'/' + sv.step + '/' + sv.id">
      {{sv.v.sn || 'inconnu'}}
      {{sv.v.givenName || 'inconnu'}}
    </router-link>

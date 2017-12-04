@@ -2,21 +2,16 @@ import VueRouter from "vue-router";
 import conf from './conf';
 import * as Helpers from './services/helpers'; 
 import { AttrsForm } from './services/attrsForm';
-import { Validate } from './controllers/validate';
 import { ModerateList } from './controllers/list';
 
 import template_welcome from './templates/welcome.html'
-import template_welcome_create from './templates/welcome-create.html'
 
 console.log(template_welcome);
 
 const _routes = {
-    '/moderate/:wanted_id': AttrsForm,
-    '/validate/:id': Validate,
-    '/create/:initialStep': AttrsForm,
-    '/moderate': ModerateList,
+    '/steps/:kind?': ModerateList,
+    '/:stepName/:wanted_id?': AttrsForm,
     '/': { template: template_welcome },
-    '/create': { template: template_welcome_create },
 };
 
 const routes = [];

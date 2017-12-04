@@ -13,7 +13,7 @@
                     <td>
                         <span v-if="vr.success">
                             <span v-if="vr.ignored">Ignoré</span>
-                            <span v-else-if="vr.in_moderation"><router-link to='/moderate'>Doublon détecté</router-link></span>
+                            <span v-else-if="vr.in_moderation"><router-link :to='"/" + vr.step + "/" + vr.id'>Doublon détecté</router-link></span>
                             <span v-else>Ok</span>                            
                         </span>
                         <span v-else>

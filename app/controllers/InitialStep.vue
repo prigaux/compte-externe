@@ -8,7 +8,7 @@
     </div>
     <div v-else>
         <h4>
-            <router-link :to="'/create/' + step.id" v-html="step.labels.title"></router-link>
+            <router-link :to="'/' + step.id" v-html="step.labels.title"></router-link>
         </h4>
     </div>
     <p style="margin-bottom: 2em"></p>
@@ -28,7 +28,7 @@ export default Vue.extend({
    },
    methods: {
      reuse(u) {
-        router.push(`/create/${this.step.id}?uid=${u.uid}`);
+        router.push(`/${this.step.id}?uid=${u.uid}`);
      },
   },  
 });

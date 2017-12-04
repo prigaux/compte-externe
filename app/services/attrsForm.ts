@@ -31,24 +31,22 @@ function AttrsForm_data() {
 
 export const AttrsForm = Vue.extend({
     mounted() {
-        Ws.getInScope(this, this.id, this.$route.query, this.expectedStep).then(() => {
+        Ws.getInScope(this, this.id, this.$route.query, this.stepName).then(() => {
             if (this.v.noInteraction) this.send();
         });
     },
 
     template,
-    props: [ 'wanted_id', 'initialStep' ],
+    props: [ 'wanted_id', 'stepName' ],
     data: AttrsForm_data,
     components: { ImportFile, ImportResult, Homonyms },
 
     computed: {
         id() {
-            if (this.initialStep) return "new/" + this.initialStep;
-            if (this.wanted_id) return this.wanted_id;
-            throw "expected either initialStep or id";
+            return this.wanted_id || "new";
         },
-        expectedStep() {
-            return this.initialStep || null;
+        initialStep() {
+            return !this.wanted_id && this.stepName;
         },
         check_homonyms() {
             return !this.initialStep && this.attrs && this.attrs.uid;
@@ -97,7 +95,7 @@ export const AttrsForm = Vue.extend({
             } else if (this.initialStep) {
                 this.templated_response(resp, template_auto_created);
             } else {
-                router.push('/moderate');            
+                router.push('/steps');            
             }
         } else if (resp.step === 'validate_email') {
             this.templated_response(resp, template_awaiting_email_validation);
@@ -119,11 +117,11 @@ export const AttrsForm = Vue.extend({
             // TODO: to test
             document.location.href = conf.base_pathname;
         } else {
-            router.push('/moderate');            
+            router.push('/steps');            
         }          
       },
       send() {
-          Ws.set(this.id, this.v).then(resp => {
+          Ws.set(this.id, this.stepName, this.v).then(resp => {
               if (resp.error === "no_moderators") {
                   alert(conf.error_msg.noModerators(this.v.structureParrainS.name));
                   this.v.structureParrainS = undefined;
@@ -135,7 +133,7 @@ export const AttrsForm = Vue.extend({
       send_new_many() {
             this.to_import.lines.forEach(v => defaults(v, this.v));
 
-            return Ws.new_many(this.initialStep, this.to_import.lines).then(resp => {
+            return Ws.new_many(this.stepName, this.to_import.lines).then(resp => {
                 this.imported = resp;
                 this.imported.forEach((resp, i) => {
                     resp.v = this.to_import.lines[i];
@@ -157,7 +155,7 @@ export const AttrsForm = Vue.extend({
           this.v_orig = Helpers.copy(this.v_orig); // make it clear for Vuejs that v_orig has been updated
         },
       reject() {
-        Ws.remove(this.id).then(this.nextStep);
+        Ws.remove(this.id, this.stepName).then(this.nextStep);
       }
     },
 });

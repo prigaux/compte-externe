@@ -198,6 +198,7 @@ export const genLogin: simpleAction = (_req, sv) => {
 export const sendValidationEmail: action = (_req, sv) => {
     let v = sv.v;
     console.log("action sendValidationEmail to " + v.supannMailPerso);
-    mail.sendWithTemplate('validation.html', { conf, v, to: v.supannMailPerso, id: sv.id });
+    const sv_url = conf.mainUrl + "/" + sv.step + "/" + sv.id;
+    mail.sendWithTemplate('validation.html', { conf, v, to: v.supannMailPerso, sv_url });
     return Promise.resolve({ v });
 };
