@@ -8,6 +8,7 @@
   "scripts": {
     "prestart": "npm install",
     "build": "concurrently 'tsc -p server' 'webpack'",
+    "build:w": "concurrently 'tsc --watch -p server' 'webpack --watch'",
     "start:w": "concurrently 'tsc --watch -p server/' 'webpack --watch' 'NODE_ENV=test nodemon --watch server/ start-server.js' 'live-reload --port 35729 app/'",
     "test:w": "mocha --watch server/tests",
     "karma": "karma start"
