@@ -4,7 +4,7 @@ import * as Helpers from '../services/helpers';
 
 Vue.component('input-with-validity', {
   template: "<input :name='name' :value='value' :type='type'>",
-  props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType', 'pattern'],
+  props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType', 'pattern', 'min', 'max'],
   data: () => ({ prev: undefined }),
   mounted() {
     let element = this.$el;
@@ -27,10 +27,9 @@ Vue.component('input-with-validity', {
             this.checkValidity();
         }
     },
-    sameAs(v) {
-        this.$el.setAttribute('pattern', Helpers.escapeRegexp(v));
-        this.checkValidity();
-    },
+    min(v) { this._attrUpdated('min', v) },
+    max(v) { this._attrUpdated('max', v) },
+    sameAs(v) { this._attrUpdated('pattern', Helpers.escapeRegexp(v)) },
   },
   methods: {
     tellParent() { 
@@ -48,8 +47,14 @@ Vue.component('input-with-validity', {
             this.$emit('update:validity', validity);
         }          
     },
+    _attrUpdated(name, v) {
+        this.$el.setAttribute(name, v);
+        this.checkValidity();
+    },
     _setPattern() {
-        if (this.pattern) this.$el.setAttribute('pattern', this.pattern);
+        for (const name of ['pattern', 'min', 'max']) {
+            if (this[name]) this.$el.setAttribute(name, this[name]);
+        }
         if (this.realType === 'phone') this.$el.setAttribute('pattern', conf.pattern.phone);
         if (this.realType === 'frenchPostalCode') this.$el.setAttribute('pattern', conf.pattern.frenchPostalCode);
     },
