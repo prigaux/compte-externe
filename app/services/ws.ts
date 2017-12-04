@@ -37,6 +37,7 @@ export interface V extends VCommon {
     birthDay?: MyDate;
     homePostalAddress?: HomePostalAddress;
     structureParrainS: { key: string, name: string, description: string };
+    noInteraction?: boolean;
 }
 export interface SVRaw {
     v: VRaw;

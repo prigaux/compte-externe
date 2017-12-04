@@ -54,6 +54,9 @@ export const AttrsForm = Vue.extend({
         check_homonyms() {
             return !this.initialStep && this.attrs && this.attrs.uid;
         },
+        noInteraction() {
+            return this.v.noInteraction || Object.keys(this.attrs).length === 0;
+        },
         other_attrs(): StepAttrsOption {
             if (this.to_import && this.attrs) {
                 return Helpers.filter(this.attrs, (_, k) => !this.to_import.fields.includes(k));
@@ -76,7 +79,7 @@ export const AttrsForm = Vue.extend({
     methods: {
         init() {
             Ws.getInScope(this, this.id, this.$route.query, this.stepName).then(() => {
-                if (this.v.noInteraction) this.send();
+                if (this.noInteraction) this.send();
             });    
         },
       submit(event) {
