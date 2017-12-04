@@ -5,6 +5,7 @@ import * as Ws from '../services/ws';
 import * as Helpers from '../services/helpers'; 
 import MixinAttrs from '../attrs/MixinAttrs.vue';
 import PasswordAttrs from '../attrs/PasswordAttrs.vue';
+import DateAttr from '../attrs/DateAttr.vue';
 import BarcodeAttrs from '../attrs/BarcodeAttrs.vue';
 import jpegPhotoAttr from '../attrs/jpegPhotoAttr.vue';
 
@@ -13,15 +14,11 @@ import template_extern_attrs from '../templates/extern-attrs.html';
 
 
 const accentsRange = '\u00C0-\u00FC';
-const month2maxDay = [undefined,
-        31, 29, 31, 30, 31, 30,
-        31, // july
-        31, 30, 31, 30, 31];
-
 
 Vue.component('common-attrs', {
     template: template_common_attrs,
     mixins: [MixinAttrs],
+    components: { DateAttr },
     data() {
         return {
             validity: { day: {}, month: {}, year: {} },
@@ -30,9 +27,6 @@ Vue.component('common-attrs', {
         };
     },
     computed: {
-        maxDay() {
-            return month2maxDay[this.month] || 31;
-        },
         allowedCharsInNames() {
             return "[A-Za-z" + accentsRange + "'. -]";
         },

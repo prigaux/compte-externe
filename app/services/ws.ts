@@ -3,22 +3,6 @@ import { pick } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
-function padLeft(s: string | number, width: number) {
-    let n = s + '';
-    return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
-}
-
-class MyDate {
-    constructor(public year: number, public month: number, public day: number) {
-    }
-    toString() {
-        return [padLeft(this.day, 2), padLeft(this.month, 2), padLeft(this.year, 4)].join('/');
-    }
-    toDate() {
-        return new Date(Date.UTC(this.year, this.month - 1, this.day));
-    }
-}
-
 type HomePostalAddress =
     { country: string, 
       lines: string,
@@ -34,7 +18,7 @@ export interface VRaw extends VCommon {
     homePostalAddress?: string;
 }
 export interface V extends VCommon {
-    birthDay?: MyDate;
+    birthDay?: Date;
     homePostalAddress?: HomePostalAddress;
     structureParrainS: { key: string, name: string, description: string };
     noInteraction?: boolean;
@@ -74,17 +58,15 @@ const api_url = conf.base_pathname + 'api';
             return axios.get(api_url + '/structures', { params: { token, maxRows } }).then((resp) => resp.data as Structure[]);
         }
 
-        function _fromJSONDate(date: string) {
-            var d = new Date(date);
-            return d && new MyDate(d.getUTCFullYear(), 1 + d.getUTCMonth(), d.getUTCDate());
-        }
+        const _toDate = (year: number, month: number, day: number) => new Date(Date.UTC(year, month - 1, day));
+                
         function _fromLDAPDate(date: string) {
             var m = date.match(/^([0-9]{4})([0-9]{2})([0-9]{2})[0-9]{6}Z?$/);
-            return m && new MyDate(parseInt(m[1]), parseInt(m[2]), parseInt(m[3]));
+            return m && _toDate(parseInt(m[1]), parseInt(m[2]), parseInt(m[3]));
         }
         function _fromFrenchDate(date: string) {
             var m = date.match(/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/);
-            return m && new MyDate(parseInt(m[3]), parseInt(m[2]), parseInt(m[1]));
+            return m && _toDate(parseInt(m[3]), parseInt(m[2]), parseInt(m[1]));
         }
 
         function _fromHomePostalAddress(addr: string): HomePostalAddress {
@@ -121,10 +103,7 @@ const api_url = conf.base_pathname + 'api';
             var v_: V = <any> Helpers.copy(v);
             //v.birthDay = "19751002000000Z"; //"1975-10-02";
             if (v.birthDay) {
-                v_.birthDay = _fromLDAPDate(v.birthDay) || _fromJSONDate(v.birthDay);
-            }
-            if (!v_.birthDay) {
-                v_.birthDay = new MyDate(undefined, undefined, undefined);
+                v_.birthDay = new Date(v.birthDay);
             }
             v_.homePostalAddress = _fromHomePostalAddress(v.homePostalAddress);
             v_.structureParrainS = undefined;
@@ -141,9 +120,6 @@ const api_url = conf.base_pathname + 'api';
 
         export function toWs(v: V): VRaw {
             var v_: VRaw = <any>Helpers.copy(v);
-            if (v.birthDay && v.birthDay.year) {
-                v_.birthDay = v.birthDay.toDate().toJSON();
-            }
             if (v.homePostalAddress) {
                 v_.homePostalAddress = _toHomePostalAddress(v.homePostalAddress);
             }
@@ -198,7 +174,7 @@ const api_url = conf.base_pathname + 'api';
                         sv.v = fromWs(sv.v);
                         sv.v_orig = Helpers.copy(sv.v);
                     }
-                    sv.modifyTimestamp = _fromJSONDate(sv.modifyTimestamp);
+                    sv.modifyTimestamp = new Date(sv.modifyTimestamp);
                     Helpers.eachObject(sv.attrs, (attr) => sv.v[attr] = sv.v[attr]); // ensure key exists for Vuejs setters
                     Helpers.assign(sv.v, params);
                     $scope.v = sv.v;

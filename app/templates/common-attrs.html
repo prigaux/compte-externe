@@ -16,26 +16,7 @@
     <input-with-validity name="birthName" v-model="v.birthName" type="text" title="si différent du nom d'usage" :allowed-chars="allowedCharsInNames" :validity.sync="validity.birthName"></input-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="day" multi="true" :label="label.birthDay" v-if="attrs.birthDay">
-    <div class="col-xs-2" :class="{'has-error': validity.submitted && !validity.day.valid }">
-      <div>
-        <input-with-validity name="day" v-model="v.birthDay.day" type="number" min="1" :max="maxDay" placeholder="Jour" required :validity.sync="validity.day"></input-with-validity>
-        <validation-errors name="day" :validity="validity"></validation-errors>
-      </div>
-    </div>
-    <div class="col-xs-2" :class="{'has-error': validity.submitted && !validity.month.valid }">
-      <div>
-        <input-with-validity name="month" v-model="v.birthDay.month" type="number" min="1" max="12" placeholder="Mois" required :validity.sync="validity.month"></input-with-validity>
-        <validation-errors name="month" :validity="validity"></validation-errors>
-      </div>
-    </div>
-    <div class="col-xs-5" :class="{'has-error': validity.submitted && !validity.year.valid }">
-      <div>
-        <input-with-validity name="year" v-model="v.birthDay.year" type="number" min="1900" :max="maxYear" placeholder="Année" required  :validity.sync="validity.year"></input-with-validity>
-        <validation-errors name="year" :validity="validity"></validation-errors>
-      </div>
-    </div>   
-  </my-bootstrap-form-group>
+  <DateAttr v-model="v.birthDay" minYear="1900" :maxYear="maxYear" :label="label.birthDay" v-if="attrs.birthDay"  :submitted="submitted"></DateAttr>
 
 <div v-if="attrs.homePostalAddress">
   <my-bootstrap-form-group name="country" :label="label.homePostalAddress" :validity="validity">
