@@ -9,9 +9,6 @@ import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
 import Homonyms from '../controllers/Homonyms.vue';
 import template from '../templates/create.html';
-import template_awaiting_moderation from '../templates/awaiting-moderation.html';
-import template_awaiting_email_validation from '../templates/awaiting-email-validation.html';
-import template_auto_created from '../templates/auto-created.html';
 
 function AttrsForm_data() {
     return {
@@ -93,30 +90,24 @@ export const AttrsForm = Vue.extend({
           }
       },
       nextStep(resp) {
-        console.log("nextStep");
+        console.log("nextStep", resp);
+        const template = resp.labels && resp.labels.added || this.step && this.step.labels && this.step.labels.accepted;
+        if (template) {
+            this.templated_response(resp, "<div>" + template + "</div>");
+            return;
+        }
         if (resp.login && !resp.step) {
             // user created
             if (this.v.supannAliasLogin &&
                 this.v.supannAliasLogin !== resp.login) {
                 alert("L'utilisateur a été créé, mais avec l'identifiant « " + resp.login + "». Il faut prévenir l'utilisateur");
-                this.go_back();
             }
             if (conf.printCardUrl && this.attrs.barcode && !this.v.barcode) {
                 document.location.href = conf.printCardUrl(resp.login);
-            } else if (this.initialStep) {
-                this.templated_response(resp, template_auto_created);
-            } else {
-                router.push('/steps');            
+                return;
             }
-        } else if (this.step && this.step.labels && this.step.labels.accepted) {
-            this.templated_response(resp, "<div>" + this.step.labels.accepted + "</div>");
-        } else if (resp.step === 'validate_email') {
-            this.templated_response(resp, template_awaiting_email_validation);
-        } else if (resp.login) {
-            this.templated_response(resp, template_awaiting_moderation);
-        } else {
-            this.go_back();
         }
+        this.go_back();
       },
       templated_response(resp, template: string) {
         this.resp = resp;

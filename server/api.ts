@@ -144,7 +144,10 @@ function set(req: req, id: id, wanted_step: string, v: v) {
         setRaw(req, sv, v)
     )).then(svr => {
         let r = <r> { success: true, ...svr.response };
-        if (svr.step) r.step = svr.step;
+        if (svr.step) {
+            r.step = svr.step;
+            r.labels = step(svr).labels;
+        }
         return r;
     });
 }

@@ -26,7 +26,7 @@ type sv = {
   attrs?: StepAttrsOption,
 }
 
-type r = response & { success: boolean, step?: string }
+type r = response & { success: boolean, step?: string, labels?: StepLabels }
 type vr = {v: v; response?: response }
 type svr = sv & { response?: response }
 type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
@@ -51,6 +51,8 @@ interface StepLabels {
     title?: string;
     okButton?: string;
     cancelButton?: string;
+
+    added?: string;
     accepted?: string;
 }
 
