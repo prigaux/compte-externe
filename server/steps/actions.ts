@@ -58,15 +58,18 @@ export const getExistingUser: simpleAction = (req, _sv)  => (
     onePerson(filters.eq("uid", req.query.uid)).then(v => ({ v }))
 );
 
-export function chain(l_actions: simpleAction[]): action {
-    return (req, sv_: sv) => {
-        let sv: Promise<vr> = Promise.resolve(sv_);
+export function chain(l_actions: action[]): action {
+    return (req, sv: sv) => {
+        let vr: Promise<vr> = Promise.resolve(sv);
         l_actions.forEach(action => {
-            sv = sv.then(sv => (
-                action(req, sv)
+            vr = vr.then(vr => (
+                action(req, { ...sv, v: vr.v }).then(vr2 => (
+                    // merge "response"s
+                    { v: vr2.v, response: { ...vr.response, ...vr2.response } }
+                ))
             ));
         });
-        return sv;
+        return vr;
     };
 }
 
