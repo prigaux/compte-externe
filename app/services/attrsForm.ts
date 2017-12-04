@@ -91,6 +91,9 @@ export const AttrsForm = Vue.extend({
       },
       nextStep(resp) {
         console.log("nextStep", resp);
+        if (resp.forceBrowserExit) {
+            Helpers.createCookie('forceBrowserExit', 'true', 0);
+        }
         const template = resp.labels && resp.labels.added || this.step && this.step.labels && this.step.labels.accepted;
         if (template) {
             this.templated_response(resp, "<div>" + template + "</div>");

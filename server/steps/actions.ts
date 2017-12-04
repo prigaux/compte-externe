@@ -205,3 +205,8 @@ export const sendValidationEmail: action = (_req, sv) => {
     mail.sendWithTemplate('validation.html', { conf, v, to: v.supannMailPerso, sv_url });
     return Promise.resolve({ v });
 };
+
+// simple flag sent to the browser
+export const forceBrowserExit: action = (_req, { v }) => (
+    Promise.resolve({ v, response: { forceBrowserExit: true } })
+);
