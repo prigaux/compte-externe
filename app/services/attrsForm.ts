@@ -108,6 +108,8 @@ export const AttrsForm = Vue.extend({
             } else {
                 router.push('/steps');            
             }
+        } else if (this.step && this.step.labels && this.step.labels.accepted) {
+            this.templated_response(resp, "<div>" + this.step.labels.accepted + "</div>");
         } else if (resp.step === 'validate_email') {
             this.templated_response(resp, template_awaiting_email_validation);
         } else if (resp.login) {

@@ -51,6 +51,7 @@ interface StepLabels {
     title?: string;
     okButton?: string;
     cancelButton?: string;
+    accepted?: string;
 }
 
 interface StepNotify {
