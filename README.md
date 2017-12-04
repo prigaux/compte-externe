@@ -85,7 +85,7 @@ TODO
 ## Apache shibboleth SP configuration
 
 ```apache
-<Location /api>
+<Location />
   Authtype shibboleth
   require shibboleth
   ShibRequestSetting requireSession 0
@@ -93,10 +93,8 @@ TODO
 </Location>
 
 <LocationMatch ^/(moderate|create/federation|create/cas)>
-  Authtype shibboleth
   require valid-user
   ShibRequireSession On
-  ShibUseHeaders On
 </LocationMatch>
 
 <LocationMatch ^/(create/cas)>
