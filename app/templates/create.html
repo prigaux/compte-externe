@@ -4,9 +4,9 @@
     <component :is="resp.component" :resp="resp"></component>
  </div>
  <div v-else-if="v">
+  <h4 style="margin-top: 2em" v-html="step.labels.title"></h4>
 
   <div v-if="step.allow_many">
-        <h4 style="margin-top: 2em" v-html="step.labels.title"></h4>
     
         <div v-if="imported">
             <ImportResult :imported="imported" :ordered_fields="to_import.fields" @done="imported = to_import = undefined"></ImportResult>
@@ -51,7 +51,7 @@
    <barcode-attrs v-model="v" :attrs="other_attrs" :submitted="submitted" :v_orig="v_orig"></barcode-attrs>   
    
    <my-bootstrap-form-group>
-      <button class="btn btn-primary" type="submit">
+      <button class="btn btn-primary" type="submit" v-if="step.labels.okButton">
         <span class="glyphicon glyphicon-plus"></span>
         <span v-html="step.labels.okButton"></span>
       </button>
