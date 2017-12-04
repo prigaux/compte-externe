@@ -1,6 +1,11 @@
-<div class="normalContent" v-if="v">
+<div class="normalContent">
 
-<div v-if="step.allow_many">
+ <div v-if="resp && resp.component">
+    <component :is="resp.component" :resp="resp"></component>
+ </div>
+ <div v-else-if="v">
+
+  <div v-if="step.allow_many">
         <h4 style="margin-top: 2em" v-html="step.labels.title"></h4>
     
         <div v-if="imported">
@@ -59,5 +64,5 @@
 
  </form>
 </div>
-
+</div>
 </div>

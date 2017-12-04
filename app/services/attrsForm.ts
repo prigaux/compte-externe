@@ -9,6 +9,9 @@ import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
 import Homonyms from '../controllers/Homonyms.vue';
 import template from '../templates/create.html';
+import template_awaiting_moderation from '../templates/awaiting-moderation.html';
+import template_awaiting_email_validation from '../templates/awaiting-email-validation.html';
+import template_auto_created from '../templates/auto-created.html';
 
 function AttrsForm_data() {
     return {
@@ -19,6 +22,7 @@ function AttrsForm_data() {
       v_orig: <V> undefined,
       errorMessages: {},
       submitted: false,
+      resp: undefined,
 
       to_import: undefined,
       imported: <any[]> undefined,
@@ -91,17 +95,24 @@ export const AttrsForm = Vue.extend({
             if (conf.printCardUrl && this.attrs.barcode && !this.v.barcode) {
                 document.location.href = conf.printCardUrl(resp.login);
             } else if (this.initialStep) {
-                router.push('/auto-created/' + resp.login);
+                this.templated_response(resp, template_auto_created);
             } else {
                 router.push('/moderate');            
             }
         } else if (resp.step === 'validate_email') {
-            router.push('/awaiting-email-validation');
+            this.templated_response(resp, template_awaiting_email_validation);
         } else if (resp.login) {
-            router.push('/awaiting-moderation/' + resp.login);
+            this.templated_response(resp, template_awaiting_moderation);
         } else {
             this.go_back();
         }
+      },
+      templated_response(resp, template: string) {
+        this.resp = resp;
+        this.resp.component = Vue.extend({ 
+            props: ['resp'], 
+            template,
+        });
       },
       go_back() {
         if (this.initialStep) {

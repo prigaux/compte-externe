@@ -7,9 +7,6 @@ import { ModerateList } from './controllers/list';
 
 import template_welcome from './templates/welcome.html'
 import template_welcome_create from './templates/welcome-create.html'
-import template_auto_created from './templates/auto-created.html';
-import template_awaiting_email_validation from './templates/awaiting-email-validation.html';
-import template_awaiting_moderation from './templates/awaiting-moderation.html';
 
 console.log(template_welcome);
 
@@ -20,9 +17,6 @@ const _routes = {
     '/moderate': ModerateList,
     '/': { template: template_welcome },
     '/create': { template: template_welcome_create },
-    '/auto-created/:id': { props: ['id'], template: template_auto_created },
-    '/awaiting-email-validation': { template: template_awaiting_email_validation },
-    '/awaiting-moderation/:id': { props: ['id'], template: template_awaiting_moderation },
 };
 
 const routes = [];
