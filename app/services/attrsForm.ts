@@ -31,16 +31,19 @@ function AttrsForm_data() {
 
 export const AttrsForm = Vue.extend({
     mounted() {
-        Ws.getInScope(this, this.id, this.$route.query, this.stepName).then(() => {
-            if (this.v.noInteraction) this.send();
-        });
+        this.init();
     },
-
     template,
     props: [ 'wanted_id', 'stepName' ],
     data: AttrsForm_data,
     components: { ImportFile, ImportResult, Homonyms },
 
+    watch: {
+        '$route': function() {
+            Helpers.assign(this, AttrsForm_data());
+            this.init();
+        },
+    },
     computed: {
         id() {
             return this.wanted_id || "new";
@@ -71,6 +74,11 @@ export const AttrsForm = Vue.extend({
     },
 
     methods: {
+        init() {
+            Ws.getInScope(this, this.id, this.$route.query, this.stepName).then(() => {
+                if (this.v.noInteraction) this.send();
+            });    
+        },
       submit(event) {
           console.log("submit");
           this.submitted = true;
