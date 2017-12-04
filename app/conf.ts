@@ -83,7 +83,7 @@ export default {
             ],
         },
         css: [
-            'app.css'
+            '.public/app.css'
         ],
     },
 };

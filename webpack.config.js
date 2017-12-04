@@ -6,7 +6,7 @@ module.exports = {
   entry: './app/start.ts',
   devtool: '#eval-source-map',
   output: {
-    filename: 'app/build.js'
+    filename: 'app/public/build.js'
   },
   module: {
     rules: [

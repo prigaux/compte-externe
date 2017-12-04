@@ -1,5 +1,5 @@
-app/build.js
-app/build.js.map
+app/public/build.js
+app/public/build.js.map
 app/conf.js
 app/conf.js.map
 server/**/*.js
