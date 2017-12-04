@@ -38,6 +38,7 @@
     "csvtojson": "^1.1.5",
     "debug": "~2.2.0",
     "diff": "^3.3.0",
+    "es6-promise": "^4.1.1",
     "express": "~4.12.4",
     "html5-boilerplate": "0.0.1",
     "ldap-filter": "^0.3.3",
