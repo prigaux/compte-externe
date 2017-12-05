@@ -86,7 +86,7 @@
     <input-with-validity name="duration" :value="v.duration / 30" @input="v.duration = $event * 30" type="number" min="1" :max="attrs.duration.max / 30" required :validity.sync="validity.duration"></input-with-validity>
   </my-bootstrap-form-group>
 
-  <jpegPhotoAttr v-model="v" :attrs="other_attrs" :submitted="submitted"></jpegPhotoAttr>
+  <jpegPhotoAttr v-model="v.jpegPhoto" :label="label.jpegPhoto" :attrs="attrs.jpegPhoto" :submitted="submitted" v-if="other_attrs.jpegPhoto"></jpegPhotoAttr>
   
    <PasswordAttrs v-model="v" :attrs="other_attrs" :submitted="submitted"></PasswordAttrs>
 

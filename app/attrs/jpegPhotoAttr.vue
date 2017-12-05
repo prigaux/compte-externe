@@ -1,19 +1,19 @@
 <template>
-  <my-bootstrap-form-group name="jpegPhoto" :label="label.jpegPhoto" v-if="attrs.jpegPhoto" :validity="validity">
+  <my-bootstrap-form-group name="jpegPhoto" :label="label" :validity="validity">
       <!-- for validation: -->
-      <input-with-validity name="jpegPhoto" v-model="v.jpegPhoto" type="text" style="display: none" required :validity.sync="validity.jpegPhoto"></input-with-validity>
+      <input-with-validity name="jpegPhoto" :value="val" type="text" style="display: none" required :validity.sync="validity.jpegPhoto"></input-with-validity>
 
-      <div v-if="v.jpegPhoto">
-          <img :src="v.jpegPhoto">
-          <a href="#" @click.prevent="v.jpegPhoto = ''" v-if="!attrs.jpegPhoto.readonly">
+      <div v-if="val">
+          <img :src="val">
+          <a href="#" @click.prevent="val = ''" v-if="!attrs.readonly">
               Changer la photo
           </a>
       </div>
-      <div v-else-if="attrs.jpegPhoto.readonly">
+      <div v-else-if="attrs.readonly">
           aucune
       </div>
       <div v-else>
-          <webcam-live-portrait width="240" height="300" :doget="doGet" @image="v.jpegPhoto = $event"></webcam-live-portrait>
+          <webcam-live-portrait width="240" height="300" :doget="doGet" @image="val = $event"></webcam-live-portrait>
           <a href="#" @click.prevent="doGet = [0]">Prendre une photo</a>
       </div>
   </my-bootstrap-form-group> 
@@ -21,14 +21,26 @@
 
 <script lang="ts">
 import Vue from "vue";
-import MixinAttrs from './MixinAttrs.vue';
 
 export default Vue.extend({
-    mixins: [MixinAttrs],
+    props: ['value', 'label', 'attrs', 'submitted'],
     data() {
         return {
+            validity: { jpegPhoto: {}, submitted: false },
+            val: this.value,
             doGet: null,
         };
+    },
+    watch: {
+        value(val) {
+            this.val = val;
+        },
+        val(val) {
+            this.$emit('input', val);
+        },
+        submitted(b) {
+            this.validity.submitted = b;
+        },
     },
 });
 </script>
