@@ -113,26 +113,30 @@ export const createCompte: simpleAction = (_req, sv) => (
 );
     
 const createCompte_ = (v: v, opts : crejsonldap.options) => {
-    let wanted_uid = v.uid;
+    let is_new_account = !v.uid;
     return createCompteRaw(v, opts).then(function (uid) {
         console.log("createCompteRaw returned", uid);
         v.uid = uid;
         if (!v.supannAliasLogin) v.supannAliasLogin = uid;
         return v;
     }).tap((v) => {
-        if (wanted_uid) {
-            // we merged the account. ignore new password + no mail
-        } else if (v.userPassword) {
-            return esup_activ_bo.setPassword(v.uid, v.userPassword);
-            // NB: if we have a password, it is a fast registration, so do not send a mail
-        } else if (v.supannMailPerso) {
-            mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v });
-        }
-        return null;
+        return after_crejsonldap(v, is_new_account);
     }).then((v) => (
         { v, response: {login: v.supannAliasLogin} }
     ));
 };
+
+const after_crejsonldap = (v: v, is_new_account: boolean) => {
+    if (!is_new_account) {
+        // we merged the account. ignore new password + no mail
+    } else if (v.userPassword) {
+        return esup_activ_bo.setPassword(v.uid, v.userPassword);
+        // NB: if we have a password, it is a fast registration, so do not send a mail
+    } else if (v.supannMailPerso) {
+        mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v });
+    }
+    return null;
+}
 
 const createCompteRaw = (v: v, opts : crejsonldap.options) => (
     crejsonldap.call(v, opts)
