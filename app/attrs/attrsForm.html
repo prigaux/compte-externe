@@ -88,7 +88,7 @@
 
   <jpegPhotoAttr v-model="v.jpegPhoto" :label="label.jpegPhoto" :attrs="attrs.jpegPhoto" :submitted="submitted" v-if="other_attrs.jpegPhoto"></jpegPhotoAttr>
   
-   <PasswordAttrs v-model="v" :attrs="other_attrs" :submitted="submitted"></PasswordAttrs>
+   <PasswordAttr v-model="v.userPassword" :label="label.userPassword" :submitted="submitted" v-if="other_attrs.userPassword"></PasswordAttr>
 
    <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity" v-if="other_attrs.profilename">
     <radio-with-validity :values="profilename2descr" name="profilename" v-model="v.profilename" :validity.sync="validity.profilename"></radio-with-validity>

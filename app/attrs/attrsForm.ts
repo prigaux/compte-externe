@@ -6,7 +6,7 @@ import { router } from '../router';
 import { defaults } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
 
-import PasswordAttrs from './PasswordAttrs.vue';
+import PasswordAttr from './PasswordAttr.vue';
 import BarcodeAttrs from './BarcodeAttrs.vue';
 import DateAttr from './DateAttr.vue';
 import AddressAttr from './AddressAttr.vue';
@@ -42,7 +42,7 @@ export const AttrsForm = Vue.extend({
     template,
     props: [ 'wanted_id', 'stepName' ],
     data: AttrsForm_data,
-    components: { DateAttr, AddressAttr, jpegPhotoAttr, BarcodeAttrs, PasswordAttrs, ImportFile, ImportResult, Homonyms },
+    components: { DateAttr, AddressAttr, jpegPhotoAttr, BarcodeAttrs, PasswordAttr, ImportFile, ImportResult, Homonyms },
 
     watch: {
         '$route': function() {
