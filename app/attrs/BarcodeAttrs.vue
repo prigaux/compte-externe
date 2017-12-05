@@ -1,9 +1,5 @@
 <template>
 <fieldset>
-  <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity" v-if="attrs.profilename">
-    <radio-with-validity :values="profilename2descr" name="profilename" v-model="v.profilename" :validity.sync="validity.profilename"></radio-with-validity>
-  </my-bootstrap-form-group>
-
   <my-bootstrap-form-group name="cardChoice" :label="label.cardChoice" v-if="attrs.barcode">
     <label class="radio-inline" v-for="(descr, val) in cardChoices">
        <input type="radio" :name="cardChoice" :value="val" v-model="cardChoice" required>
@@ -72,12 +68,6 @@ export default Vue.extend({
             enroll: 'Enroller une carte existante', 
             ...this.allow_unchanged && { unchanged: 'Pas de modification de carte' },
         };
-      },
-      profilename2descr() {
-          let map = {};
-          let attr = this.attrs.profilename;
-          for (let e of attr.choices) map[e.key] = e.name;
-          return map;
       },
     },
 });

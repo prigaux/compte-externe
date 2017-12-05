@@ -89,7 +89,12 @@
   <jpegPhotoAttr v-model="v" :attrs="other_attrs" :submitted="submitted"></jpegPhotoAttr>
   
    <PasswordAttrs v-model="v" :attrs="other_attrs" :submitted="submitted"></PasswordAttrs>
-   <BarcodeAttrs v-model="v" :attrs="other_attrs" :submitted="submitted" :v_orig="v_orig"></BarcodeAttrs>
+
+   <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity" v-if="other_attrs.profilename">
+    <radio-with-validity :values="profilename2descr" name="profilename" v-model="v.profilename" :validity.sync="validity.profilename"></radio-with-validity>
+   </my-bootstrap-form-group>
+   
+   <BarcodeAttrs v-model="v" :attrs="other_attrs" :submitted="submitted" :v_orig="v_orig" v-if="other_attrs.barcode || other_attrs.mifare"></BarcodeAttrs>
    
    <my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit" v-if="step.labels.okButton">

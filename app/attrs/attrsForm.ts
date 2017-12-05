@@ -29,7 +29,7 @@ function AttrsForm_data() {
       v: <V> undefined,
       v_orig: <V> undefined,
       resp: undefined,
-      validity: { submitted: false, supannCivilite: {}, givenName: {}, sn: {}, birthName: {}, homePhone: {}, supannMailPerso: {}, structureParrain: {}, duration: {} },
+      validity: { submitted: false, supannCivilite: {}, givenName: {}, sn: {}, birthName: {}, homePhone: {}, supannMailPerso: {}, structureParrain: {}, duration: {}, profilename: {} },
       to_import: undefined,
       imported: <any[]> undefined,
     };    
@@ -80,7 +80,14 @@ export const AttrsForm = Vue.extend({
         maxYear() {
             return new Date().getUTCFullYear();
         },
-        
+
+        profilename2descr() {
+            let map = {};
+            let attr = this.attrs.profilename;
+            for (let e of attr.choices) map[e.key] = e.name;
+            return map;
+        },
+          
         // for reuse steps:
         isMember() { 
             let aff = this.v.eduPersonAffiliation;
