@@ -83,6 +83,7 @@ export const aclChecker = (acls: acl_search[]) => (
 ) as simpleAction
 
 type createCompteOptions = {
+    create: boolean,
     dupcreate: "ignore"|"warn"|"err";
 }
 
@@ -101,7 +102,7 @@ export const createCompteSafe: simpleAction = (_req, sv) => {
             return { v, response: { ignored: true } };
         }
         // no exact match, calling crejsonldap with homonyme detection
-        return createCompte_(sv.v, { dupcreate: "err" }).catch(errS => {
+        return createCompte_(sv.v, { dupcreate: "err", create: true }).catch(errS => {
             const err = JSON.parse(errS);
             if (err.code === 'homo') {
                 return { v: sv.v, response: { in_moderation: true } };
@@ -113,7 +114,7 @@ export const createCompteSafe: simpleAction = (_req, sv) => {
 }
 
 export const createCompte: simpleAction = (_req, sv) => (
-    createCompte_(sv.v, { dupcreate: "ignore" })
+    createCompte_(sv.v, { dupcreate: "ignore", create: true })
 );
     
 const prepare_v = (v: v) => {
@@ -169,7 +170,7 @@ const prepare_crejsonldap_param = (v: v) => {
 // - 14MB RSS memory usage
 const crejsonldap = (v: v, opts : createCompteOptions) => {
     let param = JSON.stringify({
-        create: true, ...opts, ...prepare_crejsonldap_param(v)
+        ...opts, ...prepare_crejsonldap_param(v)
     });
     console.log("action createCompte:", param);
     return utils.popen(param, 'createCompte', []).then(data => {
