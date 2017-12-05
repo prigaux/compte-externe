@@ -133,22 +133,12 @@ const createCompte_ = (v: v, opts : crejsonldap.options) => {
     ));
 };
 
-const createCompteRaw = (v: v, opts : crejsonldap.options) => {
-    return crejsonldap.call(v, opts).then(resp => {
-        if (resp.err) console.error("createCompte returned", resp);
-        if (resp.err && resp.err[0].attr === "supannAliasLogin") {
-            // gasp, the generated supannAliasLogin is already in use,
-            // retry without supannAliasLogin
-            delete v.supannAliasLogin;
-            return crejsonldap.call(v, opts);
-        } else {
-            return resp;
-        }
-    }).then(resp => {
-        let uid = crejsonldap.extract_uid(resp);
-        return { uid, supannAliasLogin: v.supannAliasLogin || uid };
-    });
-}
+const createCompteRaw = (v: v, opts : crejsonldap.options) => (
+    crejsonldap.call(v, opts)
+        .then(crejsonldap.mayRetryWithoutSupannAliasLogin(v, opts))
+        .then(crejsonldap.extract_uid)
+        .then(uid => ({ uid, supannAliasLogin: v.supannAliasLogin || uid }))
+);
 
 export const genLogin: simpleAction = (_req, sv) => {
     let createResp = login => {

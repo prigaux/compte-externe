@@ -54,7 +54,7 @@ export const call = (v: v, opts : options) => {
     });
 }
 
-export const extract_uid = (resp) => {
+export const extract_uid = (resp): string => {
     let m = resp.dn && resp.dn.match(/uid=(.*?),/);
     if (m) {
         return m[1];
@@ -62,4 +62,16 @@ export const extract_uid = (resp) => {
         console.error("createCompte should return dn");
         throw resp.err ? JSON.stringify(resp.err[0]) : "createCompte should return dn";
     }
+};
+
+export const mayRetryWithoutSupannAliasLogin = (v: v, opts: options) => (resp) => {
+        if (resp.err) console.error("createCompte returned", resp);
+        if (resp.err && resp.err[0].attr === "supannAliasLogin") {
+            // gasp, the generated supannAliasLogin is already in use,
+            // retry without supannAliasLogin
+            delete v.supannAliasLogin;
+            return call(v, opts);
+        } else {
+            return resp;
+        }
 };
