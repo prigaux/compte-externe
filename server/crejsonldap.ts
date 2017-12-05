@@ -3,7 +3,7 @@ import ldap = require('./ldap');
 import conf = require('./conf');
 
 
-export type options = {
+export type options = { action: "validate" } | {
     create: boolean,
     dupcreate: "ignore"|"warn"|"err";
 }

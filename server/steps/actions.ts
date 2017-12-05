@@ -144,6 +144,14 @@ const createCompteRaw = (v: v, opts : crejsonldap.options) => (
         .then(crejsonldap.extract_uid)
 );
 
+// return a list of errors, if any
+export const validateAccount : simpleAction = (_req, sv) => (
+    crejsonldap.call(sv.v, { action: "validate" }).then(resp => {
+        if (resp.err) throw JSON.stringify(resp.err)
+        return { v: sv.v }
+    })
+);
+
 export const genLogin: simpleAction = (_req, sv) => {
     let createResp = login => {
         let v = <v> _.assign({ supannAliasLogin: login }, sv.v);
