@@ -114,9 +114,10 @@ export const createCompte: simpleAction = (_req, sv) => (
     
 const createCompte_ = (v: v, opts : crejsonldap.options) => {
     let wanted_uid = v.uid;
-    return createCompteRaw(v, opts).then(function (uid_and_login) {
-        console.log("createCompteRaw returned", uid_and_login);
-        _.assign(v, uid_and_login);
+    return createCompteRaw(v, opts).then(function (uid) {
+        console.log("createCompteRaw returned", uid);
+        v.uid = uid;
+        if (!v.supannAliasLogin) v.supannAliasLogin = uid;
         return v;
     }).tap((v) => {
         if (wanted_uid) {
@@ -137,7 +138,6 @@ const createCompteRaw = (v: v, opts : crejsonldap.options) => (
     crejsonldap.call(v, opts)
         .then(crejsonldap.mayRetryWithoutSupannAliasLogin(v, opts))
         .then(crejsonldap.extract_uid)
-        .then(uid => ({ uid, supannAliasLogin: v.supannAliasLogin || uid }))
 );
 
 export const genLogin: simpleAction = (_req, sv) => {
