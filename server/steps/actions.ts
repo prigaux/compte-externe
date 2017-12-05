@@ -133,13 +133,13 @@ const prepare_v = (v: v) => {
 }
 
 const createCompte_ = (v: v, opts : createCompteOptions) => {
-    let v_ldap = prepare_v(v);
-    return createCompteRaw(v_ldap, opts).then(function (uid_and_login) {
+    let wanted_uid = v.uid;
+    return createCompteRaw(v, opts).then(function (uid_and_login) {
         console.log("createCompteRaw returned", uid_and_login);
         _.assign(v, uid_and_login);
         return v;
     }).tap((v) => {
-        if (v_ldap.uid) {
+        if (wanted_uid) {
             // we merged the account. ignore new password + no mail
         } else if (v.userPassword) {
             return esup_activ_bo.setPassword(v.uid, v.userPassword);
@@ -153,28 +153,38 @@ const createCompte_ = (v: v, opts : createCompteOptions) => {
     ));
 };
 
+const prepare_crejsonldap_param = (v: v) => {
+    let { profilename, priority, startdate, enddate, ...attrs } = prepare_v(v);
+    
+    return {
+        id: ["uid"],
+        users: [
+            { profilename, priority, startdate, enddate, attrs } ],
+    };    
+}
+
 // NB: crejsonldap performance:
 // - 200ms minimal response time
 // - 200ms ssh overhead
 // - 14MB RSS memory usage
-const createCompteRaw = (v: Dictionary<ldap_RawValue>, opts : createCompteOptions) => {
-    let { profilename, priority, startdate, enddate, ...attrs } = v;
-    
+const crejsonldap = (v: v, opts : createCompteOptions) => {
     let param = JSON.stringify({
-        id: ["uid"], create: true, ...opts,
-        users: [
-            { profilename, priority, startdate, enddate, attrs } ],
+        create: true, ...opts, ...prepare_crejsonldap_param(v)
     });
     console.log("action createCompte:", param);
     return utils.popen(param, 'createCompte', []).then(data => {
-        let resp;
         try { 
-            resp = JSON.parse(data);
-            resp = resp.users[0];
+            const resp = JSON.parse(data);
+            return resp.users[0];
         } catch (e) {
             console.error(e);
             throw "createCompte error:" + data;
         }
+    });
+}
+
+const createCompteRaw = (v: v, opts : createCompteOptions) => {
+    return crejsonldap(v, opts).then(resp => {
         if (resp.err) console.error("createCompte returned", resp);
         if (resp.err && resp.err[0].attr === "supannAliasLogin") {
             // gasp, the generated supannAliasLogin is already in use,
