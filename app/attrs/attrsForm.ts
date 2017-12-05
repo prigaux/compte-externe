@@ -28,7 +28,6 @@ function AttrsForm_data() {
       attrs: <StepAttrsOption> undefined,
       v: <V> undefined,
       v_orig: <V> undefined,
-      errorMessages: {},
       resp: undefined,
       validity: { submitted: false, supannCivilite: {}, givenName: {}, sn: {}, birthName: {}, homePhone: {}, supannMailPerso: {}, structureParrain: {}, duration: {} },
       to_import: undefined,
