@@ -118,6 +118,7 @@ import { Dictionary } from '../services/ws';
 
     export function formatDate(date : Date | string, format : string) : string {
         const date_ : Date = typeof date === "string" ? new Date(date) : date;
+        if (!date) return null;
         return format.split(/(yyyy|MM|dd|HH|mm|ss)/).map(function (item) {
             switch (item) {
                 case 'yyyy': return date_.getFullYear();
