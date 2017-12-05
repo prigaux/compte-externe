@@ -9,7 +9,6 @@ import "./directives/various";
 import "./directives/validators";
 import "./directives/Bootstrap";
 import "./directives/typeahead";
-import "./services/attrsEdit";
 
 Vue.mixin(GlobalMixin);
 Vue.use(VueRouter)

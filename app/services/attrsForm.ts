@@ -5,6 +5,9 @@ import * as Ws from '../services/ws';
 import { router } from '../router';
 import { defaults } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
+import { CommonAttrs, ExternAttrs } from '../services/attrsEdit';
+import PasswordAttrs from '../attrs/PasswordAttrs.vue';
+import BarcodeAttrs from '../attrs/BarcodeAttrs.vue';
 import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
 import Homonyms from '../controllers/Homonyms.vue';
@@ -33,7 +36,7 @@ export const AttrsForm = Vue.extend({
     template,
     props: [ 'wanted_id', 'stepName' ],
     data: AttrsForm_data,
-    components: { ImportFile, ImportResult, Homonyms },
+    components: { CommonAttrs, ExternAttrs, BarcodeAttrs, PasswordAttrs, ImportFile, ImportResult, Homonyms },
 
     watch: {
         '$route': function() {
