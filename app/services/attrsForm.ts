@@ -5,13 +5,17 @@ import * as Ws from '../services/ws';
 import { router } from '../router';
 import { defaults } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
-import { CommonAttrs, ExternAttrs } from '../services/attrsEdit';
 import PasswordAttrs from '../attrs/PasswordAttrs.vue';
 import BarcodeAttrs from '../attrs/BarcodeAttrs.vue';
+import DateAttr from '../attrs/DateAttr.vue';
+import AddressAttr from '../attrs/AddressAttr.vue';
+import jpegPhotoAttr from '../attrs/jpegPhotoAttr.vue';
 import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
 import Homonyms from '../controllers/Homonyms.vue';
-import template from '../templates/create.html';
+import template from '../attrs/attrsForm.html';
+
+const accentsRange = '\u00C0-\u00FC';
 
 function AttrsForm_data() {
     return {
@@ -21,9 +25,8 @@ function AttrsForm_data() {
       v: <V> undefined,
       v_orig: <V> undefined,
       errorMessages: {},
-      submitted: false,
       resp: undefined,
-
+      validity: { submitted: false, supannCivilite: {}, givenName: {}, sn: {}, birthName: {}, homePhone: {}, supannMailPerso: {}, structureParrain: {}, duration: {} },
       to_import: undefined,
       imported: <any[]> undefined,
     };    
@@ -36,7 +39,7 @@ export const AttrsForm = Vue.extend({
     template,
     props: [ 'wanted_id', 'stepName' ],
     data: AttrsForm_data,
-    components: { CommonAttrs, ExternAttrs, BarcodeAttrs, PasswordAttrs, ImportFile, ImportResult, Homonyms },
+    components: { DateAttr, AddressAttr, jpegPhotoAttr, BarcodeAttrs, PasswordAttrs, ImportFile, ImportResult, Homonyms },
 
     watch: {
         '$route': function() {
@@ -57,6 +60,9 @@ export const AttrsForm = Vue.extend({
         noInteraction() {
             return this.v.noInteraction || Object.keys(this.attrs).length === 0;
         },
+        submitted() {
+            return this.validity.submitted;
+        },
         other_attrs(): StepAttrsOption {
             if (this.to_import && this.attrs) {
                 return Helpers.filter(this.attrs, (_, k) => !this.to_import.fields.includes(k));
@@ -64,7 +70,14 @@ export const AttrsForm = Vue.extend({
                 return this.attrs;
             }
         },
-    
+
+        allowedCharsInNames() {
+            return "[A-Za-z" + accentsRange + "'. -]";
+        },
+        maxYear() {
+            return new Date().getUTCFullYear();
+        },
+        
         // for reuse steps:
         isMember() { 
             let aff = this.v.eduPersonAffiliation;
@@ -77,6 +90,8 @@ export const AttrsForm = Vue.extend({
     },
 
     methods: {
+        structures_search: Ws.structures_search,
+
         init() {
             Ws.getInScope(this, this.id, this.$route.query, this.stepName).then(() => {
                 if (this.noInteraction) this.send();
@@ -84,7 +99,7 @@ export const AttrsForm = Vue.extend({
         },
       submit(event) {
           console.log("submit");
-          this.submitted = true;
+          this.validity.submitted = true;
           if (!event.target.checkValidity()) return;
           if (this.to_import) {
             this.send_new_many();
