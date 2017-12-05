@@ -1,4 +1,4 @@
-import * as Ws from '../services/ws';
+import * as Address from './address';
 import * as Helpers from './helpers';
 
 let raw = (o) => Helpers.assign({}, o);
@@ -9,9 +9,9 @@ describe('service ws', function() {
         
         it('should encode/decode homePostalAddress', () => {
             function check(in_, out, in_out?) {
-                var r = Ws.fromWs({ homePostalAddress: in_ });
-                expect(raw(r.homePostalAddress)).toEqual(out);
-                expect(Ws.toWs(r).homePostalAddress).toEqual(in_out || in_);
+                var r = Address.fromString(in_);
+                expect(raw(r)).toEqual(out);
+                expect(Address.toString(r)).toEqual(in_out || in_);
             }
             check("44 rue balard\n75015 PARIS\nFRANCE",
                   { postalCode: '75015', town: 'PARIS', country: 'FRANCE', lines: '44 rue balard', line2: '' });

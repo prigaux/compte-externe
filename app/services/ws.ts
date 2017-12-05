@@ -3,23 +3,18 @@ import { pick } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
-type HomePostalAddress =
-    { country: string, 
-      lines: string,
-      line2?: string, postalCode?: string, town?: string };
 
 interface VCommon {
     structureParrain?: string;
     supannAliasLogin?: string;
     jpegPhoto?: string;
+    homePostalAddress?: string;
 }
 export interface VRaw extends VCommon {
     birthDay?: string;
-    homePostalAddress?: string;
 }
 export interface V extends VCommon {
     birthDay?: Date;
-    homePostalAddress?: HomePostalAddress;
     structureParrainS: { key: string, name: string, description: string };
     noInteraction?: boolean;
 }
@@ -69,28 +64,6 @@ const api_url = conf.base_pathname + 'api';
             return m && _toDate(parseInt(m[3]), parseInt(m[2]), parseInt(m[1]));
         }
 
-        function _fromHomePostalAddress(addr: string): HomePostalAddress {
-            if (!addr) return { lines: '', line2: '', postalCode: '', town: '', country: "FRANCE" };
-
-            let lines = addr.split(/\n/);
-            if (lines.length < 3) return { lines: addr, country: '' };
-            let country = lines.pop();
-            if (country.match(/^france$/i)) {
-                let pt = lines.pop();
-                let pt_ = pt.match(/(\d+) (.*)/);
-                if (!pt_) return { lines: lines.join("\n"), country };
-
-                let l1 = lines.shift();
-                let line2 = lines.join(" - "); // we want only 2 lines, group the remaining lines                
-                return { lines: l1, line2, postalCode: pt_[1], town: pt_[2], country: "FRANCE" };
-            } else {
-                return { lines: lines.join("\n"), country };
-            }
-        }
-        function _toHomePostalAddress(addr: HomePostalAddress) : string {
-            let pt = [ addr.postalCode, addr.town ].filter(e => e).join(" ");
-            return [ addr.lines, addr.line2, pt, addr.country || 'FRANCE' ].filter(s => s).join("\n")
-        }
 
         function _base64_to_jpeg_data_URL(base64: string): string {
             return "data:image/jpeg;base64," + base64;
@@ -105,7 +78,6 @@ const api_url = conf.base_pathname + 'api';
             if (v.birthDay) {
                 v_.birthDay = new Date(v.birthDay);
             }
-            v_.homePostalAddress = _fromHomePostalAddress(v.homePostalAddress);
             v_.structureParrainS = undefined;
             if (v.structureParrain) {
                 structures_search(v.structureParrain, 1).then((resp) => {
@@ -120,9 +92,6 @@ const api_url = conf.base_pathname + 'api';
 
         export function toWs(v: V): VRaw {
             var v_: VRaw = <any>Helpers.copy(v);
-            if (v.homePostalAddress) {
-                v_.homePostalAddress = _toHomePostalAddress(v.homePostalAddress);
-            }
             if (v.structureParrainS) {
                 v_.structureParrain = v.structureParrainS.key;
             }

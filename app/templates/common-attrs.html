@@ -18,39 +18,7 @@
 
   <DateAttr v-model="v.birthDay" minYear="1900" :maxYear="maxYear" :label="label.birthDay" v-if="attrs.birthDay"  :submitted="submitted"></DateAttr>
 
-<div v-if="attrs.homePostalAddress">
-  <my-bootstrap-form-group name="country" :label="label.homePostalAddress" :validity="validity">
-     <typeahead name="country" v-model="v.homePostalAddress.country" :options="countries" placeholder="Pays" :validity.sync="validity.country" required></typeahead>
-  </my-bootstrap-form-group>
-    
- <div v-if="v.homePostalAddress.country === 'FRANCE'">
-  <my-bootstrap-form-group name="address_lines" :label="label.address_lines" :validity="validity">
-    <input-with-validity name="address_lines" v-model="v.homePostalAddress.lines" placeholder="Numéro, rue" :validity.sync="validity.address_lines" required></input-with-validity>
-  </my-bootstrap-form-group>
-  <my-bootstrap-form-group name="address_line2">
-    <input-with-validity name="address_line2" v-model="v.homePostalAddress.line2" placeholder="complément d'adresse"></input-with-validity>
-  </my-bootstrap-form-group>
-  <my-bootstrap-form-group name="postalCode" multi="true">
-    <div class="col-md-offset-3 col-xs-2" :class="{'has-error': validity.submitted && !validity.postalCode.valid}">
-      <div>
-        <input-with-validity name="postalCode" v-model="v.homePostalAddress.postalCode" real-type="frenchPostalCode" placeholder="Code postal" required :validity.sync="validity.postalCode"></input-with-validity>
-        <validation-errors name="postalCode" :validity="validity"></validation-errors>
-      </div>
-    </div>
-    <div class="col-xs-7" :class="{'has-error': validity.submitted && !validity.town.valid}">
-      <div>
-        <typeahead name="town" v-model="v.homePostalAddress.town" :options="towns" placeholder="Ville" :editable="false" :validity.sync="validity.town"></typeahead>
-        <validation-errors name="town" :validity="validity"></validation-errors>
-      </div>
-    </div>
-  </my-bootstrap-form-group>
- </div>
- <div v-else>
-   <my-bootstrap-form-group name="address_lines" :label="label.address_lines" :validity="validity">
-     <textarea-with-validity rows="5" v-model="v.homePostalAddress.lines" class="form-control" :validity.sync="validity.address_lines"></textarea-with-validity>
-   </my-bootstrap-form-group>
- </div>
-</div>
+  <AddressAttr v-model="v.homePostalAddress" :label="label.homePostalAddress" v-if="attrs.homePostalAddress" :submitted="submitted"></AddressAttr>
 
   <my-bootstrap-form-group name="homePhone" :label="label.homePhone" :validity="validity" v-if="attrs.homePhone">
     <input-with-validity name="homePhone" v-model="v.homePhone" real-type="phone" required :validity.sync="validity.homePhone"></input-with-validity>
