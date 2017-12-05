@@ -2,7 +2,7 @@ import VueRouter from "vue-router";
 import conf from './conf';
 import * as Helpers from './services/helpers'; 
 import { AttrsForm } from './attrs/attrsForm';
-import { ModerateList } from './controllers/list';
+import ModerateList from './controllers/ModerateList';
 
 import template_welcome from './templates/welcome.html'
 

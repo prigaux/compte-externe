@@ -1,13 +1,39 @@
+<template>
+<div>
+
+<div v-for="step in initialSteps" v-if="initialSteps">
+    <InitialStep :step="step"></InitialStep>
+</div>
+
+<div v-for="(svs_,step) in svsGroupedByStep">      
+ <h4 v-if="svs_[0].labels" v-html="svs_[0].labels.title"></h4>
+ <ul>
+  <li v-for="sv in svs_">
+  le {{sv.modifyTimestamp | date('dd/MM/yyyy à HH:mm')}} : 
+   <router-link :to="'/' + sv.step + '/' + sv.id">
+     {{sv.v.sn || 'inconnu'}}
+     {{sv.v.givenName || 'inconnu'}}
+   </router-link>
+</li>
+</ul>
+</div>
+
+<div v-if="svs && svs.length === 0">
+  Rien à modérer
+</div>
+
+</div>
+</template>
+
+<script lang="ts">
 import Vue from 'vue';
 import axios from 'axios';
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
-import template from '../templates/list.html';
 import InitialStep from './InitialStep.vue';
 
-export const ModerateList = Vue.extend({
+export default Vue.extend({
   name: 'ModerateList',
-  template,
   components: { InitialStep },
   data: () => ({
     svs: null,
@@ -37,3 +63,4 @@ export const ModerateList = Vue.extend({
     },
   },
 });
+</script>
