@@ -190,14 +190,14 @@ const createCompteRaw = (v: v, opts : createCompteOptions) => {
         if (resp.err && resp.err[0].attr === "supannAliasLogin") {
             // gasp, the generated supannAliasLogin is already in use,
             // retry without supannAliasLogin
-            delete v['supannAliasLogin'];
+            delete v.supannAliasLogin;
             return createCompteRaw(v, opts);
         }
             
         let m = resp.dn && resp.dn.match(/uid=(.*?),/);
         if (m) {
             let uid = m[1];
-            return { uid, supannAliasLogin: v['supannAliasLogin'] || uid };
+            return { uid, supannAliasLogin: v.supannAliasLogin || uid };
         } else {
             console.error("createCompte should return dn");
             throw resp.err ? JSON.stringify(resp.err[0]) : "createCompte should return dn";
