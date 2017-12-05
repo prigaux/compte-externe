@@ -1,5 +1,6 @@
-app/public/build.js
-app/public/build.js.map
+app/public/build*.js
+app/public/build*.js.map
+app/public/webpack-assets.json
 app/conf.js
 app/conf.js.map
 server/**/*.js

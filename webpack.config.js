@@ -1,12 +1,14 @@
 
 var path = require('path')
 var webpack = require('webpack')
+var AssetsPlugin = require('assets-webpack-plugin');
 
 module.exports = {
   entry: './app/start.ts',
   devtool: '#eval-source-map',
   output: {
-    filename: 'app/public/build.js'
+    path: path.join(__dirname, "app/public"),
+    filename: 'build-[hash].js',
   },
   module: {
     rules: [
@@ -46,6 +48,11 @@ module.exports = {
     historyApiFallback: true,
     noInfo: true
   },
+  plugins: [
+    new AssetsPlugin({
+        path: path.join(__dirname, 'app/public'),
+    }),
+  ],
 }
 
 if (process.env.NODE_ENV === 'production') {

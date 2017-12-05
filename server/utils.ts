@@ -31,14 +31,18 @@ if (!client_conf.base_pathname.match(/\/$/)) throw "base_pathname in app/conf.ts
 export const index_html = (_req: req, res: express.Response, _next): void => {
     let fs = require('fs');
     let Mustache = require('mustache');
-    let tconf = _.merge({ livereload: process.env.NODE_ENV !== 'production', mainUrl: conf.mainUrl }, client_conf);
-    fs.readFile(__dirname + "/../app/index.html", (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            data = Mustache.render(data.toString(), tconf);
-            res.send(data);
-        }
+    fs.readFile(__dirname + "/../app/public/webpack-assets.json", (err, webpack_assets) => {
+        if (err) { console.error(err); return }
+        const build_js = JSON.parse(webpack_assets).main.js;
+        let tconf = _.merge({ livereload: process.env.NODE_ENV !== 'production', mainUrl: conf.mainUrl, build_js }, client_conf);
+        fs.readFile(__dirname + "/../app/index.html", (err, data) => {
+            if (err) {
+                console.log(err);
+            } else {
+                data = Mustache.render(data.toString(), tconf);
+                res.send(data);
+            }
+        });
     });
 };
 
