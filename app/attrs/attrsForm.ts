@@ -5,15 +5,19 @@ import * as Ws from '../services/ws';
 import { router } from '../router';
 import { defaults } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
-import PasswordAttrs from '../attrs/PasswordAttrs.vue';
-import BarcodeAttrs from '../attrs/BarcodeAttrs.vue';
-import DateAttr from '../attrs/DateAttr.vue';
-import AddressAttr from '../attrs/AddressAttr.vue';
-import jpegPhotoAttr from '../attrs/jpegPhotoAttr.vue';
+
+import PasswordAttrs from './PasswordAttrs.vue';
+import BarcodeAttrs from './BarcodeAttrs.vue';
+import DateAttr from './DateAttr.vue';
+import AddressAttr from './AddressAttr.vue';
+import jpegPhotoAttr from './jpegPhotoAttr.vue';
+
 import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
 import Homonyms from '../controllers/Homonyms.vue';
-import template from '../attrs/attrsForm.html';
+
+import template from './attrsForm.html';
+
 
 const accentsRange = '\u00C0-\u00FC';
 
