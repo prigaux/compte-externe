@@ -94,7 +94,7 @@ const accountExactMatch = (v: v) => {
 export const createCompteSafe: simpleAction = (_req, sv) => {
     return accountExactMatch(sv.v).then(v => {
         if (v) {
-            return { v, response: { ignored: true } };
+            return Promise.resolve({ v, response: { ignored: true } } as vr);
         }
         // no exact match, calling crejsonldap with homonyme detection
         return createCompte_(sv.v, { dupcreate: "err", create: true }).catch(errS => {
