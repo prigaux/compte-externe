@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import AsyncComputed from 'vue-async-computed';
 import { router } from './router';
 import GlobalMixin from './GlobalMixin';
 
@@ -12,6 +13,7 @@ import "./services/attrsEdit";
 
 Vue.mixin(GlobalMixin);
 Vue.use(VueRouter)
+Vue.use(AsyncComputed)
 
 new Vue({ 
     router
