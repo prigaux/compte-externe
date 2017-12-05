@@ -3,6 +3,7 @@
 import _ = require('lodash');
 import mail = require('../mail');
 import ldap = require('../ldap');
+import utils = require('../utils');
 import crejsonldap = require('../crejsonldap');
 import search_ldap = require('../search_ldap');
 import acl_checker = require('../acl_checker');
@@ -114,6 +115,15 @@ export const createCompte: simpleAction = (_req, sv) => (
     
 const createCompte_ = (v: v, opts : crejsonldap.options) => {
     let is_new_account = !v.uid;
+
+    if (!v.startdate) v.startdate = new Date();
+    if (!v.enddate) {
+        if (!v.duration) throw "no duration nor enddate";
+        // "enddate" is *expiration* date and is rounded down to midnight (by ldap_convert.date.toLdap)
+        // so adding a full 23h59m to help 
+        v.enddate = utils.addDays(v.startdate, v.duration + 0.9999);
+    }
+    
     return createCompteRaw(v, opts).then(function (uid) {
         console.log("createCompteRaw returned", uid);
         v.uid = uid;

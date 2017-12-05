@@ -11,13 +11,6 @@ export type options = { action: "validate" } | {
 const prepare_v = (v: v) => {
     if (!v) throw "internal error: createCompte with no v";
 
-    if (!v.startdate) v.startdate = new Date();
-    if (!v.enddate) {
-        if (!v.duration) throw "no duration nor enddate";
-        // "enddate" is *expiration* date and is rounded down to midnight (by ldap_convert.date.toLdap)
-        // so adding a full 23h59m to help 
-        v.enddate = utils.addDays(v.startdate, v.duration + 0.9999);
-    }
     let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, v, { toJson: true });
     delete v_ldap.userPassword; // handled by esup_activ_bo
     delete v_ldap.duration; // only useful to compute "enddate"
