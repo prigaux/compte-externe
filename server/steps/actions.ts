@@ -140,9 +140,11 @@ const createCompteRaw = (v: v, opts : crejsonldap.options) => {
             // gasp, the generated supannAliasLogin is already in use,
             // retry without supannAliasLogin
             delete v.supannAliasLogin;
-            return createCompteRaw(v, opts);
+            return crejsonldap.call(v, opts);
+        } else {
+            return resp;
         }
-            
+    }).then(resp => {
         let uid = crejsonldap.extract_uid(resp);
         return { uid, supannAliasLogin: v.supannAliasLogin || uid };
     });
