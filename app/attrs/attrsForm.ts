@@ -11,6 +11,7 @@ import BarcodeAttrs from './BarcodeAttrs.vue';
 import DateAttr from './DateAttr.vue';
 import AddressAttr from './AddressAttr.vue';
 import jpegPhotoAttr from './jpegPhotoAttr.vue';
+import StructureAttr from './StructureAttr.vue';
 
 import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
@@ -42,7 +43,7 @@ export const AttrsForm = Vue.extend({
     template,
     props: [ 'wanted_id', 'stepName' ],
     data: AttrsForm_data,
-    components: { DateAttr, AddressAttr, jpegPhotoAttr, BarcodeAttrs, PasswordAttr, ImportFile, ImportResult, Homonyms },
+    components: { DateAttr, AddressAttr, jpegPhotoAttr, StructureAttr, BarcodeAttrs, PasswordAttr, ImportFile, ImportResult, Homonyms },
 
     watch: {
         '$route': function() {
@@ -100,8 +101,6 @@ export const AttrsForm = Vue.extend({
     },
 
     methods: {
-        structures_search: Ws.structures_search,
-
         init() {
             Ws.getInScope(this, this.id, this.$route.query, this.stepName).then(() => {
                 if (this.noInteraction) this.send();
@@ -158,8 +157,10 @@ export const AttrsForm = Vue.extend({
       send() {
           Ws.set(this.id, this.stepName, this.v).then(resp => {
               if (resp.error === "no_moderators") {
-                  alert(conf.error_msg.noModerators(this.v.structureParrainS.name));
-                  this.v.structureParrainS = undefined;
+                  Ws.structure_get(this.v.structureParrain).then(structure => {
+                    alert(conf.error_msg.noModerators(structure.name));
+                    this.v.structureParrain = undefined;
+                  });
               } else {
                 return this.nextStep(resp);
               }

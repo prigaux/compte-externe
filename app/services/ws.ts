@@ -15,7 +15,6 @@ export interface VRaw extends VCommon {
 }
 export interface V extends VCommon {
     birthDay?: Date;
-    structureParrainS: { key: string, name: string, description: string };
     noInteraction?: boolean;
 }
 export interface SVRaw {
@@ -52,6 +51,9 @@ const api_url = conf.base_pathname + 'api';
         export function structures_search(token : string, maxRows? : number) : Promise<Structure[]> {
             return axios.get(api_url + '/structures', { params: { token, maxRows } }).then((resp) => resp.data as Structure[]);
         }
+        export function structure_get(id: string) {
+            return structures_search(id, 1).then(resp => resp[0]);
+        }
 
         const _toDate = (year: number, month: number, day: number) => new Date(Date.UTC(year, month - 1, day));
                 
@@ -78,12 +80,6 @@ const api_url = conf.base_pathname + 'api';
             if (v.birthDay) {
                 v_.birthDay = new Date(v.birthDay);
             }
-            v_.structureParrainS = undefined;
-            if (v.structureParrain) {
-                structures_search(v.structureParrain, 1).then((resp) => {
-                    v_.structureParrainS = resp[0];
-                });
-            }
             if (v.jpegPhoto) {
                 v_.jpegPhoto = _base64_to_jpeg_data_URL(v.jpegPhoto);
             }
@@ -92,9 +88,6 @@ const api_url = conf.base_pathname + 'api';
 
         export function toWs(v: V): VRaw {
             var v_: VRaw = <any>Helpers.copy(v);
-            if (v.structureParrainS) {
-                v_.structureParrain = v.structureParrainS.key;
-            }
             if (v.jpegPhoto) {
                 v_.jpegPhoto = _jpeg_data_URL_to_base64(v.jpegPhoto);
             }

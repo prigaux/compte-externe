@@ -73,14 +73,7 @@
     <input-with-validity name="supannMailPerso" v-model="v.supannMailPerso" type="email" required :validity.sync="validity.supannMailPerso"></input-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="structureParrain" :label="attr_labels.structureParrain" v-if="other_attrs.structureParrain" :validity="validity">
-    <div v-if="attrs.structureParrain.readonly">
-      {{v.structureParrainS.description}}
-    </div>
-    <div v-else>
-      <typeahead name="structureParrain" v-model="v.structureParrainS" :options="structures_search" :minChars="3" :formatting="function (e) { return e.description }" :editable="false" :validity.sync="validity.structureParrain"></typeahead>
-    </div>
-  </my-bootstrap-form-group>
+  <StructureAttr v-model="v.structureParrain" :label="attr_labels.structureParrain" :attrs="attrs.structureParrain" :submitted="submitted" v-if="other_attrs.structureParrain"></StructureAttr>
 
   <my-bootstrap-form-group name="duration" :label="attr_labels.duration_month" v-if="other_attrs.duration" :validity="validity">
     <input-with-validity name="duration" :value="v.duration / 30" @input="v.duration = $event * 30" type="number" min="1" :max="attrs.duration.max / 30" required :validity.sync="validity.duration"></input-with-validity>
