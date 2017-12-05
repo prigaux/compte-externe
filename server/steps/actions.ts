@@ -86,18 +86,22 @@ type createCompteOptions = {
     dupcreate: "ignore"|"warn"|"err";
 }
 
-export const createCompteSafe: simpleAction = (_req, sv) => {
+const accountExactMatch = (v: v) => {
     // first lookup exact match in LDAP
-    let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, sv.v, {});    
+    let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, v, {});    
     let attrs_exact_match = [ 'sn', 'givenName', 'supannMailPerso', 'birthDay' ];
     let filters_ = attrs_exact_match.filter(attr => attr in v_ldap).map(attr => filters.eq(attr, v_ldap[attr] as string));
     if (filters_.length < 3) throw "refusing to create account with so few attributes. Expecting at least 3 of " + attrs_exact_match.join(',');
-    return onePerson(filters.and(filters_)).then(v => {  
+    return onePerson(filters.and(filters_));
+}
+
+export const createCompteSafe: simpleAction = (_req, sv) => {
+    return accountExactMatch(sv.v).then(v => {
         if (v) {
             return { v, response: { ignored: true } };
         }
         // no exact match, calling crejsonldap with homonyme detection
-        return createCompte_(sv, { dupcreate: "err" }).catch(errS => {
+        return createCompte_(sv.v, { dupcreate: "err" }).catch(errS => {
             const err = JSON.parse(errS);
             if (err.code === 'homo') {
                 return { v: sv.v, response: { in_moderation: true } };
@@ -109,27 +113,31 @@ export const createCompteSafe: simpleAction = (_req, sv) => {
 }
 
 export const createCompte: simpleAction = (_req, sv) => (
-    createCompte_(sv, { dupcreate: "ignore" })
+    createCompte_(sv.v, { dupcreate: "ignore" })
 );
     
-const createCompte_ = (sv, opts : createCompteOptions) => {
-    if (!sv.v) throw "internal error: createCompte with no v";
+const prepare_v = (v: v) => {
+    if (!v) throw "internal error: createCompte with no v";
 
-    if (!sv.v.startdate) sv.v.startdate = new Date();
-    if (!sv.v.enddate) {
-        if (!sv.v.duration) throw "no duration nor enddate";
+    if (!v.startdate) v.startdate = new Date();
+    if (!v.enddate) {
+        if (!v.duration) throw "no duration nor enddate";
         // "enddate" is *expiration* date and is rounded down to midnight (by ldap_convert.date.toLdap)
         // so adding a full 23h59m to help 
-        sv.v.enddate = utils.addDays(sv.v.startdate, sv.v.duration + 0.9999);
+        v.enddate = utils.addDays(v.startdate, v.duration + 0.9999);
     }
-    let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, sv.v, { toJson: true });
+    let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, v, { toJson: true });
     delete v_ldap.userPassword; // handled by esup_activ_bo
     delete v_ldap.duration; // only useful to compute "enddate"
+    return v_ldap;
+}
 
+const createCompte_ = (v: v, opts : createCompteOptions) => {
+    let v_ldap = prepare_v(v);
     return createCompteRaw(v_ldap, opts).then(function (uid_and_login) {
         console.log("createCompteRaw returned", uid_and_login);
-        _.assign(sv.v, uid_and_login);
-        return sv.v;
+        _.assign(v, uid_and_login);
+        return v;
     }).tap((v) => {
         if (v_ldap.uid) {
             // we merged the account. ignore new password + no mail
