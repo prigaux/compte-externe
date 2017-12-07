@@ -12,4 +12,6 @@ export const require_fresh = (name: string) => {
 export const assert = {
   equal: <T>(actual: T, expected: T, message?: string): void => raw_assert.equal(actual, expected, message),
   deepEqual: <T>(actual: T, expected: T, message?: string): void => raw_assert.deepEqual(actual, expected, message),
+  fail: (raw_assert.fail as (...any) => void),
+  throws: (raw_assert.throws as (...any) => void),
 };

@@ -3,8 +3,8 @@ import ldap = require('./ldap');
 import conf = require('./conf');
 
 
-export type options = { action: "validate" } | {
-    create: boolean,
+export type options = { action: "validate" } | { create: false } | {
+    create: true;
     dupcreate: "ignore"|"warn"|"err";
 }
 
@@ -36,7 +36,7 @@ export const call = (v: v, opts : options) => {
         ...opts, ...prepare_crejsonldap_param(v)
     });
     console.log("action createCompte:", param);
-    return utils.popen(param, 'createCompte', []).then(data => {
+    return callRaw.fn(param).then(data => {
         try { 
             const resp = JSON.parse(data);
             return resp.users[0];
@@ -46,6 +46,14 @@ export const call = (v: v, opts : options) => {
         }
     });
 }
+
+// exported for tests purpose
+export const callRaw = { fn: (param) => utils.popen(param, 'createCompte', []) };
+
+export const throw_if_err = (resp) => {
+    if (resp.err) throw JSON.stringify(resp.err);
+    return resp;
+};
 
 export const extract_uid = (resp): string => {
     let m = resp.dn && resp.dn.match(/uid=(.*?),/);
@@ -68,3 +76,9 @@ export const mayRetryWithoutSupannAliasLogin = (v: v, opts: options) => (resp) =
             return resp;
         }
 };
+
+export const createMayRetryWithoutSupannAliasLogin = (v: v, opts: options) => (
+    call(v, opts)
+        .then(mayRetryWithoutSupannAliasLogin(v, opts))
+        .then(extract_uid)
+);

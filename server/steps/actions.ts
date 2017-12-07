@@ -124,19 +124,19 @@ const createCompte_ = (v: v, opts : crejsonldap.options) => {
         v.enddate = utils.addDays(v.startdate, v.duration + 0.9999);
     }
     
-    return createCompteRaw(v, opts).then(function (uid) {
+    return crejsonldap.createMayRetryWithoutSupannAliasLogin(v, opts).then(function (uid) {
         console.log("createCompteRaw returned", uid);
         v.uid = uid;
         if (!v.supannAliasLogin) v.supannAliasLogin = uid;
         return v;
     }).tap((v) => {
-        return after_crejsonldap(v, is_new_account);
+        return after_createAccount(v, is_new_account);
     }).then((v) => (
         { v, response: {login: v.supannAliasLogin} }
     ));
 };
 
-const after_crejsonldap = (v: v, is_new_account: boolean) => {
+const after_createAccount = (v: v, is_new_account: boolean) => {
     if (!is_new_account) {
         // we merged the account. ignore new password + no mail
     } else if (v.userPassword) {
@@ -148,19 +148,30 @@ const after_crejsonldap = (v: v, is_new_account: boolean) => {
     return null;
 }
 
-const createCompteRaw = (v: v, opts : crejsonldap.options) => (
+const crejsonldap_simple = (v: v, opts : crejsonldap.options) => (
     crejsonldap.call(v, opts)
-        .then(crejsonldap.mayRetryWithoutSupannAliasLogin(v, opts))
-        .then(crejsonldap.extract_uid)
+    .then(crejsonldap.throw_if_err)
+    .then(_ =>({ v })) 
+)
+
+export const modifyAccount : simpleAction = (_req, sv) => {
+    if (!sv.v.uid) throw "modifyAccount needs uid";
+    return crejsonldap_simple(sv.v, { create: false });
+};
+
+// throw a list of errors, if any
+export const validateAccount : simpleAction = (_req, sv) => (
+    crejsonldap_simple(sv.v, { action: "validate" })
 );
 
-// return a list of errors, if any
-export const validateAccount : simpleAction = (_req, sv) => (
-    crejsonldap.call(sv.v, { action: "validate" }).then(resp => {
-        if (resp.err) throw JSON.stringify(resp.err)
-        return { v: sv.v }
-    })
-);
+// NB: expires only one profile. It will expire account if no more profiles
+export const expireAccount : simpleAction = (_req, sv) => {
+    const { uid, profilename } = sv.v;
+    if (!uid) throw "expireAccount need uid";
+    if (!profilename) throw "expireAccount need profilename";
+    const v = { uid, profilename, enddate: new Date("1970-01-01") } as v;
+    return crejsonldap_simple(v, { create: false }); // should we return sv.v?
+};
 
 export const genLogin: simpleAction = (_req, sv) => {
     let createResp = login => {
