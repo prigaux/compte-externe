@@ -71,6 +71,7 @@ function homonymes_filter(sns: string[], givenNames: string[], supannMailPerso?:
 }
 
 function homonyme_scoring(birthDay: Date, known_birthDay: Date): number {
+    if (!birthDay || !known_birthDay) return 1; // mostly for tests
     let partialInLdap = birthDay.getUTCMonth() + 1 === 1 && birthDay.getUTCDate() === 1; // we have many entries with birthDay 1945-01-01, in that case matching only year is enough
     function same(method) {
         return birthDay[method]() === known_birthDay[method]();
