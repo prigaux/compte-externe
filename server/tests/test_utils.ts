@@ -1,6 +1,6 @@
 'use strict';
 
-import raw_assert = require('assert');
+import * as raw_assert from 'assert';
 
 export const require_fresh = (name: string) => {
     let file = require.resolve(name);

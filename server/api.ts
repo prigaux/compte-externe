@@ -1,14 +1,14 @@
 /// <reference path='types.d.ts' />
 
-import _ = require('lodash');
-import express = require('express');
-import acl_checker = require('./acl_checker');
-import db = require('./db');
-import utils = require('./utils');
-import search_ldap = require('./search_ldap');
-import mail = require('./mail');
-import conf = require('./conf');
-import conf_steps = require('./steps/conf');
+import * as _ from 'lodash';
+import * as express from 'express';
+import * as acl_checker from './acl_checker';
+import * as db from './db';
+import * as utils from './utils';
+import * as search_ldap from './search_ldap';
+import * as mail from './mail';
+import * as conf from './conf';
+import * as conf_steps from './steps/conf';
 require('./helpers');
 
 const router = express.Router();
@@ -324,4 +324,4 @@ router.get('/structures', (req: req, res) => {
     respondJson(req, res, search_structures(req));
 });
 
-export = router;
+export default router;

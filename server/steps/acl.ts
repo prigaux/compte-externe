@@ -1,7 +1,7 @@
 'use strict';
 
-import conf = require('../conf');
-import ldap = require('../ldap');
+import * as conf from '../conf';
+import * as ldap from '../ldap';
 const filters = ldap.filters;
 
 const searchPeople = (peopleFilter: string, attr: string) => (

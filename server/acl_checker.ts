@@ -1,6 +1,6 @@
 'use strict';
 
-import _ = require('lodash');
+import * as _ from 'lodash';
 
 export const checkAuthorized = (moderators: string[], user: CurrentUser) => {
     if (!moderators) {

@@ -1,14 +1,14 @@
 'use strict';
 
-import _ = require('lodash');
-import mail = require('../mail');
-import ldap = require('../ldap');
-import utils = require('../utils');
-import crejsonldap = require('../crejsonldap');
-import search_ldap = require('../search_ldap');
-import acl_checker = require('../acl_checker');
-import esup_activ_bo = require('../esup_activ_bo');
-import conf = require('../conf');
+import * as _ from 'lodash';
+import * as mail from '../mail';
+import * as ldap from '../ldap';
+import * as utils from '../utils';
+import * as crejsonldap from '../crejsonldap';
+import * as search_ldap from '../search_ldap';
+import * as acl_checker from '../acl_checker';
+import * as esup_activ_bo from '../esup_activ_bo';
+import * as conf from '../conf';
 const filters = ldap.filters;
 
 export const addAttrs = (v: Partial<v>) => (_req, sv) => {

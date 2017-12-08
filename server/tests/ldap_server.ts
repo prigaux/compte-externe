@@ -1,5 +1,5 @@
-import ldap = require('ldapjs');
-import helpers = require('ldap-filter/lib/helpers');
+import * as ldap from 'ldapjs';
+import * as helpers from '../../node_modules/ldap-filter/lib/helpers';
 
 /* workaround "Filters match on attribute values only case-sensitively" (ldapjs github issue #156) */
 function escapeRegExp(str) {

@@ -1,8 +1,8 @@
 'use strict';
 
-import _ = require('lodash');
-import ldapjs = require('ldapjs');
-import conf = require('./conf');
+import * as _ from 'lodash';
+import * as ldapjs from 'ldapjs';
+import * as conf from './conf';
 
 const remove_accents = _.deburr;
 

@@ -1,9 +1,9 @@
 'use strict';
 
-import _ = require('lodash');
-import express = require('express');
-import csvtojson = require('csvtojson');
-import conf = require('./conf');
+import * as _ from 'lodash';
+import * as express from 'express';
+import * as csvtojson from 'csvtojson';
+import * as conf from './conf';
 import client_conf from '../app/conf'; // ES6 syntax needed for default export
 import { EventEmitter } from 'events';
 

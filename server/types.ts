@@ -1,6 +1,6 @@
-import express = require('express');
-import mongodb = require('mongodb');
-import conf = require('./conf');
+import * as express from 'express';
+import * as mongodb from 'mongodb';
+import * as conf from './conf';
 
 declare global {
     

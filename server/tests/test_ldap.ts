@@ -1,12 +1,12 @@
 'use strict';
 
-import _ = require('lodash');
-import test_utils = require('./test_utils');
+import * as _ from 'lodash';
+import * as test_utils from './test_utils';
 import { parseDN } from 'ldapjs';
 
 // get module types:
-import __conf__ = require('../conf');
-import __ldap__ = require('../ldap');
+import * as __conf__ from '../conf';
+import * as __ldap__ from '../ldap';
 export type conf = typeof __conf__;
 export type ldap = typeof __ldap__;
 

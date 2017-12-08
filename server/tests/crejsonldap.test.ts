@@ -1,6 +1,6 @@
 import { assert } from './test_utils';
-import crejsonldap = require('../crejsonldap');
-import actions = require('../steps/actions');
+import * as crejsonldap from '../crejsonldap';
+import * as actions from '../steps/actions';
 
 const fake_callRaw = (param_resp_s) => {
     crejsonldap.callRaw.fn = (param) => {

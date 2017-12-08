@@ -1,10 +1,10 @@
 'use strict';
 
-import _ = require('lodash');
-import fs = require('fs');
-import nodemailer = require('nodemailer');
-import conf = require('./conf');
-import Mustache = require('mustache');
+import * as _ from 'lodash';
+import * as fs from 'fs';
+import * as nodemailer from 'nodemailer';
+import * as conf from './conf';
+import * as Mustache from 'mustache';
 
 const mailTransporter = nodemailer.createTransport(conf.mail.transport);
 

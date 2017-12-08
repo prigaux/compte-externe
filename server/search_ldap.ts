@@ -1,8 +1,8 @@
 'use strict';
 
-import _ = require('lodash');
-import conf = require('./conf');
-import ldap = require('./ldap');
+import * as _ from 'lodash';
+import * as conf from './conf';
+import * as ldap from './ldap';
 const filters = ldap.filters;
 
 const maxLoginLength = 10;

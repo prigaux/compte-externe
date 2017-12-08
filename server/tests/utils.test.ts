@@ -1,7 +1,7 @@
 'use strict';
 
 import { assert } from './test_utils';
-import utils = require('../utils');
+import * as utils from '../utils';
 
 describe('nextDate', () => {
         it ("should work", () => {

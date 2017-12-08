@@ -1,10 +1,10 @@
 'use strict';
 
 import { require_fresh, assert } from '../test_utils';
-import test_ldap = require('../test_ldap');
+import * as test_ldap from '../test_ldap';
 
 // get module types:
-import __acl__ = require('../../steps/acl');
+import * as __acl__ from '../../steps/acl';
 type acl = typeof __acl__;
 
 describe('structureRoles', () => {

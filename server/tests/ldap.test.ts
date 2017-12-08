@@ -1,8 +1,8 @@
 'use strict';
 
 import { assert } from './test_utils';
-import ldap_convert = require('../ldap_convert');
-import test_ldap = require('./test_ldap');
+import * as ldap_convert from '../ldap_convert';
+import * as test_ldap from './test_ldap';
 require('../helpers');
 
 describe('ldap_convert', () => {

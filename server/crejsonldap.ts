@@ -1,6 +1,6 @@
-import utils = require('./utils');
-import ldap = require('./ldap');
-import conf = require('./conf');
+import * as utils from './utils';
+import * as ldap from './ldap';
+import * as conf from './conf';
 
 
 export type options = { action: "validate" } | { create: false } | {

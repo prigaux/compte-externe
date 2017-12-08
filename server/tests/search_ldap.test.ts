@@ -1,11 +1,11 @@
 'use strict';
 
-import _ = require('lodash');
+import * as _ from 'lodash';
 import { require_fresh, assert } from './test_utils';
-import test_ldap = require('./test_ldap');
+import * as test_ldap from './test_ldap';
 
 // get module types:
-import __search_ldap__ = require('../search_ldap');
+import * as __search_ldap__ from '../search_ldap';
 type search_ldap = typeof __search_ldap__;
 
 

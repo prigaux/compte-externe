@@ -1,12 +1,12 @@
-import _ = require('lodash');
-import express = require('express');
-import path = require('path');
-import logger = require('morgan');
-import bodyParser = require('body-parser');
+import * as _ from 'lodash';
+import * as express from 'express';
+import * as path from 'path';
+import * as logger from 'morgan';
+import * as bodyParser from 'body-parser';
 
-import db = require('./db');
-import api = require('./api');
-import utils = require('./utils');
+import * as db from './db';
+import api from './api';
+import * as utils from './utils';
 const app = express();
 
 _.attempt(() => require('source-map-support').install());

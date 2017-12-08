@@ -1,6 +1,6 @@
 'use strict';
 
-import _ = require('lodash');
+import * as _ from 'lodash';
 
 export const datetime: ldap_conversion = {
         fromLdap: (dt: string): Date => {

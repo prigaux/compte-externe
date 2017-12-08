@@ -1,8 +1,8 @@
 'use strict';
 
-import fs = require('fs');
+import * as fs from 'fs';
 import sendmailTransport = require('nodemailer-sendmail-transport');
-import ldap_convert = require('./ldap_convert');
+import * as ldap_convert from './ldap_convert';
 
 const ldap_base = "dc=univ,dc=fr";
 const ldap_main = {

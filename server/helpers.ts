@@ -1,9 +1,9 @@
 'use strict';
 
-import _ = require('lodash');
+import * as _ from 'lodash';
 import concat = require('concat-stream');
-import simpleGet = require('simple-get');
-import conf = require('./conf');
+import * as simpleGet from 'simple-get';
+import * as conf from './conf';
 
 if (Promise.prototype.tap === undefined) {
     // https://github.com/kriskowal/q/wiki/API-Reference#promisetaponfulfilled

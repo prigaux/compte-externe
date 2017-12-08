@@ -1,11 +1,11 @@
 'use strict';
 
-import _ = require('lodash');
-import fs = require('fs');
-import xml2js = require('xml2js');
-import Mustache = require('mustache');
-import helpers = require('./helpers');
-import conf = require('./conf');
+import * as _ from 'lodash';
+import * as fs from 'fs';
+import * as xml2js from 'xml2js';
+import * as Mustache from 'mustache';
+import * as helpers from './helpers';
+import * as conf from './conf';
 
 const parseString: (xml: string, options: xml2js.Options) => Promise<any> = helpers.promisify_callback(xml2js.parseString);
 const readFile = helpers.promisify_callback(fs.readFile);
