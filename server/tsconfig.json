@@ -15,7 +15,7 @@
         "body-parser", "express", "lodash", "mocha", "mongodb", "morgan", "mustache", "node", "nodemailer", "xml2js"
     ],
     "lib": [
-        "es5", "es2015.promise"
+        "es5", "es2015.promise", "es2015.core", "es2015.proxy"
     ],
     "module": "commonjs"
   }

@@ -14,7 +14,7 @@
     "karma": "karma start"
   },
   "engines": {
-    "node": "^4"
+    "node": "^6.4"
   },
   "dependencies": {
     "@types/body-parser": "^1.16.4",

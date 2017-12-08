@@ -8,6 +8,7 @@ import * as crejsonldap from '../crejsonldap';
 import * as search_ldap from '../search_ldap';
 import * as acl_checker from '../acl_checker';
 import * as esup_activ_bo from '../esup_activ_bo';
+import v_display from '../v_display';
 import * as conf from '../conf';
 const filters = ldap.filters;
 
@@ -92,13 +93,13 @@ const accountExactMatch = (v: v) => {
     return onePerson(filters.and(filters_));
 }
 
-export const createCompteSafe: simpleAction = (_req, sv) => {
+export const createCompteSafe: action = (_req, sv) => {
     return accountExactMatch(sv.v).then(v => {
         if (v) {
             return Promise.resolve({ v, response: { ignored: true } } as vr);
         }
         // no exact match, calling crejsonldap with homonyme detection
-        return createCompte_(sv.v, { dupcreate: "err", create: true }).catch(errS => {
+        return createCompte_(sv, { dupcreate: "err", create: true }).catch(errS => {
             const err = JSON.parse(errS);
             if (err.code === 'homo') {
                 return { v: sv.v, response: { in_moderation: true } };
@@ -109,11 +110,12 @@ export const createCompteSafe: simpleAction = (_req, sv) => {
     });
 }
 
-export const createCompte: simpleAction = (_req, sv) => (
-    createCompte_(sv.v, { dupcreate: "ignore", create: true })
+export const createCompte: action = (_req, sv) => (
+    createCompte_(sv, { dupcreate: "ignore", create: true })
 );
     
-const createCompte_ = (v: v, opts : crejsonldap.options) => {
+const createCompte_ = (sv: sv, opts : crejsonldap.options) => {
+    const v = sv.v;
     let is_new_account = !v.uid;
 
     if (!v.startdate) v.startdate = new Date();
@@ -130,20 +132,22 @@ const createCompte_ = (v: v, opts : crejsonldap.options) => {
         if (!v.supannAliasLogin) v.supannAliasLogin = uid;
         return v;
     }).tap((v) => {
-        return after_createAccount(v, is_new_account);
+        const attrs = require('../steps/conf').steps[sv.step].attrs;
+        return after_createAccount(v, attrs, is_new_account);
     }).then((v) => (
         { v, response: {login: v.supannAliasLogin} }
     ));
 };
 
-const after_createAccount = (v: v, is_new_account: boolean) => {
+const after_createAccount = (v: v, attrs: StepAttrsOption, is_new_account: boolean) => {
     if (!is_new_account) {
         // we merged the account. ignore new password + no mail
     } else if (v.userPassword) {
         return esup_activ_bo.setPassword(v.uid, v.userPassword);
         // NB: if we have a password, it is a fast registration, so do not send a mail
     } else if (v.supannMailPerso) {
-        mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v });
+        const v_ = v_display(v, attrs);
+        mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v, v_display: v_ });
     }
     return null;
 }
