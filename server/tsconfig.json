@@ -12,7 +12,10 @@
     "alwaysStrict": true,
     "strictFunctionTypes": true,
     "types" : [
-        "body-parser", "es6-promise", "express", "lodash", "mocha", "mongodb", "morgan", "mustache", "node", "nodemailer", "xml2js"
+        "body-parser", "express", "lodash", "mocha", "mongodb", "morgan", "mustache", "node", "nodemailer", "xml2js"
+    ],
+    "lib": [
+        "es5", "es2015.promise"
     ],
     "module": "commonjs"
   }
