@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { pick } from 'lodash';
+import { pick, mapKeys } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
@@ -138,7 +138,7 @@ const api_url = conf.base_pathname + 'api';
                     }
                     sv.modifyTimestamp = new Date(sv.modifyTimestamp);
                     Helpers.eachObject(sv.attrs, (attr) => sv.v[attr] = sv.v[attr]); // ensure key exists for Vuejs setters
-                    Helpers.assign(sv.v, params);
+                    Helpers.assign(sv.v, fromWs(mapKeys(params, (_, k: string) => k.replace(/^default_/, ''))));
                     $scope.v = sv.v;
                     $scope.attrs = sv.attrs;
                     $scope.step = pick(sv, ['allow_many', 'labels']);
@@ -164,10 +164,10 @@ const api_url = conf.base_pathname + 'api';
                 , _handleErr);
         }
 
-        export function set(id: string, step: string, v: V) {
+        export function set(id: string, step: string, v: V, params) {
             var url = api_url + '/comptes/' + id + "/" + step;
             var v_ = toWs(v);
-            return axios.put(url, v_).then(
+            return axios.put(url, v_, { params }).then(
                 (resp) => resp.data,
                 _handleErr);
         }

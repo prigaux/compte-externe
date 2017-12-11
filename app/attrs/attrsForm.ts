@@ -68,11 +68,14 @@ export const AttrsForm = Vue.extend({
             return this.validity.submitted;
         },
         other_attrs(): StepAttrsOption {
-            if (this.to_import && this.attrs) {
-                return Helpers.filter(this.attrs, (_, k) => !this.to_import.fields.includes(k));
-            } else {
-                return this.attrs;
+            let attrs = this.attrs;
+            if (this.to_import && attrs) {
+                attrs = Helpers.filter(attrs, (_, k) => !this.to_import.fields.includes(k));
             }
+            if (this.$route.query && attrs) {
+                attrs = Helpers.filter(attrs, (_, k) => !(k in this.$route.query));
+            }
+            return attrs;
         },
 
         allowedCharsInNames() {
@@ -155,7 +158,7 @@ export const AttrsForm = Vue.extend({
         }          
       },
       send() {
-          Ws.set(this.id, this.stepName, this.v).then(resp => {
+          Ws.set(this.id, this.stepName, this.v, this.$route.query).then(resp => {
               if (resp.error === "no_moderators") {
                   Ws.structure_get(this.v.structureParrain).then(structure => {
                     alert(conf.error_msg.noModerators(structure.name));
