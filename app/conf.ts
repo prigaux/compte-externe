@@ -79,7 +79,6 @@ export default {
             ],
             js: [
                 "node_modules/promise-polyfill/promise.js",
-                wsgroupsURL + "/web-widget/autocompleteUser-resources.html.js",
             ],
         },
         css: [

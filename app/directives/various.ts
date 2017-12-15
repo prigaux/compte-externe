@@ -1,5 +1,6 @@
 import Vue from "vue";
 import conf from '../conf';
+import loadScriptOnce from 'load-script-once';
 import webcamLivePortrait from './webcamLivePortrait.vue';
 
 Vue.component('webcamLivePortrait', webcamLivePortrait);
@@ -12,7 +13,14 @@ Vue.component('autocomplete-user', {
     };
     let params = { select, wsParams: { allowInvalidAccounts: true } };
     let searchURL = conf.wsgroupsURL + '/searchUserCAS';
-    window['jQuery'](this.$el)['autocompleteUser'](searchURL, params);
+
+    loadScriptOnce(conf.wsgroupsURL + "/web-widget/autocompleteUser-resources.html.js", (err) => {
+        if (err) {
+            console.error(err);
+        } else {
+            window['jQuery'](this.$el)['autocompleteUser'](searchURL, params);
+        }
+    });
   },
 })
 
