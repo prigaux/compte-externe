@@ -5,13 +5,19 @@
   "author": "Pascal Rigaux <pascal.rigaux@univ-paris1.fr>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --config build/webpack.dev.conf.js",
+    "build:w": "webpack --watch --config build/webpack.normal.conf.js",
     "start": "npm run dev",
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.17.1",
+    "bootstrap": "^3.3.7",
     "load-script-once": "^1.1.2",
+    "raw-loader": "^0.5.1",
+    "ts-loader": "^3.2.0",
     "vue": "^2.5.2",
+    "vue-async-computed": "^3.3.1",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
@@ -38,6 +44,7 @@
     "portfinder": "^1.0.13",
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.8",
+    "promise-polyfill": "^6.1.0",
     "rimraf": "^2.6.0",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",

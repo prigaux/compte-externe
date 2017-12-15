@@ -1,5 +1,6 @@
 'use strict';
 
+import * as path from 'path';
 import * as _ from 'lodash';
 import * as express from 'express';
 import * as csvtojson from 'csvtojson';
@@ -29,21 +30,7 @@ export function respondJson(req: req, res: express.Response, p: Promise<response
 if (!client_conf.base_pathname.match(/\/$/)) throw "base_pathname in app/conf.ts must have a trailing slash";
 
 export const index_html = (_req: req, res: express.Response, _next): void => {
-    let fs = require('fs');
-    let Mustache = require('mustache');
-    fs.readFile(__dirname + "/../app/public/webpack-assets.json", (err, webpack_assets) => {
-        if (err) { console.error(err); return }
-        const build_js = JSON.parse(webpack_assets).main.js;
-        let tconf = _.merge({ livereload: process.env.NODE_ENV !== 'production', mainUrl: conf.mainUrl, build_js }, client_conf);
-        fs.readFile(__dirname + "/../app/index.html", (err, data) => {
-            if (err) {
-                console.log(err);
-            } else {
-                data = Mustache.render(data.toString(), tconf);
-                res.send(data);
-            }
-        });
-    });
+    res.sendFile(path.join(__dirname, "../app/dist/index.html"), console.error)
 };
 
 

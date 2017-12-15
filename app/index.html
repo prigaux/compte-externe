@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <base href="{{{base_pathname}}}">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Gestion des comptes externes</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  {{#assets.lib.css}}
-  <link rel="stylesheet" href="{{{.}}}">
-  {{/assets.lib.css}}
-  {{#assets.css}}
-  <link rel="stylesheet" href="{{{.}}}">
-  {{/assets.css}}
-  <script src="node_modules/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  <link rel="stylesheet" href="<%= webpackConfig.output.publicPath %>static/bootstrap.css">
+  <link rel="stylesheet" href="<%= webpackConfig.output.publicPath %>static/app.css">
+  <script src="<%= webpackConfig.output.publicPath %>static/promise-polyfill.js"></script>
 </head>
 <body>
   <!--[if lt IE 7]>
@@ -23,21 +18,13 @@
   <div class="container-fluid">
     <div class="page">
       <p class="text-center">
-        <img src=".public/header.png">
+        <img src="<%= webpackConfig.output.publicPath %>static/header.png">
       </p>
-      <h1 class="text-center" style="margin-bottom: 1em">{{title}}</h1>
+      <h1 class="text-center" style="margin-bottom: 1em">{{conf.title}}</h1>
       <div class="content">
           <router-view></router-view>
       </div>
     </div>
   </div>
-
-  {{#assets.lib.js}}
-  <script src="{{{.}}}"></script>
-  {{/assets.lib.js}}
-  <script src=".public/{{{build_js}}}"></script>
-  {{#livereload}}
-  <script src="{{{mainUrl}}}:35729/livereload.js"></script>
-  {{/livereload}}
 </body>
 </html>

@@ -69,21 +69,5 @@ export default {
         "MAROC", "BELGIQUE", "LUXEMBOURG", "ARGENTINE", "ALGERIE", "GRANDE BRETAGNE", "TOGO", "CANADA", "SUISSE", "BRESIL",
         "GRECE", "TUNISIE", "RUSSIE", "COTE D'IVOIRE", "ILE MAURICE", "PAYS BAS", "POLOGNE", "GABON", "AUTRICHE", "REPUBLIQUE DOMINICAINE",
     ],
-
-    assets: {
-        lib: {
-            css: [
-                'node_modules/html5-boilerplate/dist/css/normalize.css',
-                'node_modules/html5-boilerplate/dist/css/main.css',
-                'node_modules/bootstrap/dist/css/bootstrap.css',
-            ],
-            js: [
-                "node_modules/promise-polyfill/promise.js",
-            ],
-        },
-        css: [
-            '.public/app.css'
-        ],
-    },
 };
 

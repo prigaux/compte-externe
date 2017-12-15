@@ -32,6 +32,14 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       : false,
     publicPath: config.dev.assetsPublicPath,
     proxy: config.dev.proxyTable,
+    // workaround https://github.com/webpack/webpack-dev-server/issues/954
+    after(app) {
+        if (config.dev.assetsPublicPath !== '/') {
+            const path = require('path')
+            const express = require('express')
+            app.use(config.dev.assetsPublicPath + "static", express.static(path.resolve(__dirname, '../static')))
+        }
+    },
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
