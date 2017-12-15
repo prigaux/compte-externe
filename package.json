@@ -55,6 +55,8 @@
   },
   "devDependencies": {
     "concurrently": "^3.4.0",
+    "eslint": "^4.13.1",
+    "eslint-plugin-vue": "^4.0.0-beta.2",
     "jasmine-core": "^2.3.4",
     "karma": "^1.7.1",
     "karma-jasmine": "^1.1.0",
