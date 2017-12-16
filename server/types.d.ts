@@ -44,8 +44,10 @@ declare module 'ldapjs' {
       sizeLimit?: number;
     }
     export interface Client {
+          on: any;
         bind: any; 
       search: any;
+      destroy(): void;
     }
     
     export function createClient(options: any): Client

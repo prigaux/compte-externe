@@ -6,11 +6,30 @@ import * as conf from './conf';
 
 const remove_accents = _.deburr;
 
-const client = ldapjs.createClient({ url: conf.ldap.uri, reconnect: true });
+let _clientP : Promise<ldapjs.Client>;
+function clientP() {
+    if (!_clientP) _clientP = new_clientP();
+    return _clientP;
+}
 
-client.bind(conf.ldap.dn, conf.ldap.password, err => {
-    if (err) console.log("err: " + err);
-});
+function new_clientP() : Promise<ldapjs.Client> {
+    const c = ldapjs.createClient({ url: conf.ldap.uri, reconnect: true, idleTimeout: conf.ldap.disconnectWhenIdle_duration });
+    c.on('error', console.error);
+    c.on('idle', () => {
+        //console.log("destroying ldap connection");
+        c.destroy();
+        _clientP = undefined;
+    });
+
+    return new Promise((resolve, reject) => {
+        c.on('connect', () => {
+            //console.log("connecting to ldap server");
+            c.bind(conf.ldap.dn, conf.ldap.password, err => {
+                err ? reject(err) : resolve(c);
+            });
+        });
+    });
+}
 
 export type filter = string
 export type Options = ldapjs.SearchOptions
@@ -31,8 +50,8 @@ export function searchRaw(base: string, filter: filter, attributes: string[], op
     let params = merge({ filter, attributes, scope: "sub" }, options);
     let p = new Promise((resolve, reject) => {
         let l: LdapEntry[] = [];
-        client.search(base, params, (err, res) => {
-            if (err) reject(err);
+        clientP().then(c => c.search(base, params, (err, res) => {
+            if (err) return reject(err);
 
             res.on('searchEntry', entry => {
                 l.push(entry.raw);
@@ -55,7 +74,7 @@ export function searchRaw(base: string, filter: filter, attributes: string[], op
                 else
                     reject("unknown error");
             });
-        });
+        }));
     });
     return <Promise<Dictionary<RawValueB>[]>> p;
 }

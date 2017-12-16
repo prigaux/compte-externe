@@ -100,7 +100,9 @@ const conf = {
             let r = user_dn.match(/^uid=([^,]*)/);
             if (!r) console.log("invalid group member " + user_dn);
             return r && r[1] + conf.ldap.uid_to_eppn;
-        }
+        },
+
+        disconnectWhenIdle_duration: 1 * 60 * 1000, // in milliseconds
     },
 
     shibboleth: {
