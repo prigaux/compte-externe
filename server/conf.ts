@@ -83,6 +83,7 @@ const conf = {
             },
             sns: ['sn'],
             givenNames: ['givenName'],
+            supannCiviliteChoices: [ 'M.', 'Mme' ].map(s => ({ key: s, name: s })),
             homonymes_restriction: '(objectClass=inetOrgPerson)',
         },
 

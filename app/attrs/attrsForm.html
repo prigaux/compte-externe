@@ -46,7 +46,9 @@
    </fieldset>
 
    <my-bootstrap-form-group name="supannCivilite" :label="attr_labels.supannCivilite" :validity="validity" v-if="other_attrs.supannCivilite">
-    <radio-with-validity :values="{'M.': 'M.', Mme: 'Mme'}" name="supannCivilite" v-model="v.supannCivilite" :validity.sync="validity.supannCivilite"></radio-with-validity>
+    <radio-with-validity name="supannCivilite" v-model="v.supannCivilite"
+        :values="attrs.supannCivilite.choicesMap" :validity.sync="validity.supannCivilite">
+    </radio-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="givenName" :label="attr_labels.givenName" :validity="validity" v-if="other_attrs.givenName">
