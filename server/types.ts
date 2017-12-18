@@ -13,7 +13,7 @@ type req = express.Request;
 type Mails = string[]
 
 type id = string
-type v = typeof conf.ldap.people.types & { noInteraction?: boolean }
+type v = typeof conf.ldap.people.types & { noInteraction?: boolean, various?: any }
 type response = { [index: string]: any };
 type sv = {
   _id?: mongodb.ObjectID;
