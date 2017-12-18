@@ -61,7 +61,7 @@
     <input-with-validity name="birthName" v-model="v.birthName" type="text" title="si différent du nom d'usage" :allowed-chars="allowedCharsInNames" :validity.sync="validity.birthName"></input-with-validity>
   </my-bootstrap-form-group>
 
-  <DateAttr v-model="v.birthDay" minYear="1900" :maxYear="maxYear" :label="attr_labels.birthDay" v-if="other_attrs.birthDay"  :submitted="submitted"></DateAttr>
+  <DateAttr v-model="v.birthDay" minYear="1900" :maxYear="currentYear" :label="attr_labels.birthDay" v-if="other_attrs.birthDay"  :submitted="submitted"></DateAttr>
 
   <AddressAttr v-model="v.homePostalAddress" :label="attr_labels.homePostalAddress" v-if="other_attrs.homePostalAddress" :submitted="submitted"></AddressAttr>
 

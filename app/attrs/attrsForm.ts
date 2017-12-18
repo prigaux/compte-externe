@@ -81,7 +81,7 @@ export const AttrsForm = Vue.extend({
         allowedCharsInNames() {
             return "[A-Za-z" + accentsRange + "'. -]";
         },
-        maxYear() {
+        currentYear() {
             return new Date().getUTCFullYear();
         },
 
