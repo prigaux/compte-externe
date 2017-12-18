@@ -37,13 +37,13 @@ const server = ldap.createServer();
 
 let valid_bind = false;
 
-function authorize(req, _res, next) {
+function authorize(req, res, next) {
   valid_bind = req.dn.equals(params.dn) && req.credentials === params.password;
   if (!valid_bind) {
       //console.log(req.dn.toString(), '!==', params.dn, '||', req.credentials, '!==', params.password);
       return next(new ldap.InvalidCredentialsError());
   }
-
+  res.end();
   return next();
 }
 
