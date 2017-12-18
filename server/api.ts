@@ -118,9 +118,8 @@ function checkAcls(req: req, sv: sv) {
 }
 
 function first_sv(req: req, wanted_step: string): Promise<sv> {
-    let stepName = conf_steps.firstStep(wanted_step, req);
-    let empty_sv = { step: stepName, v: <v> {} };
-    if (!step(empty_sv).initialStep) throw `${stepName} is not a valid initial step`;
+    let empty_sv = { step: wanted_step, v: <v> {} };
+    if (!step(empty_sv).initialStep) throw `${wanted_step} is not a valid initial step`;
     return action_pre(req, empty_sv);
 }
 
