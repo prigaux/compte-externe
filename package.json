@@ -11,7 +11,7 @@
     "build": "concurrently 'tsc -p server' 'cd app && npm run build'",
     "build:w": "concurrently 'tsc --watch -p server' 'cd app && npm run build:w'",
     "start:w": "concurrently 'tsc --watch -p server/' 'cd app && npm run build:w' 'NODE_ENV=test nodemon --watch server/ start-server.js'",
-    "test:w": "mocha --watch server/tests",
+    "test:w": "mocha --recursive --watch server/tests",
     "karma": "karma start"
   },
   "engines": {
