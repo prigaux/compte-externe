@@ -64,7 +64,9 @@
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="birthName" :label="attr_labels.birthName" :validity="validity" v-if="other_attrs.birthName">
-    <input-with-validity name="birthName" v-model="v.birthName" type="text" title="si différent du nom d'usage" :allowed-chars="allowedCharsInNames" :validity.sync="validity.birthName"></input-with-validity>
+    <input-with-validity name="birthName" v-model="v.birthName" title="si différent du nom d'usage"
+        type="text" :allowed-chars="allowedCharsInNames" :validity.sync="validity.birthName">
+    </input-with-validity>
   </my-bootstrap-form-group>
 
   <DateAttr v-model="v.birthDay" minYear="1900" :maxYear="currentYear" :label="attr_labels.birthDay" v-if="other_attrs.birthDay"  :submitted="submitted"></DateAttr>
@@ -95,11 +97,11 @@
   
    <PasswordAttr v-model="v.userPassword" :label="label.userPassword" :submitted="submitted" v-if="other_attrs.userPassword"></PasswordAttr>
 
-   <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity" v-if="other_attrs.profilename">
+  <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity" v-if="other_attrs.profilename">
     <radio-with-validity name="profilename" v-model="v.profilename"
         :values="attrs.profilename.choicesMap" :validity.sync="validity.profilename">
     </radio-with-validity>
-   </my-bootstrap-form-group>
+  </my-bootstrap-form-group>
    
    <BarcodeAttrs v-model="v" :attrs="other_attrs" :submitted="submitted" :v_orig="v_orig" v-if="other_attrs.barcode || other_attrs.mifare"></BarcodeAttrs>
    
