@@ -71,6 +71,11 @@ function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
             if (!(_.isString(val_) && val_.match("^(" + opt.pattern + ")$")))
                 throw `constraint ${key}.pattern ${opt.pattern} failed for ${val}`;
         }
+        if (opt.choices) {
+            const keys = opt.choices.map(e => e.key);
+            if (val !== undefined && !keys.includes(val))
+                throw `constraint ${key}.choices ${keys} failed for ${val}`;
+        }
     });
     return <v> _.assign(prev, v);
 }
