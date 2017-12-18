@@ -201,3 +201,11 @@ export const sendValidationEmail: action = (_req, sv) => {
 export const forceBrowserExit: action = (_req, { v }) => (
     Promise.resolve({ v, response: { forceBrowserExit: true } })
 );
+
+export const homePhone_to_pager_if_mobile : simpleAction = async function(_req, { v }) {
+    const { homePhone, ...v_ } = v;
+    if (homePhone && homePhone.match("^(" + conf.pattern.isFrenchMobilePhone + ")$")) {
+        v = { pager: homePhone, ...v_ } as v;
+    }
+    return { v };
+}

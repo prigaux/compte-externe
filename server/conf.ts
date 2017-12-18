@@ -44,7 +44,7 @@ const conf = {
                 supannCivilite: '',
                 supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '',
                 birthDay: new Date(), birthName: '',
-                homePhone: '',
+                homePhone: '', pager: '',
                 homePostalAddress: '',
                 jpegPhoto: '',
                 structureParrain: '',
@@ -125,6 +125,10 @@ const conf = {
 
     esup_activ_bo: {
         url: "http://xxxx.univ.fr:8080/esup-activ-bo/xfire/AccountManagement",
+    },
+
+    pattern: {
+        isFrenchMobilePhone: "(0|\\+33)\\s*[67](\\s*[0-9]){8}",        
     },
 
     http_client_CAs: fs.readFileSync('/etc/ssl/certs/ca-certificates.crt').toString().split(/(?=-----BEGIN CERTIFICATE-----)/),
