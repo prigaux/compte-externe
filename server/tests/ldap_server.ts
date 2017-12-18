@@ -35,8 +35,11 @@ const db = params.DNs;
 
 const server = ldap.createServer();
 
+let valid_bind = false;
+
 function authorize(req, _res, next) {
-  if (!req.dn.equals(params.dn) || req.credentials !== params.password) {
+  valid_bind = req.dn.equals(params.dn) && req.credentials === params.password;
+  if (!valid_bind) {
       //console.log(req.dn.toString(), '!==', params.dn, '||', req.credentials, '!==', params.password);
       return next(new ldap.InvalidCredentialsError());
   }
@@ -60,6 +63,8 @@ function search(dn, filter, scope: string) {
 }
 
 server.search(params.base, (req, res, next) => {
+  if (!valid_bind) return next(new ldap.InvalidCredentialsError());
+  
   let dn = req.dn.toString();
   //console.log("ldap server.search", dn, req.filter.toString());
   if (db[dn]) {
