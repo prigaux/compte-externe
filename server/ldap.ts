@@ -13,7 +13,7 @@ client.bind(conf.ldap.dn, conf.ldap.password, err => {
 });
 
 export type filter = string
-export type Options = ldapjs.Options
+export type Options = ldapjs.SearchOptions
 export type LdapAttrValue = string | number | Date | string[] | number[];
 export type LdapEntry = Dictionary<LdapAttrValue>;
 

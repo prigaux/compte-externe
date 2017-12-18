@@ -37,7 +37,7 @@ declare module 'simple-get' {
 }
 
 declare module 'ldapjs' {
-    export interface Options {
+    export interface SearchOptions {
       attributes?: string[];
       scope?: string;
       filter?: string;
