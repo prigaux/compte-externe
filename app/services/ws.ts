@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { pick, mapKeys } from 'lodash';
+import { pick, mapKeys, keyBy, mapValues } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
@@ -23,9 +23,17 @@ export interface SVRaw {
     error?: string;
 }
 
+interface StepAttrOptionChoices {
+  key: string;
+  name?: string;
+}
 export interface StepAttrOption {
   readonly?: boolean;
-  hidden?: boolean;
+  pattern?: string;
+  max?: number;
+  choices?: StepAttrOptionChoices[];
+
+  choicesMap?: Dictionary<string>; // computed from "choices"
 }
 export interface Dictionary<T> {
   [index: string]: T;
@@ -128,6 +136,16 @@ const api_url = conf.base_pathname + 'api';
             ));
         }
 
+        function initAttrs(attrs: StepAttrsOption) {
+            for (const attr in attrs) {
+                const opts = attrs[attr];
+                if (opts.choices) {
+                    opts.choicesMap = mapValues(keyBy(opts.choices, 'key'), choice => choice.name)
+                }
+            }
+            return attrs;
+        }
+
         export function getInScope($scope, id: string, params, expectedStep: string) : Promise<void> {
             var url = api_url + '/comptes/' + id + "/" + expectedStep;
             return axios.get(url, { params }).then((resp) => {
@@ -140,7 +158,7 @@ const api_url = conf.base_pathname + 'api';
                     Helpers.eachObject(sv.attrs, (attr) => sv.v[attr] = sv.v[attr]); // ensure key exists for Vuejs setters
                     Helpers.assign(sv.v, fromWs(mapKeys(params, (_, k: string) => k.replace(/^default_/, ''))));
                     $scope.v = sv.v;
-                    $scope.attrs = sv.attrs;
+                    $scope.attrs = initAttrs(sv.attrs);
                     $scope.step = pick(sv, ['allow_many', 'labels']);
             }, err => _handleErr(err, $scope));
         }

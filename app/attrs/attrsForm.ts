@@ -85,13 +85,6 @@ export const AttrsForm = Vue.extend({
             return new Date().getUTCFullYear();
         },
 
-        profilename2descr() {
-            let map = {};
-            let attr = this.attrs.profilename;
-            for (let e of attr.choices) map[e.key] = e.name;
-            return map;
-        },
-          
         // for reuse steps:
         isMember() { 
             let aff = this.v.eduPersonAffiliation;
