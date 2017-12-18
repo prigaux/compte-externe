@@ -25,7 +25,10 @@ _.each(conf_steps.steps, normalize_step);
 
 function step(sv: sv): step {
     let r = conf_steps.steps[sv.step];
-    if (!r) throw "invalid step " + sv.step;
+    if (!r) {
+        console.trace("invalid step " + sv.step);
+        throw "invalid step " + sv.step;
+    }
     return r;
 }
 
