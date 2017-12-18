@@ -18,7 +18,7 @@ const respondJson = utils.respondJson;
 
 function normalize_step(step: step, _name: string) {
     _.each(step.attrs, (opts) => {
-        if (opts.toUserOnly) opts.readonly = true;    
+        if (opts.toUserOnly) opts.optional = opts.readonly = true;    
     });
 }
 _.each(conf_steps.steps, normalize_step);
@@ -57,6 +57,10 @@ function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
         if (opt.toUserOnly) {
             /* the attr was sent to the user, but we do not propagate it to next steps (eg: display it to the user, but do not propagate to createCompte step) */
             delete prev[key];
+        }
+        if (!opt.optional) {
+            if (val === '' || val === undefined)
+                throw `constraint !${key}.optional failed for ${val}`;
         }
         if (opt.max) {
             if (!(_.isNumber(val) && 0 <= val && val <= opt.max))

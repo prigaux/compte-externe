@@ -41,6 +41,8 @@ interface StepAttrOption {
   readonly?: boolean;
   hidden?: boolean;
   toUserOnly?: boolean; // implies hidden
+
+  optional?: boolean;
   pattern?: string;
   max?: number;
   choices?: StepAttrOptionChoices[];

@@ -52,11 +52,15 @@
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="givenName" :label="attr_labels.givenName" :validity="validity" v-if="other_attrs.givenName">
-    <input-with-validity name="givenName" v-model="v.givenName" type="text" :allowed-chars="allowedCharsInNames" required :validity.sync="validity.givenName"></input-with-validity>
+    <input-with-validity name="givenName" v-model="v.givenName" 
+        type="text" :allowed-chars="allowedCharsInNames" :required="!attrs.givenName.optional" :validity.sync="validity.givenName">
+    </input-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="sn" :label="attr_labels.sn" :validity="validity" v-if="other_attrs.sn">
-    <input-with-validity name="sn" v-model="v.sn" type="text" :allowed-chars="allowedCharsInNames" required :validity.sync="validity.sn"></input-with-validity>
+    <input-with-validity name="sn" v-model="v.sn"
+        type="text" :allowed-chars="allowedCharsInNames" :required="!attrs.sn.optional" :validity.sync="validity.sn">
+    </input-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="birthName" :label="attr_labels.birthName" :validity="validity" v-if="other_attrs.birthName">
@@ -68,17 +72,23 @@
   <AddressAttr v-model="v.homePostalAddress" :label="attr_labels.homePostalAddress" v-if="other_attrs.homePostalAddress" :submitted="submitted"></AddressAttr>
 
   <my-bootstrap-form-group name="homePhone" :label="attr_labels.homePhone" :validity="validity" v-if="other_attrs.homePhone">
-    <input-with-validity name="homePhone" v-model="v.homePhone" real-type="phone" required :validity.sync="validity.homePhone"></input-with-validity>
+    <input-with-validity name="homePhone" v-model="v.homePhone"
+        real-type="phone" :required="!attrs.homePhone.optional" :validity.sync="validity.homePhone">
+    </input-with-validity>
   </my-bootstrap-form-group>
 
   <my-bootstrap-form-group name="supannMailPerso" :label="attr_labels.supannMailPerso" :validity="validity" v-if="other_attrs.supannMailPerso">
-    <input-with-validity name="supannMailPerso" v-model="v.supannMailPerso" type="email" required :validity.sync="validity.supannMailPerso"></input-with-validity>
+    <input-with-validity name="supannMailPerso" v-model="v.supannMailPerso" 
+        type="email" :required="!attrs.supannMailPerso.optional" :validity.sync="validity.supannMailPerso">
+    </input-with-validity>
   </my-bootstrap-form-group>
 
   <StructureAttr v-model="v.structureParrain" :label="attr_labels.structureParrain" :attrs="attrs.structureParrain" :submitted="submitted" v-if="other_attrs.structureParrain"></StructureAttr>
 
   <my-bootstrap-form-group name="duration" :label="attr_labels.duration_month" v-if="other_attrs.duration" :validity="validity">
-    <input-with-validity name="duration" :value="v.duration / 30" @input="v.duration = $event * 30" type="number" min="1" :max="attrs.duration.max / 30" required :validity.sync="validity.duration"></input-with-validity>
+    <input-with-validity name="duration" :value="v.duration / 30" @input="v.duration = $event * 30"
+        type="number" min="1" :max="attrs.duration.max / 30" :required="!attrs.duration.optional" :validity.sync="validity.duration">
+    </input-with-validity>
   </my-bootstrap-form-group>
 
   <jpegPhotoAttr v-model="v.jpegPhoto" :label="label.jpegPhoto" :attrs="attrs.jpegPhoto" :submitted="submitted" v-if="other_attrs.jpegPhoto"></jpegPhotoAttr>
