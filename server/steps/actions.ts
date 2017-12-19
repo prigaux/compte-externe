@@ -86,8 +86,9 @@ export const aclChecker = (acls: acl_search[]) => (
 
 const accountExactMatch = (v: v) => {
     // first lookup exact match in LDAP
-    let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, v, {});    
     let attrs_exact_match = [ 'sn', 'givenName', 'supannMailPerso', 'birthDay' ];
+    const attrsType = <typeof conf.ldap.people.types> _.pick(conf.ldap.people.types, attrs_exact_match);
+    let v_ldap = ldap.convertToLdap(attrsType, conf.ldap.people.attrs, v, {});
     let filters_ = attrs_exact_match.filter(attr => attr in v_ldap).map(attr => filters.eq(attr, v_ldap[attr] as string));
     if (filters_.length < 3) throw "refusing to create account with so few attributes. Expecting at least 3 of " + attrs_exact_match.join(',');
     return onePerson(filters.and(filters_));
