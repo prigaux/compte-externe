@@ -242,7 +242,7 @@ function remove(req: req, id: id, wanted_step: string) {
 function listAuthorized(req: req) {
     if (!req.user) return Promise.reject("Unauthorized");
     return db.listByModerator(req.user).then(svs => (
-        _.map(svs, sv => (
+        svs.map(sv => (
             { ...sv_removeHiddenAttrs(sv), ...exportStep(step(sv)) }
         ))
     ));
@@ -269,7 +269,7 @@ function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
             givenNames,
             sv.v.birthDay,
             sv.v.supannMailPerso,
-            _.keys(step(sv).attrs));
+            Object.keys(step(sv).attrs));
     });
 }
 
@@ -282,7 +282,7 @@ const exportStep = (step) : Partial<step> => (
     }
 );
 const exportInitialSteps = (steps: string[]) : Partial<step>[] => (
-    _.map(steps, step => ({ ...exportStep(conf_steps.steps[step]), id: step }))
+    steps.map(step => ({ ...exportStep(conf_steps.steps[step]), id: step }))
 );
 const initialSteps = (req: req) => (
     Promise.all(Object.keys(conf_steps.steps).map(stepName => {
