@@ -242,7 +242,11 @@ function remove(req: req, id: id, wanted_step: string) {
 function listAuthorized(req: req) {
     if (!req.user) return Promise.reject("Unauthorized");
     return db.listByModerator(req.user).then(svs => (
-        svs.map(sv => (
+        svs.filter(sv => {
+            const valid = sv.step in conf_steps.steps;
+            if (!valid) console.error("ignoring sv in db with invalid step " + sv.step);
+            return valid;
+        }).map(sv => (
             { ...sv_removeHiddenAttrs(sv), ...exportStep(step(sv)) }
         ))
     ));
