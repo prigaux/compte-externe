@@ -35,7 +35,7 @@ export const call = (v: v, opts : options) => {
     let param = JSON.stringify({
         ...opts, ...prepare_crejsonldap_param(v)
     });
-    console.log("action createCompte:", param);
+    console.log("action createCompte:", param.replace(/"jpegPhoto":"(.*)"/, `"jpegPhoto":"xxx"`));
     return callRaw.fn(param).then(data => {
         try { 
             const resp = JSON.parse(data);
