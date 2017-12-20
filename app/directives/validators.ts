@@ -109,6 +109,28 @@ Vue.component('radio-with-validity', {
   },
 });
 
+Vue.component('checkbox-with-validity', {
+    template: `<input type="checkbox" :name="name" :checked="value" @change="onchange" required>`,
+    props: ['value', 'name'],
+    mounted() {
+      this.checkValidity(this.value);
+    },
+    watch: {
+      value: 'checkValidity',
+    },
+    methods: {
+      onchange(event) {
+          let v = event.target.checked;
+          this.$emit("input", v);
+          this.checkValidity(v);
+      },
+      checkValidity(v) {
+          let validity = v ? { valid: true } : { valueMissing: true };
+          this.$emit('update:validity', validity);
+      },
+    },
+});
+  
 Vue.component('textarea-with-validity', {
   template: `<textarea :value="value" @input="onchange" required></textarea>`,
   props: ['value'],

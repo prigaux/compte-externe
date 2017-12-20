@@ -104,7 +104,17 @@
   </my-bootstrap-form-group>
    
    <BarcodeAttrs v-model="v" :attrs="other_attrs" :submitted="submitted" :v_orig="v_orig" v-if="other_attrs.barcode || other_attrs.mifare"></BarcodeAttrs>
-   
+
+  <my-bootstrap-form-group name="charter" :label="label.charter" :validity="validity"  v-if="other_attrs.userPassword">
+    <div class="checkbox">
+      <label>
+        <checkbox-with-validity name="charter" :value="v.charter" :validity.sync="validity.charter"></checkbox-with-validity>
+        <span v-html="conf.attrs_description.charter"></span>
+      </label>
+    </div>
+  </my-bootstrap-form-group>
+
+  
    <my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit" v-if="step.labels.okButton">
         <span class="glyphicon glyphicon-plus"></span>

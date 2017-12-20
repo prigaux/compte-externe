@@ -30,6 +30,15 @@ export default {
         barcode: "Code barre",
         mifare: "Code Mifare",
         profilename: "Type de compte",
+        charter: "Charte",
+    },
+
+    attrs_description: {
+        charter: `Vous acceptez de vous conformer 
+            aux chartes informatiques <a target="_blank" href="http://dsiun.univ-paris1.fr/fileadmin/DSI/Chartes/charte_utilisation_ressources_informatiques_et_internet.html">de l'université</a> 
+            et <a target="_blank" href="http://www.renater.fr/IMG/pdf/Charte_RENATER_Vjanv2014.pdf" >du réseau RENATER</a>.
+            <br>
+            Votre compte et son mot de passe associé sont strictement personnels : vous êtes seul responsable de l'usage qui en est fait.`,
     },
 
     title: "Gestion de comptes",
