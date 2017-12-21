@@ -14,3 +14,11 @@ describe('ldap_convert', () => {
         });
     });
 });
+
+describe('parse_composite', () => {
+    it ("should work", () => {
+        let check = (in_, wanted) => assert.deepEqual(ldap_convert.parse_composite(in_), wanted);
+        check("[foo=bar]", { foo: "bar" });
+        check("[role={SUPANN}D30][type={SUPANN}S230][code=DGH]", { role: '{SUPANN}D30', type: '{SUPANN}S230', code: 'DGH' })
+    });        
+});

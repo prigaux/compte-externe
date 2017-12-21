@@ -18,6 +18,7 @@ function test_params() {
         base_people: "ou=people,dc=univ,dc=fr",
         base_rolesGeneriques: "ou=supannRoleGenerique,ou=tables,dc=univ,dc=fr",
         dn: 'cn=admin,dc=univ,dc=fr', password: 'xxx',    
+        group_cn_to_memberOf: cn => "cn=" + cn + "," + "ou=groups,dc=univ,dc=fr",
         DNs: DNs,
     };
 
@@ -25,7 +26,7 @@ function test_params() {
 /* tslint:disable:max-line-length whitespace */      
         { uid: "prigaux", sn: "rigaux", givenName: "pascal", cn: "rigaux pascal", displayName: "pascal rigaux", up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [], supannEtablissement: [ "{UAI}0751717J", "{SAML}https://univ-test.fr", "{MIFARE}mifare_id" ], supannEtuAnneeInscription: [ "2016", "2017" ] },
         { uid: "e10000000", sn: "rigaux", givenName: "pascal", cn: "rigaux pascal", displayName: "pascal rigaux", up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','student'], objectClass: [] },
-        { uid: "arigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux ayme", displayName: "aymé rigaux", up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [], supannRoleEntite: "[role={SUPANN}D30][type={SUPANN}S230][code=DGH]" },
+        { uid: "arigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux ayme", displayName: "aymé rigaux", up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [], mail: "ayme.rigaux@univ-paris1.fr", eduPersonPrincipalName: "arigaux@univ-paris1.fr", supannRoleEntite: ["[role={SUPANN}D30][type={SUPANN}S230][code=DGH]"], memberOf: ["cn=g1,ou=groups,dc=univ,dc=fr"] },
         { uid: "ayrigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux ayme", displayName: "aymé rigaux", up1BirthDay: '19750101000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [] },
 /* tslint:enable */
     ];

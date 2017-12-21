@@ -60,6 +60,7 @@ const conf = {
                 eduPersonEntitlement: '',
                 supannEtablissement: [],
                 supannEtuAnneeInscription: [0],
+                supannRoleEntite: [],
 
                 profilename: '',
                 priority: 0,

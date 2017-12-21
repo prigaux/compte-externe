@@ -73,3 +73,17 @@ export const base64: ldap_conversion = {
             throw "not handled correctly by ldapjs";
         }
 }
+
+export const parse_composite = (str: string) => {
+    let r = {};
+    str.replace(/\[(.*?)\]/g, (_m, e) => {
+      const m = e.match(/(.*?)=(.*)/)
+      r[m[1]] = m[2];
+      return '';
+    });
+    return r;
+};
+
+export const parse_composites = (strs: string[]) => (
+    strs.map(parse_composite)
+);

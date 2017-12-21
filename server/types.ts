@@ -32,7 +32,10 @@ type vr = {v: v; response?: response }
 type svr = sv & { response?: response }
 type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
 type action = (req: any, sv: sv) => Promise<vr>
-type acl_search = (v, string) => Promise<string[]>
+type acl_search = {    
+    v_to_users(v: v, attr: string): Promise<string[]>
+    user_to_subv(user: v): Promise<Partial<v>[]>
+}
 
 interface StepAttrOptionChoices {
   key: string;
