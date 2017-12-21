@@ -87,6 +87,14 @@ describe('structureRoles', () => {
         ))
     ));
 
+    it('v_to_users should raise no_moderators', () => (
+        acl.structureRoles('structureParrain', "(supannRoleGenerique=*)").v_to_users({ structureParrain: "xxx" } as v, 'uid').then(_ => {
+            assert.fail("should raise error");
+        }).catch(err => {
+            assert.equal(err, 'no_moderators');
+        })
+    ));
+    
     const user_2roles = { supannRoleEntite: [
         "[role={SUPANN}D30][type={SUPANN}S230][code=DGH]",
         "[role={SUPANN}D10][type={SUPANN}S230][code=DGHA]",

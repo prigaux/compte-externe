@@ -185,7 +185,6 @@ function advance_sv(req: req, sv: sv) : Promise<svr> {
         }
         if (svr.step) {
             return acl_checker.moderators(step(svr).acls, svr.v).then(mails => {
-                if (mails && mails.length === 0) throw "no_moderators";
                 svr.moderators = mails;
                 return svr;
             });
