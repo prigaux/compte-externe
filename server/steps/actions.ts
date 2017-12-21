@@ -5,6 +5,7 @@ import * as mail from '../mail';
 import * as ldap from '../ldap';
 import * as utils from '../utils';
 import * as crejsonldap from '../crejsonldap';
+import { onePerson } from '../search_ldap';
 import * as search_ldap from '../search_ldap';
 import * as acl_checker from '../acl_checker';
 import * as esup_activ_bo from '../esup_activ_bo';
@@ -40,8 +41,6 @@ export const getShibAttrs: simpleAction = (req, _sv) => {
     console.log("action getShibAttrs:", v);
     return Promise.resolve({ v });
 };
-
-const onePerson = (filter) => ldap.searchOne(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, {})
 
 export const getCasAttrs: simpleAction = (req, _sv) => {
     if (!isCasUser(req)) throw `Unauthorized`;

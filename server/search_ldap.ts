@@ -9,6 +9,10 @@ const maxLoginLength = 10;
 
 const remove_accents = _.deburr;
 
+export const onePerson = (filter) => (
+    ldap.searchOne(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, {})
+);
+
 export const searchPeople = (filter: ldap.filter, attrs: string[], options: ldap.Options) => {
     // TODO check attrs are in conf.ldap.people.types
     return ldap.search(conf.ldap.base_people,
