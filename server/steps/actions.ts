@@ -54,6 +54,10 @@ export const getShibOrCasAttrs: simpleAction = (req, _sv) => (
     (isCasUser(req) ? getCasAttrs : getShibAttrs)(req, _sv)
 )
 
+export const autoModerateIf = (f: (v: v) => boolean) : simpleAction => (_req, { v }) => (
+    Promise.resolve({ v, response: { autoModerate: f(v) } })
+);
+
 export const getExistingUser: simpleAction = (req, _sv)  => (
     onePerson(filters.eq("uid", req.query.uid)).then(v => ({ v }))
 );

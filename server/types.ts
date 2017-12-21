@@ -27,7 +27,7 @@ type sv = {
   lock?: boolean,
 }
 
-type r = response & { success: boolean, step?: string, labels?: StepLabels }
+type r = response & { success: boolean, step?: string, labels?: StepLabels, autoModerate: boolean }
 type vr = {v: v; response?: response }
 type svr = sv & { response?: response }
 type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
