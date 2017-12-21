@@ -1,11 +1,11 @@
 'use strict';
-const webpackConfig = require('./webpack.config.js');
+const webpackConfig = require('./build/webpack.base.conf');
 
 module.exports = function(config){
     config.set({
-        files: ["app/**/*_test.ts"],
+        files: ["**/*_test.ts"],
         preprocessors: {
-            'app/**/*_test.ts': ['webpack']
+            '**/*_test.ts': ['webpack']
         },     
         frameworks: ['jasmine'],
         browsers : ['PhantomJS'],
