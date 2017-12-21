@@ -7,7 +7,6 @@ import * as utils from '../utils';
 import * as crejsonldap from '../crejsonldap';
 import { onePerson } from '../search_ldap';
 import * as search_ldap from '../search_ldap';
-import * as acl_checker from '../acl_checker';
 import * as esup_activ_bo from '../esup_activ_bo';
 import v_display from '../v_display';
 import * as conf from '../conf';
@@ -73,15 +72,6 @@ export function chain(l_actions: action[]): action {
         return vr;
     };
 }
-
-export const aclChecker = (acls: acl_search[]) => (
-    (req, { v }) => (
-        acl_checker.moderators(acls, v).then(moderators => {
-            acl_checker.checkAuthorized(moderators, req.user);
-            return { v };
-        })
-    )
-) as simpleAction
 
 const accountExactMatch = (v: v) => {
     // first lookup exact match in LDAP
