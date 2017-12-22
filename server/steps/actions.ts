@@ -137,7 +137,7 @@ const after_createAccount = (v: v, attrs: StepAttrsOption, is_new_account: boole
     if (!is_new_account) {
         // we merged the account. ignore new password + no mail
     } else if (v.userPassword) {
-        return esup_activ_bo.setPassword(v.uid, v.userPassword);
+        return esup_activ_bo.setPassword(v.uid, v.supannAliasLogin, v.userPassword);
         // NB: if we have a password, it is a fast registration, so do not send a mail
     } else if (v.supannMailPerso) {
         const v_ = v_display(v, attrs);
