@@ -100,23 +100,32 @@ function sv_removeHiddenAttrs(sv: sv): sv {
 function mayNotifyModerators(req: req, sv: sv, notifyKind: string) {
     let notify = step(sv).notify;
     if (!notify) return;
-    let mails = sv.moderators;
-    if (mails.length) {
+    acl_checker.moderators(step(sv).acls, sv.v).then(mails => {
+        if (!mails.length) { console.log("no moderators"); return }
+        //console.log("moderators", mails);
         const sv_url = conf.mainUrl + "/" + sv.step + "/" + sv.id;
         let params = _.merge({ to: mails.join(', '), moderator: req.user, conf, sv_url }, sv);
         mail.sendWithTemplate(notify[notifyKind], params);
-    }
+    });
 }
 
+const acls_allowed_ssubv = (user: CurrentUser) => (
+    search_ldap.vuser(user).then(vuser => (
+        acl_checker.allowed_ssubvs(vuser, conf_steps.steps)
+    ))//.tap(l => console.log(user && user.id, JSON.stringify(l)))
+);
+
 function checkAcls(req: req, sv: sv) {
-    return acl_checker.moderators(step(sv).acls, sv.v).then(moderators => {
-        // updating moderators
-        sv.moderators = moderators;
-        return sv;
-    }).tap(sv => {
-        acl_checker.checkAuthorized(sv.moderators, req.user);
-        console.log("authorizing", req.user, "for step", sv.step);
-    });
+    return acls_allowed_ssubv(req.user).then(allowed_ssubvs => {
+        if (acl_checker.is_sv_allowed(sv, allowed_ssubvs)) {
+            console.log("authorizing", req.user, "for step", sv.step);
+        } else if (!req.user) {
+            throw "Unauthorized";
+        } else {
+            console.error(req.user, "not authorized for step", sv.step);
+            throw "Forbidden"
+        }
+    })
 }
 
 function first_sv(req: req, wanted_step: string): Promise<sv> {
@@ -183,14 +192,7 @@ function advance_sv(req: req, sv: sv) : Promise<svr> {
             // advance again to next step!
             return setRaw(req, svr, svr.v);
         }
-        if (svr.step) {
-            return acl_checker.moderators(step(svr).acls, svr.v).then(mails => {
-                svr.moderators = mails;
-                return svr;
-            });
-        } else {
-            return svr;
-        }
+        return svr;
     });
 }
 
@@ -238,9 +240,22 @@ function remove(req: req, id: id, wanted_step: string) {
     }).then(_ => ({ success: true }));
 }
 
+const non_initial_with_acls = (allowed_ssubvs: acl_checker.allowed_ssubvs) => (
+    allowed_ssubvs.filter(ssubvs => {
+        const step = conf_steps.steps[ssubvs.step];
+        return step.acls && !step.initialStep;
+    })
+)
+
 function listAuthorized(req: req) {
     if (!req.user) return Promise.reject("Unauthorized");
-    return db.listByModerator(req.user).then(svs => (
+    return search_ldap.vuser(req.user).then(vuser => (
+        acl_checker.allowed_ssubvs(vuser, conf_steps.steps)
+    )).then(allowed_ssubvs => (
+        acl_checker.mongo_query(non_initial_with_acls(allowed_ssubvs))
+    )).then(query => (
+        db.listByModerator(query)
+    )).then(svs => (
         svs.filter(sv => {
             const valid = sv.step in conf_steps.steps;
             if (!valid) console.error("ignoring sv in db with invalid step " + sv.step);
@@ -288,15 +303,17 @@ const exportInitialSteps = (steps: string[]) : Partial<step>[] => (
     steps.map(step => ({ ...exportStep(conf_steps.steps[step]), id: step }))
 );
 const initialSteps = (req: req) => (
+  acls_allowed_ssubv(req.user).then(allowed_ssubvs => (
     Promise.all(Object.keys(conf_steps.steps).map(stepName => {
         const step = conf_steps.steps[stepName];
         if (step.initialStep) {            
             const empty_sv = { step: stepName, v: <v> {} };
-            return checkAcls(req, empty_sv).then(_ => [stepName]).catch(_ => []);
+            return acl_checker.is_sv_allowed(empty_sv, allowed_ssubvs) ? [stepName] : [];
         } else {
             return [];
         }
     })).then(_.flatten).then(exportInitialSteps)
+  ))
 );
 
 router.get('/initialSteps', (req : req, res) => {

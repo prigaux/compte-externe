@@ -24,7 +24,7 @@ If ```GET /comptes/:id/:step```
 * read sv from database
 
 With current sv.step:
-* ```.acls``` is used to compute/update sv.moderators which is checked against authenticated user
+* ```.acls``` is used to check authenticated user is allowed
 
 It returns { step, attrs, v }
 
@@ -38,18 +38,17 @@ If ```PUT /comptes/:id/:step```
 * read sv from database
 
 With current sv.step:
-* ```.acls``` is used to compute/update sv.moderators which is checked against authenticated user
+* ```.acls``` is used to check authenticated user is allowed
 * ```.attrs``` is used to update sv.v using PUT body
 * ```.action_post``` is called with params (req, sv)
-* ```.notify.accepted``` template is mailed to sv.moderators
+* ```.notify.accepted``` template is mailed to moderators (moderators computed from ```.acls```)
 * ```.next``` step is the new sv.step
 
 If sv.step is not null, with new sv.step:
 * ```.action_pre``` is called with params (req, sv)
   * ```svr.response.autoModerate``` implies going straight to next step
-* ```.acls``` is used to compute sv.moderators
 * sv is saved in database
-* ```.notify.added``` template is mailed to sv.moderators
+* ```.notify.added``` template is mailed to moderators (moderators computed from ```.acls```)
 
 If sv.step is null, sv is removed from database
 
@@ -58,8 +57,8 @@ It returns { success: true, step: xxx, ... action_pre || action_post response }
 ## ```DELETE /comptes/```
 
 Read sv from database
-* sv.moderators are checked against authenticated user
-* ```.notify.rejected``` template is mailed to sv.moderators
+* ```.acls``` is used to check authenticated user is allowed
+* ```.notify.rejected``` template is mailed to moderators (moderators computed from ```.acls```)
 
 # Steps configuration
 

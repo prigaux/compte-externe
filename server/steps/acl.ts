@@ -5,7 +5,7 @@ import * as ldap from '../ldap';
 import { parse_composites } from '../ldap_convert';
 const filters = ldap.filters;
 
-const has_subv = (v: v, subv: Partial<v>) => (
+export const has_subv = (v: v, subv: Partial<v>) => (
   !Object.keys(subv).find(k => v[k] !== subv[k])
 );
 

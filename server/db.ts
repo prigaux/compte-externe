@@ -43,12 +43,9 @@ export const setLock = (id: id, lock: boolean) => (
 );
 
     // lists svs, sorted by steps + recent one at the beginning
-export const listByModerator = (user: CurrentUser) : Promise<sv[]> => {
-        let mail = user && user.mail;
-        if (!mail) return Promise.resolve([]);
-        
+export const listByModerator = (query) : Promise<sv[]> => {
         return (
-            svs().find({ moderators: mail }).sort({ step: 1, modifyTimestamp: -1 }).toArray()
+            svs().find(query).sort({ step: 1, modifyTimestamp: -1 }).toArray()
         ).then(svs => (
             _.map(svs, fromDB)
         ));

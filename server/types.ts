@@ -22,7 +22,6 @@ type sv = {
   id?: id,
   step: string,
   v: v,
-  moderators?: Mails,
   attrs?: StepAttrsOption,
   lock?: boolean,
 }
