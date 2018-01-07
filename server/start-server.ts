@@ -5,6 +5,7 @@ import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 
 import * as db from './db';
+import gen_gsh_script from './gen_gsh_script';
 import api from './api';
 import * as utils from './utils';
 const app = express();
@@ -23,6 +24,8 @@ app.use(utils.express_auth);
 app.use('/csv2json', 
      bodyParser.text({type: '*/*'}), 
      utils.csv2json);
+
+app.use('/gen_gsh_script', gen_gsh_script);
 
 app.use('/api',
      bodyParser.json({type: '*/*'}), // do not bother checking, everything we will get is JSON :)

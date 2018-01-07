@@ -9,6 +9,7 @@ interface CurrentUser {
   mail: string;
 }
 type req = express.Request;
+type res = express.Response;
 
 type Mails = string[]
 
