@@ -5,6 +5,7 @@ import * as actions from './actions';
 import * as acl from './acl';
 import * as utils from '../utils';
 import * as conf from '../conf';
+import profiles from './conf_profiles';
 
 
 const attrs: StepAttrsOption = {
@@ -19,6 +20,7 @@ const attrs: StepAttrsOption = {
     homePhone: {},
     supannMailPerso: {},
     structureParrain: {},
+    profilename: { choices: profiles },
 };
 
 const moderator_attrs = _.defaults(<StepAttrsOption> {
@@ -51,7 +53,10 @@ const nextSteps: steps = {
             rejected: 'moderation_rejected.html',
         },
         attrs: moderator_attrs,
-        action_post: actions.createCompte
+        action_post: actions.chain([
+            actions.addProfileAttrs(profiles),
+            actions.createCompte,
+        ]),
     },
 };
 

@@ -36,6 +36,8 @@ type acl_search = {
     user_to_subv(user: v): Promise<Partial<v>[]>
 }
 
+type profileValues = StepAttrOptionChoices & { fv: () => Partial<v> }
+
 interface StepAttrOptionChoices {
   key: string;
   name?: string;
