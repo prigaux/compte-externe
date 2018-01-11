@@ -19,8 +19,15 @@ Helpers.eachObject(_routes, (path, component) => {
     routes.push({ path, component, props: true })
 });
 
-export const router = new VueRouter({
-  mode: 'history',
-  base: conf.base_pathname,
-  routes,
-});
+const opts = {
+    mode: undefined,
+    base: conf.base_pathname,
+    routes,
+};
+
+declare var process;
+if (process.env.NODE_ENV === 'production') {
+    opts.mode = 'history';
+}
+
+export const router = new VueRouter(opts);
