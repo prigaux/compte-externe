@@ -9,7 +9,6 @@ import profiles from './conf_profiles';
 
 
 const attrs: StepAttrsOption = {
-    status: {},
     barcode: {},
     supannCivilite: { choices: conf.ldap.people.supannCiviliteChoices },
     sn: {},
