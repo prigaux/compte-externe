@@ -10,6 +10,7 @@
     "prestart": "npm install",
     "build": "concurrently 'tsc -p server' 'cd app && npm run build'",
     "build:w": "concurrently 'tsc --watch -p server' 'cd app && npm run build:w'",
+    "dev": "concurrently 'tsc --watch -p server' 'cd app && npm run dev'",
     "start:w": "concurrently 'tsc --watch -p server/' 'cd app && npm run build:w' 'NODE_ENV=test nodemon --watch server/ start-server.js'",
     "test:w": "mocha --require source-map-support/register --recursive --watch server/tests"
   },
