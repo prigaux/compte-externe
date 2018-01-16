@@ -91,12 +91,12 @@ TODO
   ShibUseHeaders On
 </Location>
 
-<LocationMatch /(steps|login/local|login/extern)$>
+<LocationMatch .*/login/(local|extern)$>
   require valid-user
   ShibRequireSession On
 </LocationMatch>
 
-<LocationMatch /(steps|login/local)$>
+<LocationMatch .*/login/local$>
   ShibRequestSetting entityID https://idp.univ.fr
 </LocationMatch>
 ```
