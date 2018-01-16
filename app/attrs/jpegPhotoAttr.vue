@@ -5,16 +5,16 @@
 
       <div v-if="val">
           <img :src="val">
-          <a href="#" @click.prevent="val = ''" v-if="!attrs.readonly">
+          <button class="btn btn-default" @click.prevent="val = ''" v-if="!attrs.readonly">
               Changer la photo
-          </a>
+          </button>
       </div>
       <div v-else-if="attrs.readonly">
           aucune
       </div>
       <div v-else>
-          <webcam-live-portrait width="240" height="300" :doget="doGet" @image="val = $event"></webcam-live-portrait>
-          <a href="#" @click.prevent="doGet = [0]">Prendre une photo</a>
+          <webcam-live-portrait width="240" height="300" :doget="doGet" @image="val = $event" style="vertical-align: middle"></webcam-live-portrait>
+          <button class="btn btn-default" @click.prevent="doGet = [0]">Prendre une photo</button>
       </div>
   </my-bootstrap-form-group> 
 </template>
