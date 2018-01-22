@@ -28,7 +28,7 @@ const typeaheadComponent = Vue.extend({
          @click.prevent="hit"
          @mousemove="setActive($item)"
          @mousedown.prevent=""> <!-- do not blur "input" -->
-        <a v-text="formatting(item)"></a>
+        <a v-html="formatAndHighlight(item)"></a>
       </li>
       <li v-if="noResults"><a v-text="noResultsMsg"></a></li>
     </ul>
@@ -120,6 +120,10 @@ const typeaheadComponent = Vue.extend({
 
     matcher(entry : string) {
         return entry.match(new RegExp(this.query, "i"));
+    },
+
+    formatAndHighlight(v) {
+        return this.formatting(v).replace(new RegExp(this.query, "i"), m => `<b>${m}</b>`);
     },
 
     setOptions(data) {
