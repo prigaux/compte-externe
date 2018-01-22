@@ -159,6 +159,7 @@ const api_url = conf.base_pathname + 'api';
                     Helpers.eachObject(sv.attrs, (attr) => sv.v[attr] = sv.v[attr]); // ensure key exists for Vuejs setters
                     Helpers.assign(sv.v, fromWs(mapKeys(params, (_, k: string) => k.replace(/^default_/, ''))));
                     $scope.v = sv.v;
+                    $scope.v_orig = sv.v_orig;
                     $scope.attrs = initAttrs(sv.attrs);
                     $scope.step = pick(sv, ['allow_many', 'labels']);
             }, err => _handleErr(err, $scope));
