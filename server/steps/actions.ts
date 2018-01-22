@@ -92,21 +92,17 @@ const accountExactMatch = (v: v) => {
     return onePerson(filters.and(filters_));
 }
 
-export const createCompteSafe: action = (_req, sv) => {
-    return accountExactMatch(sv.v).then(v => {
-        if (v) {
-            return Promise.resolve({ v, response: { ignored: true } } as vr);
-        }
-        // no exact match, calling crejsonldap with homonyme detection
-        return createCompte_(sv, { dupcreate: "err", create: true }).catch(errS => {
-            const err = JSON.parse(errS);
-            if (err.code === 'homo') {
-                return { v: sv.v, response: { in_moderation: true } };
-             } else {
-                 throw errS;
-             }
-        });
-    });
+export const createCompteSafe: action = async (_req, sv) => {
+    {
+        const existingAccount = await accountExactMatch(sv.v);
+        if (existingAccount) return { v: existingAccount, response: { ignored: true } };
+    }
+    {
+        const homonymes = await search_ldap.homonymes(sv.v);
+        if (homonymes.length) return { v: sv.v, response: { id: sv.id, in_moderation: true } };
+    }
+    // ok, let's create it
+    return createCompte_(sv, { dupcreate: "ignore", create: true });
 }
 
 export const createCompte: action = (_req, sv) => (
