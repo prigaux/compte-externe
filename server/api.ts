@@ -86,14 +86,14 @@ function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
 }
 
 /* before sending to client, remove sensible information */
-function removeHiddenAttrs(attrs: StepAttrsOption, v: v): v {
-    return <v> _.omitBy(v, (_val, key) => ( 
+function removeHiddenAttrs(attrs: StepAttrsOption, v) {
+    return _.omitBy(v, (_val, key) => ( 
         !attrs[key] || attrs[key].hidden
     ));
 }
 function sv_removeHiddenAttrs(sv: sv): sv {
     sv = _.clone(sv);
-    sv.v = removeHiddenAttrs(step(sv).attrs, sv.v);
+    sv.v = removeHiddenAttrs(step(sv).attrs, sv.v) as v;
     return sv;
 }
 
