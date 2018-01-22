@@ -92,14 +92,16 @@ const accountExactMatch = (v: v) => {
     return onePerson(filters.and(filters_));
 }
 
-export const createCompteSafe: action = async (_req, sv) => {
+export const createCompteSafe = (l_actions: action[]): action => async (req, sv) => {
+    const orig_v = sv.v;
+    sv.v = (await chain(l_actions)(req, sv)).v;
     {
         const existingAccount = await accountExactMatch(sv.v);
         if (existingAccount) return { v: existingAccount, response: { ignored: true } };
     }
     {
         const homonymes = await search_ldap.homonymes(sv.v);
-        if (homonymes.length) return { v: sv.v, response: { id: sv.id, in_moderation: true } };
+        if (homonymes.length) return { v: orig_v, response: { id: sv.id, in_moderation: true } };
     }
     // ok, let's create it
     return createCompte_(sv, { dupcreate: "ignore", create: true });
