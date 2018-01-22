@@ -21,15 +21,6 @@ export const vuser = (user: CurrentUser) => {
     })
 };
 
-export const searchPeople = (filter: ldap.filter, attrs: string[], options: ldap.Options) => {
-    // TODO check attrs are in conf.ldap.people.types
-    return ldap.search(conf.ldap.base_people,
-                          filter,
-                          <typeof conf.ldap.people.types> _.pick(conf.ldap.people.types, attrs),
-                          conf.ldap.people.attrs,
-                          options);
-};
-
 export const structures = (token: string, sizeLimit: number) => {
     let words_filter = filters.fuzzy(['description', 'ou'], token);
     let many = [filters.eq("supannCodeEntite", token), 
@@ -106,19 +97,28 @@ function homonymes_scoring(l: typeof conf.ldap.people.types[], birthDay: Date): 
     return _.sortBy(l_, 'score').reverse();
 }
 
-export const homonymes = (sns: string[], givenNames: string[], birthDay: Date, supannMailPerso: string, attrs: string[]) : Promise<Homonyme[]> => {
-    attrs.push('uid', 'dn'); // we want the dn & uid to id the homonymes
+const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannMailPerso: string) : Promise<Homonyme[]> => {
     let filter = homonymes_filter(sns, givenNames, supannMailPerso);
     if (conf.ldap.people.homonymes_restriction) {
         filter = filters.and([filter, conf.ldap.people.homonymes_restriction]);
         //console.log("homonymes filter", filter);
     }
     //console.log("homonymes", sns, givenNames, birthDay);
-    return searchPeople(filter, attrs, { sizeLimit: 10 }).then(l => {
+    return ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, { sizeLimit: 10 }).then(l => {
                               return homonymes_scoring(l, birthDay).filter(e => (
                                   e.score > 0
                               ));
                           });
+};
+
+const _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(<{}> v, attrs));
+
+export const homonymes = (v: v) : Promise<Homonyme[]> => {
+    let sns = _merge_at(v, conf.ldap.people.sns);
+    let givenNames = _merge_at(v, conf.ldap.people.givenNames);
+    if (sns[0] === undefined) return Promise.resolve([]);
+    console.log("sns", sns);
+    return homonymes_(sns, givenNames, v.birthDay, v.supannMailPerso);    
 };
 
 // export it to allow override

@@ -273,21 +273,13 @@ const body_to_v = (o) => (
     }) as v
 );
 
-let _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(<{}> v, attrs));
-
 function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
     return getRaw(req, id, undefined).then(sv => {
         // acls are checked => removing is allowed
-        let sns = _merge_at(sv.v, conf.ldap.people.sns);
-        let givenNames = _merge_at(sv.v, conf.ldap.people.givenNames);
-        if (sns[0] === undefined) return [];
-        console.log("sns", sns);
-        return search_ldap.homonymes(
-            sns,
-            givenNames,
-            sv.v.birthDay,
-            sv.v.supannMailPerso,
-            Object.keys(step(sv).attrs));
+        return search_ldap.homonymes(sv.v).then(l => {
+                const attrs = { score: {}, ...step(sv).attrs };
+                return l.map(v => removeHiddenAttrs(attrs, v) as search_ldap.Homonyme)
+            })
     });
 }
 

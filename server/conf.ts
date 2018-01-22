@@ -40,7 +40,7 @@ const conf = {
         
         people: {
             types: {
-                uid: '', dn: '', cn: '', sn: '', displayName: '', givenName: '',
+                uid: '', cn: '', sn: '', displayName: '', givenName: '',
                 supannCivilite: '',
                 supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '',
                 birthDay: new Date(), birthName: '',

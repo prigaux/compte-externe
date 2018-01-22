@@ -133,8 +133,7 @@ describe('homonymes', () => {
 
         it('should detect simple homonyme', () => (
             search_ldap.homonymes(
-                ['rigaux'], ['pascal'], new Date('1975-10-02'), undefined,
-                ['uid', 'birthDay']).then(l => {
+                { sn: 'rigaux', givenName: 'pascal', birthDay: new Date('1975-10-02') } as v).then(l => {
                     assert.equal(l.length, 1);
                     assert.equal(l[0].uid, "prigaux");
                     assert.equal(l[0].score, 3);
@@ -142,8 +141,7 @@ describe('homonymes', () => {
         ));
         it('should detect homonyme with birth date a little different', () => (
             search_ldap.homonymes(
-                ['rigaux'], ['ayme'], new Date('1975-10-02'), undefined,
-                ['uid', 'birthDay']).then(l => {
+                { sn: 'rigaux', givenName: 'ayme', birthDay: new Date('1975-10-02') } as v).then(l => {
                     assert.equal(l.length, 2);
                     assert.equal(l[0].uid, "arigaux");
                     assert.equal(l[0].score, 3);
