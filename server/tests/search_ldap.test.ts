@@ -136,7 +136,7 @@ describe('homonymes', () => {
                 { sn: 'rigaux', givenName: 'pascal', birthDay: new Date('1975-10-02') } as v).then(l => {
                     assert.equal(l.length, 1);
                     assert.equal(l[0].uid, "prigaux");
-                    assert.equal(l[0].score, 3);
+                    assert.equal(l[0].score, 4);
                 })
         ));
         it('should detect homonyme with birth date a little different', () => (
@@ -144,7 +144,7 @@ describe('homonymes', () => {
                 { sn: 'rigaux', givenName: 'ayme', birthDay: new Date('1975-10-02') } as v).then(l => {
                     assert.equal(l.length, 2);
                     assert.equal(l[0].uid, "arigaux");
-                    assert.equal(l[0].score, 3);
+                    assert.equal(l[0].score, 4);
                     assert.equal(l[1].uid, "ayrigaux");
                     assert.equal(l[1].score, 1);
                 })

@@ -92,6 +92,10 @@ export type Homonyme = typeof conf.ldap.people.types & { score: number }
 function homonymes_scoring(l: typeof conf.ldap.people.types[], birthDay: Date): Homonyme[] {
     let l_ = _.map(l, e => {
       let score = e.birthDay ? homonyme_scoring(e.birthDay, birthDay) : 0;
+      if (score === 3) {
+         score += e.eduPersonPrimaryAffiliation === 'student' ? 2 : 
+                (e.eduPersonAffiliation || []).includes('member') ? 1 : 0;
+      }   
       return <Homonyme> _.merge({ score }, e);
     });
     return _.sortBy(l_, 'score').reverse();
