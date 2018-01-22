@@ -1,21 +1,15 @@
 <template>
-<div>
- <div v-if="homonymes.length || v.uid">
+<div v-if="homonymes.length">
    <p style="height: 2em"></p>
      <div class="alert alert-danger" >
-         <div v-if="v.uid">
-            Le compte sera fusionné avec le compte existant {{v.uid}}
-         </div>
-         <div v-else>
        Les informations fournies pour le nouveau compte correspondent à un compte existant.
-         </div>
      </div>
- </div>
 
- <div v-for="homonyme in homonymes" v-if="!v.uid">
+ <div v-for="homonyme in homonymes">
    <p style="height: 0.5em"></p>
    <compare-users :v="v" :homonyme="homonyme"></compare-users>
-   <button class="btn btn-primary" @click="$emit(homonyme)"><span class="glyphicon glyphicon-resize-small"></span> Fusionner avec {{homonyme.uid}}</button>
+   <button class="btn btn-primary" @click="merge(homonyme)"><span class="glyphicon glyphicon-resize-small"></span> C'est la même personne</button>
+   <button class="btn btn-primary" @click="ignore(homonyme)"><span class="glyphicon glyphicon-remove"></span> Ce n'est pas la même personne</button>
    <p style="height: 1em"></p>
  </div>
 </div>
@@ -36,10 +30,26 @@ export default Vue.extend({
 
   components: { 'compare-users': CompareUsers },
 
+  watch: {
+      homonymes(l) {
+        this.$emit('homonymes', l);
+      },
+  },
+
   mounted() {
         Ws.homonymes(this.id).then(l => {
             this.homonymes = l;
         });
   },
+
+  methods: {
+      merge(homonym) {
+        this.$emit('merge', homonym);
+        this.homonymes = [];
+      },
+      ignore(homonym) {
+          this.homonymes = this.homonymes.filter(e => e !== homonym);
+      }
+  }
 });
 </script>

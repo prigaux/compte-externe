@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as JsDiff from 'diff';
+import conf from '../conf';
 import { Dictionary } from '../services/ws';
 
     const entityMap = {
@@ -80,6 +81,10 @@ import { Dictionary } from '../services/ws';
         }
     }
 
+    export const equalsIgnoreCase = (a: string, b: string) => (
+        a.toLowerCase() === b.toLowerCase()
+    )
+        
     export function createCookie(name : string, value : string, days : number) : void {
         let expires = "";
         if (days) {
@@ -132,9 +137,18 @@ import { Dictionary } from '../services/ws';
         }).join('');   
     }
 
+    export function maybeFormatPhone(maybePhone : string) : string {
+        if (maybePhone.match(conf.pattern.frenchPhone)) {
+            return maybePhone.replace(/^(\+33|0)/, '').replace(/\s/g, '').replace(/(.)(..)(..)(..)(..)/, "+33 $1 $2 $3 $4 $5");
+        }
+        return maybePhone;
+    }
+
     export function escapeRegexp(s : string) {
         return ('' + s).replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
     }
+
+    export const formatAcademicYear = (n : number) => n ? `${n} / ${n+1}` : '';
 
     export function filter(collection, predicate) {
         if (Array.isArray(collection)) return collection.filter(predicate);
@@ -145,3 +159,7 @@ import { Dictionary } from '../services/ws';
         }
         return r;
     }
+
+    export const arrayContains = (superset, subset) => (
+        subset.every(value => superset.indexOf(value) >= 0)
+    );

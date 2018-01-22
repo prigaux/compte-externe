@@ -10,6 +10,7 @@ export default {
     attr_labels: {
         supannCivilite: "Civilité",
         givenName: "Prénom",
+        altGivenName: 'Autres prénoms',
         sn: "Nom d'usage",
         birthName: "Nom de naissance",
         birthDay: "Date de naissance",
@@ -41,9 +42,16 @@ export default {
             Votre compte et son mot de passe associé sont strictement personnels : vous êtes seul responsable de l'usage qui en est fait.`,
     },
 
+    attrs_order: [
+        'supannCivilite', 'givenName', 'altGivenName', 'sn', 'birthName', 'birthDay',
+        'homePostalAddress', 'homePhone', 'supannMailPerso',
+        'jpegPhoto',
+    ],
+
     title: "Gestion de comptes",
 
     pattern: {
+        frenchPhone: "^(\\+33|0)\\s*[1-9](\\s*[0-9]){8}$", // french
         phone: [
             "0(\\s*[0-9]){9}", // french
             "\\+(1|2[07]|3[0-469]|4[013-9]|5[1-8]|6[0-6]|7|8[1246]|9[0-58]|[0-9]{3})(\\s*[0-9]){4,14}", // international country code, less than 15 digits

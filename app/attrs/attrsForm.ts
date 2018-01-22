@@ -16,6 +16,7 @@ import StructureAttr from './StructureAttr.vue';
 import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
 import Homonyms from '../controllers/Homonyms.vue';
+import ExistingAccountWarning from '../controllers/ExistingAccountWarning.vue';
 
 import template from './attrsForm.html';
 
@@ -33,6 +34,7 @@ function AttrsForm_data() {
       validity: { submitted: false, supannCivilite: {}, givenName: {}, sn: {}, birthName: {}, homePhone: {}, supannMailPerso: {}, structureParrain: {}, duration: {}, profilename: {} },
       to_import: undefined,
       imported: <any[]> undefined,
+      potential_homonyms: undefined,
     };    
 }
 
@@ -43,7 +45,7 @@ export const AttrsForm = Vue.extend({
     template,
     props: [ 'wanted_id', 'stepName' ],
     data: AttrsForm_data,
-    components: { DateAttr, AddressAttr, jpegPhotoAttr, StructureAttr, BarcodeAttrs, PasswordAttr, ImportFile, ImportResult, Homonyms },
+    components: { DateAttr, AddressAttr, jpegPhotoAttr, StructureAttr, BarcodeAttrs, PasswordAttr, ImportFile, ImportResult, Homonyms, ExistingAccountWarning },
 
     watch: {
         '$route': function() {
@@ -83,16 +85,6 @@ export const AttrsForm = Vue.extend({
         },
         currentYear() {
             return new Date().getUTCFullYear();
-        },
-
-        // for reuse steps:
-        isMember() { 
-            let aff = this.v.eduPersonAffiliation;
-            return aff && aff.indexOf('member') >= 0;
-        },
-        anneeInscription() {
-            let annees = this.v.supannEtuAnneeInscription;
-            return annees && Math.max(...annees);
         },
     },
 

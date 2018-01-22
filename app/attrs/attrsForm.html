@@ -18,18 +18,22 @@
 
 <div v-if="!imported">
 
- <div v-if="isMember" class="alert alert-danger">
-     {{v.givenName}} {{v.sn}} est {{conf.affiliation_labels[v.eduPersonPrimaryAffiliation]}}
-     <span v-if="anneeInscription">
-         {{anneeInscription}}/{{anneeInscription+1}}
-     </span>
+ <div v-if="check_homonyms && (!potential_homonyms || potential_homonyms.length) && !v.uid">
+    <Homonyms :v="v" :id="id" @merge="merge" @homonymes="l => potential_homonyms = l"></Homonyms>
  </div>
+ <div v-else>
 
-  <div v-if="check_homonyms">
-      <Homonyms :v="v" :id="id" @merge="merge"></Homonyms>
-  </div>
-               
- <form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">
+    <div v-if="v.uid">
+        <p style="height: 2em"></p>
+            <div class="alert alert-danger" >
+                Le compte sera fusionné avec le compte existant {{v.uid}}
+            </div>
+    </div>
+             
+    <div v-if="hasAffiliation(v, 'member')" class="alert alert-danger">
+        {{v.givenName}} {{v.sn}} <ExistingAccountWarning :v="v"></ExistingAccountWarning> 
+    </div>
+    <form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">
 
    <fieldset>  
     <my-bootstrap-form-group name="Shib_Identity_Provider" label="Etablissement" v-if="v.Shib_Identity_Provider">
@@ -128,6 +132,7 @@
     </my-bootstrap-form-group>
 
  </form>
-</div>
-</div>
+ </div> <!-- !homonyms -->
+</div> <!-- imported -->
+</div> <!-- v -->
 </div>
