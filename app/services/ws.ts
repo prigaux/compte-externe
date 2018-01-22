@@ -179,7 +179,7 @@ const api_url = conf.base_pathname + 'api';
 
         export function homonymes(id) {
             return axios.get(api_url + '/homonymes/' + id).then((resp) =>
-                (<any>resp.data)
+                (<any>resp.data).map(fromWs)
                 , _handleErr);
         }
 

@@ -62,8 +62,7 @@ export default Vue.extend({
     components: { ExistingAccountWarning },
     computed: {
         comparisons() {
-            let v_ = Ws.toWs(this.v);
-            return computeComparisons(v_, this.homonyme);
+            return computeComparisons(this.v, this.homonyme);
         },
         label() {
             return conf.attr_labels;
