@@ -77,9 +77,16 @@ export function chain(l_actions: action[]): action {
 
 const accountExactMatch = (v: v) => {
     // first lookup exact match in LDAP
-    let attrs_exact_match = [ 'sn', 'givenName', 'supannMailPerso', 'birthDay' ];
-    const attrsType = <typeof conf.ldap.people.types> _.pick(conf.ldap.people.types, attrs_exact_match);
-    let v_ldap = ldap.convertToLdap(attrsType, conf.ldap.people.attrs, v, {});
+    const ignored_attrs = [
+        'profilename', 'priority', 'startdate', 'enddate', 'duration', // hard to compare (stored in up1Profile)
+        'various', // not stored
+        'userPassword', // no way
+        'jpegPhoto', // not handled correctly by convertToLdap
+        'homePhone', 'pager', // we would need conversion to have a correct comparison
+    ]
+    const attrs_exact_match = _.difference(Object.keys(v), ignored_attrs);
+    const subv = _.pick(v, attrs_exact_match) as v;
+    let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, subv, {});
     let filters_ = attrs_exact_match.filter(attr => attr in v_ldap).map(attr => filters.eq(attr, v_ldap[attr] as string));
     if (filters_.length < 3) throw "refusing to create account with so few attributes. Expecting at least 3 of " + attrs_exact_match.join(',');
     return onePerson(filters.and(filters_));
