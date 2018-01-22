@@ -41,6 +41,7 @@
     "es6-promise": "^4.1.1",
     "express": "~4.12.4",
     "html5-boilerplate": "0.0.1",
+    "iconv-lite": "^0.4.19",
     "ldap-filter": "^0.3.3",
     "ldapjs": "^1.0.0",
     "lodash": "^4.14.x",

@@ -2,6 +2,7 @@
 
 import * as path from 'path';
 import * as _ from 'lodash';
+import * as iconv from 'iconv-lite';
 import * as express from 'express';
 import * as csvtojson from 'csvtojson';
 import * as conf from './conf';
@@ -34,6 +35,11 @@ export const index_html = (_req: req, res: express.Response, _next): void => {
 };
 
 
+const toString = (buffer : Buffer) => {
+    let r = buffer.toString('utf8');
+    if (r.match("\uFFFD")) r = iconv.decode(buffer, 'win1252'); // fallback
+    return r;
+}
 
 const parse_csv = (csv: string): Promise<{ fields: string[], lines: {}[] }> => (
     new Promise((resolve, reject) => {
@@ -52,7 +58,7 @@ const parse_csv = (csv: string): Promise<{ fields: string[], lines: {}[] }> => (
     })
 );
 export const csv2json = (req: req, res): void => (
-    respondJson(req, res, parse_csv(req.body))
+    respondJson(req, res, parse_csv(toString(req.body)))
 );
 
 export const eventBus = (): EventEmitter => {

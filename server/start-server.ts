@@ -22,7 +22,7 @@ app.use("/static", express.static(path.join(__dirname, '../app/dist/static'), st
 app.use(utils.express_auth);
 
 app.use('/csv2json', 
-     bodyParser.text({type: '*/*'}), 
+     bodyParser.raw({type: '*/*'}), 
      utils.csv2json);
 
 app.use('/gen_gsh_script', gen_gsh_script);
