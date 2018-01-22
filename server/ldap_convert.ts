@@ -70,7 +70,8 @@ export const base64: ldap_conversion = {
             return s;
         },
         toLdap: (_s: string): string => {
-            throw "not handled correctly by ldapjs";
+            console.trace("base64.toLdap not handled correctly by ldapjs");
+            throw "base64.toLdap not handled correctly by ldapjs";
         }
 }
 
