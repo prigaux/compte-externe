@@ -291,14 +291,15 @@ const exportStep = (step) : Partial<step> => (
         allow_many: step.allow_many,
     }
 );
-const exportInitialSteps = (steps: string[]) : Partial<step>[] => (
-    steps.map(step => ({ ...exportStep(conf_steps.steps[step]), id: step }))
-);
 const initialSteps = (req: req) => (
   acls_allowed_ssubv(req.user).then(allowed_ssubvs => (
-    exportInitialSteps(allowed_ssubvs.filter(({ step }) => (
+    allowed_ssubvs.filter(({ step }) => (
           conf_steps.steps[step].initialStep
-    )).map(({ step }) => step))
+    )).map(({ step }) => (
+        { id: step, 
+          ...exportStep(conf_steps.steps[step]),
+        }
+    ))
   ))
 );
 
