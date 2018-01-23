@@ -35,7 +35,7 @@ export const allowed_ssubvs = (vuser: v, steps: steps): Promise<allowed_ssubvs> 
 
 export const is_sv_allowed = (sv: sv, allowed_ssubvs: allowed_ssubvs) => (
     allowed_ssubvs.some(({ step, subvs}) => (
-        step === sv.step && subvs.some(subv => acl.has_subv(sv.v, subv))
+        step === sv.step && acl.has_one_subvs(sv.v, subvs)
     ))
 );
 

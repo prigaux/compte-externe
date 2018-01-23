@@ -5,8 +5,12 @@ import * as ldap from '../ldap';
 import { parse_composites } from '../ldap_convert';
 const filters = ldap.filters;
 
-export const has_subv = (v: v, subv: Partial<v>) => (
+const has_subv = (v: v, subv: Partial<v>) => (
   !Object.keys(subv).some(k => v[k] !== subv[k])
+);
+
+export const has_one_subvs = (v: v, subvs: Partial<v>[]) => (
+    subvs.some(subv => has_subv(v, subv))
 );
 
 const searchPeople = (peopleFilter: string, attr: string) => (
