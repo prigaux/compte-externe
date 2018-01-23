@@ -15,7 +15,7 @@ export const moderators = (acls: acl_search[], v: v): Promise<string[]> => {
     ))).then(mails => _.flatten(mails));
 };
 
-const one_allowed_ssubvs = (vuser : v) => (step: step, stepName: string) => {
+export const allowed_subvs = (vuser : v, step: step) => {
     let subvs: Promise<subvs>;
     if (!step.acls) {
         subvs = Promise.resolve([{}]); // allow any v
@@ -26,8 +26,14 @@ const one_allowed_ssubvs = (vuser : v) => (step: step, stepName: string) => {
             _.flatten(ll)
         ));
     }
-    return subvs.then(subvs => ({ step: stepName, subvs }));
+    return subvs;
 };
+
+const one_allowed_ssubvs = (vuser : v) => (step: step, stepName: string) => (
+    allowed_subvs(vuser, step).then(subvs => (
+        { step: stepName, subvs }
+    ))
+);
 
 export const allowed_ssubvs = (vuser: v, steps: steps): Promise<allowed_ssubvs> => (
     Promise.all(_.map(steps, one_allowed_ssubvs(vuser))).then(l => l.filter(e => e.subvs.length > 0))
