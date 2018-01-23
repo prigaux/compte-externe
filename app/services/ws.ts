@@ -57,6 +57,10 @@ import conf from '../conf';
 
 const api_url = conf.base_pathname + 'api';
 
+export const people_search = (step: string, token: string, maxRows? : number) : Promise<V[]> => (
+    axios.get(api_url + '/comptes/search/' + step, { params: { token, maxRows } }).then(resp => resp.data as Promise<V[]>)
+);
+
         export function structures_search(token : string, maxRows? : number) : Promise<Structure[]> {
             return axios.get(api_url + '/structures', { params: { token, maxRows } }).then((resp) => resp.data as Structure[]);
         }

@@ -157,6 +157,19 @@ function get(req: req, id: id, wanted_step: string) {
     ));
 }
 
+async function search_with_acls(req: req, wanted_step: string) {
+    let token = req.query.token;
+    if (!token) return Promise.reject("missing token parameter");
+    if (!req.user) return Promise.reject("Unauthorized");
+    const sizeLimit = parseInt(req.query.maxRows) || 10;
+    const step = conf_steps.steps[wanted_step];
+
+    const vuser = await search_ldap.vuser(req.user);
+    const subvs = await acl_checker.allowed_subvs(vuser, step);
+    const vs = await search_ldap.searchPeople_matching_subvs(subvs, token, { sizeLimit });
+    return _.sortBy(vs, 'displayName').map(v => removeHiddenAttrs(step.attrs, v))
+}
+
 function set_new_many(req: req, wanted_step: string, vs: v[]) {
     return Promise.all(vs.map(v => set(req, 'new', wanted_step, v).catch(error => (console.log(error), { error }))));
 }
@@ -295,8 +308,9 @@ const initialSteps = (req: req) => (
   acls_allowed_ssubv(req.user).then(allowed_ssubvs => (
     allowed_ssubvs.filter(({ step }) => (
           conf_steps.steps[step].initialStep
-    )).map(({ step }) => (
+    )).map(({ step, subvs }) => (
         { id: step, 
+          acl_subvs: _.isEqual(subvs, [{}]) ? undefined: subvs, // no subvs means no restriction
           ...exportStep(conf_steps.steps[step]),
         }
     ))
@@ -318,6 +332,10 @@ router.get('/comptes', (req : req, res) => {
     } else {
         respondJson(req, res, listAuthorized(req));
     }
+});
+
+router.get('/comptes/search/:step', (req : req, res) => {
+    respondJson(req, res, search_with_acls(req, req.params.step));
 });
 
 router.get('/comptes/:id/:step', (req : req, res) => {

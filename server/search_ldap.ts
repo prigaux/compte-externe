@@ -125,6 +125,20 @@ export const homonymes = (v: v) : Promise<Homonyme[]> => {
     return homonymes_(sns, givenNames, v.birthDay, v.supannMailPerso);    
 };
 
+export function searchPeople_matching_subvs(subvs: Partial<v>[], token: string, options: ldap.Options) {
+    const ands = subvs.map(subv => {
+        const v_ldap = ldap.convertToLdap(conf.ldap.people.attrs, conf.ldap.people.attrs, subv as any, {});
+        // limitation: do not handle multi-valued attrs
+        return filters.or(_.map(v_ldap, (val, attr) => filters.eq(attr, val as string)));
+    });
+    const filter = filters.and([
+        filters.fuzzy(['displayName', 'cn'], token),
+        ...ands,
+    ]);
+    console.log("searchPeople_matching_subvs with filter", filter);
+    return ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, options);
+}
+
 // export it to allow override
 export let existLogin = (login: string): Promise<boolean> => (
     ldap.searchOne(conf.ldap.base_people, filters.eq("uid", login), {}, null).then(v => (

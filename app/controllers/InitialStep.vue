@@ -2,7 +2,13 @@
 <div v-if="step.labels && step.labels.title">
     <div v-if="allow_reuse">
         <h4 v-html="step.labels.title"></h4>
-        <div>
+        <div v-if="step.acl_subvs">
+          <typeahead :minChars="3" :editable="false"
+             @input="reuse"
+             :options="people_search"
+             :formatting="e => e.givenName + ' ' + e.sn"></typeahead>
+        </div>
+        <div v-else>
             <autocomplete-user class="form-control" placeholder="Rechercher une personne" @select="reuse"></autocomplete-user>
         </div>
     </div>
@@ -17,6 +23,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import * as Ws from '../services/ws';
 import { router } from '../router';
 
 export default Vue.extend({
@@ -27,6 +34,9 @@ export default Vue.extend({
      },
    },
    methods: {
+     people_search(token) {
+         return Ws.people_search(this.step.id, token);
+     },
      reuse(u) {
         router.push(`/${this.step.id}?uid=${u.uid}`);
      },
