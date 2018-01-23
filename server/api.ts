@@ -296,15 +296,9 @@ const exportInitialSteps = (steps: string[]) : Partial<step>[] => (
 );
 const initialSteps = (req: req) => (
   acls_allowed_ssubv(req.user).then(allowed_ssubvs => (
-    Promise.all(Object.keys(conf_steps.steps).map(stepName => {
-        const step = conf_steps.steps[stepName];
-        if (step.initialStep) {            
-            const empty_sv = { step: stepName, v: <v> {} };
-            return acl_checker.is_sv_allowed(empty_sv, allowed_ssubvs) ? [stepName] : [];
-        } else {
-            return [];
-        }
-    })).then(_.flatten).then(exportInitialSteps)
+    exportInitialSteps(allowed_ssubvs.filter(({ step }) => (
+          conf_steps.steps[step].initialStep
+    )).map(({ step }) => step))
   ))
 );
 
