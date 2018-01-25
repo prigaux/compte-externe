@@ -1,18 +1,19 @@
 import * as _ from 'lodash';
 
 export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
+    let r = {};
     _.each(attrs, (opt, key) => {
-        if (opt.hidden || opt.readonly) {
-            /* security: client must NOT modify hidden/readonly information */
-            delete v[key];
-        }
         if (opt.toUserOnly) {
             /* the attr was sent to the user, but we do not propagate it to next steps (eg: display it to the user, but do not propagate to createCompte step) */
-            delete prev[key];
+        } else if (opt.hidden || opt.readonly) {
+            /* security: client must NOT modify hidden/readonly information */
+            if (key in prev) r[key] = prev[key];
+        } else {
+            validate(key, opt, v[key]);
+            if (key in v) r[key] = v[key];
         }
-        validate(key, opt, v[key]);
     });
-    return <v> _.assign(prev, v);
+    return r as v;
 }
 
 function validate(key: string, opt: StepAttrOption, val) {
