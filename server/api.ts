@@ -19,13 +19,6 @@ const router = express.Router();
 const bus = utils.eventBus();
 const respondJson = utils.respondJson;
 
-function normalize_step(step: step, _name: string) {
-    _.each(step.attrs, (opts) => {
-        if (opts.toUserOnly) opts.optional = opts.readonly = true;    
-    });
-}
-_.each(conf_steps.steps, normalize_step);
-
 function step(sv: sv): step {
     let r = conf_steps.steps[sv.step];
     if (!r) {

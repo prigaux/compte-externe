@@ -40,6 +40,10 @@ export function export_v(attrs: StepAttrsOption, v) {
     ));
 }
 
-export const exportAttrs = (attrs: StepAttrsOption) => (
-    <StepAttrsOption> _.omitBy(attrs, val => val.hidden)
+const transform_toUserOnly_into_hidden_readonly = ({ toUserOnly, ...opt}) => (
+    toUserOnly ? { optional: true, readonly: true, ...opt} : opt
 );
+
+export const exportAttrs = (attrs: StepAttrsOption) => (
+    _.mapValues(_.omitBy(attrs, val => val.hidden), transform_toUserOnly_into_hidden_readonly)
+) as StepAttrsOption;
