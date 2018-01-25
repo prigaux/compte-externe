@@ -10,7 +10,7 @@ export default Vue.extend({
     },
     methods: {
         hasAffiliation(v, ...affiliations) {
-            return Helpers.arrayContains(v.eduPersonAffiliation || [], affiliations);
+            return Helpers.arrayContains(v.global_eduPersonAffiliation || [], affiliations);
         },
     },
 });

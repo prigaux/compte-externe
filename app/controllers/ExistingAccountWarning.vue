@@ -3,7 +3,7 @@
   était étudiant en {{lastAnneeInscription | formatAcademicYear}}
 </span>
 <span v-else>
-  est {{conf.affiliation_labels[v.eduPersonPrimaryAffiliation] || 'un ancien compte sans affiliation'}}      
+  est {{conf.affiliation_labels[v.global_eduPersonPrimaryAffiliation] || 'un ancien compte sans affiliation'}}      
   {{lastAnneeInscription | formatAcademicYear}}
   <b v-if="hasAffiliation(v, 'student', 'member')">géré par Apogée</b>
   <b v-if="hasAffiliation(v, 'employee')">géré par SIHAM</b>

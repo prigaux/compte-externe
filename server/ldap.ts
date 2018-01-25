@@ -154,7 +154,7 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
     let r = {};
     _.forEach(v, (val, attr) => {
         let conv = attrsConvert[attr] || {};
-        let attr_ = conv.ldapAttr || attr;
+        let attr_ = conv.ldapAttr || defaultLdapAttr(attr);
         // transform to string|string[]
         let val_ = convertAttrToLdap(attr, attrTypes[attr], conv.convert, val, opts);
         if (val_ === '') return; // ignore empty string which can not be a valid LDAP string value
@@ -187,11 +187,12 @@ export function searchSimple<T extends {}>(base: string, filter: filter, attrTyp
   return search(base, filter, attrTypes, null, {});
 }
 
+const defaultLdapAttr = attr => attr.replace(/^global_/, '');
 
 // NB: it should be <T extends LdapEntry> but it is not well handled by typescript
 export function search<T extends {}>(base: string, filter: filter, attrTypes: T, attrsConvert: AttrsConvert, options: Options): Promise<T[]> {
     let wantedConvert = _.mapValues(attrTypes, (_type, attr) => attrsConvert && attrsConvert[attr] || {});
-    let attrRemap = _.mapValues(wantedConvert, (c, attr) => c.ldapAttr || attr);
+    let attrRemap = _.mapValues(wantedConvert, (c, attr) => c.ldapAttr || defaultLdapAttr(attr));
     let attrRemapRev = _.invertBy(attrRemap);
     let attributes = _.keys(attrRemapRev);
     let p = searchRaw(base, filter, attributes, options).then(l => 

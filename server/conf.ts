@@ -55,11 +55,14 @@ const conf = {
                 barcode: '',
                 mifare: '',
 
-                eduPersonAffiliation: [],
+                // useful to know the kind of profiles the user has.
+                global_eduPersonAffiliation: [],
+                global_eduPersonPrimaryAffiliation: '',
+                global_supannEtuAnneeInscription: [0],
+
                 eduPersonPrimaryAffiliation: '',
                 eduPersonEntitlement: '',
                 supannEtablissement: [],
-                supannEtuAnneeInscription: [0],
                 supannRoleEntite: [],
 
                 profilename: '',

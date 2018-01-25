@@ -30,9 +30,9 @@ function format(val) {
 
 function computeComparisons(v, homonyme) {   
         let sameAttrs = {};
-        const ignored_attrs = [ 'uid', 'supannAliasLogin', 'score', 'eduPersonAffiliation', 'eduPersonPrimaryAffiliation', 'supannEtuAnneeInscription' ];
+        const ignored_attrs = [ 'uid', 'supannAliasLogin', 'score' ];
         return conf.attrs_order.filter(attr => (
-            (attr in homonyme) && !_.includes(ignored_attrs, attr)
+            (attr in homonyme) && !_.includes(ignored_attrs, attr) && !attr.match(/^global_/)
         )).map(attr => {
             var val2 = format(homonyme[attr]);
             var val1 = format(v[attr]);
