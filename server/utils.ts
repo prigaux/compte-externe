@@ -120,3 +120,7 @@ export function mergeSteps(initialSteps: steps, nextSteps: steps): steps {
     _.forEach(initialSteps, (step, _name) => step.initialStep = true);
     return { ...initialSteps, ...nextSteps };
 }
+
+export const attrsHelpingDiagnoseHomonymes = (
+    _.fromPairs(conf.attrsHelpingDiagnoseHomonymes.map(k => [k, { toUserOnly: true }]))    
+);

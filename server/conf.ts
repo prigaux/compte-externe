@@ -124,6 +124,10 @@ const conf = {
         },
     },
 
+    attrsHelpingDiagnoseHomonymes: [
+        'mail', 'altGivenName', 'global_eduPersonAffiliation', 'global_eduPersonPrimaryAffiliation', 'global_supannEtuAnneeInscription',
+    ],
+
     cas_idp: 'https://idp.univ.fr',
 
     mongodb: { 
