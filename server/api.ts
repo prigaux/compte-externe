@@ -9,6 +9,7 @@ import * as search_ldap from './search_ldap';
 import * as mail from './mail';
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
+import { removeHiddenAttrs, mergeAttrs, exportAttrs } from './step_attrs_option';
 require('./helpers');
 
 require('promise.prototype.finally').shim();
@@ -52,45 +53,6 @@ function action(req: req, sv: sv, action_name: string): Promise<svr> {
     });
 }
 
-function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
-    _.each(attrs, (opt, key) => {
-        let val = v[key];
-        if (opt.hidden || opt.readonly) {
-            /* security: client must NOT modify hidden/readonly information */
-            delete v[key];
-        }
-        if (opt.toUserOnly) {
-            /* the attr was sent to the user, but we do not propagate it to next steps (eg: display it to the user, but do not propagate to createCompte step) */
-            delete prev[key];
-        }
-        if (!opt.optional) {
-            if (val === '' || val === undefined)
-                throw `constraint !${key}.optional failed for ${val}`;
-        }
-        if (opt.max) {
-            if (!(_.isNumber(val) && 0 <= val && val <= opt.max))
-                throw `constraint ${key}.max <= ${opt.max} failed for ${val}`;
-        }
-        if (opt.pattern) {
-            let val_ = val !== undefined ? val : '';
-            if (!(_.isString(val_) && val_.match("^(" + opt.pattern + ")$")))
-                throw `constraint ${key}.pattern ${opt.pattern} failed for ${val}`;
-        }
-        if (opt.choices) {
-            const keys = opt.choices.map(e => e.key);
-            if (val !== undefined && !keys.includes(val))
-                throw `constraint ${key}.choices ${keys} failed for ${val}`;
-        }
-    });
-    return <v> _.assign(prev, v);
-}
-
-/* before sending to client, remove sensible information */
-function removeHiddenAttrs(attrs: StepAttrsOption, v) {
-    return _.omitBy(v, (_val, key) => ( 
-        !attrs[key] || attrs[key].hidden
-    ));
-}
 function sv_removeHiddenAttrs(sv: sv): sv {
     sv = _.clone(sv);
     sv.v = removeHiddenAttrs(step(sv).attrs, sv.v) as v;
@@ -298,7 +260,7 @@ function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
 
 const exportStep = (step) : Partial<step> => (
     {
-        attrs: <StepAttrsOption> _.omitBy(step.attrs, val => val.hidden),
+        attrs: exportAttrs(step.attrs),
         labels: step.labels,
         attrs_pre: step.attrs_pre,
         allow_many: step.allow_many,
