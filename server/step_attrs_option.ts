@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 
 export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
     _.each(attrs, (opt, key) => {
-        let val = v[key];
         if (opt.hidden || opt.readonly) {
             /* security: client must NOT modify hidden/readonly information */
             delete v[key];
@@ -11,6 +10,12 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
             /* the attr was sent to the user, but we do not propagate it to next steps (eg: display it to the user, but do not propagate to createCompte step) */
             delete prev[key];
         }
+        validate(key, opt, v[key]);
+    });
+    return <v> _.assign(prev, v);
+}
+
+function validate(key: string, opt: StepAttrOption, val) {
         if (!opt.optional) {
             if (val === '' || val === undefined)
                 throw `constraint !${key}.optional failed for ${val}`;
@@ -29,8 +34,6 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
             if (val !== undefined && !keys.includes(val))
                 throw `constraint ${key}.choices ${keys} failed for ${val}`;
         }
-    });
-    return <v> _.assign(prev, v);
 }
 
 /* before sending to client, remove sensible information */
