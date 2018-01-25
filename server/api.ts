@@ -53,10 +53,10 @@ function action(req: req, sv: sv, action_name: string): Promise<svr> {
     });
 }
 
-function sv_removeHiddenAttrs(sv: sv): sv {
+function export_sv(sv: sv) {
     sv = _.clone(sv);
     sv.v = removeHiddenAttrs(step(sv).attrs, sv.v) as v;
-    return sv;
+    return { ...sv, ...exportStep(step(sv)) };
 }
 
 function mayNotifyModerators(req: req, sv: sv, notifyKind: string) {
@@ -114,9 +114,7 @@ function getRaw(req: req, id: id, wanted_step: string): Promise<sv> {
 }
 
 function get(req: req, id: id, wanted_step: string) {
-    return getRaw(req, id, wanted_step).then(sv_removeHiddenAttrs).then(sv => (
-        { ...sv, ...exportStep(step(sv)) }
-    ));
+    return getRaw(req, id, wanted_step).then(export_sv);
 }
 
 async function search_with_acls(req: req, wanted_step: string) {
@@ -235,9 +233,7 @@ function listAuthorized(req: req) {
             const valid = sv.step in conf_steps.steps;
             if (!valid) console.error("ignoring sv in db with invalid step " + sv.step);
             return valid;
-        }).map(sv => (
-            { ...sv_removeHiddenAttrs(sv), ...exportStep(step(sv)) }
-        ))
+        }).map(export_sv)
     ));
 }
 
