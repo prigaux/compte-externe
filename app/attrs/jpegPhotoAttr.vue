@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group name="jpegPhoto" :label="label" :validity="validity">
+  <my-bootstrap-form-group name="jpegPhoto" :label="label" :validity="validity" v-if="!attrs.readonly || val">
       <!-- for validation: -->
       <input-with-validity name="jpegPhoto" :value="val" type="text" style="display: none" required :validity.sync="validity.jpegPhoto"></input-with-validity>
 
