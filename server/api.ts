@@ -247,7 +247,7 @@ function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
     });
 }
 
-const exportStep = (step) : Partial<step> => (
+const exportStep = (step: step) : Partial<step> => (
     {
         attrs: exportAttrs(step.attrs),
         labels: step.labels,
