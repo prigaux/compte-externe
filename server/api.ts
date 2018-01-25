@@ -9,7 +9,7 @@ import * as search_ldap from './search_ldap';
 import * as mail from './mail';
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
-import { removeHiddenAttrs, mergeAttrs, exportAttrs } from './step_attrs_option';
+import { export_v, merge_v, exportAttrs } from './step_attrs_option';
 require('./helpers');
 
 require('promise.prototype.finally').shim();
@@ -55,7 +55,7 @@ function action(req: req, sv: sv, action_name: string): Promise<svr> {
 
 function export_sv(sv: sv) {
     sv = _.clone(sv);
-    sv.v = removeHiddenAttrs(step(sv).attrs, sv.v) as v;
+    sv.v = export_v(step(sv).attrs, sv.v) as v;
     return { ...sv, ...exportStep(step(sv)) };
 }
 
@@ -127,7 +127,7 @@ async function search_with_acls(req: req, wanted_step: string) {
     const vuser = await search_ldap.vuser(req.user);
     const subvs = await acl_checker.allowed_subvs(vuser, step);
     const vs = await search_ldap.searchPeople_matching_subvs(subvs, token, { sizeLimit });
-    return _.sortBy(vs, 'displayName').map(v => removeHiddenAttrs(step.attrs, v))
+    return _.sortBy(vs, 'displayName').map(v => export_v(step.attrs, v))
 }
 
 function set_new_many(req: req, wanted_step: string, vs: v[]) {
@@ -179,7 +179,7 @@ const checkSetLock = (sv) : Promise<any> => (
 // 4. call action_pre
 // 5. save to DB or remove from DB if one action returned null
 function setRaw(req: req, sv: sv, v: v) : Promise<svr> {
-    sv.v = mergeAttrs(step(sv).attrs, sv.v, v);
+    sv.v = merge_v(step(sv).attrs, sv.v, v);
     return checkSetLock(sv).then(_ => (
         advance_sv(req, sv)
     )).tap(svr => {
@@ -249,7 +249,7 @@ function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
         // acls are checked => removing is allowed
         return search_ldap.homonymes(sv.v).then(l => {
                 const attrs = { score: {}, ...step(sv).attrs };
-                return l.map(v => removeHiddenAttrs(attrs, v) as search_ldap.Homonyme)
+                return l.map(v => export_v(attrs, v) as search_ldap.Homonyme)
             })
     });
 }

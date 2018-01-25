@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-export function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
+export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
     _.each(attrs, (opt, key) => {
         let val = v[key];
         if (opt.hidden || opt.readonly) {
@@ -34,7 +34,7 @@ export function mergeAttrs(attrs : StepAttrsOption, prev, v: v): v {
 }
 
 /* before sending to client, remove sensible information */
-export function removeHiddenAttrs(attrs: StepAttrsOption, v) {
+export function export_v(attrs: StepAttrsOption, v) {
     return _.omitBy(v, (_val, key) => ( 
         !attrs[key] || attrs[key].hidden
     ));
