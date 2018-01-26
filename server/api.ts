@@ -33,6 +33,10 @@ function action_pre(req: req, sv: sv) {
 }
 function action_post(req: req, sv: sv) {
     return action(req, sv, 'action_post').tap(sv => {
+        const accountStatus = sv.response && sv.response.accountStatus;
+        if (accountStatus && accountStatus !== 'active') {
+            notifyModerators(req, sv, 'weird_account_status.html');
+        }
         mayNotifyModerators(req, sv, 'accepted');
     });
 }
