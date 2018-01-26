@@ -241,6 +241,7 @@ function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
     return getRaw(req, id, undefined).then(sv => {
         // acls are checked => removing is allowed
         return search_ldap.homonymes(sv.v).then(l => {
+                console.log(`homonymes found for ${sv.v.givenName} ${sv.v.sn}: ${l.map(v => v.uid)}`);
                 const attrs = { score: {}, ...step(sv).attrs };
                 return l.map(v => export_v(attrs, v) as search_ldap.Homonyme)
             })
