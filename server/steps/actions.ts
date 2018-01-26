@@ -111,9 +111,8 @@ export const createCompte: action = (_req, sv) => (
     createCompte_(sv, { dupcreate: "ignore", create: true })
 );
     
-const createCompte_ = (sv: sv, opts : crejsonldap.options) => {
-    const v = sv.v;
-    let is_new_account = !v.uid;
+const createCompte_ = async (sv: sv, opts : crejsonldap.options) => {
+    let v = sv.v;
 
     if (!v.startdate) v.startdate = new Date();
     if (!v.enddate) {
@@ -123,28 +122,25 @@ const createCompte_ = (sv: sv, opts : crejsonldap.options) => {
         v.enddate = utils.addDays(v.startdate, v.duration + 0.9999);
     }
     
-    return crejsonldap.createMayRetryWithoutSupannAliasLogin(v, opts).then(function (uid) {
-        console.log("createCompteRaw returned", uid);
-        v.uid = uid;
-        if (!v.supannAliasLogin) v.supannAliasLogin = uid;
-        return v;
-    }).tap((v) => {
-        const attrs = require('../steps/conf').steps[sv.step].attrs;
-        return after_createAccount(v, attrs, is_new_account);
-    }).then((v) => (
-        { v, response: {login: v.supannAliasLogin} }
-    ));
+    const resp_subv = await crejsonldap.createMayRetryWithoutSupannAliasLogin(v, opts);
+    console.log("createCompteRaw returned", resp_subv.uid);
+    v.uid = resp_subv.uid;
+    if (!v.supannAliasLogin) v.supannAliasLogin = resp_subv.uid;
+
+    const attrs = require('../steps/conf').steps[sv.step].attrs;
+    await after_createAccount(v, attrs, resp_subv.accountStatus);
+
+    return { v, response: {login: v.supannAliasLogin, accountStatus: resp_subv.accountStatus } }
 };
 
-const after_createAccount = (v: v, attrs: StepAttrsOption, is_new_account: boolean) => {
-    if (!is_new_account) {
-        // we merged the account. ignore new password + no mail
-    } else if (v.userPassword) {
-        return esup_activ_bo.setPassword(v.uid, v.supannAliasLogin, v.userPassword);
+const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: crejsonldap.accountStatus) => {
+    if (v.userPassword && !accountStatus) {
+        await esup_activ_bo.setPassword(v.uid, v.supannAliasLogin, v.userPassword);
         // NB: if we have a password, it is a fast registration, so do not send a mail
-    } else if (v.supannMailPerso) {
+    }
+    if (v.supannMailPerso) {
         const v_ = v_display(v, attrs);
-        mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v, v_display: v_ });
+        mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v, v_display: v_, isActive: !accountStatus });
     }
     return null;
 }

@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import * as utils from './utils';
 import * as ldap from './ldap';
 import * as conf from './conf';
@@ -33,6 +34,7 @@ const prepare_crejsonldap_param = (v: v) => {
 // - 14MB RSS memory usage
 export const call = (v: v, opts : options) => {
     let param = JSON.stringify({
+        retattrs: ['uid', 'accountStatus'],
         ...opts, ...prepare_crejsonldap_param(v)
     });
     console.log("action createCompte:", param.replace(/"jpegPhoto":"(.*)"/, `"jpegPhoto":"xxx"`));
@@ -55,13 +57,14 @@ export const throw_if_err = (resp) => {
     return resp;
 };
 
-export const extract_uid = (resp): string => {
-    let m = resp.dn && resp.dn.match(/uid=(.*?),/);
-    if (m) {
-        return m[1];
+export type accountStatus = undefined | "active" | "disabled" | "deleted"
+
+export const extract_attrs = (resp): { uid: string, accountStatus: accountStatus} => {
+    if (resp.attrs && resp.attrs.uid) {
+        return _.mapValues(resp.attrs, l => l[0]) as any;
     } else {
-        console.error("createCompte should return dn");
-        throw resp.err ? JSON.stringify(resp.err[0]) : "createCompte should return dn";
+        console.error("createCompte should return attrs.uid");
+        throw resp.err ? JSON.stringify(resp.err[0]) : "createCompte should return attrs.uid";
     }
 };
 
@@ -80,5 +83,5 @@ export const mayRetryWithoutSupannAliasLogin = (v: v, opts: options) => (resp) =
 export const createMayRetryWithoutSupannAliasLogin = (v: v, opts: options) => (
     call(v, opts)
         .then(mayRetryWithoutSupannAliasLogin(v, opts))
-        .then(extract_uid)
+        .then(extract_attrs)
 );

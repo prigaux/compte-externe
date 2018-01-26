@@ -13,8 +13,8 @@ const fake_callRaw = (param_resp_s) => {
 
 describe('crejsonldap return value', () => {
     it ("should work", () => {
-        const resp = {"action":"ADD","dn":"uid=pascalrigau4,ou=people,dc=univ-paris1,dc=fr"};
-        assert.equal(crejsonldap.extract_uid(resp), "pascalrigau4");
+        const resp = {"action":"ADD","dn":"uid=pascalrigau4,ou=people,dc=univ-paris1,dc=fr","attrs":{"accountStatus":["active"],"uid":["pascalrigau4"]}};
+        assert.deepEqual(crejsonldap.extract_attrs(resp), { uid: "pascalrigau4", accountStatus: "active" });
     });
 });
 
@@ -23,8 +23,8 @@ describe('modifyAccount', () => {
         const sv = { v: { "uid": "prigaux", "displayName": "Pascal Rigaux" } as v };
 
         fake_callRaw({
-            '{"create":false,"id":["uid"],"users":[{"attrs":{"uid":"prigaux","displayName":"Pascal Rigaux"}}]}':
-            '{"users":[{"action":"MOD","dn":"uid=prigaux,ou=people,dc=univ-paris1,dc=fr"}]}',
+            '{"retattrs":["uid","accountStatus"],"create":false,"id":["uid"],"users":[{"attrs":{"uid":"prigaux","displayName":"Pascal Rigaux"}}]}':
+            '{"users":[{"action":"MOD","dn":"uid=prigaux,ou=people,dc=univ-paris1,dc=fr","attrs":{"accountStatus":["active"],"uid":["pascalrigau4"]}}]}',
         });
         
         return actions.modifyAccount(null, sv).then(({ v }) => {
@@ -44,7 +44,7 @@ describe('modifyAccount', () => {
         const sv = { v: { "uid": "prigaux", "displayName": "Pascal Rigaux" } as v };
 
         fake_callRaw({
-            '{"create":false,"id":["uid"],"users":[{"attrs":{"uid":"prigaux","displayName":"Pascal Rigaux"}}]}':
+            '{"retattrs":["uid","accountStatus"],"create":false,"id":["uid"],"users":[{"attrs":{"uid":"prigaux","displayName":"Pascal Rigaux"}}]}':
             '{"err":[{"desc":"All user requests failed","code":"userfail"}],"users":[{"err":[{"code":"noids","desc":"No entry found using ID=uid"}]}]}',
         });
         
@@ -61,8 +61,8 @@ describe('expireAccount', () => {
         const sv = { v: { "uid": "prigaux", "profilename": "xxx", "sn": "ignored" } as v };
 
         fake_callRaw({
-            '{"create":false,"id":["uid"],"users":[{"profilename":"xxx","enddate":"19700101","attrs":{"uid":"prigaux"}}]}':
-            '{"users":[{"action":"MOD","dn":"uid=prigaux,ou=people,dc=univ-paris1,dc=fr"}]}',
+            '{"retattrs":["uid","accountStatus"],"create":false,"id":["uid"],"users":[{"profilename":"xxx","enddate":"19700101","attrs":{"uid":"prigaux"}}]}':
+            '{"users":[{"action":"MOD","dn":"uid=prigaux,ou=people,dc=univ-paris1,dc=fr","attrs":{"accountStatus":["active"],"uid":["pascalrigau4"]}}]}',
         });
         
         return actions.expireAccount(null, sv).then(({ v }) => {
@@ -76,7 +76,7 @@ describe('validateAccount', () => {
         const sv = { v: { "sn": "Rigaux", "supannMailPerso": "foo@toto.fr" } as v };
 
         fake_callRaw({
-            '{"action":"validate","id":["uid"],"users":[{"attrs":{"sn":"Rigaux","supannMailPerso":"foo@toto.fr"}}]}':
+            '{"retattrs":["uid","accountStatus"],"action":"validate","id":["uid"],"users":[{"attrs":{"sn":"Rigaux","supannMailPerso":"foo@toto.fr"}}]}':
             '{"users":[{}]}',
         });
         
@@ -89,7 +89,7 @@ describe('validateAccount', () => {
         const sv = { v: { "sn": "Rigaux", "supannMailPerso": "foo@invalid" } as v };
 
         fake_callRaw({
-            '{"action":"validate","id":["uid"],"users":[{"attrs":{"sn":"Rigaux","supannMailPerso":"foo@invalid"}}]}':
+            '{"retattrs":["uid","accountStatus"],"action":"validate","id":["uid"],"users":[{"attrs":{"sn":"Rigaux","supannMailPerso":"foo@invalid"}}]}':
             '{"err":[{"desc":"All user requests failed","code":"userfail"}],"users":[{"err":[{"attr":"supannMailPerso","code":"badval","val":"foo@invalid","desc":"Invalid attribute value"}]}]}',
         });
         
@@ -106,15 +106,15 @@ describe('createMayRetryWithoutSupannAliasLogin', () => {
         const v_ = { "supannAliasLogin": "prigaux", "sn": "Rigaux", "givenName": "Pascal" } as v;
 
         fake_callRaw({
-            '{"create":true,"dupcreate":"ignore","id":["uid"],"users":[{"attrs":{"supannAliasLogin":"prigaux","sn":"Rigaux","givenName":"Pascal"}}]}':
+            '{"retattrs":["uid","accountStatus"],"create":true,"dupcreate":"ignore","id":["uid"],"users":[{"attrs":{"supannAliasLogin":"prigaux","sn":"Rigaux","givenName":"Pascal"}}]}':
             '{"users":[{"err":[{"code":"dupval","attr":"supannAliasLogin","desc":"Conflicting entries found","dn":["uid=prigaux,ou=people,dc=univ-paris1,dc=fr"],"val":"prigaux"}]}],"err":[{"code":"userfail","desc":"All user requests failed"}]}',
 
-            '{"create":true,"dupcreate":"ignore","id":["uid"],"users":[{"attrs":{"sn":"Rigaux","givenName":"Pascal"}}]}':
-            '{"users":[{"action":"ADD","dn":"uid=pascalrigau4,ou=people,dc=univ-paris1,dc=fr"}]}',
+            '{"retattrs":["uid","accountStatus"],"create":true,"dupcreate":"ignore","id":["uid"],"users":[{"attrs":{"sn":"Rigaux","givenName":"Pascal"}}]}':
+            '{"users":[{"action":"ADD","dn":"uid=pascalrigau4,ou=people,dc=univ-paris1,dc=fr","attrs":{"accountStatus":["active"],"uid":["pascalrigau4"]}}]}',
         });
         
-        return crejsonldap.createMayRetryWithoutSupannAliasLogin(v_, { create: true, dupcreate: "ignore" }).then(uid => {
-            assert.equal(uid, "pascalrigau4");
+        return crejsonldap.createMayRetryWithoutSupannAliasLogin(v_, { create: true, dupcreate: "ignore" }).then(subv => {
+            assert.equal(subv.uid, "pascalrigau4");
         });
     });
 });
