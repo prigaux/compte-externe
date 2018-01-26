@@ -83,7 +83,8 @@ function checkAcls(req: req, sv: sv) {
         } else if (!req.user) {
             throw "Unauthorized";
         } else {
-            console.error(req.user, "not authorized for step", sv.step);
+            const ssubv = allowed_ssubvs.find(ssubv => ssubv.step === sv.step);
+            console.error(req.user, "not authorized for step", sv.step, ssubv && ssubv.subvs, sv.v);
             throw "Forbidden"
         }
     })
