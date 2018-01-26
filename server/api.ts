@@ -54,13 +54,15 @@ function export_sv(sv: sv) {
 
 function mayNotifyModerators(req: req, sv: sv, notifyKind: string) {
     let notify = step(sv).notify;
-    if (!notify) return;
+    if (notify) notifyModerators(req, sv, notify[notifyKind]);
+}
+function notifyModerators(req: req, sv: sv, templateName: string) {
     acl_checker.moderators(step(sv).acls, sv.v).then(mails => {
         if (!mails.length) { console.log("no moderators"); return }
         //console.log("moderators", mails);
         const sv_url = conf.mainUrl + "/" + sv.step + "/" + sv.id;
         let params = _.merge({ to: mails.join(', '), moderator: req.user, conf, sv_url }, sv);
-        mail.sendWithTemplate(notify[notifyKind], params);
+        mail.sendWithTemplate(templateName, params);
     });
 }
 
