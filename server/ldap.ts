@@ -13,7 +13,9 @@ function clientP() {
 }
 
 function new_clientP() : Promise<ldapjs.Client> {
+    console.info("connecting to " + conf.ldap.uri);
     const c = ldapjs.createClient({ url: conf.ldap.uri, reconnect: true, idleTimeout: conf.ldap.disconnectWhenIdle_duration });
+    c.on('connectError', console.error);
     c.on('error', console.error);
     c.on('idle', () => {
         //console.log("destroying ldap connection");
@@ -23,8 +25,9 @@ function new_clientP() : Promise<ldapjs.Client> {
 
     return new Promise((resolve, reject) => {
         c.on('connect', () => {
-            //console.log("connecting to ldap server");
+            console.log("connected to ldap server");
             c.bind(conf.ldap.dn, conf.ldap.password, err => {
+                if (err) console.error(err);
                 err ? reject(err) : resolve(c);
             });
         });
