@@ -1,39 +1,4 @@
-<div class="normalContent">
-
- <div v-if="resp && resp.component">
-    <component :is="resp.component" :resp="resp"></component>
- </div>
- <div v-else-if="v">
-  <h4 style="margin-top: 2em" v-html="step.labels.title"></h4>
-
-  <div v-if="step.allow_many">
-    
-        <div v-if="imported">
-            <ImportResult :imported="imported" :ordered_fields="to_import.fields" @done="imported = to_import = undefined"></ImportResult>
-        </div>
-        <div v-else>
-            <ImportFile @change="val => to_import = val"></ImportFile>
-        </div>
-</div>
-
-<div v-if="!imported">
-
- <div v-if="check_homonyms && (!potential_homonyms || potential_homonyms.length) && !v.uid">
-    <Homonyms :v="v" :id="id" @merge="merge" @homonymes="l => potential_homonyms = l"></Homonyms>
- </div>
- <div v-else>
-
-    <div v-if="v.uid">
-        <p style="height: 2em"></p>
-            <div class="alert alert-danger" >
-                Le compte sera fusionné avec le compte existant {{v.uid}}
-            </div>
-    </div>
-             
-    <div v-if="hasAffiliation(v, 'member')" class="alert alert-danger">
-        {{v.givenName}} {{v.sn}} <ExistingAccountWarning :v="v"></ExistingAccountWarning> 
-    </div>
-    <form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">
+<form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">
 
    <fieldset>  
     <my-bootstrap-form-group name="Shib_Identity_Provider" label="Etablissement" v-if="v.Shib_Identity_Provider">
@@ -131,8 +96,4 @@
       </button>
     </my-bootstrap-form-group>
 
- </form>
- </div> <!-- !homonyms -->
-</div> <!-- imported -->
-</div> <!-- v -->
-</div>
+</form>

@@ -1,7 +1,7 @@
 import VueRouter from "vue-router";
 import conf from './conf';
 import * as Helpers from './services/helpers'; 
-import { AttrsForm } from './attrs/attrsForm';
+import Step from './controllers/Step';
 import ModerateList from './controllers/ModerateList';
 
 import template_welcome from './templates/welcome.html'
@@ -9,7 +9,7 @@ import template_welcome from './templates/welcome.html'
 const _routes = {
     '/login/:kind?': { render(_h) { router.replace(this.$route.query.then) } }, // TODO, use vue-router redirect
     '/steps/:kind?': ModerateList,
-    '/:stepName/:wanted_id?': AttrsForm,
+    '/:stepName/:wanted_id?': Step,
     '/': { template: template_welcome },
 };
 
