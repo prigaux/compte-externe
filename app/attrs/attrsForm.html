@@ -85,14 +85,14 @@
 
   
    <my-bootstrap-form-group>
-      <button class="btn btn-primary" type="submit" v-if="step.labels.okButton">
+      <button class="btn btn-primary" type="submit" v-if="step_labels.okButton">
         <span class="glyphicon glyphicon-plus"></span>
-        <span v-html="step.labels.okButton"></span>
+        <span v-html="step_labels.okButton"></span>
       </button>
 
-      <button class="btn btn-primary" @click.prevent="reject()" v-if="step.labels.cancelButton">
+      <button class="btn btn-primary" @click.prevent="reject()" v-if="step_labels.cancelButton">
         <span class="glyphicon glyphicon-trash"></span>
-        <span v-html="step.labels.cancelButton"></span>
+        <span v-html="step_labels.cancelButton"></span>
       </button>
     </my-bootstrap-form-group>
 

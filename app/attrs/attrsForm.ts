@@ -14,7 +14,7 @@ import template from './attrsForm.html';
 const accentsRange = '\u00C0-\u00FC';
 
 export default Vue.extend({
-    props: ['v', 'v_orig', 'attrs', 'step'],
+    props: ['v', 'v_orig', 'attrs', 'step_labels'],
     data() {
         return {
             validity: { submitted: false, supannCivilite: {}, givenName: {}, sn: {}, birthName: {}, homePhone: {}, supannMailPerso: {}, structureParrain: {}, duration: {}, profilename: {} },

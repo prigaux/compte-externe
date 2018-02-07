@@ -35,7 +35,7 @@
     </div>
 
     <attrsForm
-        :v="v" :v_orig="v_orig" :attrs="other_attrs" :step="step"
+        :v="v" :v_orig="v_orig" :attrs="other_attrs" :step_labels="step.labels"
         @submit="submit" @reject="reject"></attrsForm>
 
  </div> <!-- !homonyms -->
