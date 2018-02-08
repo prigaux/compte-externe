@@ -27,9 +27,6 @@ export default Vue.extend({
         label() {
             return conf.attr_labels;
         },
-        other_attrs() {
-            return this.attrs;
-        },
         submitted() {
             return this.validity.submitted;
         },

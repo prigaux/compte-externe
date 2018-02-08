@@ -14,67 +14,67 @@
     </my-bootstrap-form-group>
    </fieldset>
 
-   <my-bootstrap-form-group name="supannCivilite" :label="attr_labels.supannCivilite" :validity="validity" v-if="other_attrs.supannCivilite">
+   <my-bootstrap-form-group name="supannCivilite" :label="attr_labels.supannCivilite" :validity="validity" v-if="attrs.supannCivilite">
     <radio-with-validity name="supannCivilite" v-model="v.supannCivilite"
         :values="attrs.supannCivilite.choicesMap" :validity.sync="validity.supannCivilite">
     </radio-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="givenName" :label="attr_labels.givenName" :validity="validity" v-if="other_attrs.givenName">
+  <my-bootstrap-form-group name="givenName" :label="attr_labels.givenName" :validity="validity" v-if="attrs.givenName">
     <input-with-validity name="givenName" v-model="v.givenName" 
         type="text" :allowed-chars="allowedCharsInNames" :required="!attrs.givenName.optional" :validity.sync="validity.givenName">
     </input-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="sn" :label="attr_labels.sn" :validity="validity" v-if="other_attrs.sn">
+  <my-bootstrap-form-group name="sn" :label="attr_labels.sn" :validity="validity" v-if="attrs.sn">
     <input-with-validity name="sn" v-model="v.sn"
         type="text" :allowed-chars="allowedCharsInNames" :required="!attrs.sn.optional" :validity.sync="validity.sn">
     </input-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="birthName" :label="attr_labels.birthName" :validity="validity" v-if="other_attrs.birthName">
+  <my-bootstrap-form-group name="birthName" :label="attr_labels.birthName" :validity="validity" v-if="attrs.birthName">
     <input-with-validity name="birthName" v-model="v.birthName" title="si différent du nom d'usage"
         type="text" :allowed-chars="allowedCharsInNames" :validity.sync="validity.birthName">
     </input-with-validity>
   </my-bootstrap-form-group>
 
-  <DateAttr v-model="v.birthDay" minYear="1900" :maxYear="currentYear" :label="attr_labels.birthDay" v-if="other_attrs.birthDay"  :submitted="submitted"></DateAttr>
+  <DateAttr v-model="v.birthDay" minYear="1900" :maxYear="currentYear" :label="attr_labels.birthDay" v-if="attrs.birthDay"  :submitted="submitted"></DateAttr>
 
-  <AddressAttr v-model="v.homePostalAddress" :label="attr_labels.homePostalAddress" v-if="other_attrs.homePostalAddress" :submitted="submitted"></AddressAttr>
+  <AddressAttr v-model="v.homePostalAddress" :label="attr_labels.homePostalAddress" v-if="attrs.homePostalAddress" :submitted="submitted"></AddressAttr>
 
-  <my-bootstrap-form-group name="homePhone" :label="attr_labels.homePhone" :validity="validity" v-if="other_attrs.homePhone">
+  <my-bootstrap-form-group name="homePhone" :label="attr_labels.homePhone" :validity="validity" v-if="attrs.homePhone">
     <input-with-validity name="homePhone" v-model="v.homePhone"
         real-type="phone" :required="!attrs.homePhone.optional" :validity.sync="validity.homePhone">
     </input-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="supannMailPerso" :label="attr_labels.supannMailPerso" :validity="validity" v-if="other_attrs.supannMailPerso">
+  <my-bootstrap-form-group name="supannMailPerso" :label="attr_labels.supannMailPerso" :validity="validity" v-if="attrs.supannMailPerso">
     <input-with-validity name="supannMailPerso" v-model="v.supannMailPerso" 
         type="email" :required="!attrs.supannMailPerso.optional" :validity.sync="validity.supannMailPerso">
     </input-with-validity>
   </my-bootstrap-form-group>
 
-  <StructureAttr v-model="v.structureParrain" :label="attr_labels.structureParrain" :attrs="attrs.structureParrain" :submitted="submitted" v-if="other_attrs.structureParrain"></StructureAttr>
+  <StructureAttr v-model="v.structureParrain" :label="attr_labels.structureParrain" :attrs="attrs.structureParrain" :submitted="submitted" v-if="attrs.structureParrain"></StructureAttr>
 
-  <my-bootstrap-form-group name="duration" :label="attr_labels.duration_month" v-if="other_attrs.duration" :validity="validity">
+  <my-bootstrap-form-group name="duration" :label="attr_labels.duration_month" v-if="attrs.duration" :validity="validity">
     <input-with-validity name="duration" :value="v.duration / 30" @input="v.duration = $event * 30"
         type="number" min="1" :max="attrs.duration.max / 30" :required="!attrs.duration.optional" :validity.sync="validity.duration">
     </input-with-validity>
   </my-bootstrap-form-group>
 
-  <jpegPhotoAttr v-model="v.jpegPhoto" :label="label.jpegPhoto" :attrs="attrs.jpegPhoto" :submitted="submitted" v-if="other_attrs.jpegPhoto"></jpegPhotoAttr>
+  <jpegPhotoAttr v-model="v.jpegPhoto" :label="label.jpegPhoto" :attrs="attrs.jpegPhoto" :submitted="submitted" v-if="attrs.jpegPhoto"></jpegPhotoAttr>
   
-   <PasswordAttr v-model="v.userPassword" :label="label.userPassword" :submitted="submitted" v-if="other_attrs.userPassword"></PasswordAttr>
+   <PasswordAttr v-model="v.userPassword" :label="label.userPassword" :submitted="submitted" v-if="attrs.userPassword"></PasswordAttr>
 
-  <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity" v-if="other_attrs.profilename">
+  <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity" v-if="attrs.profilename">
     <radio-with-validity name="profilename" v-model="v.profilename"
         :values="attrs.profilename.choicesMap" :validity.sync="validity.profilename">
     </radio-with-validity>
   </my-bootstrap-form-group>
    
-   <BarcodeAttrs v-model="v" :attrs="other_attrs" :submitted="submitted" :v_orig="v_orig" v-if="other_attrs.barcode || other_attrs.mifare"></BarcodeAttrs>
+   <BarcodeAttrs v-model="v" :attrs="attrs" :submitted="submitted" :v_orig="v_orig" v-if="attrs.barcode || attrs.mifare"></BarcodeAttrs>
 
-  <my-bootstrap-form-group name="charter" :label="label.charter" :validity="validity"  v-if="other_attrs.userPassword">
+  <my-bootstrap-form-group name="charter" :label="label.charter" :validity="validity"  v-if="attrs.userPassword">
     <div class="checkbox">
       <label>
         <checkbox-with-validity name="charter" :value="v.charter" :validity.sync="validity.charter"></checkbox-with-validity>
