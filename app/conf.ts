@@ -84,6 +84,12 @@ export default {
         researcher: "chercheur",
         student: "étudiant",
         alum: "ancien étudiant",
+        affiliate: "partenaire extérieur",
+        emeritus: "professeur émérite",
+        retired: "retraité",
+        employee: "employé",
+        'registered-reader': 'lecteur externe',
+        'library-walk-in': "visiteur bibliothèque",
     },
 
     countries: [
