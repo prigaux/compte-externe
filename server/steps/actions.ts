@@ -3,7 +3,7 @@
 import * as _ from 'lodash';
 import * as mail from '../mail';
 import * as ldap from '../ldap';
-import * as utils from '../utils';
+import * as helpers from '../helpers';
 import * as crejsonldap from '../crejsonldap';
 import { onePerson } from '../search_ldap';
 import * as search_ldap from '../search_ldap';
@@ -119,7 +119,7 @@ const createCompte_ = async (sv: sv, opts : crejsonldap.options) => {
         if (!v.duration) throw "no duration nor enddate";
         // "enddate" is *expiration* date and is rounded down to midnight (by ldap_convert.date.toLdap)
         // so adding a full 23h59m to help 
-        v.enddate = utils.addDays(v.startdate, v.duration + 0.9999);
+        v.enddate = helpers.addDays(v.startdate, v.duration + 0.9999);
     }
     
     const resp_subv = await crejsonldap.createMayRetryWithoutSupannAliasLogin(v, opts);

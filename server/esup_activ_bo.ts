@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as xml2js from 'xml2js';
 import * as Mustache from 'mustache';
 import * as helpers from './helpers';
+import * as utils from './utils';
 import * as conf from './conf';
 
 const parseString: (xml: string, options: xml2js.Options) => Promise<any> = helpers.promisify_callback(xml2js.parseString);
@@ -29,7 +30,7 @@ function raw_soap(url, body) {
         SOAPAction: "",
         "content-type": "text/xml",
     };
-    return helpers.post(url, body, { headers }).then(result => (
+    return utils.post(url, body, { headers }).then(result => (
         parseString(result, { explicitArray: false, ignoreAttrs: true })
     ));
 }

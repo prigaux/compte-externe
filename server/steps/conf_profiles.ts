@@ -1,7 +1,7 @@
-//import * as utils from '../utils';
+//import * as helpers from '../helpers';
 
 //const enddate_S2 = () => (
-//    utils.nextDate("XXXX-09-01", new Date())
+//    helpers.nextDate("XXXX-09-01", new Date())
 //);
 
 const profiles : profileValues[] = [

@@ -5,6 +5,8 @@ import * as _ from 'lodash';
 import * as iconv from 'iconv-lite';
 import * as express from 'express';
 import * as csvtojson from 'csvtojson';
+import concat = require('concat-stream');
+import * as simpleGet from 'simple-get';
 import * as conf from './conf';
 import client_conf from '../app/conf'; // ES6 syntax needed for default export
 import { EventEmitter } from 'events';
@@ -14,6 +16,23 @@ export const express_auth = (req: req, _res: express.Response, next): void => {
   let mail = req.header('mail');
   if (user_id) req.user = { id: user_id, mail };
   next();
+};
+
+export const post = (url: string, body: string, options: simpleGet.Options) : Promise<string> => {
+    options = _.assign({ url, body, ca: conf.http_client_CAs }, options);
+    return new Promise((resolve: (string) => void, reject: (any) => void) => {
+        simpleGet.post(options, (err, res) => {
+            if (err) return reject(err);
+            res.setTimeout(options.timeout || 10000, null);
+
+            //console.log(res.headers)
+
+            res.pipe(concat(data => {
+                //console.log('got the response: ' + data)
+                resolve(data.toString());
+            }));
+        });
+    });
 };
 
 export function respondJson(req: req, res: express.Response, p: Promise<response>) {
@@ -98,23 +117,6 @@ export function popen(inText: string, cmd: string, params: string[]): Promise<st
         });
     });
 }
-
-export const addDays = (date : Date, days : number) => {
-    let r = date;
-    r.setDate(r.getDate() + days);
-    return r;
-}
-
-export const nextDate = (pattern : string, date: Date) => {
-    let s = pattern.replace(/^XXXX-/, "" + date.getFullYear() + "-");
-    let r = new Date(s);
-    if (r.getTime() < date.getTime()) r.setFullYear(r.getFullYear() + 1);
-    return r;
-}
-
-export const equalsIgnoreCase = (a: string, b: string) => (
-    a.toLowerCase() === b.toLowerCase()
-)
 
 export function mergeSteps(initialSteps: steps, nextSteps: steps): steps {
     _.forEach(initialSteps, (step, _name) => step.initialStep = true);

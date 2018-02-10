@@ -1,9 +1,6 @@
 'use strict';
 
 import * as _ from 'lodash';
-import concat = require('concat-stream');
-import * as simpleGet from 'simple-get';
-import * as conf from './conf';
 
 if (Promise.prototype.tap === undefined) {
     // https://github.com/kriskowal/q/wiki/API-Reference#promisetaponfulfilled
@@ -18,23 +15,6 @@ if (Promise.prototype.tap === undefined) {
     };
 }
 
-export const post = (url: string, body: string, options: simpleGet.Options) : Promise<string> => {
-    options = _.assign({ url, body, ca: conf.http_client_CAs }, options);
-    return new Promise((resolve: (string) => void, reject: (any) => void) => {
-        simpleGet.post(options, (err, res) => {
-            if (err) return reject(err);
-            res.setTimeout(options.timeout || 10000, null);
-
-            //console.log(res.headers)
-
-            res.pipe(concat(data => {
-                //console.log('got the response: ' + data)
-                resolve(data.toString());
-            }));
-        });
-    });
-};
-
 export const promisify_callback = f => (
     (...args) => {
         return new Promise((resolve, reject) => {
@@ -45,3 +25,21 @@ export const promisify_callback = f => (
         });
     }
 );
+
+export const addDays = (date : Date, days : number) => {
+    let r = date;
+    r.setDate(r.getDate() + days);
+    return r;
+}
+
+export const nextDate = (pattern : string, date: Date) => {
+    let s = pattern.replace(/^XXXX-/, "" + date.getFullYear() + "-");
+    let r = new Date(s);
+    if (r.getTime() < date.getTime()) r.setFullYear(r.getFullYear() + 1);
+    return r;
+}
+
+export const equalsIgnoreCase = (a: string, b: string) => (
+    a.toLowerCase() === b.toLowerCase()
+)
+
