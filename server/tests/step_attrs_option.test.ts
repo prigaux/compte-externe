@@ -72,5 +72,13 @@ describe('merge_v', () => {
         test({ sn: {} }, {}, { sn: null }, { sn: null });
         test({ sn: {} }, prev, v, v);
     });
+    it ("should check pattern", () => {
+        test({ sn: { pattern: "x" } }, {}, { sn: 'x' }, { sn: 'x' });
+        test_fail({ sn: { pattern: "x" } }, {}, { sn: 'X' }, "constraint sn.pattern x failed for X");
+    });
+    it ("should not check pattern if optional and value is empty", () => {
+        test({ sn: { optional: true, pattern: "x" } }, {}, {}, {});
+        test({ sn: { optional: true, pattern: "x" } }, {}, { sn: '' }, { sn: '' });
+    });
 });
 

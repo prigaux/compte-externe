@@ -17,9 +17,11 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
 }
 
 function validate(key: string, opt: StepAttrOption, val) {
-        if (!opt.optional) {
-            if (val === '' || val === undefined)
+        if (val === '' || val === undefined) {
+            if (!opt.optional)
                 throw `constraint !${key}.optional failed for ${val}`;
+            else 
+                return; // no more checks if optional
         }
         if (opt.max) {
             if (!(_.isNumber(val) && 0 <= val && val <= opt.max))
