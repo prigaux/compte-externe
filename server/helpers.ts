@@ -46,3 +46,11 @@ export const equalsIgnoreCase = (a: string, b: string) => (
 export const sameKeyNameChoices = (l: string[]) => (
     l.map(s => ({ key: s, name: s }))
 )
+
+export function inclusive_range(start: string, end: string): string[];
+export function inclusive_range(start: number, end: number): number[];
+export function inclusive_range(start, end): any {
+    return typeof start === 'number' ?
+        _.range(start, end+1) :
+        _.range(start.charCodeAt(0), end.charCodeAt(0) + 1).map(n => String.fromCharCode(n))
+}
