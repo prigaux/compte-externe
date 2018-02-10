@@ -44,6 +44,7 @@ export const setLock = (id: id, lock: boolean) => (
 
     // lists svs, sorted by steps + recent one at the beginning
 export const listByModerator = (query) : Promise<sv[]> => {
+        if (_.isEqual(query, { "$or": [] })) return Promise.resolve(null);
         return (
             svs().find(query).sort({ step: 1, modifyTimestamp: -1 }).toArray()
         ).then(svs => (

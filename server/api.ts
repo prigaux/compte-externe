@@ -229,7 +229,7 @@ function listAuthorized(req: req) {
     )).then(query => (
         db.listByModerator(query)
     )).then(svs => (
-        svs.filter(sv => {
+        svs && svs.filter(sv => {
             const valid = sv.step in conf_steps.steps;
             if (!valid) console.error("ignoring sv in db with invalid step " + sv.step);
             return valid;

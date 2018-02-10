@@ -39,7 +39,7 @@ export function respondJson(req: req, res: express.Response, p: Promise<response
     let logPrefix = req.method + " " + req.path + ":";
     p.then(r => {
         //console.log(logPrefix, r);
-        res.json(r || {});
+        res.json(r);
     }, err => {
         console.error(logPrefix, err);
         res.status(err === "Unauthorized" ? 401 : err === "Forbidden" ? 403 : err === "Bad Request" ? 400 : 500);
