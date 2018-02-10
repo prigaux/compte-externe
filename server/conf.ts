@@ -3,6 +3,7 @@
 import * as fs from 'fs';
 import sendmailTransport = require('nodemailer-sendmail-transport');
 import * as ldap_convert from './ldap_convert';
+import { sameKeyNameChoices } from './helpers';
 
 const ldap_base = "dc=univ,dc=fr";
 const ldap_main = {
@@ -101,7 +102,7 @@ const conf = {
             },
             sns: ['sn'],
             givenNames: ['givenName'],
-            supannCiviliteChoices: [ 'M.', 'Mme' ].map(s => ({ key: s, name: s })),
+            supannCiviliteChoices: sameKeyNameChoices([ 'M.', 'Mme' ]),
             homonymes_restriction: '(objectClass=inetOrgPerson)',
         },
 

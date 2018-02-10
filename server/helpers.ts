@@ -43,3 +43,6 @@ export const equalsIgnoreCase = (a: string, b: string) => (
     a.toLowerCase() === b.toLowerCase()
 )
 
+export const sameKeyNameChoices = (l: string[]) => (
+    l.map(s => ({ key: s, name: s }))
+)
