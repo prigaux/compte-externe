@@ -34,7 +34,7 @@ export const getShibAttrs: simpleAction = (req, _sv) => {
     if (!req.user) throw `Unauthorized`;
     let v = _.mapValues(conf.shibboleth.header_map, headerName => (
         req.header(headerName)
-    )) as v;
+    )) as any as v;
     console.log("action getShibAttrs:", v);
     return Promise.resolve({ v });
 };
