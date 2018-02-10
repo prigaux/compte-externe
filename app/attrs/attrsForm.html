@@ -62,6 +62,34 @@
     </input-with-validity>
   </my-bootstrap-form-group>
 
+  <my-bootstrap-form-group name="telephoneNumber" :label="attr_labels.telephoneNumber" :validity="validity" v-if="attrs.telephoneNumber">
+    <input-with-validity name="telephoneNumber" v-model="v.telephoneNumber"
+        real-type="phone" :required="!attrs.telephoneNumber.optional" :validity.sync="validity.telephoneNumber">
+    </input-with-validity>
+  </my-bootstrap-form-group>
+
+  <my-bootstrap-form-group name="roomAccess" :label="attr_labels.roomAccess" v-if="attrs.roomAccess">
+    <select name="roomAccess" v-model="v.roomAccess">
+        <option v-for="option in attrs.roomAccess.choices" :value="option.key">
+            {{option.name}}
+        </option>
+    </select>
+  </my-bootstrap-form-group>
+
+  <my-bootstrap-form-group name="floorNumber" :label="attr_labels.floorNumber" v-if="attrs.floorNumber">
+    <select name="floorNumber" v-model="v.floorNumber">
+        <option v-for="option in attrs.floorNumber.choices" :value="option.key">
+            {{option.name}}
+        </option>
+    </select>
+  </my-bootstrap-form-group>
+
+  <my-bootstrap-form-group name="roomNumber" :label="attr_labels.roomNumber" :validity="validity" :labels="attrs.roomNumber.labels" v-if="attrs.roomNumber">
+    <input-with-validity name="roomNumber" v-model="v.roomNumber" 
+        type="text" :required="!attrs.roomNumber.optional" :pattern="attrs.roomNumber.pattern" :validity.sync="validity.roomNumber">
+    </input-with-validity>
+  </my-bootstrap-form-group>
+
   <jpegPhotoAttr v-model="v.jpegPhoto" :label="label.jpegPhoto" :attrs="attrs.jpegPhoto" :submitted="submitted" v-if="attrs.jpegPhoto"></jpegPhotoAttr>
   
    <PasswordAttr v-model="v.userPassword" :label="label.userPassword" :submitted="submitted" v-if="attrs.userPassword"></PasswordAttr>
