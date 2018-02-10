@@ -52,6 +52,7 @@ interface StepAttrOption {
   pattern?: string;
   max?: number;
   choices?: StepAttrOptionChoices[];
+  labels?: { advice?: string; }
 }
 type StepAttrsOption = Dictionary<StepAttrOption>;
 
