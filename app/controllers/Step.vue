@@ -28,12 +28,11 @@
             <div class="alert alert-danger" >
                 Le compte sera fusionné avec le compte existant {{v.uid}}
             </div>
+            <div v-if="hasAffiliation(v, 'member')" class="alert alert-danger">
+                {{v.givenName}} {{v.sn}} <ExistingAccountWarning :v="v"></ExistingAccountWarning> 
+            </div>
     </div>
              
-    <div v-if="hasAffiliation(v, 'member')" class="alert alert-danger">
-        {{v.givenName}} {{v.sn}} <ExistingAccountWarning :v="v"></ExistingAccountWarning> 
-    </div>
-
     <attrsForm
         :v="v" :v_orig="v_orig" :attrs="other_attrs" :step_labels="step.labels"
         @submit="submit" @reject="reject"></attrsForm>
