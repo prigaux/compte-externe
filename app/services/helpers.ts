@@ -19,7 +19,7 @@ import { Dictionary } from '../services/ws';
 
     export function formatDifferences(val1, val2) {
         /* globals JsDiff */
-        var diff = JsDiff.diffChars(val1, val2);
+        var diff = JsDiff.diffChars(val1, val2, { ignoreCase: true });
         var fragment1 = '';
         var fragment2 = '';
         for (var i = 0; i < diff.length; i++) {

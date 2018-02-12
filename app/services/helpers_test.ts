@@ -17,7 +17,8 @@ describe('service helpers', function() {
         });
         
         it('should handle nearly same value', () => {
-            expect(diff("foo", "Foo")).toEqual(['<ins>f</ins>oo', '<ins>F</ins>oo']);
+            expect(diff("foo", "Foo")).toEqual(['Foo', 'Foo']);
+            expect(diff("foo", "Fooo")).toEqual(['Foo', 'Foo<ins>o</ins>']);
             expect(diff("foo", "fooo")).toEqual(['foo', 'foo<ins>o</ins>']);
         });
         
