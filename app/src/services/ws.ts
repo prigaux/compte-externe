@@ -39,7 +39,8 @@ export interface InitialSteps {
 
 import conf from '../conf';
 
-const api_url = conf.base_pathname + 'api';
+const non_test_base_pathname = conf.base_pathname.replace(/\/test\/$/, '/');
+const api_url = non_test_base_pathname + 'api';
 
 export function eachAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | 'never', f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption) => void) {
     function rec_mpp(mpp: Mpp) {
@@ -140,7 +141,11 @@ function _handleErr(err : AxiosError, $scope = null, redirect = false) {
         console.log("must relog", resp.headers.toString());
         restarting = true;
         const type = resp.data && resp.data.authenticate && resp.data.authenticate.type || $scope.$route.query.idp || 'local';
-        document.location.href = conf.base_pathname + 'login/' + type + '?then=' + encodeURIComponent($scope.$route.fullPath);
+        const need_reload_to_test = type === 'cas_with_pgt' && conf.base_pathname !== non_test_base_pathname;
+        document.location.href = 
+            (need_reload_to_test ? non_test_base_pathname : conf.base_pathname) +
+            'login/' + type + '?then=' + encodeURIComponent($scope.$route.fullPath) +
+            (need_reload_to_test ? "&reload_to_test" : '');
         return Promise.reject("logging...");
     } else if (resp.status === 401) {
         if (confirm("Votre session a expiré, vous allez devoir recommencer.")) {

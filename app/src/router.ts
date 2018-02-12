@@ -10,7 +10,13 @@ export let router;
 
 const _routes = {
     '/playground': () => import('./controllers/Playground.vue'),
-    '/login/:kind?': { render(_h) { router.replace(this.$route.query.then) } }, // TODO, use vue-router redirect
+    '/login/:kind?': { render(_h) {
+        const then = this.$route.query.then;
+        if ("reload_to_test" in this.$route.query)
+            document.location.href = conf.base_pathname + "test/#" + then;
+        else
+            router.replace(then) // TODO, use vue-router redirect
+    } },
     '/steps/:kind?': ModerateList,
     '/:stepName/:wanted_id?': Step,
     '/': { template: template_welcome },
@@ -29,8 +35,7 @@ const opts = {
     routes,
 };
 
-declare var process;
-if (process.env.NODE_ENV === 'production') {
+if (!conf.base_pathname.match(/\/test\/$/)) {
     opts.mode = 'history';
 }
 

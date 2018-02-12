@@ -2,8 +2,9 @@ const path = require('path')
 
 module.exports = {
   runtimeCompiler: true,
-  publicPath: "/",
+  publicPath: "/foo/" + (process.env.npm_lifecycle_event === 'serve' ? 'test/' : ''),
   devServer: {
+    public: 'comptex-test.univ-paris1.fr',
     // workaround for https://github.com/vuejs/vue-cli/issues/4557#issuecomment-596272497
     progress: false,
   },

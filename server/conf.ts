@@ -11,9 +11,9 @@ import * as grouped_calls from './helper_grouped_calls';
 // @ts-expect-error
 import * as vue_config from '../app/vue.config';
 
-const ldap_base = "dc=univ,dc=fr";
+const ldap_base = "dc=univ-paris1,dc=fr";
 const ldap_main = {
-        uri: ['ldap://ldap-test.univ.fr'],
+        uri: ['ldap://ldap-pmf2.univ-paris1.fr', 'ldap://ldap-pth2.univ-paris1.fr', 'ldap://ldap-pth1.univ-paris1.fr'],
 
         // empty for anonymous bind:
         dn: 'cn=comptex,ou=admin,' + ldap_base,
@@ -27,23 +27,24 @@ const ldap_main = {
         base_rolesGeneriques: "ou=supannRoleGenerique,ou=tables," + ldap_base,
         base_etablissements: "ou=supannEtablissement,ou=tables," + ldap_base,
 
-        uid_to_eppn: "@univ.fr",
+        uid_to_eppn: "@univ-paris1.fr",
 };
 
 const internal_organizations = [
     '{UAI}0751717J', // Univ Paris 1
     '{UAI}0752719Y', // SCD
+    '{UAI}0753364Z', // IAE
 ];
 
 const conf = {
     maxLiveModerators: 100,
 
-    mainUrl: 'https://comptex.univ.fr' + vue_config.publicPath.replace(/\/$/, ''),
+    mainUrl: 'https://comptex.univ-paris1.fr' + vue_config.publicPath.replace(/\/$/, ''),
     
     mail: {
-        from: 'Assistance <assistance@univ.fr>',
-        intercept: 'Admin <admin@univ.fr>',
-        transport: sendmailTransport({}),
+        from: 'Assistance DSIUN <Assistance-DSIUN@univ-paris1.fr>',
+        intercept: '', //'Admin <admin@univ.fr>',
+        transport: sendmailTransport({ path: '/usr/sbin/sendmail' }), // give sendmail with full path (since PATH may not have /usr/sbin/)
     },
 
     mongodb: { 
@@ -51,12 +52,12 @@ const conf = {
     },
 
     esup_activ_bo: {
-        url: "http://xxxx.univ.fr:8080/esup-activ-bo/xfire",
+        url: "http://marmite.univ-paris1.fr:8080/esup-activ-bo/xfire",
         multiValue_separator: '__-',
     },
     
     ldap: {
-        shibIdentityProvider: 'https://idp.univ.fr',
+        shibIdentityProvider: 'urn:mace:cru.fr:federation:univ-paris1.fr',
 
         ...ldap_main,
 
@@ -146,10 +147,12 @@ const conf = {
                 supannCodeINE: '',
                 
                 termsOfUse: [''],
+                supannConsentement: [''],
                 supannListeRouge: '',
 
                 up1Profile: [] as any[],
-                '{SMSU}CG': '', '{PHOTO}PUBLIC': '', '{PHOTO}INTRANET': '', '{PHOTO}STUDENT': '',
+                '{SMSU}CG': '', '{PAGER}DISPLAY.FACULTY': '', '{PHOTO}PUBLIC': '', '{PHOTO}INTRANET': '', '{PHOTO}STUDENT': '',
+                '{APPLI:OFFICE365}CGU': '',
             },
 
             attrs : { 
@@ -180,17 +183,25 @@ const conf = {
                 global_mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
                 jpegPhoto: { convert: ldap_convert.base64 },
                 termsOfUse: { ldapAttr: 'up1TermsOfUse' },
-                ..._.fromPairs(['{SMSU}CG', '{PHOTO}PUBLIC', '{PHOTO}INTRANET', '{PHOTO}STUDENT'].map(value => 
+                ..._.fromPairs(['{SMSU}CG', '{PAGER}DISPLAY.FACULTY', '{PHOTO}PUBLIC', '{PHOTO}INTRANET', '{PHOTO}STUDENT'].map(value => 
                     [ value, { ldapAttr: 'up1TermsOfUse', convert: ldap_convert.has_value(value) } ]
+                )),
+                ..._.fromPairs(['{APPLI:OFFICE365}CGU'].map(value => 
+                    [ value, { ldapAttr: 'supannConsentement', convert: ldap_convert.has_value(value) } ]
                 )),
             },
             supannCiviliteChoices: sameKeyNameChoices([ 'M.', 'Mme' ]),
 
             mail_domains: [
+                'univ-paris1.fr',
+                'etu.univ-paris1.fr',
+                'malix.univ-paris1.fr',
+                'anciens.univ-paris1.fr',
+                'bis-sorbonne.fr',
             ],
     
-            homonymes_preferStudent: (profilename: string) => !!(profilename || '').match(/^\{COMPTEX\}learner\./),
-            homonymes_restriction: '(objectClass=inetOrgPerson)',
+            homonymes_preferStudent: (profilename: string) => !!(profilename || '').match(/^\{COMPTEX:FC\}learner\./),
+            homonymes_restriction: '(&(objectClass=inetOrgPerson)(!(shadowFlag=2))(!(shadowFlag=8)))' // ignore dupes/deceased
         },
 
         group_cn_to_memberOf: (cn: string) => (
