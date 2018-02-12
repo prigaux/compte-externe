@@ -8,12 +8,19 @@ import { sameKeyNameChoices } from './helpers';
 const ldap_base = "dc=univ,dc=fr";
 const ldap_main = {
         uri: 'ldap://ldap-test.univ.fr',
+
+        // empty for anonymous bind:
+        dn: 'cn=comptex,ou=admin,' + ldap_base,
+        password: 'xxx',
+
         base: ldap_base,
         base_people: "ou=people," + ldap_base,
         base_groups: "ou=groups," + ldap_base,
         base_structures: "ou=structures," + ldap_base,
         base_rolesGeneriques: "ou=supannRoleGenerique,ou=tables," + ldap_base,
         base_etablissements: "ou=supannEtablissement,ou=tables," + ldap_base,
+
+        uid_to_eppn: "@univ.fr",
 };
 
 const conf = {
@@ -26,7 +33,17 @@ const conf = {
         intercept: 'Admin <admin@univ.fr>',
         transport: sendmailTransport({}),
     },
-       
+
+    cas_idp: 'https://idp.univ.fr',
+
+    mongodb: { 
+        url: "mongodb://localhost:27017/compte-externe",
+    },
+
+    esup_activ_bo: {
+        url: "http://xxxx.univ.fr:8080/esup-activ-bo/xfire/AccountManagement",
+    },
+    
     ldap: {
         ...ldap_main,
 
@@ -113,11 +130,6 @@ const conf = {
             "cn=" + cn + "," + ldap_main.base_groups
         ),
 
-        // empty for anonymous bind:
-        dn: 'cn=comptex,ou=admin,' + ldap_main.base,
-        password: 'xxx',
-        
-        uid_to_eppn: "@univ.fr",
         group_member_to_eppn: user_dn => {
             let r = user_dn.match(/^uid=([^,]*)/);
             if (!r) console.log("invalid group member " + user_dn);
@@ -144,16 +156,6 @@ const conf = {
     attrsHelpingDiagnoseHomonymes: [
         'mail', 'altGivenName', 'global_eduPersonAffiliation', 'global_eduPersonPrimaryAffiliation', 'global_supannEtuAnneeInscription',
     ],
-
-    cas_idp: 'https://idp.univ.fr',
-
-    mongodb: { 
-        url: "mongodb://localhost:27017/compte-externe",
-    },
-
-    esup_activ_bo: {
-        url: "http://xxxx.univ.fr:8080/esup-activ-bo/xfire/AccountManagement",
-    },
 
     pattern: {
         isFrenchMobilePhone: "(0|\\+33)\\s*[67](\\s*[0-9]){8}",        
