@@ -26,7 +26,7 @@ const ldap_main = {
 const conf = {
     maxLiveModerators: 100,
 
-    mainUrl: 'https://compte-externe-test.univ.fr',
+    mainUrl: 'https://comptex.univ.fr/test',
     
     mail: {
         from: 'Assistance <assistance@univ.fr>',
