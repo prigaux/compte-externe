@@ -26,9 +26,8 @@
     <div v-if="attrs.profilename && v.uid">
         <p style="height: 2em"></p>
             <div class="alert alert-danger" >
-                Le compte sera fusionné avec le compte existant {{v.uid}}
-            </div>
-            <div v-if="hasAffiliation(v, 'member')" class="alert alert-danger">
+                Le compte sera fusionné avec le compte existant {{v.uid}}.
+                <p/>
                 {{v.givenName}} {{v.sn}} <ExistingAccountWarning :v="v"></ExistingAccountWarning> 
             </div>
     </div>
