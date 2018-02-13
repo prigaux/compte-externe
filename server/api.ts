@@ -161,7 +161,7 @@ function advance_sv(req: req, sv: sv) : Promise<svr> {
             return svr;
         }
     }).then(svr => {
-        if (svr.response.autoModerate) {
+        if (svr.response && svr.response.autoModerate) {
             // advance again to next step!
             return setRaw(req, svr, svr.v);
         }
