@@ -109,7 +109,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
 
         let restarting = false;
 
-        function _handleErr(err : AxiosError, $scope = null) {
+        function _handleErr(err : AxiosError, $scope = null, redirect = false) {
             if (restarting) return Promise.reject("restarting");
 
             if (!err.response) {
@@ -130,7 +130,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 const msg = resp.data && resp.data.error || err.message;
                 console.error(resp || err)
                 alert(msg);
-                router.replace("/");
+                if (redirect) router.replace("/");
                 return Promise.reject(msg);
             }
         }
@@ -166,7 +166,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                     $scope.v_orig = sv.v_orig;
                     $scope.attrs = initAttrs(sv.attrs);
                     $scope.step = pick(sv, ['allow_many', 'labels']);
-            }, err => _handleErr(err, $scope));
+            }, err => _handleErr(err, $scope, true));
         }
 
         export function listInScope($scope, params, cancelToken) : Promise<"ok" | "cancel"> {
