@@ -51,7 +51,7 @@ describe('modifyAccount', () => {
         return actions.modifyAccount(null, sv).then(_ => {
             assert.fail("should raise error");
         }).catch(err => {
-            assert.equal(err, '[{"code":"noids","desc":"No entry found using ID=uid"}]');
+            assert.deepEqual(err, {"code":"noids","desc":"No entry found using ID=uid"});
         });
     }); 
 });
@@ -96,7 +96,7 @@ describe('validateAccount', () => {
         return actions.validateAccount(null, sv).then(_ => {
             assert.fail("should raise error");
         }).catch(err => {
-            assert.equal(err, '[{"attr":"supannMailPerso","code":"badval","val":"foo@invalid","desc":"Invalid attribute value"}]');
+            assert.deepEqual(err, { code: 'Bad Request', error: 'Valeur foo@invalid non valide' });
         });
     }); 
 });

@@ -42,8 +42,9 @@ export function respondJson(req: req, res: express.Response, p: Promise<response
         res.json(r);
     }, err => {
         console.error(logPrefix, err);
-        res.status(err === "Unauthorized" ? 401 : err === "Forbidden" ? 403 : err === "Bad Request" ? 400 : 500);
-        res.json({error: "" + err, stack: err.stack});
+        const errMsg = err.code || "" + err;
+        res.status(errMsg === "Unauthorized" ? 401 : errMsg === "Forbidden" ? 403 : errMsg === "Bad Request" ? 400 : 500);
+        res.json(err.code ? err : {error: errMsg, stack: err.stack});
     });
 }
 
