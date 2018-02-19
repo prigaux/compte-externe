@@ -1,4 +1,4 @@
-<form novalidate name="myForm" @submit.prevent="submit" class="form-horizontal">
+<form novalidate name="myForm" v-on-submit.prevent="submit" class="form-horizontal">
 
    <fieldset>  
     <my-bootstrap-form-group name="Shib_Identity_Provider" label="Etablissement" v-if="v.Shib_Identity_Provider">

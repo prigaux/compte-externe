@@ -121,6 +121,10 @@ import { Dictionary } from '../services/ws';
         }
     }
 
+    export function finallyP<P>(p : Promise<P>, cb : () => void) : Promise<void> {
+        return p.then(cb).catch(cb);
+    }
+    
     export function formatDate(date : Date | string, format : string) : string {
         const date_ : Date = typeof date === "string" ? new Date(date) : date;
         if (!date) return null;

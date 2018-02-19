@@ -42,8 +42,11 @@ export default Vue.extend({
       submit(event) {
           console.log("submit");
           this.validity.submitted = true;
-          if (!event.target.checkValidity()) return;
-          this.$emit('submit', this.v);
+          if (!event.target.checkValidity()) return Promise.resolve();
+          
+          return new Promise((resolve, reject) => {
+            this.$emit('submit', this.v, { resolve, reject });
+          });
       },
       reject() {
           this.$emit('reject', this.v);

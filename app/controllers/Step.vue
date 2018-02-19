@@ -117,13 +117,10 @@ export default Vue.extend({
                 if (this.noInteraction) this.send();
             });    
         },
-      submit(v) {
+      submit(v, { resolve }) {
           this.v = v;
-          if (this.to_import) {
-            this.send_new_many();
-          } else {
-            this.send();
-          }
+          let p = this.to_import ? this.send_new_many() : this.send();
+          Helpers.finallyP(p, resolve);
       },
       nextStep(resp) {
         console.log("nextStep", resp);
@@ -164,7 +161,7 @@ export default Vue.extend({
         }          
       },
       send() {
-          Ws.set(this.id, this.stepName, this.v, this.$route.query).then(resp => {
+          return Ws.set(this.id, this.stepName, this.v, this.$route.query).then(resp => {
               if (resp.error === "no_moderators") {
                   Ws.structure_get(this.v.structureParrain).then(structure => {
                     alert(conf.error_msg.noModerators(structure.name));

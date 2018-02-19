@@ -2,6 +2,7 @@ import Vue from "vue";
 import conf from '../conf';
 import loadScriptOnce from 'load-script-once';
 import webcamLivePortrait from './webcamLivePortrait.vue';
+import { finallyP } from '../services/helpers';
 
 Vue.component('webcamLivePortrait', webcamLivePortrait);
 
@@ -39,3 +40,25 @@ Vue.component('input-file', {
         },
     },
 });
+
+// usage: v-on-submit.prevent="action" where "action" returns a promise
+//
+// inspired from https://github.com/adamzerner/az.helpers/blob/master/az-helpers/disableDoubleSubmit/disableDoubleSubmit.directive.js
+Vue.directive('on-submit', function (el : HTMLElement, binding) {
+    const [ eventName, submitButton ] = 
+        el.tagName === 'FORM' ? 
+            [ 'submit', el.querySelector('[type=submit]') ] :
+            [ 'click', el ];
+
+    el['on' + eventName] = function (event) {
+        // prevent fast double-click
+        if (submitButton.disabled) return;
+
+        submitButton.disabled = true;
+        if (binding.modifiers.prevent && event) event.preventDefault();
+        
+        finallyP(binding.value(event), () => setTimeout(_ => {
+            submitButton.disabled = false;            
+        }, 500));
+    };
+})
