@@ -105,6 +105,7 @@ export default Vue.extend({
                 attrs = Helpers.filter(attrs, (_, k) => !this.to_import.fields.includes(k));
             }
             if (this.$route.query && attrs) {
+                // do not display things that have been forced in the url
                 attrs = Helpers.filter(attrs, (_, k) => !(k in this.$route.query));
             }
             return attrs;
