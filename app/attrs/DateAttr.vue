@@ -66,7 +66,8 @@ export default Vue.extend({
             const [ year, month, day, minYear, maxYear, maxDay ] = [ 'year', 'month', 'day', 'minYear', 'maxYear', 'maxDay' ].map(n => parseInt(this[n]));
             return year && month && day && 
                    day <= maxDay &&
-                   minYear <= year && year <= maxYear &&
+                   (!minYear || minYear <= year) && 
+                   (!maxYear || year <= maxYear) &&
                new Date(Date.UTC(year, month - 1, day));
         },
     },
