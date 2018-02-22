@@ -42,9 +42,9 @@
 
   <AddressAttr v-model="v.homePostalAddress" :label="attr_labels.homePostalAddress" v-if="attrs.homePostalAddress" :submitted="submitted"></AddressAttr>
 
-  <genericAttr name="homePhone" :attr="attrs.homePhone" v-model="v.homePhone" ui-type="phone" :submitted="submitted"></genericAttr>
+  <genericAttr name="homePhone" :attr="attrs.homePhone" v-model="v.homePhone" :submitted="submitted"></genericAttr>
 
-  <genericAttr name="supannMailPerso" :attr="attrs.supannMailPerso" v-model="v.supannMailPerso" ui-type="email" :submitted="submitted"></genericAttr>
+  <genericAttr name="supannMailPerso" :attr="attrs.supannMailPerso" v-model="v.supannMailPerso" :submitted="submitted"></genericAttr>
 
   <StructureAttr v-model="v.structureParrain" :label="attr_labels.structureParrain" :attrs="attrs.structureParrain" :submitted="submitted" v-if="attrs.structureParrain"></StructureAttr>
 
@@ -62,7 +62,7 @@
 
   <DateAttr v-model="v.enddate" :minYear="currentYear" :label="attr_labels.enddate" v-if="attrs.enddate" :submitted="submitted"></DateAttr>
 
-  <genericAttr name="telephoneNumber" :attr="attrs.telephoneNumber" v-model="v.telephoneNumber" ui-type="phone" :submitted="submitted"></genericAttr>
+  <genericAttr name="telephoneNumber" :attr="attrs.telephoneNumber" v-model="v.telephoneNumber" :submitted="submitted"></genericAttr>
   
   <my-bootstrap-form-group name="roomAccess" :label="attr_labels.roomAccess" v-if="attrs.roomAccess">
     <select name="roomAccess" v-model="v.roomAccess">

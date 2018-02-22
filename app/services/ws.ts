@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { pick, mapKeys, keyBy, mapValues } from 'lodash';
+import { merge, pick, mapKeys, keyBy, mapValues } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
@@ -149,6 +149,10 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 if (opts.choices) {
                     opts.choicesMap = mapValues(keyBy(opts.choices, 'key'), choice => choice.name)
                 }
+                // recursive merge, especially useful for attr.labels
+                attrs[attr] = merge({}, conf.default_attrs_opts[attr], opts);
+                // also init "sub" attrs
+                (attrs[attr].choices || []).forEach(choice => { if (choice.sub) initAttrs(choice.sub) });
             }
             return attrs;
         }

@@ -11,7 +11,7 @@ import Vue from "vue";
 import { includes } from 'lodash';
 
 export default Vue.extend({
-    props: ['value', 'name', 'attr', 'submitted', 'uiType'],
+    props: ['value', 'name', 'attr', 'submitted'],
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },
@@ -21,12 +21,12 @@ export default Vue.extend({
     },
     computed: {
         type() {
-            return this.realType || !this.uiType ?
+            return this.realType || !this.attr.uiType ?
                'text' : 
-               this.uiType;
+               this.attr.uiType;
         },
         realType() { 
-            return includes(['phone', 'frenchPostalCode', 'siret'], this.uiType) ? this.uiType : undefined;
+            return includes(['phone', 'frenchPostalCode', 'siret'], this.attr.uiType) ? this.attr.uiType : undefined;
         },
     },
     watch: {

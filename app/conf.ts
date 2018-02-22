@@ -49,6 +49,12 @@ export default {
             Votre compte et son mot de passe associé sont strictement personnels : vous êtes seul responsable de l'usage qui en est fait.`,
     },
 
+    default_attrs_opts: {
+        homePhone: { uiType: "phone" },
+        telephoneNumber: { uiType: "phone" },
+        supannMailPerso: { uiType: "email" },
+    },
+
     attrs_order: [
         'supannCivilite', 'givenName', 'altGivenName', 'sn', 'birthName', 'birthDay',
         'homePostalAddress', 'homePhone', 'supannMailPerso',
