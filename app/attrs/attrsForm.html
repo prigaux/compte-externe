@@ -22,7 +22,7 @@
 
   <genericAttr name="birthName" :attr="attrs.birthName" v-model="v.birthName" :submitted="submitted"></genericAttr>
 
-  <DateAttr v-model="v.birthDay" minYear="1900" :maxYear="currentYear" :label="attr_labels.birthDay" v-if="attrs.birthDay"  :submitted="submitted"></DateAttr>
+  <DateAttr v-model="v.birthDay" :minYear="attrs.birthDay.minYear" :maxYear="attrs.birthDay.maxYear" :label="attr_labels.birthDay" v-if="attrs.birthDay"  :submitted="submitted"></DateAttr>
 
   <AddressAttr v-model="v.homePostalAddress" :label="attr_labels.homePostalAddress" v-if="attrs.homePostalAddress" :submitted="submitted"></AddressAttr>
 
@@ -36,7 +36,7 @@
   
   <genericAttr name="duration" :attr="attrs.duration" v-model="v.duration" :submitted="submitted"></genericAttr>
 
-  <DateAttr v-model="v.enddate" :minYear="currentYear" :label="attr_labels.enddate" v-if="attrs.enddate" :submitted="submitted"></DateAttr>
+  <DateAttr v-model="v.enddate" :minYear="attrs.enddate.minYear" :label="attr_labels.enddate" v-if="attrs.enddate" :submitted="submitted"></DateAttr>
 
   <genericAttr name="telephoneNumber" :attr="attrs.telephoneNumber" v-model="v.telephoneNumber" :submitted="submitted"></genericAttr>
   

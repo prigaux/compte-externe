@@ -29,9 +29,6 @@ export default Vue.extend({
         submitted() {
             return this.validity.submitted;
         },
-        currentYear() {
-            return new Date().getUTCFullYear();
-        },
     },
 
     methods: {
