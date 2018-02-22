@@ -40,9 +40,10 @@ function validate(key: string, opt: StepAttrOption, val) {
                 throw `constraint ${key}.pattern ${opt.pattern} failed for ${val}`;
         }
         if (opt.choices) {
-            const keys = opt.choices.map(e => e.key);
-            if (val !== undefined && !keys.includes(val))
+            if (val !== undefined && !find_choice(opt.choices, val)) {
+                const keys = opt.choices.map(e => e.key);
                 throw `constraint ${key}.choices ${keys} failed for ${val}`;
+            }
         }
 }
 
