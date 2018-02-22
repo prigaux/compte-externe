@@ -1,15 +1,15 @@
 <template>
   <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="attr.labels" v-if="attr">
 
-    <radio-with-validity :name="name" v-model="val" v-if="attr.uiType === 'radio'"
+    <radio-with-validity :name="name" v-model="val" v-if="uiType === 'radio'"
         :values="choicesMap" :validity.sync="validity[name]">
     </radio-with-validity>
 
-    <select-with-validity :name="name" v-model="val" v-else-if="attr.uiType === 'select'"
+    <select-with-validity :name="name" v-model="val" v-else-if="uiType === 'select'"
         :choices="attr.choices" :required="!attr.optional" :validity.sync="validity[name]">
     </select-with-validity>
 
-    <div class="checkbox" v-else-if="attr.uiType === 'checkbox'">
+    <div class="checkbox" v-else-if="uiType === 'checkbox'">
       <label>
         <checkbox-with-validity :name="name" v-model="val" :validity.sync="validity[name]">
         </checkbox-with-validity>
@@ -38,6 +38,9 @@ export default Vue.extend({
         };
     },
     computed: {
+        uiType() {
+            return this.attr.uiType || this.attr.choices && (this.attr.choices.length <= 2 ? 'radio' : 'select');
+        },
         type() {
             return this.realType || !this.attr.uiType ?
                'text' : 

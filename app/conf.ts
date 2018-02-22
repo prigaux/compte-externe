@@ -53,19 +53,14 @@ export default {
     },
 
     default_attrs_opts: {
-        supannCivilite: { uiType: 'radio' },
         homePhone: { uiType: "phone" },
         telephoneNumber: { uiType: "phone" },
         supannMailPerso: { uiType: "email" },
         givenName: { allowedChars: allowedCharsInNames },
         sn: { allowedChars: allowedCharsInNames },
         birthName: { allowedChars: allowedCharsInNames, labels: { tooltip: "si différent du nom d'usage" } },
-        duration_or_enddate: { uiType: 'radio' },
-        duration: { uiType: 'select' },
         profilename: { uiType: 'radio' },
         charter: { uiType: 'checkbox' },
-        roomAccess: { uiType: 'select' },
-        floorNumber: { uiType: 'select' },
     },
 
     attrs_order: [
