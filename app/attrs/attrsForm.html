@@ -77,10 +77,10 @@
        </div>
     </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="charter" :label="label.charter" :validity="validity"  v-if="attrs.userPassword">
+  <my-bootstrap-form-group name="charter" :label="label.charter" :validity="validity"  v-if="attrs.charter">
     <div class="checkbox">
       <label>
-        <checkbox-with-validity name="charter" :value="v.charter" :validity.sync="validity.charter"></checkbox-with-validity>
+        <checkbox-with-validity name="charter" v-model="v.charter" :validity.sync="validity.charter"></checkbox-with-validity>
         <span v-html="conf.attrs_description.charter"></span>
       </label>
     </div>
