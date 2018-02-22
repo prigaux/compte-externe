@@ -61,6 +61,7 @@ export default {
         sn: { allowedChars: allowedCharsInNames },
         birthName: { allowedChars: allowedCharsInNames, labels: { tooltip: "si différent du nom d'usage" } },
         duration_or_enddate: { uiType: 'radio' },
+        duration: { uiType: 'select' },
         profilename: { uiType: 'radio' },
         charter: { uiType: 'checkbox' },
     },

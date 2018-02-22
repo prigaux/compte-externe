@@ -34,11 +34,7 @@
 
   <genericAttr name="duration_or_enddate" :attr="attrs.duration_or_enddate" v-model="v.duration_or_enddate" :submitted="submitted"></genericAttr>
   
-  <my-bootstrap-form-group name="duration" :label="attr_labels.duration" v-if="attrs.duration" :validity="validity">
-    <select-with-validity name="duration" v-model="v.duration" :choices="attrs.duration.choices"
-        :required="!attrs.duration.optional" :validity.sync="validity.duration">
-    </select-with-validity>
-  </my-bootstrap-form-group>
+  <genericAttr name="duration" :attr="attrs.duration" v-model="v.duration" :submitted="submitted"></genericAttr>
 
   <DateAttr v-model="v.enddate" :minYear="currentYear" :label="attr_labels.enddate" v-if="attrs.enddate" :submitted="submitted"></DateAttr>
 

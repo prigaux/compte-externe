@@ -5,6 +5,10 @@
         :values="attr.choicesMap" :validity.sync="validity[name]">
     </radio-with-validity>
 
+    <select-with-validity :name="name" v-model="val" v-else-if="attr.uiType === 'select'"
+        :choices="attr.choices" :required="!attr.optional" :validity.sync="validity[name]">
+    </select-with-validity>
+
     <div class="checkbox" v-else-if="attr.uiType === 'checkbox'">
       <label>
         <checkbox-with-validity :name="name" v-model="val" :validity.sync="validity[name]">
