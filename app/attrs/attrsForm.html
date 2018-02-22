@@ -40,22 +40,10 @@
 
   <genericAttr name="telephoneNumber" :attr="attrs.telephoneNumber" v-model="v.telephoneNumber" :submitted="submitted"></genericAttr>
   
-  <my-bootstrap-form-group name="roomAccess" :label="attr_labels.roomAccess" v-if="attrs.roomAccess">
-    <select name="roomAccess" v-model="v.roomAccess">
-        <option v-for="option in attrs.roomAccess.choices" :value="option.key">
-            {{option.name}}
-        </option>
-    </select>
-  </my-bootstrap-form-group>
+  <genericAttr name="roomAccess" :attr="attrs.roomAccess" v-model="v.roomAccess" :submitted="submitted"></genericAttr>
 
-  <my-bootstrap-form-group name="floorNumber" :label="attr_labels.floorNumber" v-if="attrs.floorNumber">
-    <select name="floorNumber" v-model="v.floorNumber">
-        <option v-for="option in attrs.floorNumber.choices" :value="option.key">
-            {{option.name}}
-        </option>
-    </select>
-  </my-bootstrap-form-group>
-
+  <genericAttr name="floorNumber" :attr="attrs.floorNumber" v-model="v.floorNumber" :submitted="submitted"></genericAttr>
+  
   <genericAttr name="roomNumber" :attr="attrs.roomNumber" v-model="v.roomNumber" :submitted="submitted"></genericAttr>
 
   <jpegPhotoAttr v-model="v.jpegPhoto" :label="label.jpegPhoto" :attrs="attrs.jpegPhoto" :submitted="submitted" v-if="attrs.jpegPhoto"></jpegPhotoAttr>

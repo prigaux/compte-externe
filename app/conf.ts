@@ -64,6 +64,8 @@ export default {
         duration: { uiType: 'select' },
         profilename: { uiType: 'radio' },
         charter: { uiType: 'checkbox' },
+        roomAccess: { uiType: 'select' },
+        floorNumber: { uiType: 'select' },
     },
 
     attrs_order: [
