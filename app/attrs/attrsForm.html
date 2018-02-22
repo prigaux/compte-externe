@@ -77,14 +77,7 @@
        </div>
     </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="charter" :label="label.charter" :validity="validity"  v-if="attrs.charter">
-    <div class="checkbox">
-      <label>
-        <checkbox-with-validity name="charter" v-model="v.charter" :validity.sync="validity.charter"></checkbox-with-validity>
-        <span v-html="conf.attrs_description.charter"></span>
-      </label>
-    </div>
-  </my-bootstrap-form-group>
+  <genericAttr name="charter" :attr="attrs.charter" v-model="v.charter" :submitted="submitted"></genericAttr>
 
    <my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit" v-if="step_labels.okButton">
