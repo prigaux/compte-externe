@@ -42,17 +42,9 @@
 
   <AddressAttr v-model="v.homePostalAddress" :label="attr_labels.homePostalAddress" v-if="attrs.homePostalAddress" :submitted="submitted"></AddressAttr>
 
-  <my-bootstrap-form-group name="homePhone" :label="attr_labels.homePhone" :validity="validity" v-if="attrs.homePhone">
-    <input-with-validity name="homePhone" v-model="v.homePhone"
-        real-type="phone" :required="!attrs.homePhone.optional" :validity.sync="validity.homePhone">
-    </input-with-validity>
-  </my-bootstrap-form-group>
+  <genericAttr name="homePhone" :attr="attrs.homePhone" v-model="v.homePhone" ui-type="phone" :submitted="submitted"></genericAttr>
 
-  <my-bootstrap-form-group name="supannMailPerso" :label="attr_labels.supannMailPerso" :validity="validity" v-if="attrs.supannMailPerso">
-    <input-with-validity name="supannMailPerso" v-model="v.supannMailPerso" 
-        type="email" :required="!attrs.supannMailPerso.optional" :validity.sync="validity.supannMailPerso">
-    </input-with-validity>
-  </my-bootstrap-form-group>
+  <genericAttr name="supannMailPerso" :attr="attrs.supannMailPerso" v-model="v.supannMailPerso" ui-type="email" :submitted="submitted"></genericAttr>
 
   <StructureAttr v-model="v.structureParrain" :label="attr_labels.structureParrain" :attrs="attrs.structureParrain" :submitted="submitted" v-if="attrs.structureParrain"></StructureAttr>
 
