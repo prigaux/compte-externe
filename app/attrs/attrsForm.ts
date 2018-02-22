@@ -1,6 +1,7 @@
 import Vue from "vue";
 import conf from '../conf';
 
+import genericAttr from './genericAttr.vue';
 import PasswordAttr from './PasswordAttr.vue';
 import BarcodeAttrs from './BarcodeAttrs.vue';
 import DateAttr from './DateAttr.vue';
@@ -21,7 +22,7 @@ export default Vue.extend({
         };
     },
     template,
-    components: { DateAttr, AddressAttr, jpegPhotoAttr, StructureAttr, BarcodeAttrs, PasswordAttr },
+    components: { genericAttr, DateAttr, AddressAttr, jpegPhotoAttr, StructureAttr, BarcodeAttrs, PasswordAttr },
 
     computed: {
         label() {

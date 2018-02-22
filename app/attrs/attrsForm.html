@@ -92,11 +92,7 @@
     </select>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="roomNumber" :label="attr_labels.roomNumber" :validity="validity" :labels="attrs.roomNumber.labels" v-if="attrs.roomNumber">
-    <input-with-validity name="roomNumber" v-model="v.roomNumber" 
-        type="text" :required="!attrs.roomNumber.optional" :pattern="attrs.roomNumber.pattern" :validity.sync="validity.roomNumber">
-    </input-with-validity>
-  </my-bootstrap-form-group>
+  <genericAttr name="roomNumber" :attr="attrs.roomNumber" v-model="v.roomNumber" :submitted="submitted"></genericAttr>
 
   <jpegPhotoAttr v-model="v.jpegPhoto" :label="label.jpegPhoto" :attrs="attrs.jpegPhoto" :submitted="submitted" v-if="attrs.jpegPhoto"></jpegPhotoAttr>
   
