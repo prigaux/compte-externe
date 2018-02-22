@@ -52,12 +52,12 @@
 
   <genericAttr name="profilename" :attr="attrs.profilename" v-model="v.profilename" :submitted="submitted"></genericAttr>
    
-   <BarcodeAttrs v-model="v" :attrs="attrs" :submitted="submitted" :v_orig="v_orig" v-if="attrs.barcode || attrs.mifare"></BarcodeAttrs>
-
   <genericAttr name="siret" :attr="attrs.siret" v-model="v.siret" :submitted="submitted"></genericAttr>
 
   <genericAttr name="charter" :attr="attrs.charter" v-model="v.charter" :submitted="submitted"></genericAttr>
 
+  <BarcodeAttrs v-model="v" :attrs="attrs" :submitted="submitted" :v_orig="v_orig" v-if="attrs.barcode || attrs.mifare"></BarcodeAttrs>
+ 
    <my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit" v-if="step_labels.okButton">
         <span class="glyphicon glyphicon-plus"></span>
