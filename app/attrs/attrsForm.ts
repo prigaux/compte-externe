@@ -12,8 +12,6 @@ import StructureAttr from './StructureAttr.vue';
 import template from './attrsForm.html';
 
 
-const accentsRange = '\u00C0-\u00FC';
-
 export default Vue.extend({
     props: ['v', 'v_orig', 'attrs', 'step_labels'],
     data() {
@@ -30,9 +28,6 @@ export default Vue.extend({
         },
         submitted() {
             return this.validity.submitted;
-        },
-        allowedCharsInNames() {
-            return "[A-Za-z" + accentsRange + "'. -]";
         },
         currentYear() {
             return new Date().getUTCFullYear();

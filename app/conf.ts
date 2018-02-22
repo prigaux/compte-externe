@@ -1,5 +1,8 @@
 'use strict';
 
+const accentsRange = '\u00C0-\u00FC';
+const allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
+
 const wsgroupsURL = "https://wsgroups.univ-paris1.fr";
 
 export default {
@@ -53,6 +56,8 @@ export default {
         homePhone: { uiType: "phone" },
         telephoneNumber: { uiType: "phone" },
         supannMailPerso: { uiType: "email" },
+        givenName: { allowedChars: allowedCharsInNames },
+        sn: { allowedChars: allowedCharsInNames },
     },
 
     attrs_order: [

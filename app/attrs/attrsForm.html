@@ -20,17 +20,9 @@
     </radio-with-validity>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="givenName" :label="attr_labels.givenName" :validity="validity" v-if="attrs.givenName">
-    <input-with-validity name="givenName" v-model="v.givenName" 
-        type="text" :allowed-chars="allowedCharsInNames" :required="!attrs.givenName.optional" :validity.sync="validity.givenName">
-    </input-with-validity>
-  </my-bootstrap-form-group>
-
-  <my-bootstrap-form-group name="sn" :label="attr_labels.sn" :validity="validity" v-if="attrs.sn">
-    <input-with-validity name="sn" v-model="v.sn"
-        type="text" :allowed-chars="allowedCharsInNames" :required="!attrs.sn.optional" :validity.sync="validity.sn">
-    </input-with-validity>
-  </my-bootstrap-form-group>
+  <genericAttr name="givenName" :attr="attrs.givenName" v-model="v.givenName" :submitted="submitted"></genericAttr>
+  
+  <genericAttr name="sn" :attr="attrs.sn" v-model="v.sn" :submitted="submitted"></genericAttr>
 
   <my-bootstrap-form-group name="birthName" :label="attr_labels.birthName" :validity="validity" v-if="attrs.birthName">
     <input-with-validity name="birthName" v-model="v.birthName" title="si différent du nom d'usage"
