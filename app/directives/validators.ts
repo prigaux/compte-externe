@@ -112,6 +112,34 @@ Vue.component('radio-with-validity', {
   },
 });
 
+Vue.component('select-with-validity', {
+    template: `
+    <select :name="name" :value="value" @change="onchange" class="form-control">
+        <option v-for="option in choices" :value="option.key">
+            {{option.name}}
+        </option>
+    </select>
+    `,
+    props: ['value', 'name', 'choices', 'required'],
+    mounted() {
+      this.checkValidity(this.value);
+    },
+    watch: {
+      value: 'checkValidity',
+    },
+    methods: {
+      onchange(event) {
+          let v = event.target.value;
+          this.$emit("input", v);
+          this.checkValidity(v);
+      },
+      checkValidity(v) {
+          let validity = v || !this.required ? { valid: true } : { valueMissing: true };
+          this.$emit('update:validity', validity);
+      },
+    },
+});
+
 Vue.component('checkbox-with-validity', {
     template: `<input type="checkbox" :name="name" :checked="value" @change="onchange" required>`,
     props: ['value', 'name'],
