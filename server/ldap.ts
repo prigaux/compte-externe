@@ -145,7 +145,7 @@ function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ld
             return v.toString();
         } else if (attr === 'dn' || attr === 'objectClass') {
             return v.toString();
-        } else if (attr === 'noInteraction' || attr === 'various') {
+        } else if (['noInteraction', 'various', 'duration_or_enddate'].includes(attr)) {
             return '';
         } else {
             console.error(`unknown type for attribute ${attr}`);

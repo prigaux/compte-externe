@@ -17,7 +17,7 @@ export default Vue.extend({
     props: ['v', 'v_orig', 'attrs', 'step_labels'],
     data() {
         return {
-            validity: { submitted: false, supannCivilite: {}, givenName: {}, sn: {}, birthName: {}, homePhone: {}, telephoneNumber: {}, roomAccess: {}, floorNumber: {}, roomNumber: {}, supannMailPerso: {}, structureParrain: {}, duration: {}, profilename: {} },
+            validity: { submitted: false, supannCivilite: {}, givenName: {}, sn: {}, birthName: {}, homePhone: {}, telephoneNumber: {}, roomAccess: {}, floorNumber: {}, roomNumber: {}, supannMailPerso: {}, structureParrain: {}, duration_or_enddate: {}, duration: {}, enddate: {}, profilename: {} },
         };
     },
     template,

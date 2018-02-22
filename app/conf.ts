@@ -28,7 +28,6 @@ export default {
         floorNumber: "Étage",
         roomNumber: "Numéro de bureau",
         structureParrain: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)",
-        duration_month: "Durée du compte (en mois)",
         userPassword: "Mot de passe",
         userPassword2: "Confirmer le mot de passe",
         cardChoice: "Carte",
@@ -37,6 +36,9 @@ export default {
         profilename: "Type de compte",
         siret: "Etablissement",
         charter: "Charte",
+        duration_or_enddate: "Fin du compte",
+        duration: "Durée",
+        enddate: "Date de fin",
     },
 
     attrs_description: {
