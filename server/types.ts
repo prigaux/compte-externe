@@ -42,6 +42,7 @@ type profileValues = StepAttrOptionChoices & { fv: () => Partial<v> }
 interface StepAttrOptionChoices {
   key: string;
   name?: string;
+  sub?: StepAttrsOption;
 }
 interface StepAttrOption {
   readonly?: boolean;

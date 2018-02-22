@@ -49,8 +49,8 @@ import conf from '../conf';
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { defaults } from 'lodash';
-import { V, StepAttrsOption } from '../services/ws';
+import { defaults, find } from 'lodash';
+import { V, StepAttrsOption, StepAttrOption } from '../services/ws';
 
 import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
@@ -108,7 +108,14 @@ export default Vue.extend({
                 // do not display things that have been forced in the url
                 attrs = Helpers.filter(attrs, (_, k) => !(k in this.$route.query));
             }
-            return attrs;
+            let subAttrs = {};
+            Helpers.filter(this.attrs, (opts : StepAttrOption, k) => {
+                if (opts.choices && this.v[k]) {
+                    const selected = find(opts.choices, choice => choice.key === this.v[k]);
+                    if (selected && selected.sub) Helpers.assign(subAttrs, selected.sub);
+                }
+            });
+            return { ...attrs, ...subAttrs };
         },
     },
 

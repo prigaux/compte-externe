@@ -26,6 +26,7 @@ export interface SVRaw {
 interface StepAttrOptionChoices {
   key: string;
   name?: string;
+  sub?: StepAttrsOption;
 }
 export interface StepAttrOption {
   readonly?: boolean;

@@ -2,7 +2,8 @@ import * as _ from 'lodash';
 
 export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
     let r = {};
-    _.each(attrs, (opt, key) => {
+    function merge_one_level(attrs : StepAttrsOption) {
+      _.each(attrs, (opt, key) => {
         if (opt.toUserOnly) {
             /* the attr was sent to the user, but we do not propagate it to next steps (eg: display it to the user, but do not propagate to createCompte step) */
         } else if (opt.hidden || opt.readonly) {
@@ -12,7 +13,13 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
             validate(key, opt, v[key]);
             if (key in v) r[key] = v[key];
         }
-    });
+        if (key in r && opt.choices) {
+            const choice = find_choice(opt.choices, r[key]);
+            if (choice && choice.sub) merge_one_level(choice.sub);
+        }
+      });
+    }
+    merge_one_level(attrs);
     return r as v;
 }
 
@@ -45,6 +52,8 @@ export function export_v(attrs: StepAttrsOption, v) {
         !attrs[key] || attrs[key].hidden
     ));
 }
+
+const find_choice = (choices, key) => choices.find(choice => choice.key === key);
 
 const transform_toUserOnly_into_hidden_readonly = ({ toUserOnly, ...opt}) => (
     toUserOnly ? { optional: true, readonly: true, ...opt} : opt

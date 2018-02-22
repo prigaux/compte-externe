@@ -80,5 +80,19 @@ describe('merge_v', () => {
         test({ sn: { optional: true, pattern: "x" } }, {}, {}, {});
         test({ sn: { optional: true, pattern: "x" } }, {}, { sn: '' }, { sn: '' });
     });
+    it ("should check choices", () => {
+        const attrs = { duration: { choices: [ { key: "1" } ] } };
+        test(attrs, {}, { duration: "1" }, { duration: "1" });
+        test_fail(attrs, {}, { duration: "2" }, "constraint duration.choices 1 failed for 2");
+    });
+    it ("should handle sub", () => {
+        const attrs = { duration: { choices: [ 
+            { key: "1", sub: { sn: {} } }, 
+            { key: "2" },
+        ] } };
+        test(attrs, {}, { sn: 'x', duration: "1" }, { duration: "1", sn: 'x' });
+        test(attrs, {}, { sn: 'x', duration: "2" }, { duration: "2" }); // sn not allowed, it is removed
+        test_fail(attrs, {}, { duration: '1' }, "constraint !sn.optional failed for undefined");
+    });
 });
 
