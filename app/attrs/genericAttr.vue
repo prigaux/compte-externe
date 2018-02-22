@@ -1,5 +1,5 @@
 <template>
- <div v-if="attr">
+ <div v-if="attr && (!attr.readonly || val)">
 
   <DateAttr v-model="val" :label="attr_labels[name]" v-if="uiType === 'date'"
     :minYear="attr.minYear" :maxYear="attr.maxYear" :submitted="submitted">

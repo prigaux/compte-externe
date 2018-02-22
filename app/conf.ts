@@ -74,6 +74,11 @@ export default {
         'supannCivilite', 'givenName', 'altGivenName', 'sn', 'birthName', 'birthDay',
         'homePostalAddress', 'homePhone', 'supannMailPerso',
         'jpegPhoto',
+        'structureParrain',
+        'duration_or_enddate', 'duration', 'enddate',
+        'telephoneNumber', 'roomAccess', 'floorNumber', 'roomNumber',
+        'userPassword', 'profilename',
+        'siret', 'charter',
     ],
 
     title: "Gestion de comptes",

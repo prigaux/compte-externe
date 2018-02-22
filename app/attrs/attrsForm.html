@@ -14,47 +14,9 @@
     </my-bootstrap-form-group>
    </fieldset>
 
-  <genericAttr name="supannCivilite" :attr="attrs.supannCivilite" v-model="v.supannCivilite" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="givenName" :attr="attrs.givenName" v-model="v.givenName" :submitted="submitted"></genericAttr>
-  
-  <genericAttr name="sn" :attr="attrs.sn" v-model="v.sn" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="birthName" :attr="attrs.birthName" v-model="v.birthName" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="birthDay" :attr="attrs.birthDay" v-model="v.birthDay" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="homePostalAddress" :attr="attrs.homePostalAddress" v-model="v.homePostalAddress" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="homePhone" :attr="attrs.homePhone" v-model="v.homePhone" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="supannMailPerso" :attr="attrs.supannMailPerso" v-model="v.supannMailPerso" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="structureParrain" :attr="attrs.structureParrain" v-model="v.structureParrain" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="duration_or_enddate" :attr="attrs.duration_or_enddate" v-model="v.duration_or_enddate" :submitted="submitted"></genericAttr>
-  
-  <genericAttr name="duration" :attr="attrs.duration" v-model="v.duration" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="enddate" :attr="attrs.enddate" v-model="v.enddate" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="telephoneNumber" :attr="attrs.telephoneNumber" v-model="v.telephoneNumber" :submitted="submitted"></genericAttr>
-  
-  <genericAttr name="roomAccess" :attr="attrs.roomAccess" v-model="v.roomAccess" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="floorNumber" :attr="attrs.floorNumber" v-model="v.floorNumber" :submitted="submitted"></genericAttr>
-  
-  <genericAttr name="roomNumber" :attr="attrs.roomNumber" v-model="v.roomNumber" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="jpegPhoto" :attr="attrs.jpegPhoto" v-model="v.jpegPhoto" :submitted="submitted"></genericAttr>
-  
-  <genericAttr name="userPassword" :attr="attrs.userPassword" v-model="v.userPassword" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="profilename" :attr="attrs.profilename" v-model="v.profilename" :submitted="submitted"></genericAttr>
-   
-  <genericAttr name="siret" :attr="attrs.siret" v-model="v.siret" :submitted="submitted"></genericAttr>
-
-  <genericAttr name="charter" :attr="attrs.charter" v-model="v.charter" :submitted="submitted"></genericAttr>
+   <div v-for="name in conf.attrs_order">
+     <genericAttr :name="name" :attr="attrs[name]" v-model="v[name]" :submitted="submitted"></genericAttr>
+   </div>
 
   <BarcodeAttrs v-model="v" :attrs="attrs" :submitted="submitted" :v_orig="v_orig" v-if="attrs.barcode || attrs.mifare"></BarcodeAttrs>
  
