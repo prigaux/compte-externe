@@ -1,22 +1,33 @@
 <template>
   <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="attr.labels" v-if="attr">
-    <input-with-validity :name="name" v-model="val" 
-        type="text" :required="!attr.optional" :pattern="attr.pattern" :validity.sync="validity[name]">
+    <input-with-validity :name="name" v-model="val"
+        :type="type" :realType="realType" :required="!attr.optional" :pattern="attr.pattern" :validity.sync="validity[name]">
     </input-with-validity>
   </my-bootstrap-form-group>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { includes } from 'lodash';
 
 export default Vue.extend({
-    props: ['value', 'name', 'attr', 'submitted'],
+    props: ['value', 'name', 'attr', 'submitted', 'uiType'],
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },
             val: this.value,
             doGet: null,
         };
+    },
+    computed: {
+        type() {
+            return this.realType || !this.uiType ?
+               'text' : 
+               this.uiType;
+        },
+        realType() { 
+            return includes(['phone', 'frenchPostalCode', 'siret'], this.uiType) ? this.uiType : undefined;
+        },
     },
     watch: {
         value(val) {

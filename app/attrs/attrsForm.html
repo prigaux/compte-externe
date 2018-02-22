@@ -69,13 +69,9 @@
   </my-bootstrap-form-group>
 
   <DateAttr v-model="v.enddate" :minYear="currentYear" :label="attr_labels.enddate" v-if="attrs.enddate" :submitted="submitted"></DateAttr>
-  
-  <my-bootstrap-form-group name="telephoneNumber" :label="attr_labels.telephoneNumber" :validity="validity" v-if="attrs.telephoneNumber">
-    <input-with-validity name="telephoneNumber" v-model="v.telephoneNumber"
-        real-type="phone" :required="!attrs.telephoneNumber.optional" :validity.sync="validity.telephoneNumber">
-    </input-with-validity>
-  </my-bootstrap-form-group>
 
+  <genericAttr name="telephoneNumber" :attr="attrs.telephoneNumber" v-model="v.telephoneNumber" ui-type="phone" :submitted="submitted"></genericAttr>
+  
   <my-bootstrap-form-group name="roomAccess" :label="attr_labels.roomAccess" v-if="attrs.roomAccess">
     <select name="roomAccess" v-model="v.roomAccess">
         <option v-for="option in attrs.roomAccess.choices" :value="option.key">
