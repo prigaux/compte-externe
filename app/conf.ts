@@ -53,12 +53,15 @@ export default {
     },
 
     default_attrs_opts: {
+        supannCivilite: { uiType: 'radio' },
         homePhone: { uiType: "phone" },
         telephoneNumber: { uiType: "phone" },
         supannMailPerso: { uiType: "email" },
         givenName: { allowedChars: allowedCharsInNames },
         sn: { allowedChars: allowedCharsInNames },
         birthName: { allowedChars: allowedCharsInNames, labels: { tooltip: "si différent du nom d'usage" } },
+        duration_or_enddate: { uiType: 'radio' },
+        profilename: { uiType: 'radio' },
     },
 
     attrs_order: [

@@ -14,11 +14,7 @@
     </my-bootstrap-form-group>
    </fieldset>
 
-   <my-bootstrap-form-group name="supannCivilite" :label="attr_labels.supannCivilite" :validity="validity" v-if="attrs.supannCivilite">
-    <radio-with-validity name="supannCivilite" v-model="v.supannCivilite"
-        :values="attrs.supannCivilite.choicesMap" :validity.sync="validity.supannCivilite">
-    </radio-with-validity>
-  </my-bootstrap-form-group>
+  <genericAttr name="supannCivilite" :attr="attrs.supannCivilite" v-model="v.supannCivilite" :submitted="submitted"></genericAttr>
 
   <genericAttr name="givenName" :attr="attrs.givenName" v-model="v.givenName" :submitted="submitted"></genericAttr>
   
@@ -36,12 +32,8 @@
 
   <StructureAttr v-model="v.structureParrain" :label="attr_labels.structureParrain" :attrs="attrs.structureParrain" :submitted="submitted" v-if="attrs.structureParrain"></StructureAttr>
 
-  <my-bootstrap-form-group name="duration_or_enddate" :label="attr_labels.duration_or_enddate" :validity="validity" v-if="attrs.duration_or_enddate">
-    <radio-with-validity name="duration_or_enddate" v-model="v.duration_or_enddate"
-        :values="attrs.duration_or_enddate.choicesMap" :validity.sync="validity.duration_or_enddate">
-    </radio-with-validity>
-  </my-bootstrap-form-group>
-
+  <genericAttr name="duration_or_enddate" :attr="attrs.duration_or_enddate" v-model="v.duration_or_enddate" :submitted="submitted"></genericAttr>
+  
   <my-bootstrap-form-group name="duration" :label="attr_labels.duration" v-if="attrs.duration" :validity="validity">
     <select-with-validity name="duration" v-model="v.duration" :choices="attrs.duration.choices"
         :required="!attrs.duration.optional" :validity.sync="validity.duration">
@@ -74,11 +66,7 @@
   
    <PasswordAttr v-model="v.userPassword" :label="label.userPassword" :submitted="submitted" v-if="attrs.userPassword"></PasswordAttr>
 
-  <my-bootstrap-form-group name="profilename" :label="label.profilename" :validity="validity" v-if="attrs.profilename">
-    <radio-with-validity name="profilename" v-model="v.profilename"
-        :values="attrs.profilename.choicesMap" :validity.sync="validity.profilename">
-    </radio-with-validity>
-  </my-bootstrap-form-group>
+  <genericAttr name="profilename" :attr="attrs.profilename" v-model="v.profilename" :submitted="submitted"></genericAttr>
    
    <BarcodeAttrs v-model="v" :attrs="attrs" :submitted="submitted" :v_orig="v_orig" v-if="attrs.barcode || attrs.mifare"></BarcodeAttrs>
 
