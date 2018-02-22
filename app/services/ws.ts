@@ -33,6 +33,7 @@ export interface StepAttrOption {
   optional?: boolean;
   pattern?: string;
   max?: number;
+  default?: string;
   choices?: StepAttrOptionChoices[];
 
   choicesMap?: Dictionary<string>; // computed from "choices"
@@ -161,7 +162,10 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                         sv.v_orig = Helpers.copy(sv.v);
                     }
                     sv.modifyTimestamp = new Date(sv.modifyTimestamp);
-                    Helpers.eachObject(sv.attrs, (attr) => sv.v[attr] = sv.v[attr]); // ensure key exists for Vuejs setters
+                    Helpers.eachObject(sv.attrs, (attr, opts) => {
+                        if (opts.default && !(attr in sv.v)) sv.v[attr] = opts.default;
+                        sv.v[attr] = sv.v[attr]; // ensure key exists for Vuejs setters
+                    });
                     Helpers.assign(sv.v, fromWs(mapKeys(params, (_, k: string) => k.replace(/^default_/, ''))));
                     $scope.v = sv.v;
                     $scope.v_orig = sv.v_orig;

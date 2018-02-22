@@ -48,6 +48,7 @@ interface StepAttrOption {
   readonly?: boolean;
   hidden?: boolean;
   toUserOnly?: boolean; // implies hidden
+  default?: string;
 
   optional?: boolean;
   pattern?: string;
