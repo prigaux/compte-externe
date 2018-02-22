@@ -2,7 +2,7 @@
   <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="attr.labels" v-if="attr">
 
     <radio-with-validity :name="name" v-model="val" v-if="attr.uiType === 'radio'"
-        :values="attr.choicesMap" :validity.sync="validity[name]">
+        :values="choicesMap" :validity.sync="validity[name]">
     </radio-with-validity>
 
     <select-with-validity :name="name" v-model="val" v-else-if="attr.uiType === 'select'"
@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { includes } from 'lodash';
+import { includes, keyBy, mapValues } from 'lodash';
 
 export default Vue.extend({
     props: ['value', 'name', 'attr', 'submitted'],
@@ -45,6 +45,9 @@ export default Vue.extend({
         },
         realType() { 
             return includes(['phone', 'frenchPostalCode', 'siret'], this.attr.uiType) ? this.attr.uiType : undefined;
+        },
+        choicesMap() {
+            return this.attr.choices && mapValues(keyBy(this.attr.choices, 'key'), choice => choice.name);
         },
     },
     watch: {

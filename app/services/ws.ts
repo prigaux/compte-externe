@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { merge, pick, mapKeys, keyBy, mapValues } from 'lodash';
+import { merge, pick, mapKeys } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
@@ -35,8 +35,6 @@ export interface StepAttrOption {
   max?: number;
   default?: string;
   choices?: StepAttrOptionChoices[];
-
-  choicesMap?: Dictionary<string>; // computed from "choices"
 }
 export interface Dictionary<T> {
   [index: string]: T;
@@ -146,9 +144,6 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         function initAttrs(attrs: StepAttrsOption) {
             for (const attr in attrs) {
                 const opts = attrs[attr];
-                if (opts.choices) {
-                    opts.choicesMap = mapValues(keyBy(opts.choices, 'key'), choice => choice.name)
-                }
                 // recursive merge, especially useful for attr.labels
                 attrs[attr] = merge({}, conf.default_attrs_opts[attr], opts);
                 // also init "sub" attrs
