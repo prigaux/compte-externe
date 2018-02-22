@@ -24,11 +24,7 @@
   
   <genericAttr name="sn" :attr="attrs.sn" v-model="v.sn" :submitted="submitted"></genericAttr>
 
-  <my-bootstrap-form-group name="birthName" :label="attr_labels.birthName" :validity="validity" v-if="attrs.birthName">
-    <input-with-validity name="birthName" v-model="v.birthName" title="si différent du nom d'usage"
-        type="text" :allowed-chars="allowedCharsInNames" :validity.sync="validity.birthName">
-    </input-with-validity>
-  </my-bootstrap-form-group>
+  <genericAttr name="birthName" :attr="attrs.birthName" v-model="v.birthName" :submitted="submitted"></genericAttr>
 
   <DateAttr v-model="v.birthDay" minYear="1900" :maxYear="currentYear" :label="attr_labels.birthDay" v-if="attrs.birthDay"  :submitted="submitted"></DateAttr>
 

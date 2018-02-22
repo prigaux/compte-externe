@@ -58,6 +58,7 @@ export default {
         supannMailPerso: { uiType: "email" },
         givenName: { allowedChars: allowedCharsInNames },
         sn: { allowedChars: allowedCharsInNames },
+        birthName: { allowedChars: allowedCharsInNames, labels: { tooltip: "si différent du nom d'usage" } },
     },
 
     attrs_order: [

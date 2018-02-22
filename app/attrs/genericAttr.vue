@@ -1,7 +1,7 @@
 <template>
   <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="attr.labels" v-if="attr">
     <input-with-validity :name="name" v-model="val"
-        :type="type" :realType="realType" :required="!attr.optional" :pattern="attr.pattern" :allowedChars="attr.allowedChars" :validity.sync="validity[name]">
+        :type="type" :realType="realType" :required="!attr.optional" :pattern="attr.pattern" :allowedChars="attr.allowedChars" :title="attr.labels && attr.labels.tooltip" :validity.sync="validity[name]">
     </input-with-validity>
   </my-bootstrap-form-group>
 </template>
