@@ -1,5 +1,36 @@
 <template>
-  <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="attr.labels" v-if="attr">
+ <div v-if="attr">
+
+  <DateAttr v-model="val" :label="attr_labels[name]" v-if="uiType === 'date'"
+    :minYear="attr.minYear" :maxYear="attr.maxYear" :submitted="submitted">
+  </DateAttr>
+
+  <AddressAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'postalAddress'"
+    :submitted="submitted">
+  </AddressAttr>
+
+  <jpegPhotoAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'photo'"
+     :attrs="attr" :submitted="submitted">
+  </jpegPhotoAttr>
+
+  <StructureAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'structure'"
+     :attrs="attr" :submitted="submitted">
+  </StructureAttr>
+
+  <PasswordAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'password'"
+     :submitted="submitted">
+  </PasswordAttr>
+
+  <my-bootstrap-form-group :name="name" multi="true" :label="attr_labels[name]" v-else-if="uiType === 'siret'">
+     <div class="col-xs-3" :class="{'has-error': validity.submitted && !validity[name].valid}">
+         <input-with-validity :name="name" v-model="val"
+            real-type="siret" placeholder="Numéro SIRET" :required="!attr.optional" :validity.sync="validity[name]">
+         </input-with-validity>
+         <validation-errors :name="name" :validity="validity"></validation-errors>
+     </div>
+  </my-bootstrap-form-group>
+
+  <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="attr.labels" v-else-if="attr">
 
     <radio-with-validity :name="name" v-model="val" v-if="uiType === 'radio'"
         :values="choicesMap" :validity.sync="validity[name]">
@@ -22,14 +53,22 @@
     </input-with-validity>
 
   </my-bootstrap-form-group>
+ </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { includes, keyBy, mapValues } from 'lodash';
 
+import DateAttr from './DateAttr.vue';
+import AddressAttr from './AddressAttr.vue';
+import jpegPhotoAttr from './jpegPhotoAttr.vue';
+import PasswordAttr from './PasswordAttr.vue';
+import StructureAttr from './StructureAttr.vue';
+
 export default Vue.extend({
     props: ['value', 'name', 'attr', 'submitted'],
+    components: { DateAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr },
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },

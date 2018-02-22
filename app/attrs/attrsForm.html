@@ -22,21 +22,21 @@
 
   <genericAttr name="birthName" :attr="attrs.birthName" v-model="v.birthName" :submitted="submitted"></genericAttr>
 
-  <DateAttr v-model="v.birthDay" :minYear="attrs.birthDay.minYear" :maxYear="attrs.birthDay.maxYear" :label="attr_labels.birthDay" v-if="attrs.birthDay"  :submitted="submitted"></DateAttr>
+  <genericAttr name="birthDay" :attr="attrs.birthDay" v-model="v.birthDay" :submitted="submitted"></genericAttr>
 
-  <AddressAttr v-model="v.homePostalAddress" :label="attr_labels.homePostalAddress" v-if="attrs.homePostalAddress" :submitted="submitted"></AddressAttr>
+  <genericAttr name="homePostalAddress" :attr="attrs.homePostalAddress" v-model="v.homePostalAddress" :submitted="submitted"></genericAttr>
 
   <genericAttr name="homePhone" :attr="attrs.homePhone" v-model="v.homePhone" :submitted="submitted"></genericAttr>
 
   <genericAttr name="supannMailPerso" :attr="attrs.supannMailPerso" v-model="v.supannMailPerso" :submitted="submitted"></genericAttr>
 
-  <StructureAttr v-model="v.structureParrain" :label="attr_labels.structureParrain" :attrs="attrs.structureParrain" :submitted="submitted" v-if="attrs.structureParrain"></StructureAttr>
+  <genericAttr name="structureParrain" :attr="attrs.structureParrain" v-model="v.structureParrain" :submitted="submitted"></genericAttr>
 
   <genericAttr name="duration_or_enddate" :attr="attrs.duration_or_enddate" v-model="v.duration_or_enddate" :submitted="submitted"></genericAttr>
   
   <genericAttr name="duration" :attr="attrs.duration" v-model="v.duration" :submitted="submitted"></genericAttr>
 
-  <DateAttr v-model="v.enddate" :minYear="attrs.enddate.minYear" :label="attr_labels.enddate" v-if="attrs.enddate" :submitted="submitted"></DateAttr>
+  <genericAttr name="enddate" :attr="attrs.enddate" v-model="v.enddate" :submitted="submitted"></genericAttr>
 
   <genericAttr name="telephoneNumber" :attr="attrs.telephoneNumber" v-model="v.telephoneNumber" :submitted="submitted"></genericAttr>
   
@@ -46,20 +46,15 @@
   
   <genericAttr name="roomNumber" :attr="attrs.roomNumber" v-model="v.roomNumber" :submitted="submitted"></genericAttr>
 
-  <jpegPhotoAttr v-model="v.jpegPhoto" :label="label.jpegPhoto" :attrs="attrs.jpegPhoto" :submitted="submitted" v-if="attrs.jpegPhoto"></jpegPhotoAttr>
+  <genericAttr name="jpegPhoto" :attr="attrs.jpegPhoto" v-model="v.jpegPhoto" :submitted="submitted"></genericAttr>
   
-   <PasswordAttr v-model="v.userPassword" :label="label.userPassword" :submitted="submitted" v-if="attrs.userPassword"></PasswordAttr>
+  <genericAttr name="userPassword" :attr="attrs.userPassword" v-model="v.userPassword" :submitted="submitted"></genericAttr>
 
   <genericAttr name="profilename" :attr="attrs.profilename" v-model="v.profilename" :submitted="submitted"></genericAttr>
    
    <BarcodeAttrs v-model="v" :attrs="attrs" :submitted="submitted" :v_orig="v_orig" v-if="attrs.barcode || attrs.mifare"></BarcodeAttrs>
 
-    <my-bootstrap-form-group name="siret" multi="true" :label="label.siret" v-if="attrs.siret">
-       <div class="col-xs-3" :class="{'has-error': validity.submitted && !validity.siret.valid}">
-           <input-with-validity name="siret" v-model="v.siret" real-type="siret" placeholder="Numéro SIRET" :required="!attrs.siret.optional" :validity.sync="validity.siret"></input-with-validity>
-           <validation-errors name="siret" :validity="validity"></validation-errors>
-       </div>
-    </my-bootstrap-form-group>
+  <genericAttr name="siret" :attr="attrs.siret" v-model="v.siret" :submitted="submitted"></genericAttr>
 
   <genericAttr name="charter" :attr="attrs.charter" v-model="v.charter" :submitted="submitted"></genericAttr>
 

@@ -2,12 +2,7 @@ import Vue from "vue";
 import conf from '../conf';
 
 import genericAttr from './genericAttr.vue';
-import PasswordAttr from './PasswordAttr.vue';
 import BarcodeAttrs from './BarcodeAttrs.vue';
-import DateAttr from './DateAttr.vue';
-import AddressAttr from './AddressAttr.vue';
-import jpegPhotoAttr from './jpegPhotoAttr.vue';
-import StructureAttr from './StructureAttr.vue';
 
 import template from './attrsForm.html';
 
@@ -20,7 +15,7 @@ export default Vue.extend({
         };
     },
     template,
-    components: { genericAttr, DateAttr, AddressAttr, jpegPhotoAttr, StructureAttr, BarcodeAttrs, PasswordAttr },
+    components: { genericAttr, BarcodeAttrs },
 
     computed: {
         label() {

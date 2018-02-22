@@ -61,8 +61,13 @@ export default {
         birthName: { allowedChars: allowedCharsInNames, labels: { tooltip: "si différent du nom d'usage" } },
         profilename: { uiType: 'radio' },
         charter: { uiType: 'checkbox' },
-        birthDay: { minYear: '1900', maxYear: new Date().getUTCFullYear() },
-        enddate: { minYear: new Date().getUTCFullYear() },
+        birthDay: { uiType: 'date', minYear: '1900', maxYear: new Date().getUTCFullYear() },
+        enddate: { uiType: 'date', minYear: new Date().getUTCFullYear() },
+        homePostalAddress: { uiType: 'postalAddress' },
+        jpegPhoto: { uiType: 'photo' },
+        userPassword: { uiType: 'password' },
+        structureParrain: { uiType: 'structure' },
+        siret: { uiType: 'siret' },
     },
 
     attrs_order: [
