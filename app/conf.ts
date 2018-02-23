@@ -64,7 +64,7 @@ export default {
         birthName: { allowedChars: allowedCharsInNames, labels: { tooltip: "si différent du nom d'usage" } },
         profilename: { uiType: 'radio' },
         charter: { uiType: 'checkbox' },
-        birthDay: { uiType: 'date', minYear: '1900', maxYear: new Date().getUTCFullYear() },
+        birthDay: { uiType: 'date', min: new Date('1900'), minYear: '1900', max: new Date(), maxYear: new Date().getUTCFullYear() },
         startdate: { uiType: 'date', min: new Date(), minYear: new Date().getUTCFullYear() },
         enddate: { uiType: 'date', min: new Date(), minYear: new Date().getUTCFullYear() },
         homePostalAddress: { uiType: 'postalAddress' },
