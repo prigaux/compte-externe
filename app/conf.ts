@@ -42,6 +42,8 @@ export default {
         duration_or_enddate: "Fin du compte",
         duration: "Durée",
         enddate: "Date de fin",
+        eduPersonPrincipalName: "Identifiant dans l'établissement",
+        mail: "Mail",
     },
 
     attrs_description: {

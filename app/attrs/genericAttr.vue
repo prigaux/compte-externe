@@ -49,6 +49,7 @@
     </div>
     
     <input-with-validity :name="name" v-model="val" v-else
+        :disabled="attr.readonly"
         :type="type" :realType="realType" :required="!attr.optional" :pattern="attr.pattern" :allowedChars="attr.allowedChars" :title="attr.labels && attr.labels.tooltip" :validity.sync="validity[name]">
     </input-with-validity>
 
