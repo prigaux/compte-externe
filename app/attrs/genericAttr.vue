@@ -1,9 +1,9 @@
 <template>
  <div v-if="opts && (!opts.readonly || val)">
 
-  <DateAttr v-model="val" :label="attr_labels[name]" v-if="uiType === 'date'"
+  <DateThreeInputsAttr v-model="val" :label="attr_labels[name]" v-if="uiType === 'date'"
     :minYear="opts.minYear" :maxYear="opts.maxYear" :submitted="submitted">
-  </DateAttr>
+  </DateThreeInputsAttr>
 
   <AddressAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'postalAddress'"
     :submitted="submitted">
@@ -61,7 +61,7 @@
 import Vue from "vue";
 import { includes, keyBy, mapValues } from 'lodash';
 
-import DateAttr from './DateAttr.vue';
+import DateThreeInputsAttr from './DateThreeInputsAttr.vue';
 import AddressAttr from './AddressAttr.vue';
 import jpegPhotoAttr from './jpegPhotoAttr.vue';
 import PasswordAttr from './PasswordAttr.vue';
@@ -69,7 +69,7 @@ import StructureAttr from './StructureAttr.vue';
 
 export default Vue.extend({
     props: ['value', 'name', 'opts', 'submitted'],
-    components: { DateAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr },
+    components: { DateThreeInputsAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr },
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },
