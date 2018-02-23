@@ -107,21 +107,17 @@ Vue.component('radio-with-validity', {
     </label>
   </span>`,
   props: ['value', 'name', 'values', 'required'],
+  mixins: [ checkValidity ],
   mounted() {
-    this.checkValidity(this.value);
+    this.checkValidity();
   },
   watch: {
-    value: 'checkValidity',
+      value: 'checkValidity',
   },
   methods: {
-    onchange(event) {
-        let v = event.target.value;
-        this.$emit("input", v);
-        this.checkValidity(v);
-    },
-    checkValidity(v) {
-        let validity = v ? { valid: true } : { valueMissing: true };
-        this.$emit('update:validity', validity);
+    checkValidity() {
+        const el = this.$el.querySelector('input'); // any <input> will do
+        this.checkValidityEl(el);
     },
   },
 });
@@ -134,66 +130,36 @@ Vue.component('select-with-validity', {
         </option>
     </select>
     `,
-    props: ['value', 'name', 'choices', 'required'],
+    props: ['value', 'name', 'choices'],
+    mixins: [ checkValidity ],
     mounted() {
-      this.checkValidity(this.value);
+      this.checkValidity();
     },
     watch: {
       value: 'checkValidity',
-    },
-    methods: {
-      onchange(event) {
-          let v = event.target.value;
-          this.$emit("input", v);
-          this.checkValidity(v);
-      },
-      checkValidity(v) {
-          let validity = v || !this.required ? { valid: true } : { valueMissing: true };
-          this.$emit('update:validity', validity);
-      },
     },
 });
 
 Vue.component('checkbox-with-validity', {
     template: `<input type="checkbox" :name="name" :checked="value" @change="onchange" required>`,
     props: ['value', 'name'],
+    mixins: [ checkValidity ],
     mounted() {
-      this.checkValidity(this.value);
+      this.checkValidity();
     },
     watch: {
       value: 'checkValidity',
-    },
-    methods: {
-      onchange(event) {
-          let v = event.target.checked;
-          this.$emit("input", v);
-          this.checkValidity(v);
-      },
-      checkValidity(v) {
-          let validity = v ? { valid: true } : { valueMissing: true };
-          this.$emit('update:validity', validity);
-      },
     },
 });
   
 Vue.component('textarea-with-validity', {
   template: `<textarea :value="value" @input="onchange"></textarea>`,
   props: ['value'],
+  mixins: [ checkValidity ],
   mounted() {
-    this.checkValidity(this.value);
+    this.checkValidity();
   },
   watch: {
     value: 'checkValidity',
-  },
-  methods: {
-    onchange(event) {
-        let v = event.target.value;
-        this.$emit("input", v);
-        this.checkValidity(v);
-    },
-    checkValidity(v) {
-        let validity = v ? { valid: true } : { valueMissing: true };
-        this.$emit('update:validity', validity);
-    },
   },
 });
