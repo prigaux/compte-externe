@@ -33,7 +33,7 @@
   <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="opts.labels" v-else-if="opts">
 
     <radio-with-validity :name="name" v-model="val" v-if="uiType === 'radio'"
-        :values="choicesMap" :validity.sync="validity[name]">
+        :values="choicesMap" :required="!opts.optional" :validity.sync="validity[name]">
     </radio-with-validity>
 
     <select-with-validity :name="name" v-model="val" v-else-if="uiType === 'select'"
