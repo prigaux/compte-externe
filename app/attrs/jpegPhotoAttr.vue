@@ -1,15 +1,15 @@
 <template>
-  <my-bootstrap-form-group name="jpegPhoto" :label="label" :validity="validity" v-if="!attrs.readonly || val">
+  <my-bootstrap-form-group name="jpegPhoto" :label="label" :validity="validity" v-if="!opts.readonly || val">
       <!-- for validation: -->
       <input-with-validity name="jpegPhoto" :value="val" type="text" style="display: none" required :validity.sync="validity.jpegPhoto"></input-with-validity>
 
       <div v-if="val">
           <img :src="val">
-          <button class="btn btn-default" @click.prevent="val = ''" v-if="!attrs.readonly">
+          <button class="btn btn-default" @click.prevent="val = ''" v-if="!opts.readonly">
               Changer la photo
           </button>
       </div>
-      <div v-else-if="attrs.readonly">
+      <div v-else-if="opts.readonly">
           aucune
       </div>
       <div v-else>
@@ -23,7 +23,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-    props: ['value', 'label', 'attrs', 'submitted'],
+    props: ['value', 'label', 'opts', 'submitted'],
     data() {
         return {
             validity: { jpegPhoto: {}, submitted: false },

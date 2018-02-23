@@ -1,8 +1,8 @@
 <template>
- <div v-if="attr && (!attr.readonly || val)">
+ <div v-if="opts && (!opts.readonly || val)">
 
   <DateAttr v-model="val" :label="attr_labels[name]" v-if="uiType === 'date'"
-    :minYear="attr.minYear" :maxYear="attr.maxYear" :submitted="submitted">
+    :minYear="opts.minYear" :maxYear="opts.maxYear" :submitted="submitted">
   </DateAttr>
 
   <AddressAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'postalAddress'"
@@ -10,11 +10,11 @@
   </AddressAttr>
 
   <jpegPhotoAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'photo'"
-     :attrs="attr" :submitted="submitted">
+     :opts="opts" :submitted="submitted">
   </jpegPhotoAttr>
 
   <StructureAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'structure'"
-     :attrs="attr" :submitted="submitted">
+     :opts="opts" :submitted="submitted">
   </StructureAttr>
 
   <PasswordAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'password'"
@@ -24,20 +24,20 @@
   <my-bootstrap-form-group :name="name" multi="true" :label="attr_labels[name]" v-else-if="uiType === 'siret'">
      <div class="col-xs-3" :class="{'has-error': validity.submitted && !validity[name].valid}">
          <input-with-validity :name="name" v-model="val"
-            real-type="siret" placeholder="Numéro SIRET" :required="!attr.optional" :validity.sync="validity[name]">
+            real-type="siret" placeholder="Numéro SIRET" :required="!opts.optional" :validity.sync="validity[name]">
          </input-with-validity>
          <validation-errors :name="name" :validity="validity"></validation-errors>
      </div>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="attr.labels" v-else-if="attr">
+  <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="opts.labels" v-else-if="opts">
 
     <radio-with-validity :name="name" v-model="val" v-if="uiType === 'radio'"
         :values="choicesMap" :validity.sync="validity[name]">
     </radio-with-validity>
 
     <select-with-validity :name="name" v-model="val" v-else-if="uiType === 'select'"
-        :choices="attr.choices" :required="!attr.optional" :validity.sync="validity[name]">
+        :choices="opts.choices" :required="!opts.optional" :validity.sync="validity[name]">
     </select-with-validity>
 
     <div class="checkbox" v-else-if="uiType === 'checkbox'">
@@ -49,8 +49,8 @@
     </div>
     
     <input-with-validity :name="name" v-model="val" v-else
-        :disabled="attr.readonly"
-        :type="type" :realType="realType" :required="!attr.optional" :pattern="attr.pattern" :allowedChars="attr.allowedChars" :title="attr.labels && attr.labels.tooltip" :validity.sync="validity[name]">
+        :disabled="opts.readonly"
+        :type="type" :realType="realType" :required="!opts.optional" :pattern="opts.pattern" :allowedChars="opts.allowedChars" :title="opts.labels && opts.labels.tooltip" :validity.sync="validity[name]">
     </input-with-validity>
 
   </my-bootstrap-form-group>
@@ -68,7 +68,7 @@ import PasswordAttr from './PasswordAttr.vue';
 import StructureAttr from './StructureAttr.vue';
 
 export default Vue.extend({
-    props: ['value', 'name', 'attr', 'submitted'],
+    props: ['value', 'name', 'opts', 'submitted'],
     components: { DateAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr },
     data() {
         return {
@@ -79,18 +79,18 @@ export default Vue.extend({
     },
     computed: {
         uiType() {
-            return this.attr.uiType || this.attr.choices && (this.attr.choices.length <= 2 ? 'radio' : 'select');
+            return this.opts.uiType || this.opts.choices && (this.opts.choices.length <= 2 ? 'radio' : 'select');
         },
         type() {
-            return this.realType || !this.attr.uiType ?
+            return this.realType || !this.opts.uiType ?
                'text' : 
-               this.attr.uiType;
+               this.opts.uiType;
         },
         realType() { 
-            return includes(['phone', 'frenchPostalCode', 'siret'], this.attr.uiType) ? this.attr.uiType : undefined;
+            return includes(['phone', 'frenchPostalCode', 'siret'], this.opts.uiType) ? this.opts.uiType : undefined;
         },
         choicesMap() {
-            return this.attr.choices && mapValues(keyBy(this.attr.choices, 'key'), choice => choice.name);
+            return this.opts.choices && mapValues(keyBy(this.opts.choices, 'key'), choice => choice.name);
         },
     },
     watch: {
