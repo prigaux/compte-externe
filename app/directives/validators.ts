@@ -163,7 +163,7 @@ Vue.component('checkbox-with-validity', {
 });
   
 Vue.component('textarea-with-validity', {
-  template: `<textarea :value="value" @input="onchange" required></textarea>`,
+  template: `<textarea :value="value" @input="onchange"></textarea>`,
   props: ['value'],
   mounted() {
     this.checkValidity(this.value);

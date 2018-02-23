@@ -28,7 +28,7 @@
  </div>
  <div v-else>
    <my-bootstrap-form-group name="address_lines" :label="attr_labels.address_lines" :validity="validity">
-     <textarea-with-validity rows="5" v-model="lines" class="form-control" :validity.sync="validity.address_lines"></textarea-with-validity>
+     <textarea-with-validity rows="5" v-model="lines" class="form-control" required :validity.sync="validity.address_lines"></textarea-with-validity>
    </my-bootstrap-form-group>
  </div>
 </div>
