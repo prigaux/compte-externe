@@ -1,7 +1,11 @@
 <template>
  <div v-if="opts && (!opts.readonly || val)">
 
-  <DateThreeInputsAttr v-model="val" :label="attr_labels[name]" v-if="uiType === 'date'"
+  <DateAttr v-model="val" :label="attr_labels[name]" v-if="uiType === 'date'"
+    :opts="opts" :submitted="submitted">
+  </DateAttr>
+
+  <DateThreeInputsAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'dateThreeInputs'"
     :minYear="opts.minYear" :maxYear="opts.maxYear" :submitted="submitted">
   </DateThreeInputsAttr>
 
@@ -60,7 +64,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { includes, keyBy, mapValues } from 'lodash';
+import { isDateInputSupported } from '../services/helpers';
 
+import DateAttr from './DateAttr.vue';
 import DateThreeInputsAttr from './DateThreeInputsAttr.vue';
 import AddressAttr from './AddressAttr.vue';
 import jpegPhotoAttr from './jpegPhotoAttr.vue';
@@ -69,7 +75,7 @@ import StructureAttr from './StructureAttr.vue';
 
 export default Vue.extend({
     props: ['value', 'name', 'opts', 'submitted'],
-    components: { DateThreeInputsAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr },
+    components: { DateAttr, DateThreeInputsAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr },
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },
@@ -79,6 +85,9 @@ export default Vue.extend({
     },
     computed: {
         uiType() {
+            if (this.opts.uiType === 'date' && !isDateInputSupported()) {
+                return 'dateThreeInputs';
+            }
             return this.opts.uiType || this.opts.choices && (this.opts.choices.length <= 2 ? 'radio' : 'select');
         },
         type() {

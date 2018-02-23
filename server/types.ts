@@ -49,7 +49,7 @@ interface StepAttrOption {
   hidden?: boolean;
   toUserOnly?: boolean; // implies hidden
   default?: string;
-  uiType?: 'radio'|'select'|'checkbox'|'email'|'text' | 'phone'|'frenchPostalCode'|'date'|'postalAddress' | 'structure'|'password'|'siret';
+  uiType?: 'radio'|'select'|'checkbox'|'email'|'text' | 'phone'|'frenchPostalCode'|'date'|'dateThreeInputs'|'postalAddress' | 'structure'|'password'|'siret';
 
   optional?: boolean;
   pattern?: string;

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as JsDiff from 'diff';
+import { memoize } from 'lodash';
 import conf from '../conf';
 import { Dictionary } from '../services/ws';
 
@@ -192,5 +193,13 @@ import { Dictionary } from '../services/ws';
 
         return (check % 10) == 0;
     }
+
+    // from https://developers.google.com/web/updates/2012/08/Quick-FAQs-on-input-type-date-in-Google-Chrome
+    export const isDateInputSupported = memoize(() => {
+        let elem = document.createElement('input');
+        elem.setAttribute('type','date');
+        elem.value = 'foo';
+        return (elem.type == 'date' && elem.value !== 'foo');
+    });
 
 
