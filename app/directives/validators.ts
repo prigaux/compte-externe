@@ -2,10 +2,35 @@ import Vue from "vue";
 import conf from '../conf';
 import * as Helpers from '../services/helpers';
 
+const checkValidity = {
+  methods: {
+    onchange(event) {
+        this.$emit("input", event.target.value);
+        this.checkValidity();
+        return false;
+    },
+    checkValidity() {
+        this.checkValidityEl(this.$el);
+    },
+    checkValidityEl(el) {   
+        let validity = Helpers.copy(el.validity, { allAttrs: true });        
+        validity.message = el.validationMessage;
+        this.emitValidityIfChanged(validity);
+    },
+    emitValidityIfChanged(validity) {
+        let s = JSON.stringify(validity);
+        if (s !== this.prevValidity) {
+            this.prevValidity = s;
+            this.$emit('update:validity', validity);
+        }          
+    },
+  },
+};
+
 Vue.component('input-with-validity', {
   template: "<input :name='name' :value='value' :type='type'>",
   props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType', 'pattern', 'min', 'max'],
-  data: () => ({ prev: undefined }),
+  mixins: [checkValidity],
   mounted() {
     let element = this.$el;
 
@@ -13,11 +38,7 @@ Vue.component('input-with-validity', {
     element.classList.add("form-control");
     this._setPattern();
 
-    element.addEventListener('input', () => {
-        this.tellParent();
-        this.checkValidity();
-        return false;
-    });
+    element.addEventListener('input', checkValidity.methods.onchange.bind(this))
     this.checkValidity();
   },
   watch: {
@@ -38,14 +59,7 @@ Vue.component('input-with-validity', {
     checkValidity() {
         if (this.allowedChars) this._checkAllowedChars();
         if (this.realType) this._checkRealType();
-        let validity = Helpers.copy(this.$el.validity, { allAttrs: true });
-        validity.message = this.$el.validationMessage;
-
-        let s = JSON.stringify(validity);
-        if (s !== this.prev) {
-            this.prev = s;
-            this.$emit('update:validity', validity);
-        }          
+        checkValidity.methods.checkValidity.call(this);
     },
     _attrUpdated(name, v) {
         this.$el.setAttribute(name, v);
