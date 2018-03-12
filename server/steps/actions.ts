@@ -207,3 +207,19 @@ export const homePhone_to_pager_if_mobile : simpleAction = async function(_req, 
     }
     return { v };
 }
+
+export const sendMailNewEtablissement = (to: string): simpleAction => (_req, sv) => {
+    let v = sv.v;
+    if (!v['etablissement_description']) {
+        return Promise.resolve({ v });
+    }
+    const isEtabAttr = (_, attr) => attr.match(/etablissement_.*/);
+    const text = JSON.stringify(_.pickBy(v, isEtabAttr), undefined, '  ')
+    console.log("sending mail", text);
+    mail.send({ to, text,
+        subject: "Etablissement a ajouter dans LDAP", 
+    });
+    v = { ..._.omitBy(v, isEtabAttr), etablissementExterne: conf.ldap.etablissements.attrs.siret.convert.toLdap(v['etablissement_siret']) } as v;
+    return Promise.resolve({ v });
+};
+

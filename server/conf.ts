@@ -59,12 +59,12 @@ const conf = {
         
         etablissements: {
             types: {
-                key: '', name: '', description: '',
-                postalAddress: '', siret: '',
+                key: '', description: '',
+                siret: '',
+                postalAddress: '', labeledURI: '', telephoneNumber: '', facsimileTelephoneNumber: '',
             },
             attrs: {
-                key: { ldapAttr: 'dn' },
-                name: { ldapAttr: 'displayName' },
+                key: { ldapAttr: 'up1TableKey' },
                 siret: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette("{SIRET}") },
                 postalAddress: { convert: ldap_convert.postalAddress },
             },

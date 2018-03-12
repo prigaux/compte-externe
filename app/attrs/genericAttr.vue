@@ -25,6 +25,10 @@
      :submitted="submitted">
   </PasswordAttr>
 
+  <EtablissementAttr v-model="val" :name="name" :v="v" v-else-if="uiType === 'etablissement'"
+     :opts="opts" :submitted="submitted">
+  </EtablissementAttr>
+
   <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="opts.labels" v-else-if="opts">
 
     <radio-with-validity :name="name" v-model="val" v-if="uiType === 'radio'"
@@ -63,10 +67,11 @@ import AddressAttr from './AddressAttr.vue';
 import jpegPhotoAttr from './jpegPhotoAttr.vue';
 import PasswordAttr from './PasswordAttr.vue';
 import StructureAttr from './StructureAttr.vue';
+import EtablissementAttr from './EtablissementAttr.vue';
 
 export default Vue.extend({
-    props: ['value', 'name', 'opts', 'submitted'],
-    components: { DateAttr, DateThreeInputsAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr },
+    props: ['value', 'name', 'opts', 'submitted', 'v'],
+    components: { DateAttr, DateThreeInputsAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr, EtablissementAttr },
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },

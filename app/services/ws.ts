@@ -53,6 +53,11 @@ interface Structure {
     description: string;
 }
 
+interface Etablissement {
+    key: string;
+    description: string;
+}
+
 import conf from '../conf';
 
 const api_url = conf.base_pathname + 'api';
@@ -64,8 +69,14 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         export function structures_search(token : string, maxRows? : number) : Promise<Structure[]> {
             return axios.get(api_url + '/structures', { params: { token, maxRows } }).then((resp) => resp.data as Structure[]);
         }
+        export function etablissements_search(token : string, maxRows? : number) : Promise<Etablissement[]> {
+            return axios.get(api_url + '/etablissements', { params: { token, maxRows } }).then((resp) => resp.data as Etablissement[]);
+        }
         export function structure_get(id: string) {
             return structures_search(id, 1).then(resp => resp[0]);
+        }
+        export function etablissement_get(id: string) {
+            return etablissements_search(id, 1).then(resp => resp[0]);
         }
 
         const _toDate = (year: number, month: number, day: number) => new Date(Date.UTC(year, month - 1, day));
