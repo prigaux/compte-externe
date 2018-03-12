@@ -157,8 +157,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return axios.get(url, { params }).then((resp) => {
                 var sv = <any>resp.data;
                     if (sv.v) {
-                        Helpers.eachObject(sv.attrs, (attr, opts) => {
-                            if (opts.default && !(attr in sv.v)) sv.v[attr] = opts.default;
+                        Helpers.eachObject(sv.attrs, (attr, _opts) => {
                             sv.v[attr] = sv.v[attr]; // ensure key exists for Vuejs setters
                         });
                         sv.v = fromWs(sv.v);

@@ -48,7 +48,7 @@ import conf from '../conf';
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { defaults, find } from 'lodash';
+import { defaults, find, pickBy, mapValues, merge } from 'lodash';
 import { V, StepAttrsOption, StepAttrOption } from '../services/ws';
 
 import ImportFile from '../import/ImportFile.vue';
@@ -84,6 +84,7 @@ export default Vue.extend({
             Helpers.assign(this, AttrsForm_data());
             this.init();
         },
+        'v_default': 'handle_default_values',
     },
     computed: {
         id() {
@@ -116,6 +117,9 @@ export default Vue.extend({
             });
             return { ...attrs, ...subAttrs };
         },
+        v_default(): V {
+            return mapValues(pickBy(this.other_attrs, (opts) => "default" in opts), (opts) => opts.default);
+        },
     },
 
     methods: {
@@ -124,6 +128,25 @@ export default Vue.extend({
                 if (this.noInteraction) this.send();
             });    
         },
+        
+        handle_default_values() {
+            // assign "default" values
+            // handle the complex case where "default" values has changed because of "choices" "sub"
+            const mixed = merge(
+                mapValues(this.prev_v_default || {}, val => ({ prev: val })),
+                mapValues(this.v_default, val => ({ current: val }))
+            );
+            Helpers.eachObject(mixed, (attr, e) => {
+                if (
+                    !("prev" in e) || 
+                    (e.current !== e.prev && this.v[attr] === e.prev) // default changed AND user did not modify the value
+                ) {
+                    this.v[attr] = e.current;
+                }
+            });
+            this.prev_v_default = this.v_default;
+        },
+        
       submit(v, { resolve }) {
           this.v = v;
           let p = this.to_import ? this.send_new_many() : this.send();
