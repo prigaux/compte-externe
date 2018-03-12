@@ -111,7 +111,7 @@ const typeaheadComponent = Vue.extend({
     },
 
     checkValidity(v) {
-        if (this.required || !this.editable) this.emitValidity(v === '' ? { valueMissing: true } : { valid: true });
+        if (this.required || !this.editable) this.emitValidity(v === '' || v === undefined || v === null ? { valueMissing: true } : { valid: true });
     },
 
     emitValidity(validity) {
