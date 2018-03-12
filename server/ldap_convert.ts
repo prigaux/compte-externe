@@ -48,6 +48,17 @@ export function withEtiquette(etiquette: string): ldap_conversion {
     };
 }
 
+export function match(predicate): ldap_conversion {
+    return {
+        fromLdapMulti: (l: string[]): string => (
+            l.find(predicate)
+        ),
+        toLdap: (s: string): string => (
+            s
+        ),
+    };
+}
+
 export function dn(attrName: string, base: string): ldap_conversion {
     return {
         fromLdap: (s: string): string => {

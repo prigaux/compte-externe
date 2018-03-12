@@ -23,6 +23,11 @@ const ldap_main = {
         uid_to_eppn: "@univ.fr",
 };
 
+const internal_organizations = [
+    '{UAI}0751717J', // Univ Paris 1
+    '{UAI}0752719Y', // SCD
+];
+
 const conf = {
     maxLiveModerators: 100,
 
@@ -82,6 +87,8 @@ const conf = {
                 jpegPhoto: '',
                 structureParrain: '',
 
+                etablissementExterne: '',
+                etablissementInterne: '',
                 Shib_Identity_Provider: '',
                 eduPersonPrincipalName: '',
 
@@ -113,6 +120,8 @@ const conf = {
                 roomAccess: { ldapAttr: 'up1RoomAccess' },
                 startdate: { convert: ldap_convert.date },
                 enddate: { convert: ldap_convert.date },
+                etablissementExterne: { ldapAttr: 'supannEtablissement', convert: ldap_convert.match(s => !internal_organizations.includes(s)) },
+                etablissementInterne: { ldapAttr: 'supannEtablissement', convert: ldap_convert.match(s => internal_organizations.includes(s)) },
                 Shib_Identity_Provider: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette('{SAML}') },
                 eduPersonPrincipalName: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{EPPN}") },                
                 structureParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("supannCodeEntite", ldap_main.base_structures) },
