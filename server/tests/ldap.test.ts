@@ -47,7 +47,7 @@ describe('ldap', () => {
                 assert.equal(ldap_convert.datetime.toLdap(e.birthDay), '19751002000000Z');
 
                 let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e, {});
-                assert.deepEqual(rawLdapValue, { sn: "rigaux", up1BirthDay: '19751002000000Z', dn: 'uid=prigaux, ou=people, dc=univ, dc=fr' });
+                assert.deepEqual(rawLdapValue, { sn: "rigaux", up1BirthDay: '19751002000000Z' });
             })
         });
     });

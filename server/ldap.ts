@@ -203,6 +203,10 @@ export function search<T extends {}>(base: string, filter: filter, attrTypes: T,
               delete o['controls'];
               let r = {};
               _.forEach(o, (val, attr) => {
+                if (!attrRemapRev[attr] && !(attr in attrTypes)) {
+                    //console.log(`skipping non wanted attr ${attr}. It can be a non wanted secondary attr`)
+                    return;
+                }
                 let attrs = attrRemapRev[attr] || [attr];
                 for (let attr_ of attrs) {
                     // then transform string|string[] into the types wanted
