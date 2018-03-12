@@ -29,10 +29,14 @@ export const structures = (token: string, sizeLimit: number) => {
 };
 
 export const etablissements = (token: string, sizeLimit: number) => {
-    let words_filter = filters.fuzzy(['description', 'cn', 'displayName'], token);
-    let many = [filters.eq("supannEtablissement", <string> conf.ldap.etablissements.attrs.siret.convert.toLdap(token)), 
-                filters.and([ words_filter, "(supannEtablissement=*)"])];
-    return ldap.searchMany(conf.ldap.base_etablissements, many, 'key', conf.ldap.etablissements.types, conf.ldap.etablissements.attrs, {sizeLimit})
+    let filter;
+    if (token.match(/[0-9\s-]{5,14}/)) {
+        filter = filters.eq("up1TableKey", conf.ldap.etablissements.attrs.siret.convert.toLdap(token) + "*");
+    } else {
+        const words_filter = filters.fuzzy(['description', 'cn', 'displayName'], token);
+        filter = words_filter;
+    }
+    return ldap.search(conf.ldap.base_etablissements, filter, conf.ldap.etablissements.types, conf.ldap.etablissements.attrs, {sizeLimit})
 };
 
 function suggested_mail(sn: string, givenName: string) {
