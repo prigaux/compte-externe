@@ -25,15 +25,6 @@
      :submitted="submitted">
   </PasswordAttr>
 
-  <my-bootstrap-form-group :name="name" multi="true" :label="attr_labels[name]" v-else-if="uiType === 'siret'">
-     <div class="col-xs-3" :class="{'has-error': validity.submitted && !validity[name].valid}">
-         <input-with-validity :name="name" v-model="val"
-            real-type="siret" placeholder="Numéro SIRET" :required="!opts.optional" :validity.sync="validity[name]">
-         </input-with-validity>
-         <validation-errors :name="name" :validity="validity"></validation-errors>
-     </div>
-  </my-bootstrap-form-group>
-
   <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="opts.labels" v-else-if="opts">
 
     <radio-with-validity :name="name" v-model="val" v-if="uiType === 'radio'"
