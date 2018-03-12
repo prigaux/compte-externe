@@ -1,5 +1,10 @@
 <template>
-<div>
+<div v-if="opts.readonly">
+   <my-bootstrap-form-group name="address_lines" :label="attr_labels.address_lines">
+      <textarea rows="5" :value="value" class="form-control" disabled></textarea>
+   </my-bootstrap-form-group>
+</div>
+<div v-else>
   <my-bootstrap-form-group name="country" :label="label" :validity="validity">
      <typeahead name="country" v-model="country" :options="conf.countries" placeholder="Pays" :validity.sync="validity.country" required></typeahead>
   </my-bootstrap-form-group>
@@ -40,7 +45,7 @@ import * as Helpers from '../services/helpers';
 import * as Address from '../services/address';
 
 export default Vue.extend({
-    props: ['value', 'label', 'submitted'],
+    props: ['value', 'label', 'opts', 'submitted'],
     data() {
         return {
             validity: { country: {}, address_lines: {}, postalCode: {}, town: {}, submitted: false },

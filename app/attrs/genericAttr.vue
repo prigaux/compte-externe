@@ -10,7 +10,7 @@
   </DateThreeInputsAttr>
 
   <AddressAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'postalAddress'"
-    :submitted="submitted">
+    :opts="opts" :submitted="submitted">
   </AddressAttr>
 
   <jpegPhotoAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'photo'"
