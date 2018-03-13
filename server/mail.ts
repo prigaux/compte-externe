@@ -26,13 +26,17 @@ export const send = (params: nodemailer.SendMailOptions) => {
     });
 };
 
-export const sendWithTemplate = (templateName: string, params: {}) => {
-    console.log("sendWithTemplate");
+export const sendWithTemplateFile = (templateName: string, params: {}) => {
     fs.readFile(__dirname + "/templates/mail/" + templateName, (err, data) => {
         if (err) {
             console.log(err);
         } else {
-            let rawMsg = Mustache.render(data.toString(), params);
+            sendWithTemplate(data.toString(), params, templateName);
+        }
+    });
+}
+export const sendWithTemplate = (template: string, params: {}, templateName = "") => {
+            let rawMsg = Mustache.render(template, params);
             console.log("===========================");
             console.log("mustache result for", templateName);
             //console.log("with params", params);
@@ -40,10 +44,8 @@ export const sendWithTemplate = (templateName: string, params: {}) => {
             console.log("===========================");
             let m = rawMsg.match(/^Subject: *(.*)\n\n([^]*)/);
             if (!m) {
-                console.error("invalid template " + templateName + ': first line must be "Subject: ..."');
+                console.error("invalid template " + (templateName || template) + ': first line must be "Subject: ..."');
             } else {
                 send({ to: params['to'], subject: m[1], html: m[2] });
             }
-        }
-    });
 };

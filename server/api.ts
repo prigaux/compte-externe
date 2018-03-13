@@ -66,7 +66,7 @@ function notifyModerators(req: req, sv: sv, templateName: string) {
         //console.log("moderators", mails);
         const sv_url = conf.mainUrl + "/" + sv.step + "/" + sv.id;
         let params = _.merge({ to: mails.join(', '), moderator: req.user, conf, sv_url }, sv);
-        mail.sendWithTemplate(templateName, params);
+        mail.sendWithTemplateFile(templateName, params);
     });
 }
 

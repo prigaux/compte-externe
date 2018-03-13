@@ -140,7 +140,7 @@ const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: 
     }
     if (v.supannMailPerso) {
         const v_ = v_display(v, attrs);
-        mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v, v_display: v_, isActive: !!accountStatus });
+        mail.sendWithTemplateFile('warn_user_account_created.html', { to: v.supannMailPerso, v, v_display: v_, isActive: !!accountStatus });
     }
     return null;
 }
@@ -170,6 +170,11 @@ export const expireAccount : simpleAction = (_req, sv) => {
     return crejsonldap_simple(v, { create: false }); // should we return sv.v?
 };
 
+export const sendMail = (template: string): simpleAction => async (req, { v }) => {
+    mail.sendWithTemplate(template, { to: v.mail || v.supannMailPerso, moderator: req.user, v });
+    return { v };
+};
+
 export const genLogin: simpleAction = (_req, sv) => {
     let createResp = login => {
         let v = <v> _.assign({ supannAliasLogin: login }, sv.v);
@@ -186,7 +191,7 @@ export const sendValidationEmail: action = (_req, sv) => {
     let v = sv.v;
     console.log("action sendValidationEmail to " + v.supannMailPerso);
     const sv_url = conf.mainUrl + "/" + sv.step + "/" + sv.id;
-    mail.sendWithTemplate('validation.html', { conf, v, to: v.supannMailPerso, sv_url });
+    mail.sendWithTemplateFile('validation.html', { conf, v, to: v.supannMailPerso, sv_url });
     return Promise.resolve({ v });
 };
 
