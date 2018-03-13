@@ -140,7 +140,7 @@ const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: 
     }
     if (v.supannMailPerso) {
         const v_ = v_display(v, attrs);
-        mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v, v_display: v_, isActive: !accountStatus });
+        mail.sendWithTemplate('warn_user_account_created.html', { to: v.supannMailPerso, v, v_display: v_, isActive: !!accountStatus });
     }
     return null;
 }
