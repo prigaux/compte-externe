@@ -16,3 +16,11 @@ describe('nextDate', () => {
         });
 });
 
+describe('addDays', () => {
+    it("should work", () => {
+        const d = new Date("2017-01-31");
+        const d2 = helpers.addDays(d, 1);
+        assert.equal(d.toISOString(), '2017-01-31T00:00:00.000Z');
+        assert.equal(d2.toISOString(), '2017-02-01T00:00:00.000Z');
+    })
+});

@@ -27,7 +27,7 @@ export const promisify_callback = f => (
 );
 
 export const addDays = (date : Date, days : number) => {
-    let r = date;
+    let r = new Date(date);
     r.setDate(r.getDate() + days);
     return r;
 }
