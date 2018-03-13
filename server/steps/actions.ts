@@ -104,11 +104,11 @@ export const createCompteSafe = (l_actions: action[]): action => async (req, sv)
         if (homonymes.length) return { v: orig_v, response: { id: sv.id, in_moderation: true } };
     }
     // ok, let's create it
-    return createCompte_(sv, { dupcreate: "ignore", create: true });
+    return createCompte_(sv, { dupcreate: "ignore", dupmod: "err", create: true });
 }
 
 export const createCompte: action = (_req, sv) => (
-    createCompte_(sv, { dupcreate: "ignore", create: true })
+    createCompte_(sv, { dupcreate: "ignore", dupmod: "warn", create: true })
 );
     
 const createCompte_ = async (sv: sv, opts : crejsonldap.options) => {

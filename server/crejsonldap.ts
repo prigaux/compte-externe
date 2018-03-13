@@ -7,6 +7,7 @@ import * as conf from './conf';
 export type options = { action: "validate" } | { create: false } | {
     create: true;
     dupcreate: "ignore"|"warn"|"err";
+    dupmod: "ignore"|"warn"|"err";
 }
 
 const prepare_v = (v: v) => {

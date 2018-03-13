@@ -106,14 +106,14 @@ describe('createMayRetryWithoutSupannAliasLogin', () => {
         const v_ = { "supannAliasLogin": "prigaux", "sn": "Rigaux", "givenName": "Pascal" } as v;
 
         fake_callRaw({
-            '{"retattrs":["uid","accountStatus"],"create":true,"dupcreate":"ignore","id":["uid"],"users":[{"attrs":{"supannAliasLogin":"prigaux","sn":"Rigaux","givenName":"Pascal"}}]}':
+            '{"retattrs":["uid","accountStatus"],"create":true,"dupcreate":"ignore","dupmod":"ignore","id":["uid"],"users":[{"attrs":{"supannAliasLogin":"prigaux","sn":"Rigaux","givenName":"Pascal"}}]}':
             '{"users":[{"err":[{"code":"dupval","attr":"supannAliasLogin","desc":"Conflicting entries found","dn":["uid=prigaux,ou=people,dc=univ-paris1,dc=fr"],"val":"prigaux"}]}],"err":[{"code":"userfail","desc":"All user requests failed"}]}',
 
-            '{"retattrs":["uid","accountStatus"],"create":true,"dupcreate":"ignore","id":["uid"],"users":[{"attrs":{"sn":"Rigaux","givenName":"Pascal"}}]}':
+            '{"retattrs":["uid","accountStatus"],"create":true,"dupcreate":"ignore","dupmod":"ignore","id":["uid"],"users":[{"attrs":{"sn":"Rigaux","givenName":"Pascal"}}]}':
             '{"users":[{"action":"ADD","dn":"uid=pascalrigau4,ou=people,dc=univ-paris1,dc=fr","attrs":{"accountStatus":["active"],"uid":["pascalrigau4"]}}]}',
         });
         
-        return crejsonldap.createMayRetryWithoutSupannAliasLogin(v_, { create: true, dupcreate: "ignore" }).then(subv => {
+        return crejsonldap.createMayRetryWithoutSupannAliasLogin(v_, { create: true, dupcreate: "ignore", dupmod: "ignore" }).then(subv => {
             assert.equal(subv.uid, "pascalrigau4");
         });
     });
