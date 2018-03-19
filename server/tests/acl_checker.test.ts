@@ -24,7 +24,7 @@ describe('moderators', () => {
         acl_checker.moderators([], undefined).then(l => assert.deepEqual(l, []))
     ))
     it('should work on multiple users', () => (
-        acl_checker.moderators([ acl.user_id("arigaux"), acl.user_id("prigaux"), acl.user_id("arigaux") ], undefined).then(l => assert.deepEqual(l, [ 'ayme.rigaux@univ-paris1.fr', 'ayme.rigaux@univ-paris1.fr' ]))
+        acl_checker.moderators([ acl.user_id("arigaux"), acl.user_id("prigaux"), acl.user_id("arigaux") ], undefined).then(l => assert.deepEqual(l, [ 'ayme.rigaux@univ-paris1.fr', undefined, 'ayme.rigaux@univ-paris1.fr' ]))
     ))
 });
 
