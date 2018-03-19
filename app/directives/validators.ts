@@ -113,9 +113,12 @@ Vue.component('radio-with-validity', {
     this.checkValidity();
   },
   watch: {
-      value: 'checkValidity',
+      value: 'on_value_set',
   },
   methods: {
+    on_value_set(v) {
+        this.emitValidityIfChanged(v ? { valid: true } : { valueMissing: true, message: conf.error_msg.radio_required });
+    },
     checkValidity() {
         const el = this.$el.querySelector('input'); // any <input> will do
         this.checkValidityEl(el);
