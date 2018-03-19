@@ -9,6 +9,12 @@ const checkValidity = {
         this.checkValidity();
         return false;
     },
+    on_value_set(v) {
+        if (v !== this.$el.value) {
+            this.$el.value = v; // do it now to update validity. but do not do it if unchanged otherwise it breaks cursor position for some browsers
+            this.checkValidity();
+        }        
+    },
     checkValidity() {
         this.checkValidityEl(this.$el);
     },
@@ -42,12 +48,7 @@ Vue.component('input-with-validity', {
     this.checkValidity();
   },
   watch: {
-    value(v) {
-        if (v !== this.$el.value) {
-            this.$el.value = v; // do it now to update validity. but do not do it if unchanged otherwise it breaks cursor position for some browsers
-            this.checkValidity();
-        }
-    },
+    value: 'on_value_set',
     min(v) { this._attrUpdated('min', v) },
     max(v) { this._attrUpdated('max', v) },
     sameAs(v) { this._attrUpdated('pattern', Helpers.escapeRegexp(v)) },
@@ -136,7 +137,7 @@ Vue.component('select-with-validity', {
       this.checkValidity();
     },
     watch: {
-      value: 'checkValidity',
+      value: 'on_value_set',
     },
 });
 
@@ -148,7 +149,7 @@ Vue.component('checkbox-with-validity', {
       this.checkValidity();
     },
     watch: {
-      value: 'checkValidity',
+      value: 'on_value_set',
     },
 });
   
@@ -160,6 +161,6 @@ Vue.component('textarea-with-validity', {
     this.checkValidity();
   },
   watch: {
-    value: 'checkValidity',
+    value: 'on_value_set',
   },
 });
