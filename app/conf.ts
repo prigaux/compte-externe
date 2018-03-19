@@ -68,7 +68,6 @@ export default {
         givenName: { allowedChars: allowedCharsInNames },
         sn: { allowedChars: allowedCharsInNames },
         birthName: { allowedChars: allowedCharsInNames, labels: { tooltip: "si différent du nom d'usage" } },
-        profilename: { uiType: 'radio' },
         charter: { uiType: 'checkbox' },
         birthDay: { uiType: 'date', min: new Date('1900'), minYear: '1900', max: new Date(), maxYear: new Date().getUTCFullYear() },
         startdate: { uiType: 'date', min: new Date(), minYear: new Date().getUTCFullYear() },
