@@ -30,7 +30,7 @@ export default Vue.extend({
    props: ['step'],
    computed: {
      allow_reuse() {
-         return !!this.step.attrs.uid;
+         return this.step.attrs.uid && !this.step.attrs.uid.hidden;
      },
    },
    methods: {

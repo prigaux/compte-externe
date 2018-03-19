@@ -95,14 +95,20 @@ export default Vue.extend({
             return !this.wanted_id && this.stepName;
         },
         check_homonyms() {
-            return !this.initialStep && this.attrs && this.attrs.uid;
+            return !this.initialStep && this.attrs_ && this.attrs_.uid;
         },
         noInteraction() {
-            return this.v.noInteraction || Object.keys(this.attrs).length === 0;
+            return this.v.noInteraction || Object.keys(this.attrs_).length === 0;
         },
+        attrs_() {
+            return this.attrs && Helpers.filter(this.attrs, (opts) => !opts.hidden);
+        },
+
         other_attrs(): StepAttrsOption {
             let { attrs, prev_defaults } = compute_subAttrs_and_handle_default_values(this.attrs, this.prev_defaults, this.v);
             this.prev_defaults = prev_defaults;
+            
+            attrs = Helpers.filter(attrs, (opts) => !opts.hidden);
             
             if (this.to_import && attrs) {
                 attrs = Helpers.filter(attrs, (_, k) => !this.to_import.fields.includes(k));

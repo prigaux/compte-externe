@@ -29,6 +29,7 @@ interface StepAttrOptionChoices {
   sub?: StepAttrsOption;
 }
 export interface StepAttrOption {
+  hidden?: boolean;
   readonly?: boolean;
   optional?: boolean;
   pattern?: string;

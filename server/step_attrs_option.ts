@@ -61,5 +61,5 @@ const transform_toUserOnly_into_hidden_readonly = ({ toUserOnly, ...opt}) => (
 );
 
 export const exportAttrs = (attrs: StepAttrsOption) => (
-    _.mapValues(_.omitBy(attrs, val => val.hidden), transform_toUserOnly_into_hidden_readonly)
+    _.mapValues(attrs, transform_toUserOnly_into_hidden_readonly)
 ) as StepAttrsOption;
