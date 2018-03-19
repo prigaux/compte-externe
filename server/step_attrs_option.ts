@@ -31,7 +31,7 @@ function validate(key: string, opt: StepAttrOption, val) {
                 return; // no more checks if optional
         }
         if (opt.max) {
-            if (!(_.isNumber(val) && 0 <= val && val <= opt.max))
+            if (!((""+val).match(/\d+/) && 0 <= val && val <= opt.max))
                 throw `constraint ${key}.max <= ${opt.max} failed for ${val}`;
         }
         if (opt.pattern) {
