@@ -48,8 +48,9 @@ import conf from '../conf';
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { defaults, find, pickBy, mapValues, merge } from 'lodash';
-import { V, StepAttrsOption, StepAttrOption } from '../services/ws';
+import { defaults } from 'lodash';
+import { V, StepAttrsOption } from '../services/ws';
+import { compute_subAttrs_and_handle_default_values } from '../services/sub_and_defaults';
 
 import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
@@ -100,7 +101,9 @@ export default Vue.extend({
             return this.v.noInteraction || Object.keys(this.attrs).length === 0;
         },
         other_attrs(): StepAttrsOption {
-            let attrs = this.attrs;
+            let { attrs, prev_defaults } = compute_subAttrs_and_handle_default_values(this.attrs, this.prev_defaults, this.v);
+            this.prev_defaults = prev_defaults;
+            
             if (this.to_import && attrs) {
                 attrs = Helpers.filter(attrs, (_, k) => !this.to_import.fields.includes(k));
             }
@@ -108,17 +111,7 @@ export default Vue.extend({
                 // do not display things that have been forced in the url
                 attrs = Helpers.filter(attrs, (_, k) => !(k in this.$route.query));
             }
-            let subAttrs = {};
-            Helpers.filter(this.attrs, (opts : StepAttrOption, k) => {
-                if (opts.choices && this.v[k]) {
-                    const selected = find(opts.choices, choice => choice.key === this.v[k]);
-                    if (selected && selected.sub) Helpers.assign(subAttrs, selected.sub);
-                }
-            });
-            return { ...attrs, ...subAttrs };
-        },
-        v_default(): V {
-            return mapValues(pickBy(this.other_attrs, (opts) => "default" in opts), (opts) => opts.default);
+            return attrs;
         },
     },
 
@@ -127,24 +120,6 @@ export default Vue.extend({
             Ws.getInScope(this, this.id, this.$route.query, this.stepName).then(() => {
                 if (this.noInteraction) this.send();
             });    
-        },
-        
-        handle_default_values() {
-            // assign "default" values
-            // handle the complex case where "default" values has changed because of "choices" "sub"
-            const mixed = merge(
-                mapValues(this.prev_v_default || {}, val => ({ prev: val })),
-                mapValues(this.v_default, val => ({ current: val }))
-            );
-            Helpers.eachObject(mixed, (attr, e) => {
-                if (
-                    !("prev" in e) || 
-                    (e.current !== e.prev && this.v[attr] === e.prev) // default changed AND user did not modify the value
-                ) {
-                    this.v[attr] = e.current;
-                }
-            });
-            this.prev_v_default = this.v_default;
         },
         
       submit(v, { resolve }) {
