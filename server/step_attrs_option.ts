@@ -66,10 +66,26 @@ function validate(key: string, opt: StepAttrOption, val) {
         }
 }
 
+function compute_flat_attrs(attrs: StepAttrsOption, v) {
+    let r = {};
+    function one_level(attrs : StepAttrsOption) {
+        _.each(attrs, (opt, key) => {
+            r[key] = { ...(r[key] || {}), ...opt };
+            if (key in v && opt.choices) {
+                const choice = find_choice(opt.choices, v[key]);
+                if (choice && choice.sub) one_level(choice.sub);
+            }
+        });
+    }
+    one_level(attrs);
+    return r;
+}
+
 /* before sending to client, remove sensible information */
 export function export_v(attrs: StepAttrsOption, v) {
+    const flat_attrs = compute_flat_attrs(attrs, v);
     return _.omitBy(v, (_val, key) => ( 
-        !attrs[key] || attrs[key].hidden
+        !flat_attrs[key] || flat_attrs[key].hidden
     ));
 }
 

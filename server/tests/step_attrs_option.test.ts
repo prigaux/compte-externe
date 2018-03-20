@@ -30,6 +30,14 @@ describe('export_v', () => {
         test({ sn: { hidden: true } }, v, {});
         test({}, v, {});
     });
+    it("should handle sub", () => {
+        const attrs = { duration: { choices: [
+            { key: "1", sub: { sn: {} } }, 
+            { key: "2" },
+        ] } }
+        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2" });
+        test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
+    });
 });
 
 describe('merge_v', () => {
