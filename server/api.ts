@@ -115,6 +115,7 @@ function getRaw(req: req, id: id, wanted_step: string): Promise<sv> {
 
 function get(req: req, id: id, wanted_step: string) {
     return getRaw(req, id, wanted_step).then(export_sv);
+    // TODO add potential_homonyms si id !== 'new' && attrs && attrs.uid
 }
 
 async function search_with_acls(req: req, wanted_step: string) {
