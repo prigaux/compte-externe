@@ -171,8 +171,9 @@ export const expireAccount : simpleAction = (_req, sv) => {
     return crejsonldap_simple(v, { create: false }); // should we return sv.v?
 };
 
-export const sendMail = (template: string): simpleAction => async (req, { v }) => {
-    mail.sendWithTemplate(template, { to: v.mail || v.supannMailPerso, moderator: req.user, v });
+export const sendMail = (template: string): action => async (req, { v, attrs }) => {
+    const v_ = v_display(v, attrs);
+    mail.sendWithTemplate(template, { to: v.mail || v.supannMailPerso, moderator: req.user, v, v_display: v_ });
     return { v };
 };
 
