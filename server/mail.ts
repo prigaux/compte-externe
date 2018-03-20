@@ -37,6 +37,7 @@ export const sendWithTemplateFile = (templateName: string, params: {}) => {
 }
 export const sendWithTemplate = (template: string, params: {}, templateName = "") => {
             let rawMsg = Mustache.render(template, params);
+            if (!rawMsg) return;
             console.log("===========================");
             console.log("mustache result for", templateName);
             //console.log("with params", params);
