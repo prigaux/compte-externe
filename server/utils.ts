@@ -127,3 +127,15 @@ export function mergeSteps(initialSteps: steps, nextSteps: steps): steps {
 export const attrsHelpingDiagnoseHomonymes = (
     _.fromPairs(conf.attrsHelpingDiagnoseHomonymes.map(k => [k, { toUserOnly: true }]))    
 );
+
+export const mapAttrs = (attrs: StepAttrsOption, f) => (
+    _.mapValues(attrs, (opts, key) => {
+        opts = f(opts, key);
+        if (opts.choices)
+            opts.choices = opts.choices.map(choice => (
+                choice.sub ? { ...choice, sub: mapAttrs(choice.sub, f) } : choice
+            ));
+        return opts;        
+    })
+)
+
