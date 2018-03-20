@@ -1,7 +1,19 @@
 import * as _ from 'lodash';
 
+function compute_diff(prev, current, key) {
+    const toString = (val) => (
+        val instanceof Array ? val.join(', ') : val || ''
+    );
+    const one_diff = {
+        prev: toString(prev[key]),
+        current: toString(current[key]),
+    };
+    return one_diff.prev === one_diff.current ? {} : { [key]: one_diff };
+}
+
 export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
     let r = {};
+    let diff = {};
     function merge_one_level(attrs : StepAttrsOption) {
       _.each(attrs, (opt, key) => {
         if (opt.toUserOnly) {
@@ -11,7 +23,10 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
             if (key in prev) r[key] = prev[key];
         } else {
             validate(key, opt, v[key]);
-            if (key in v) r[key] = v[key];
+            if (key in v) {
+                Object.assign(diff, compute_diff(prev, v, key));
+                r[key] = v[key];
+            }
         }
         if (key in r && opt.choices) {
             const choice = find_choice(opt.choices, r[key]);
@@ -20,6 +35,10 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
       });
     }
     merge_one_level(attrs);
+
+    if (!r['various']) r['various'] = {};
+    r['various'].diff = diff;
+
     return r as v;
 }
 

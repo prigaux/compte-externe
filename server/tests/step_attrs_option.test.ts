@@ -34,7 +34,9 @@ describe('export_v', () => {
 
 describe('merge_v', () => {
     function test(attrs, prev, v, wanted_v) {
-        assert.deepEqual(merge_v(attrs, prev, v), wanted_v);
+        let v_ = merge_v(attrs, prev, v);
+        delete v_.various;
+        assert.deepEqual(v_, wanted_v);
     }
     
     function test_fail(attrs, prev, v, wanted_err) {
@@ -96,3 +98,34 @@ describe('merge_v', () => {
     });
 });
 
+describe('compute_diff', () => {
+    function test(attrs, prev, current, wanted_diff) {
+        let v_ = merge_v(attrs, prev, current);
+        assert.deepEqual(v_.various.diff, wanted_diff);
+    }
+
+    const attrs_sn = { sn: { optional: true }};
+
+    it("should handle no change", () => {
+        test(attrs_sn, { sn: "Rigaux" }, { sn: "Rigaux" }, {});
+    });
+    it("should handle simple change", () => {
+        test(attrs_sn, { sn: "Rigaud" }, { sn: "Rigaux" }, { sn: { prev: "Rigaud", current: "Rigaux" }});
+    });
+    it("should handle simple creation", () => {
+        test(attrs_sn, {}, { sn: "Rigaux" }, { sn: { prev: '', current: "Rigaux" }});
+    });
+    it("should handle simple removal", () => {
+        test(attrs_sn, { sn: "Rigaux" }, { sn: '' }, { sn: { prev: "Rigaux", current: '' }});
+    });
+    it("should handle array", () => {
+        test(attrs_sn, { sn: ["Rigaux"] }, { sn: ["Rigaux"] }, {});
+        test(attrs_sn, {}, { sn: ["Rigaux"] }, { sn: { prev: '', current: 'Rigaux' } });
+    });
+
+    it("should ignore non required attrs", () => {
+        test({}, { sn: "Rigaux" }, {}, {});
+        test({}, {}, { sn: "Rigaux" }, {});
+    });
+    
+});

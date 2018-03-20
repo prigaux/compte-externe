@@ -184,6 +184,7 @@ function setRaw(req: req, sv: sv, v: v) : Promise<svr> {
         advance_sv(req, sv)
     )).tap(svr => {
         let sv = <sv> _.omit(svr, 'response');
+        if (sv.v.various) delete sv.v.various.diff;
         if (sv.step) {
             return saveRaw(req, sv);
         } else {
