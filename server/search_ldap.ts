@@ -30,7 +30,9 @@ export const structures = (token: string, sizeLimit: number) => {
 
 export const etablissements = (token: string, sizeLimit: number) => {
     let filter;
-    if (token.match(/[0-9\s-]{5,14}/)) {
+    if (token.match(/\{.*/)) {
+        filter = filters.eq("up1TableKey", token);
+    } else if (token.match(/[0-9\s-]{5,14}/)) {
         filter = filters.eq("up1TableKey", conf.ldap.etablissements.attrs.siret.convert.toLdap(token) + "*");
     } else {
         const words_filter = filters.fuzzy(['description', 'cn', 'displayName'], token);
