@@ -54,7 +54,7 @@ function suggested_mail(sn: string, givenName: string) {
     return s;
 }
 
-function homonymes_filter(sns: string[], givenNames: string[], supannMailPerso?: string): ldap.filter {
+function homonymes_filter(sns: string[], givenNames: string[], birthDay: Date, supannMailPerso?: string): ldap.filter {
 
     function cn_filter() {
         return filters.alike_no_accents('cn', sns[0] + '*' + (givenNames[0] || ""));
@@ -74,8 +74,10 @@ function homonymes_filter(sns: string[], givenNames: string[], supannMailPerso?:
         return filters.startsWith("mail", suggested_mail(sns[0], givenNames[0]) + '@');
     }
 
-    let l = [ cn_filter(),
-              sn_givenName_filter(), 
+    const [ birthDay_filter ] = subv_to_eq_filters({ birthDay });
+
+    let l = [ filters.and([ cn_filter(), birthDay_filter ]),
+              filters.and([ sn_givenName_filter(), birthDay_filter ]),
               mail_filter() ];
     if (supannMailPerso) {
         l.push(filters.eq('supannMailPerso', supannMailPerso));
@@ -84,25 +86,11 @@ function homonymes_filter(sns: string[], givenNames: string[], supannMailPerso?:
     return filters.or(l);
 }
 
-function homonyme_scoring(birthDay: Date, known_birthDay: Date): number {
-    if (!birthDay || !known_birthDay) return 1; // mostly for tests
-    let partialInLdap = birthDay.getUTCMonth() + 1 === 1 && birthDay.getUTCDate() === 1; // we have many entries with birthDay 1945-01-01, in that case matching only year is enough
-    function same(method) {
-        return birthDay[method]() === known_birthDay[method]();
-    }
-    let sameYear = same('getUTCFullYear');
-    let sameMonth = same('getUTCMonth');
-    let sameDay = same('getUTCDate');
-    return sameYear && sameMonth && sameDay ? 3 :
-        sameYear && (sameMonth || sameDay || partialInLdap) ? 1 :
-        sameMonth && sameDay ? 1 :
-        0;
-}
 export type Homonyme = typeof conf.ldap.people.types & { score: number }
 
-function homonymes_scoring(l: typeof conf.ldap.people.types[], birthDay: Date): Homonyme[] {
+function homonymes_scoring(l: typeof conf.ldap.people.types[]): Homonyme[] {
     let l_ = _.map(l, e => {
-      let score = e.birthDay ? homonyme_scoring(e.birthDay, birthDay) : 0;
+      let score = 3;
       if (score === 3) {
          score += e.global_eduPersonPrimaryAffiliation === 'student' ? 2 : 
                 (e.global_eduPersonAffiliation || []).includes('member') ? 1 : 0;
@@ -113,7 +101,7 @@ function homonymes_scoring(l: typeof conf.ldap.people.types[], birthDay: Date): 
 }
 
 const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannMailPerso: string) : Promise<Homonyme[]> => {
-    let filter = homonymes_filter(sns, givenNames, supannMailPerso);
+    let filter = homonymes_filter(sns, givenNames, birthDay, supannMailPerso);
     if (conf.ldap.people.homonymes_restriction) {
         filter = filters.and([filter, conf.ldap.people.homonymes_restriction]);
         //console.log("homonymes filter", filter);
@@ -121,7 +109,7 @@ const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannM
     //console.log("homonymes", sns, givenNames, birthDay);
     const sizeLimit = 99; // big enough to handle many results, eg for "Philippe Martin"
     return ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, { sizeLimit }).then(l => {
-                              return homonymes_scoring(l, birthDay).filter(e => (
+                              return homonymes_scoring(l).filter(e => (
                                   e.score > 0
                               ));
                           });
