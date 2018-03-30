@@ -137,12 +137,14 @@ export const homonymes = (v: v) : Promise<Homonyme[]> => {
     return homonymes_(sns, givenNames, v.birthDay, v.supannMailPerso);    
 };
 
+export const subv_to_eq_filters = (subv: Partial<v>) => {
+    // limitation: do not handle multi-valued attrs
+    const v_ldap = ldap.convertToLdap(conf.ldap.people.attrs, conf.ldap.people.attrs, subv as any, {});
+    return _.map(v_ldap, (val, attr) => filters.eq(attr, val as string));
+}
+
 export function searchPeople_matching_subvs(subvs: Partial<v>[], token: string, options: ldap.Options) {
-    const ors = subvs.map(subv => {
-        const v_ldap = ldap.convertToLdap(conf.ldap.people.attrs, conf.ldap.people.attrs, subv as any, {});
-        // limitation: do not handle multi-valued attrs
-        return filters.and(_.map(v_ldap, (val, attr) => filters.eq(attr, val as string)));
-    });
+    const ors = subvs.map(subv => filters.and(subv_to_eq_filters(subv)));
     const filter = filters.and([
         filters.fuzzy(['displayName', 'cn'], token),
         filters.or(ors),
