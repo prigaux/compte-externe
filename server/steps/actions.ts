@@ -99,8 +99,13 @@ const accountExactMatch = (v: v) => {
     ]
     const attrs_exact_match = _.difference(Object.keys(v), ignored_attrs);
     const subv = _.pick(v, attrs_exact_match) as v;
+
     let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, subv, {});
     let filters_ = attrs_exact_match.filter(attr => attr in v_ldap).map(attr => filters.eq(attr, v_ldap[attr] as string));
+
+    let filters2 = search_ldap.subv_to_eq_filters(subv);
+    if (!_.isEqual(_.sortBy(filters_), _.sortBy(filters2))) console.error("accountExactMatch assertion failed", filters_, "vs", filters2);
+
     if (filters_.length < 3) throw "refusing to create account with so few attributes. Expecting at least 3 of " + attrs_exact_match.join(',');
     return onePerson(filters.and(filters_));
 }
