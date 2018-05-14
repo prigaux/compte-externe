@@ -208,6 +208,14 @@ export const homePhone_to_pager_if_mobile : simpleAction = async function(_req, 
     return { v };
 }
 
+export const pager_to_homePhone_if_no_homePhone : simpleAction = async function(_req, { v }) {
+    if (!v.homePhone) {
+        const { pager, ...v_ } = v;
+        if (pager) v = { homePhone: pager, ...v_ } as v;
+    }
+    return { v };
+}
+
 export const sendMailNewEtablissement = (to: string): simpleAction => (_req, sv) => {
     let v = sv.v;
     if (!v['etablissement_description']) {
