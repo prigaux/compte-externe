@@ -240,7 +240,9 @@ function listAuthorized(req: req) {
 const body_to_v = (o) => (
     _.mapValues(o, (val, attr) => {
         let attrType = conf.ldap.people.types[attr];
-        return _.isDate(attrType) ? new Date(val) : val;
+        return _.isDate(attrType) ? new Date(val) : 
+          _.isNumber(attrType) && val ? parseFloat(val) :
+          val;
     }) as v
 );
 

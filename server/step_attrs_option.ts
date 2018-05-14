@@ -54,7 +54,7 @@ export function export_v(attrs: StepAttrsOption, v) {
     ));
 }
 
-const find_choice = (choices, key) => choices.find(choice => choice.key === key);
+const find_choice = (choices, key) => choices.find(choice => choice.key == key); // allow equality if key is number and choice.key is string
 
 const transform_toUserOnly_into_hidden_readonly = ({ toUserOnly, ...opt}) => (
     toUserOnly ? { optional: true, readonly: true, ...opt} : opt
