@@ -71,6 +71,7 @@ Vue.component('input-with-validity', {
             if (this[name]) this.$el.setAttribute(name, this[name]);
         }
         if (this.realType === 'phone') this.$el.setAttribute('pattern', conf.pattern.phone);
+        if (this.realType === 'mobilePhone') this.$el.setAttribute('pattern', conf.pattern.frenchMobilePhone);
         if (this.realType === 'frenchPostalCode') this.$el.setAttribute('pattern', conf.pattern.frenchPostalCode);
     },
     _setCustomMsg(msg) {
@@ -86,6 +87,9 @@ Vue.component('input-with-validity', {
         switch (this.realType) {
             case 'phone' :
                 if (validity.patternMismatch) msg = conf.error_msg.phone;
+                break;
+            case 'mobilePhone' :
+                if (validity.patternMismatch) msg = conf.error_msg.mobilePhone;
                 break;
             case 'frenchPostalCode':
                 if (validity.patternMismatch) msg = conf.error_msg.frenchPostalCode;

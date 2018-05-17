@@ -24,6 +24,7 @@ export default {
         town: "Ville",
         country: "Pays",
         homePhone: "Téléphone personnel",
+        pager: "Mobile personnel",
         supannMailPerso: "Email personnel",
         jpegPhoto: "Photo",
         telephoneNumber: 'Tétéphone fixe',
@@ -64,6 +65,7 @@ export default {
     default_attrs_opts: {
         homePhone: { uiType: "phone" },
         telephoneNumber: { uiType: "phone" },
+        pager: { uiType: "mobilePhone" },
         supannMailPerso: { uiType: "email" },
         givenName: { allowedChars: allowedCharsInNames },
         sn: { allowedChars: allowedCharsInNames },
@@ -91,7 +93,7 @@ export default {
 
     attrs_order: [
         'supannCivilite', 'givenName', 'altGivenName', 'sn', 'birthName', 'birthDay',
-        'homePostalAddress', 'homePhone', 'supannMailPerso',
+        'homePostalAddress', 'homePhone', 'pager', 'supannMailPerso',
         'jpegPhoto',
         'structureParrain',
         'startdate', 'duration_or_enddate', 'duration', 'enddate',
@@ -123,6 +125,7 @@ export default {
         radio_required: 'Veuillez sélectionner une de ces options.',
         userPassword: 'Veuillez choisir un mot de passe comportant au moins 8 caractères. Ce mot de passe doit contenir des lettres minuscules, des lettres majuscules et des chiffres.',
         phone: 'Le champ doit être un numéro de téléphone. Exemples : 01 02 03 04 05  ou  +41 66 555 44 33  ou  +886 1 1234 5678',
+        mobilePhone: 'Le champ doit être un numéro de téléphone mobile. Exemples : 06 02 03 04 05',
         frenchPostalCode: 'Le champ doit être un code postal. Exemple: 75013',
         siret: 'Numéro SIRET invalide',
         forbiddenChars: (forbiddenChars) => (
