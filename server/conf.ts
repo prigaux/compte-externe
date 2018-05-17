@@ -166,10 +166,6 @@ const conf = {
         'mail', 'altGivenName', 'global_eduPersonAffiliation', 'global_eduPersonPrimaryAffiliation', 'global_supannEtuAnneeInscription',
     ],
 
-    pattern: {
-        isFrenchMobilePhone: "(0|\\+33)\\s*[67](\\s*[0-9]){8}",        
-    },
-
     http_client_CAs: fs.readFileSync('/etc/ssl/certs/ca-certificates.crt').toString().split(/(?=-----BEGIN CERTIFICATE-----)/),
 
     poll_maxTime: 4 * 60 * 1000, // 4 minutes

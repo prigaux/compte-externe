@@ -10,6 +10,7 @@ import * as search_ldap from '../search_ldap';
 import * as esup_activ_bo from '../esup_activ_bo';
 import v_display from '../v_display';
 import * as conf from '../conf';
+import client_conf from '../../app/conf'; // ES6 syntax needed for default export
 const filters = ldap.filters;
 
 export const addAttrs = (v: Partial<v>) => (_req, sv) => {
@@ -202,7 +203,7 @@ export const forceBrowserExit: action = (_req, { v }) => (
 
 export const homePhone_to_pager_if_mobile : simpleAction = async function(_req, { v }) {
     const { homePhone, ...v_ } = v;
-    if (homePhone && homePhone.match("^(" + conf.pattern.isFrenchMobilePhone + ")$")) {
+    if (homePhone && homePhone.match("^(" + client_conf.pattern.frenchMobilePhone + ")$")) {
         v = { pager: homePhone, ...v_ } as v;
     }
     return { v };
