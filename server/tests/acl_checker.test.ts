@@ -29,9 +29,15 @@ describe('moderators', () => {
 });
 
 describe('step_acls_allowed_ssubvs', () => {
-    let steps;
-    before(() => steps = { 
+    let steps, steps2;
+    before(() => { 
+      steps = { 
         "xxx": { acls: [ acl.user_id("arigaux") ], labels: undefined },
+      };
+      steps2 = {
+        ...steps,
+        "yyy": { acls: [ acl.user_id("arigaux"), acl.ldapGroup('g1') ], labels: undefined },          
+      }
     });
 
     it('should work', () => (
@@ -41,6 +47,12 @@ describe('step_acls_allowed_ssubvs', () => {
     ))
     it('should deny', () => (
         acl_checker.allowed_ssubvs({ mail: "pascal.rigaux@univ-paris1.fr" } as v, steps).then(ssubvs => assert.deepEqual(ssubvs, []))
+    ))
+    it('should simplify subvs', () => (
+        acl_checker.allowed_ssubvs({ mail: "ayme.rigaux@univ-paris1.fr" } as v, steps2).then(ssubvs => assert.deepEqual(ssubvs, [ 
+            { step: 'xxx', subvs: [{}] },
+            { step: 'yyy', subvs: [{}] },
+        ]))
     ))
 });
 

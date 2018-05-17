@@ -23,11 +23,16 @@ export const allowed_subvs = (vuser : v, step: step) => {
         subvs = Promise.resolve([]); // empty or, so disallow any v
     } else {
         subvs = Promise.all(step.acls.map(acl => acl.user_to_subv(vuser))).then(ll => (
-            _.flatten(ll)
+            simplify_subvs(_.flatten(ll))
         ));
     }
     return subvs;
 };
+
+// [{}, { ... }] becomes [{}]
+const simplify_subvs = l => (
+    l.find(_.isEmpty) ? [{}] : _.uniqWith(l, _.isEqual)
+)
 
 const one_allowed_ssubvs = (vuser : v) => (step: step, stepName: string) => (
     allowed_subvs(vuser, step).then(subvs => (
