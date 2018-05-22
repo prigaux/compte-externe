@@ -240,6 +240,7 @@ export const read = <T extends LdapEntry> (dn: string, attrTypes: T, attrsConver
     ));
 };
 
+// search LDAP using "filter" but return only one attribute for each LDAP entries
 export const searchThisAttr = <T extends LdapAttrValue>(base: string, filter: filter, attr: string, attrType: T, options: Options = {}): Promise<T[]> => {
     return search(base, filter, { val: attrType }, { val: { ldapAttr: attr } }, options).then(l => (
         _.map(l, e => e.val)
