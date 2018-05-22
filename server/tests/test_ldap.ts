@@ -32,10 +32,10 @@ function test_params() {
     ];
     let rolesGeneriques = [
 /* tslint:disable:max-line-length whitespace */      
-        { supannRoleGenerique: "{SUPANN}F10", cn: "Chef de service", description: "Chef de service", displayName: "Chef de service", initials: "CHEF SRV", objectClass: "up1TableEntry", supannRefId: "{HARPEGE.FCSTR}521" },
-        { supannRoleGenerique: "{SUPANN}D30", cn: "Directeur(ice)", description: "Directeur(ice)", displayName: "Directeur(ice)", initials: "DIR", objectClass: "up1TableEntry", supannRefId: [ "{HARPEGE.FCSTR}522", "{HARPEGE.FCEXC}8" ] },
-        { supannRoleGenerique: "{SUPANN}D10", cn: "Directeur(ice) d'administration centrale", description: "Directeur(ice) d'administration centrale", displayName: "Directeur(ice) d'administration centrale", initials: "DIR AC", objectClass: "up1TableEntry" },
-        { supannRoleGenerique: "{SUPANN}D00", cn: "Ministre", description: "Ministre", displayName: "Ministre", initials: "MINISTRE", objectClass: "up1TableEntry" },
+        { up1TableKey: "{SUPANN}F10", cn: "Chef de service", description: "Chef de service", displayName: "Chef de service", initials: "CHEF SRV", objectClass: "up1TableEntry", supannRefId: "{HARPEGE.FCSTR}521" },
+        { up1TableKey: "{SUPANN}D30", cn: "Directeur(ice)", description: "Directeur(ice)", displayName: "Directeur(ice)", initials: "DIR", objectClass: "up1TableEntry", supannRefId: [ "{HARPEGE.FCSTR}522", "{HARPEGE.FCEXC}8" ] },
+        { up1TableKey: "{SUPANN}D10", cn: "Directeur(ice) d'administration centrale", description: "Directeur(ice) d'administration centrale", displayName: "Directeur(ice) d'administration centrale", initials: "DIR AC", objectClass: "up1TableEntry" },
+        { up1TableKey: "{SUPANN}D00", cn: "Ministre", description: "Ministre", displayName: "Ministre", initials: "MINISTRE", objectClass: "up1TableEntry" },
 /* tslint:enable */
     ];
     function add(dn: string, e) {
@@ -49,7 +49,7 @@ function test_params() {
         });        
     }
     addAll(params.base_people, "uid", people);
-    addAll(params.base_rolesGeneriques, "supannRoleGenerique", rolesGeneriques);
+    addAll(params.base_rolesGeneriques, "up1TableKey", rolesGeneriques);
     return params;
 }
 

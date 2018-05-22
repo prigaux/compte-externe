@@ -38,7 +38,7 @@ export const user_id = (user_id: string, subvs : Partial<v>[] = [{}]): acl_searc
 };
 
 export const _rolesGeneriques = (rolesFilter: string) => {
-    return ldap.searchThisAttr(conf.ldap.base_rolesGeneriques, rolesFilter, 'supannRoleGenerique', '' as string)
+    return ldap.searchThisAttr(conf.ldap.base_rolesGeneriques, rolesFilter, 'up1TableKey', '' as string)
 };
 export const structureRoles = (code_attr: string, rolesFilter: string): acl_search => ({
     v_to_users: (v, attr: string) => (    

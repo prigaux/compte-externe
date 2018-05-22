@@ -70,7 +70,7 @@ describe('ldapGroup', () => {
 describe('structureRoles', () => {
     describe('_rolesGeneriques', () => {    
         it('should work', () => (
-            acl._rolesGeneriques("(supannRoleGenerique=*)").then(l => (
+            acl._rolesGeneriques("(up1TableKey=*)").then(l => (
                 assert.deepEqual(l, [ '{SUPANN}F10', '{SUPANN}D30', '{SUPANN}D10', '{SUPANN}D00' ])
             ))
         ));
@@ -82,13 +82,13 @@ describe('structureRoles', () => {
     });    
 
     it('v_to_users should work', () => (
-        acl.structureRoles('structureParrain', "(supannRoleGenerique=*)").v_to_users({ structureParrain: "DGH" } as v, 'uid').then(l => (
+        acl.structureRoles('structureParrain', "(up1TableKey=*)").v_to_users({ structureParrain: "DGH" } as v, 'uid').then(l => (
             assert.deepEqual(l, ['arigaux'])
         ))
     ));
 
     it('v_to_users should raise no_moderators', () => (
-        acl.structureRoles('structureParrain', "(supannRoleGenerique=*)").v_to_users({ structureParrain: "xxx" } as v, 'uid').then(_ => {
+        acl.structureRoles('structureParrain', "(up1TableKey=*)").v_to_users({ structureParrain: "xxx" } as v, 'uid').then(_ => {
             assert.fail("should raise error");
         }).catch(err => {
             assert.equal(err, 'no_moderators');
@@ -100,12 +100,12 @@ describe('structureRoles', () => {
         "[role={SUPANN}D10][type={SUPANN}S230][code=DGHA]",
     ] } as v;
     it('user_to_subv should work', () => (
-        acl.structureRoles('structureParrain', "(supannRoleGenerique=*)").user_to_subv(user_2roles).then(l => (
+        acl.structureRoles('structureParrain', "(up1TableKey=*)").user_to_subv(user_2roles).then(l => (
             assert.deepEqual(l, [{ structureParrain: "DGH" }, { structureParrain: "DGHA" }])
         ))
     ));
     it('user_to_subv if user with no role', () => (
-        acl.structureRoles('structureParrain', "(supannRoleGenerique=*)").user_to_subv({} as v).then(l => (
+        acl.structureRoles('structureParrain', "(up1TableKey=*)").user_to_subv({} as v).then(l => (
             assert.deepEqual(l, [])
         ))
     ));
