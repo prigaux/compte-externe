@@ -43,7 +43,6 @@ export const _rolesGeneriques = (rolesFilter: string) => {
 export const structureRoles = (code_attr: string, rolesFilter: string): acl_search => ({
     v_to_users: (v, attr: string) => (    
         _rolesGeneriques(rolesFilter).then(roles => {
-            console.log(rolesFilter);
             let code = v[code_attr];
             let l = roles.map(role => `(supannRoleEntite=*[role=${role}]*[code=${code}]*)`)
             return searchPeople(filters.or(l), attr).then(vals => {
