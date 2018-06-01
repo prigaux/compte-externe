@@ -15,7 +15,6 @@ const _routes = {
 
 const routes = [];
 Helpers.eachObject(_routes, (path, component) => {
-    if (!component.name) component.name = path.replace(/\W/g, '');
     routes.push({ path, component, props: true })
 });
 
