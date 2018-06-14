@@ -61,6 +61,19 @@ export const getExistingUser: simpleAction = (req, _sv)  => (
     onePerson(filters.eq("uid", req.query.uid)).then(v => ({ v }))
 );
 
+export const add_full_v: simpleAction = (_req, sv)  => (
+    onePerson(filters.eq("uid", sv.v.uid)).then(full_v => {
+        let v = sv.v;
+        if (!v.various) v.various = {};
+        v.various.full_v = full_v;
+        return { v };
+    })
+);
+
+export const if_v = (test_v, action: action): action => async (req, sv: sv) => (
+    test_v(sv.v) ? await action(req, sv) : { v: sv.v, response: {} }
+);
+
 export function chain(l_actions: action[]): action {
     return (req, sv: sv) => {
         let vr: Promise<vr> = Promise.resolve(sv);
