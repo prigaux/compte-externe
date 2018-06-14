@@ -83,7 +83,7 @@ const conf = {
                 birthDay: new Date(), birthName: '', altGivenName: [],
                 homePhone: '', telephoneNumber: '', supannAutreTelephone: '', pager: '',
                 homePostalAddress: '',
-                floorNumber: '', roomAccess: '', roomNumber: '',
+                floorNumber: '', roomAccess: '', roomNumber: '', buildingName: '',
                 jpegPhoto: '',
                 structureParrain: '',
 
