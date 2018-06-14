@@ -4,10 +4,6 @@
     <my-bootstrap-form-group name="Shib_Identity_Provider" label="Etablissement" v-if="v.Shib_Identity_Provider">
       <input name="Shib_Identity_Provider" :value="v.Shib_Identity_Provider | formatIdpId" type="text" disabled class="form-control">
     </my-bootstrap-form-group>
- 
-    <div v-for="name in ['eduPersonPrincipalName', 'mail']">
-        <genericAttr :name="name" :opts="attrs[name]" v-model="v[name]" :submitted="submitted"></genericAttr>
-    </div>
    </fieldset>
 
    <div v-for="name in conf.attrs_order">
