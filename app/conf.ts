@@ -97,7 +97,7 @@ export default {
         'jpegPhoto',
         'structureParrain',
         'startdate', 'duration_or_enddate', 'duration', 'enddate',
-        'telephoneNumber', 'roomAccess', 'floorNumber', 'roomNumber',
+        'telephoneNumber', 'roomNumber', 'floorNumber', 'roomAccess',
         'userPassword', 'profilename',
         'etablissementExterneOrNew',
         'etablissementExterne',
