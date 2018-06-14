@@ -16,6 +16,7 @@ export default {
         altGivenName: 'Autres prénoms',
         sn: "Nom d'usage",
         birthName: "Nom de naissance",
+        displayName: "Nom annuaire",
         birthDay: "Date de naissance",
         homePostalAddress: "Adresse personnelle",
         address_lines: "",
@@ -93,7 +94,7 @@ export default {
 
     attrs_order: [
         'eduPersonPrincipalName', 'mail',
-        'supannCivilite', 'givenName', 'altGivenName', 'sn', 'birthName', 'birthDay',
+        'supannCivilite', 'givenName', 'altGivenName', 'sn', 'birthName', 'displayName', 'birthDay',
         'homePostalAddress', 'homePhone', 'pager', 'supannMailPerso',
         'jpegPhoto',
         'structureParrain',
