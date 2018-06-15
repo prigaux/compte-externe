@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { merge, pick, mapKeys } from 'lodash';
+import { merge, pick } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
@@ -176,7 +176,11 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                         sv.v_orig = Helpers.copy(sv.v);
                     }
                     sv.modifyTimestamp = new Date(sv.modifyTimestamp);
-                    Helpers.assign(sv.v, fromWs(mapKeys(params, (_, k: string) => k.replace(/^default_/, ''))));
+                    Helpers.eachObject(sv.attrs, (attr, _opts) => {
+                        const default_ = params[`default_${attr}`];
+                        const set_ = params[attr] || params[`set_${attr}`];
+                        sv.v[attr] = set_ || sv.v[attr] || default_;
+                    });
                     $scope.v = sv.v;
                     $scope.v_orig = sv.v_orig;
                     $scope.attrs = initAttrs(sv.attrs);
