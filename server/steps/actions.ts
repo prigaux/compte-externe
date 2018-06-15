@@ -31,22 +31,21 @@ const isCasUser = (req) => {
     return idp && idp === conf.cas_idp;
 }
 
-export const getShibAttrs: simpleAction = (req, _sv) => {
+export const getShibAttrs: simpleAction = async (req, _sv) => {
     if (!req.user) throw `Unauthorized`;
     let v = _.mapValues(conf.shibboleth.header_map, headerName => (
         req.header(headerName)
     )) as any as v;
     console.log("action getShibAttrs:", v);
-    return Promise.resolve({ v });
+    return { v };
 };
 
-export const getCasAttrs: simpleAction = (req, _sv) => {
+export const getCasAttrs: simpleAction = async (req, _sv) => {
     if (!isCasUser(req)) throw `Unauthorized`;
     let filter = filters.eq("eduPersonPrincipalName", req.user.id);
-    return onePerson(filter).then((v: v) => {
-        v.noInteraction = true;
-        return { v };
-    });
+    let v: v = await onePerson(filter);
+    v.noInteraction = true;
+    return { v };
 }
 
 export const getShibOrCasAttrs: simpleAction = (req, _sv) => (
