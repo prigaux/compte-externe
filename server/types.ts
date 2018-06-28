@@ -60,6 +60,7 @@ interface StepAttrOption {
 type StepAttrsOption = Dictionary<StepAttrOption>;
 
 interface StepLabels {
+    description?: string; // an empty description means "hide this step in ModerateList"
     title?: string;
     okButton?: string;
     cancelButton?: string;
