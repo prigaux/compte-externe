@@ -1,7 +1,7 @@
 <template>
  <div v-if="opts && (!opts.readonly || val)">
 
-  <DateAttr v-model="val" :label="attr_labels[name]" v-if="uiType === 'date'"
+  <DateAttr v-model="val" :name="name" v-if="uiType === 'date'"
     :opts="opts" :submitted="submitted">
   </DateAttr>
 
