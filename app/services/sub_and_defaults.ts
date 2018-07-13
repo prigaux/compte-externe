@@ -35,7 +35,7 @@ export function compute_subAttrs_and_handle_default_values(attrs : StepAttrsOpti
 
     //console.log(JSON.stringify(attrs_.duration, null, ' '), JSON.stringify(v.duration, null, ' '));
 
-    prev_defaults = mapValues(pickBy(attrs_, (opts) => "default" in opts), (opts) => opts.default);
+    prev_defaults = mapValues(pickBy(attrs_, (opts) => "default" in opts), (opts) => opts['default']);
 
     return { attrs: attrs_, prev_defaults };
 }
