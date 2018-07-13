@@ -111,6 +111,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return v_;
         }
 
+        const fromWs_one = (attr: string, val) => fromWs({ [attr]: val })[attr]
+
         export function toWs(v: V): VRaw {
             var v_: VRaw = <any>Helpers.copy(v);
             if (v.jpegPhoto) {
@@ -175,8 +177,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                     }
                     sv.modifyTimestamp = new Date(sv.modifyTimestamp);
                     Helpers.eachObject(sv.attrs, (attr, _opts) => {
-                        const default_ = params[`default_${attr}`];
-                        const set_ = params[attr] || params[`set_${attr}`];
+                        const default_ = fromWs_one(attr, params[`default_${attr}`]);
+                        const set_ = fromWs_one(attr, params[attr] || params[`set_${attr}`]);
                         sv.v[attr] = set_ || sv.v[attr] || default_;
                     });
                     $scope.v = sv.v;
