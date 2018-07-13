@@ -13,7 +13,7 @@ function init(date) {
 }
 
 export default Vue.extend({
-    props: ['name', 'value', 'label', 'opts', 'submitted', 'min', 'max'],
+    props: ['name', 'value', 'label', 'opts', 'submitted'],
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },
