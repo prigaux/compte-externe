@@ -7,7 +7,7 @@ import template from './attrsForm.html';
 
 
 export default Vue.extend({
-    props: ['v', 'v_orig', 'attrs', 'step_labels'],
+    props: ['v', 'v_orig', 'v_ldap', 'attrs', 'step_labels'],
     data() {
         return {
             submitted: false,

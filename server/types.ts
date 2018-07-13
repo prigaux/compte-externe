@@ -23,6 +23,7 @@ type sv = {
   id?: id,
   step: string,
   v: v,
+  v_ldap?: v,
   attrs?: StepAttrsOption,
   lock?: boolean,
 }

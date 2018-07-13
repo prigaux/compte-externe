@@ -170,6 +170,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 var sv = <any>resp.data;
                     if (sv.v) {
                         sv.v = fromWs(sv.v);
+                        if (sv.v_ldap) sv.v_ldap = fromWs(sv.v_ldap);
                         sv.v_orig = Helpers.copy(sv.v);
                     }
                     sv.modifyTimestamp = new Date(sv.modifyTimestamp);
@@ -179,6 +180,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                         sv.v[attr] = set_ || sv.v[attr] || default_;
                     });
                     $scope.v = sv.v;
+                    $scope.v_ldap = sv.v_ldap;
                     $scope.v_orig = sv.v_orig;
                     $scope.attrs = initAttrs(sv.attrs);
                     $scope.step = pick(sv, ['allow_many', 'labels']);

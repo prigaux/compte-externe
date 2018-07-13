@@ -10,6 +10,7 @@ import * as mail from './mail';
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
 import { export_v, merge_v, exportAttrs } from './step_attrs_option';
+import { filters } from './ldap';
 require('./helpers');
 
 require('promise.prototype.finally').shim();
@@ -48,6 +49,15 @@ function action(req: req, sv: sv, action_name: string): Promise<svr> {
         //console.log("action returned", vr);
         return _.defaults(vr, sv);
     });
+}
+
+async function may_export_v_ldap(sv: sv) {
+    if (sv.v && sv.v.uid) {
+        let v_ldap = await search_ldap.onePerson(filters.eq("uid", sv.v.uid));
+        v_ldap = export_v(step(sv).attrs, v_ldap) as v;
+        return { ...sv, v_ldap };
+    }
+    return sv;
 }
 
 function export_sv(sv: sv) {
@@ -114,7 +124,7 @@ function getRaw(req: req, id: id, wanted_step: string): Promise<sv> {
 }
 
 function get(req: req, id: id, wanted_step: string) {
-    return getRaw(req, id, wanted_step).then(export_sv);
+    return getRaw(req, id, wanted_step).then(may_export_v_ldap).then(export_sv);
     // TODO add potential_homonyms si id !== 'new' && attrs && attrs.uid
 }
 

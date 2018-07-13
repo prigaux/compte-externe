@@ -33,7 +33,7 @@
     </div>
              
     <attrsForm
-        :v="v" :v_orig="v_orig" :attrs="other_attrs" :step_labels="step.labels"
+        :v="v" :v_orig="v_orig" :v_ldap="v_ldap" :attrs="other_attrs" :step_labels="step.labels"
         @submit="submit" @reject="reject"></attrsForm>
 
  </div> <!-- !homonyms -->
@@ -65,6 +65,7 @@ function AttrsForm_data() {
       attrs: <StepAttrsOption> undefined,
       v: <V> undefined,
       v_orig: <V> undefined,
+      v_ldap: <V> undefined,
       resp: undefined,
       to_import: undefined,
       imported: <any[]> undefined,
@@ -210,6 +211,7 @@ export default Vue.extend({
                 this.v_orig[attr] = val;
             }
           });
+          this.v_ldap = homonyme;
           this.v_orig = Helpers.copy(this.v_orig); // make it clear for Vuejs that v_orig has been updated
         },
       reject(v) {

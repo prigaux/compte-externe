@@ -2,6 +2,7 @@
  <div v-if="opts && (!opts.readonly || val)">
 
   <DateAttr v-model="val" :name="name" v-if="uiType === 'date'"
+    :ldap_value="ldap_value"
     :opts="opts" :submitted="submitted">
   </DateAttr>
 
@@ -10,6 +11,7 @@
   </DateThreeInputsAttr>
 
   <AddressAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'postalAddress'"
+    :ldap_value="ldap_value"
     :opts="opts" :submitted="submitted">
   </AddressAttr>
 
@@ -52,6 +54,8 @@
         :type="type" :realType="realType" :required="!opts.optional" :pattern="opts.pattern" :allowedChars="opts.allowedChars" :title="opts.labels && opts.labels.tooltip" :validity.sync="validity[name]">
     </input-with-validity>
 
+    <CurrentLdapValue :value="initial_value" :ldap_value="ldap_value"></CurrentLdapValue>
+
   </my-bootstrap-form-group>
  </div>
 </template>
@@ -68,14 +72,16 @@ import jpegPhotoAttr from './jpegPhotoAttr.vue';
 import PasswordAttr from './PasswordAttr.vue';
 import StructureAttr from './StructureAttr.vue';
 import EtablissementAttr from './EtablissementAttr.vue';
+import CurrentLdapValue from './CurrentLdapValue.vue';
 
 export default Vue.extend({
-    props: ['value', 'name', 'opts', 'submitted', 'v'],
-    components: { DateAttr, DateThreeInputsAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr, EtablissementAttr },
+    props: ['value', 'name', 'opts', 'submitted', 'v', 'ldap_value'],
+    components: { DateAttr, DateThreeInputsAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr, EtablissementAttr, CurrentLdapValue },
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },
             val: this.value,
+            initial_value: this.value,
             doGet: null,
         };
     },
