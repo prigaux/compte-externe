@@ -39,7 +39,7 @@ export type Options = ldapjs.SearchOptions
 export type LdapAttrValue = string | number | Date | string[] | number[];
 export type LdapEntry = Dictionary<LdapAttrValue>;
 
-type AttrConvert = { convert?: ldap_conversion, ldapAttr?: string }
+type AttrConvert = { convert?: ldap_conversion, convert2?: ldap_conversion, ldapAttr?: string }
 export type AttrsConvert = Dictionary<AttrConvert>
 
 type RawValue = ldap_RawValue;
@@ -105,7 +105,13 @@ function handleAttrsRemapAndType<T extends {}>(o : Dictionary<RawValueB>, attrRe
         let attrs = attrRemapRev[attr] || [attr];
         for (let attr_ of attrs) {
             // then transform string|string[] into the types wanted
-            let val_ = handleAttrType(attr_, attrTypes[attr_], wantedConvert[attr_] &&  wantedConvert[attr_].convert, val);
+            const convert = wantedConvert[attr_] && wantedConvert[attr_].convert;
+            const convert2 = wantedConvert[attr_] && wantedConvert[attr_].convert2;
+            let val_ = handleAttrType(attr_, attrTypes[attr_], convert, val);
+            if (!val_ && convert2) {
+                // retry with convert2
+                val_ = handleAttrType(attr_, attrTypes[attr_], convert2, val);
+            }
             r[attr_] = val_;
         }
     });              

@@ -17,6 +17,7 @@ const ldap_main = {
         base_people: "ou=people," + ldap_base,
         base_groups: "ou=groups," + ldap_base,
         base_structures: "ou=structures," + ldap_base,
+        base_structures_old: "ou=structures,o=Paris1," + ldap_base,
         base_rolesGeneriques: "ou=supannRoleGenerique,ou=tables," + ldap_base,
         base_etablissements: "ou=supannEtablissement,ou=tables," + ldap_base,
 
@@ -124,7 +125,7 @@ const conf = {
                 etablissementInterne: { ldapAttr: 'supannEtablissement', convert: ldap_convert.match(s => internal_organizations.includes(s)) },
                 Shib_Identity_Provider: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette('{SAML}') },
                 eduPersonPrincipalName: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{EPPN}") },                
-                structureParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("supannCodeEntite", ldap_main.base_structures) },
+                structureParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("supannCodeEntite", ldap_main.base_structures), convert2: ldap_convert.dn("ou", ldap_main.base_structures_old) },
                 barcode: { ldapAttr: 'employeeNumber' },
                 mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
                 jpegPhoto: { convert: ldap_convert.base64 },
