@@ -95,6 +95,23 @@ const arrayB_to_stringB = (v: RawValueB) => (
     (_.isArray(v) ? v : [v]).map(e => e && e.toString())
 );
 
+function handleAttrsRemapAndType<T extends {}>(o : Dictionary<RawValueB>, attrRemapRev: Dictionary<string[]>, attrTypes : T, wantedConvert: AttrsConvert) {
+    let r = {};
+    _.forEach(o, (val, attr) => {
+        if (!attrRemapRev[attr] && !(attr in attrTypes)) {
+            //console.log(`skipping non wanted attr ${attr}. It can be a non wanted secondary attr`)
+            return;
+        }
+        let attrs = attrRemapRev[attr] || [attr];
+        for (let attr_ of attrs) {
+            // then transform string|string[] into the types wanted
+            let val_ = handleAttrType(attr_, attrTypes[attr_], wantedConvert[attr_] &&  wantedConvert[attr_].convert, val);
+            r[attr_] = val_;
+        }
+    });              
+    return r as T;
+}
+
 // ldapjs return either a value if there is only one attribute value,
 // or an array of values if multiple value
 // this is problematic since depending on the values in LDAP, the type can change.
@@ -201,23 +218,10 @@ export function search<T extends {}>(base: string, filter: filter, attrTypes: T,
     let p = searchRaw(base, filter, attributes, options).then(l => 
           l.map(o => {
               delete o['controls'];
-              let r = {};
-              _.forEach(o, (val, attr) => {
-                if (!attrRemapRev[attr] && !(attr in attrTypes)) {
-                    //console.log(`skipping non wanted attr ${attr}. It can be a non wanted secondary attr`)
-                    return;
-                }
-                let attrs = attrRemapRev[attr] || [attr];
-                for (let attr_ of attrs) {
-                    // then transform string|string[] into the types wanted
-                    let val_ = handleAttrType(attr_, attrTypes[attr_], wantedConvert[attr_] &&  wantedConvert[attr_].convert, val);
-                    r[attr_] = val_;
-                }
-              });              
-              return r;
+              return handleAttrsRemapAndType(o, attrRemapRev, attrTypes, wantedConvert);
           })
     );
-    return <Promise<T[]>> <any> p;
+    return p;
 }
 
 export const searchMany = <T extends {}> (base: string, filters: filter[], idAttr: string, attrTypes: T, attrsConvert: AttrsConvert, options: Options = {}): Promise<T[]> => (
