@@ -110,6 +110,8 @@ const conf = {
                 startdate: new Date(),
                 enddate: new Date(),
                 duration: 0,
+
+                up1Profile: [],
             },
 
             attrs : { 
@@ -119,6 +121,7 @@ const conf = {
                 altGivenName: { ldapAttr: 'up1AltGivenName' },
                 floorNumber: { ldapAttr: 'up1FloorNumber' },
                 roomAccess: { ldapAttr: 'up1RoomAccess' },
+                up1Profile: { convert: ldap_convert.up1Profile },
                 startdate: { convert: ldap_convert.date },
                 enddate: { convert: ldap_convert.date },
                 etablissementExterne: { ldapAttr: 'supannEtablissement', convert: ldap_convert.match(s => !internal_organizations.includes(s)) },

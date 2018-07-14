@@ -36,8 +36,8 @@ function new_clientP() : Promise<ldapjs.Client> {
 
 export type filter = string
 export type Options = ldapjs.SearchOptions
-export type LdapAttrValue = string | number | Date | string[] | number[];
-export type LdapEntry = Dictionary<LdapAttrValue>;
+export type LdapAttrValue = string | number | Date | string[] | number[] | LdapEntry[];
+export type LdapEntry = { [index: string]: LdapAttrValue };
 
 type AttrConvert = { convert?: ldap_conversion, convert2?: ldap_conversion, ldapAttr?: string }
 export type AttrsConvert = Dictionary<AttrConvert>
@@ -111,6 +111,9 @@ function handleAttrsRemapAndType<T extends {}>(o : Dictionary<RawValueB>, attrRe
             if (!val_ && convert2) {
                 // retry with convert2
                 val_ = handleAttrType(attr_, attrTypes[attr_], convert2, val);
+            }
+            if (convert && convert.applyAttrsRemapAndType) {
+                val_ = (val_ as any).map(v => handleAttrsRemapAndType(v, attrRemapRev, attrTypes, wantedConvert));
             }
             r[attr_] = val_;
         }

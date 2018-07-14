@@ -86,6 +86,29 @@ export const base64: ldap_conversion = {
         }
 }
 
+export const up1Profile: ldap_conversion = {
+    fromLdapMulti: (l: string[]): {}[] => (
+        l.map(parse_up1Profile_one)
+    ),
+    toLdap: (_s: string): string => {
+        throw "NOT IMPLEMENTED";
+    },
+    applyAttrsRemapAndType: true,
+}
+
+const unescape_sharpFF = (attr_value) => (
+    attr_value.replace(/#([0-9A-F]{2})/ig, (_, xx) => String.fromCharCode(parseInt(xx, 16)))
+);
+
+const parse_up1Profile_one = (str: string) => {
+    let r = {};
+    str.replace(/\[([^\[\]=]+)=((?:[^\[\]]|\[[^\[\]]*\])*)\]/g, (_m, key, val) => {
+        r[unescape_sharpFF(key)] = val.split(';').map(unescape_sharpFF);
+        return '';
+    });
+    return r;
+};
+
 export const parse_composite = (str: string) => {
     let r = {};
     str.replace(/\[(.*?)\]/g, (_m, e) => {

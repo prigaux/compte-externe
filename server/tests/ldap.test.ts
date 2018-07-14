@@ -105,4 +105,38 @@ describe('ldap', () => {
         
 
     });
+
+    describe("up1Profile conversion", () => {
+        let attrsConvert = { 
+            up1Profile: { convert: ldap_convert.up1Profile },
+            up1StartDate: { convert: ldap_convert.date },
+            mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
+        };
+
+        it("should work with ldap.read (simple)", () => {
+            let attrTypes = { sn: '', eduPersonAffiliation: [], eduPersonPrimaryAffiliation: '', mifare: '', up1Profile: [], up1Source: '', up1StartDate: '' }
+            return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrsConvert).then(e => {
+                assert.deepEqual(e, <any> {
+                      eduPersonAffiliation: [ "member", "employee", "staff" ],
+                      sn: "rigaux",
+                      up1Profile: [ {
+                          eduPersonAffiliation: [ "member", "employee", "staff" ],
+                          eduPersonPrimaryAffiliation: "staff",
+                          mifare: "803853C2593A04",
+                          up1Source: "{HARPEGE}carriere",
+                          up1StartDate: new Date('2011-09-15'),
+                      }, {
+                          eduPersonAffiliation: [ "employee", "member", "teacher" ],
+                          eduPersonPrimaryAffiliation: "teacher",
+                          mifare: "803853C2593A04",
+                          sn: "Rigaux",
+                          up1Source: "{COMPTEX}PLB.SC4",
+                          up1StartDate: new Date('2017-12-16'),
+                      } ],
+                    }
+              );
+            });
+        });
+    });
+
 });

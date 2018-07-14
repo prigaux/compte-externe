@@ -103,6 +103,7 @@ type ldap_conversion = {
     fromLdapMultiB?(l: Buffer[]): any;
     toLdap(v: any): ldap_RawValue;
     toLdapJson?(v: any): ldap_RawValue;
+    applyAttrsRemapAndType?: true, 
 }
 
 }
