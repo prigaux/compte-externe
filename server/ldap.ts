@@ -39,7 +39,7 @@ export type Options = ldapjs.SearchOptions
 export type LdapAttrValue = string | number | Date | string[] | number[] | LdapEntry[];
 export type LdapEntry = { [index: string]: LdapAttrValue };
 
-type AttrConvert = { convert?: ldap_conversion, convert2?: ldap_conversion, ldapAttr?: string }
+type AttrConvert = { convert?: ldap_conversion, convert2?: ldap_conversion, ldapAttr?: string, ldapAttrJson?: string }
 export type AttrsConvert = Dictionary<AttrConvert>
 
 type RawValue = ldap_RawValue;
@@ -183,7 +183,7 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
     let r = {};
     _.forEach(v, (val, attr) => {
         let conv = attrsConvert[attr] || {};
-        let attr_ = conv.ldapAttr || defaultLdapAttr(attr);
+        let attr_ = opts.toJson && conv.ldapAttrJson || conv.ldapAttr || defaultLdapAttr(attr);
         // transform to string|string[]
         let val_ = convertAttrToLdap(attr, attrTypes[attr], conv.convert, val, opts);
         if (val_ === '') return; // ignore empty string which can not be a valid LDAP string value
