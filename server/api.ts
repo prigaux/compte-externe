@@ -137,7 +137,7 @@ async function search_with_acls(req: req, wanted_step: string) {
 
     const vuser = await search_ldap.vuser(req.user);
     const subvs = await acl_checker.allowed_subvs(vuser, step);
-    const attrTypes = _.pick(conf.ldap.people.types, ['sn', 'givenName', 'uid']);
+    const attrTypes = _.pick(conf.ldap.people.types, ['sn', 'givenName', 'uid', 'global_profilename']);
     const vs = await search_ldap.searchPeople_matching_subvs(subvs, token, attrTypes, { sizeLimit });
     return _.sortBy(vs, 'displayName')
 }
