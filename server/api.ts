@@ -137,8 +137,9 @@ async function search_with_acls(req: req, wanted_step: string) {
 
     const vuser = await search_ldap.vuser(req.user);
     const subvs = await acl_checker.allowed_subvs(vuser, step);
-    const vs = await search_ldap.searchPeople_matching_subvs(subvs, token, { sizeLimit });
-    return _.sortBy(vs, 'displayName').map(v => export_v(step.attrs, v))
+    const attrTypes = _.pick(conf.ldap.people.types, ['sn', 'givenName', 'uid']);
+    const vs = await search_ldap.searchPeople_matching_subvs(subvs, token, attrTypes, { sizeLimit });
+    return _.sortBy(vs, 'displayName')
 }
 
 function set_new_many(req: req, wanted_step: string, vs: v[]) {

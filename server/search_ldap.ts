@@ -133,14 +133,14 @@ export const subv_to_eq_filters = (subv: Partial<v>) => {
     return _.map(v_ldap, (val, attr) => filters.eq(attr, val as string));
 }
 
-export function searchPeople_matching_subvs(subvs: Partial<v>[], token: string, options: ldap.Options) {
+export function searchPeople_matching_subvs<T extends {}>(subvs: Partial<v>[], token: string, attrTypes: T, options: ldap.Options): Promise<T[]> {
     const ors = subvs.map(subv => filters.and(subv_to_eq_filters(subv)));
     const filter = filters.and([
         filters.fuzzy(['displayName', 'cn'], token),
         filters.or(ors),
     ]);
     console.log("searchPeople_matching_subvs with filter", filter);
-    return ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, options);
+    return ldap.search(conf.ldap.base_people, filter, attrTypes, conf.ldap.people.attrs, options);
 }
 
 // export it to allow override
