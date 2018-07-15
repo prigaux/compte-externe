@@ -96,6 +96,17 @@ export const up1Profile: ldap_conversion = {
     applyAttrsRemapAndType: true,
 }
 
+export function up1Profile_field(field: string): ldap_conversion {
+    return {
+        fromLdapMulti: (l: string[]): {}[] => (
+            l.map(parse_up1Profile_one).map(p => p[field] && p[field][0])
+        ),
+        toLdap: (_s: string): string => {
+            throw "NOT IMPLEMENTED";
+        },
+    };
+}
+
 const unescape_sharpFF = (attr_value) => (
     attr_value.replace(/#([0-9A-F]{2})/ig, (_, xx) => String.fromCharCode(parseInt(xx, 16)))
 );

@@ -36,4 +36,7 @@ describe('parse_up1Profile', () => {
             assert.deepEqual(ldap_convert.up1Profile.fromLdapMulti([test.s]), [test.parsed])
         ));
     });
+    it('should work with up1Profile_field', () => {
+        assert.deepEqual(ldap_convert.up1Profile_field('a').fromLdapMulti(['[a=aaa]']), ['aaa'])
+    });
 });

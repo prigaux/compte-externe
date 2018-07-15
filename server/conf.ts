@@ -100,6 +100,7 @@ const conf = {
                 global_eduPersonAffiliation: [],
                 global_eduPersonPrimaryAffiliation: '',
                 global_supannEtuAnneeInscription: [0],
+                global_profilename: [''],
 
                 eduPersonPrimaryAffiliation: '',
                 eduPersonEntitlement: '',
@@ -122,6 +123,7 @@ const conf = {
                 floorNumber: { ldapAttr: 'up1FloorNumber' },
                 roomAccess: { ldapAttr: 'up1RoomAccess' },
                 up1Profile: { convert: ldap_convert.up1Profile },
+                global_profilename: { ldapAttr: 'up1Profile', convert: ldap_convert.up1Profile_field('up1Source') },
                 profilename: { ldapAttr: 'up1Source', ldapAttrJson: 'profilename' },
                 priority: { ldapAttr: 'up1Priority', ldapAttrJson: 'priority' },
                 startdate: { ldapAttr: 'up1StartDate', ldapAttrJson: 'startdate', convert: ldap_convert.date },

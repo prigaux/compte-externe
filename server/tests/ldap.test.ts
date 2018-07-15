@@ -108,6 +108,7 @@ describe('ldap', () => {
 
     describe("up1Profile conversion", () => {
         let attrsConvert = { 
+            global_profilename: { ldapAttr: 'up1Profile', convert: ldap_convert.up1Profile_field('up1Source') },
             up1Profile: { convert: ldap_convert.up1Profile },
             up1StartDate: { convert: ldap_convert.date },
             mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
@@ -135,6 +136,12 @@ describe('ldap', () => {
                       } ],
                     }
               );
+            });
+        });
+        it("should work with ldap.read & global_profilename", () => {
+            let attrTypes = { global_profilename: [''] }
+            return ldap.read("uid=prigaux," + conf.ldap.base_people, attrTypes, attrsConvert).then(e => {
+                assert.deepEqual(e, { global_profilename: [ "{HARPEGE}carriere", "{COMPTEX}PLB.SC4" ] });
             });
         });
     });
