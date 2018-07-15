@@ -1,5 +1,5 @@
 import { assert } from './test_utils';
-import { merge_v, exportAttrs, export_v } from '../step_attrs_option';
+import { merge_v, exportAttrs, export_v, selectUserProfile } from '../step_attrs_option';
 
 describe('exportAttrs', () => {
     it("should work", () => {
@@ -137,3 +137,31 @@ describe('compute_diff', () => {
     });
     
 });
+
+describe('selectUserProfile', () => {
+    const profileA = { profilename: "A", sn: "Foo" };
+    const profileB = { profilename: "B", sn: "Bar", givenName: "Boo", supannRoleEntite: ["role1"] };
+    it("should handle simple up1Profile", () => {
+        const v = { up1Profile: [ profileA ] } as v;
+        assert.deepEqual(selectUserProfile(v, 'A'), { ...profileA, ...v });
+    });
+
+    it("should handle choose in up1Profile", () => {
+        const v = { up1Profile: [ profileA, profileB ] } as v;
+        assert.deepEqual(selectUserProfile(v, 'A'), { ...profileA, ...v });
+        assert.deepEqual(selectUserProfile(v, 'B'), { ...profileB, ...v });
+    });
+
+    it("should merge with non-profiled", () => {
+        const v = { pager: "060102030405", up1Profile: [ profileA, profileB ] } as v;
+        assert.deepEqual(selectUserProfile(v, 'A'), { ...profileA, ...v });
+    });
+
+    it("should not keep other profiled attrs from other profiles", () => {
+        const v = { up1Profile: [ profileA, profileB ] } as v;
+        assert.deepEqual(selectUserProfile({ ...v, givenName: "Boo" }, 'A'), { ...profileA, ...v });
+        assert.deepEqual(selectUserProfile({ ...v, givenName: "Zoo" }, 'A'), { ...profileA, ...v, givenName: "Zoo" });
+        assert.deepEqual(selectUserProfile({ ...v, supannRoleEntite: ["role1"] }, 'A'), { ...profileA, ...v, supannRoleEntite: [] });
+        assert.deepEqual(selectUserProfile({ ...v, supannRoleEntite: ["role1", "role2"] }, 'A'), { ...profileA, ...v, supannRoleEntite: ["role2"] });
+    });
+})

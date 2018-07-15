@@ -11,6 +11,26 @@ function compute_diff(prev, current, key) {
     return one_diff.prev === one_diff.current ? {} : { [key]: one_diff };
 }
 
+export const selectUserProfile = (v: v, profilename: string) => {
+    const profile = v.up1Profile.find(p => p.profilename === profilename) as v;
+    if (!profile) {
+        console.error("no profile " + profilename);
+        return undefined;
+    }
+    v = _.clone(v);
+    v.up1Profile.forEach(profile => {
+        _.forEach(profile, (pval, attr) => {
+            const val = v[attr];
+            if (_.isArray(val)) {
+                _.pull(val, ...pval);
+            } else if (val === pval) {
+                delete v[attr];
+            }
+        });
+    });
+    return { ...v, ...profile };
+};
+
 export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
     let r = {};
     let diff = {};

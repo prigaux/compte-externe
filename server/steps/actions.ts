@@ -7,6 +7,7 @@ import * as helpers from '../helpers';
 import * as crejsonldap from '../crejsonldap';
 import { onePerson } from '../search_ldap';
 import * as search_ldap from '../search_ldap';
+import { selectUserProfile } from '../step_attrs_option';
 import * as esup_activ_bo from '../esup_activ_bo';
 import v_display from '../v_display';
 import * as conf from '../conf';
@@ -58,6 +59,12 @@ export const autoModerateIf = (f: (v: v) => boolean) : simpleAction => (_req, { 
 
 export const getExistingUser: simpleAction = (req, _sv)  => (
     onePerson(filters.eq("uid", req.query.uid)).then(v => ({ v }))
+);
+
+export const getExistingUserWithProfile: simpleAction = (req, _sv)  => (
+    onePerson(filters.eq("uid", req.query.uid)).then(v => (
+        { v: selectUserProfile(v, req.query.profilename_to_modify) }
+    ))
 );
 
 export const add_full_v: simpleAction = (_req, sv)  => (

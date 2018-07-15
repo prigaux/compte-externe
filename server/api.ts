@@ -9,7 +9,7 @@ import * as search_ldap from './search_ldap';
 import * as mail from './mail';
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
-import { export_v, merge_v, exportAttrs } from './step_attrs_option';
+import { export_v, merge_v, exportAttrs, selectUserProfile } from './step_attrs_option';
 import { filters } from './ldap';
 require('./helpers');
 
@@ -54,6 +54,7 @@ function action(req: req, sv: sv, action_name: string): Promise<svr> {
 async function may_export_v_ldap(sv: sv) {
     if (sv.v && sv.v.uid) {
         let v_ldap = await search_ldap.onePerson(filters.eq("uid", sv.v.uid));
+        if (sv.v.profilename) v_ldap = selectUserProfile(v_ldap, sv.v.profilename)
         v_ldap = export_v(step(sv).attrs, v_ldap) as v;
         return { ...sv, v_ldap };
     }
