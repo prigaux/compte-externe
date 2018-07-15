@@ -133,7 +133,7 @@ describe('sub_and_defaults', function() {
         const attrs = { 
             givenName: { default: "a", choices: [ 
                     { key: "a", sub: { sn: {} } }, 
-                    { key: "b", sub: { sn: { hidden: true } } },
+                    { key: "b", sub: { sn: { uiHidden: true } } },
             ] },
             duration: { choices: [ 
                 { key: "1", sub: { sn: { default: "a" } } }, 
@@ -146,7 +146,7 @@ describe('sub_and_defaults', function() {
         test({ attrs, v: { duration: "2" } as V },
              { subAttrs: { sn: { default: "a" } }, v: { duration: "2", givenName: "a", sn: "a" } });
         test({ attrs, v: { duration: "2", givenName: "b" } as V },
-             { subAttrs: { sn: { default: "a", hidden: true } }, v: { duration: "2", givenName: "b", sn: "a" } });
+             { subAttrs: { sn: { default: "a", uiHidden: true } }, v: { duration: "2", givenName: "b", sn: "a" } });
     });
     
 });

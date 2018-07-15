@@ -102,14 +102,14 @@ export default Vue.extend({
             return this.v.noInteraction || Object.keys(this.attrs_).length === 0;
         },
         attrs_() {
-            return this.attrs && Helpers.filter(this.attrs, (opts) => !opts.hidden);
+            return this.attrs && Helpers.filter(this.attrs, (opts) => !opts.uiHidden);
         },
 
         other_attrs(): StepAttrsOption {
             let { attrs, prev_defaults } = compute_subAttrs_and_handle_default_values(this.attrs, this.prev_defaults, this.v);
             this.prev_defaults = prev_defaults;
             
-            attrs = Helpers.filter(attrs, (opts) => !opts.hidden);
+            attrs = Helpers.filter(attrs, (opts) => !opts.uiHidden);
 
             Helpers.eachObject(attrs, (attr, _opts) => {
                 // ensure Vue.js reactivity works

@@ -49,7 +49,9 @@ interface StepAttrOption {
   readonly?: boolean;
   hidden?: boolean;
   toUserOnly?: boolean; // implies hidden
+  
   default?: string;
+  uiHidden?: boolean;
   uiType?: 'radio'|'select'|'checkbox'|'email'|'text' | 'phone'|'mobilePhone'|'frenchPostalCode'|'date'|'dateThreeInputs'|'postalAddress' | 'structure'|'password'|'siret';
 
   optional?: boolean;
