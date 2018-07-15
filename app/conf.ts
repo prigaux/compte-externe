@@ -82,6 +82,7 @@ export default {
         etablissementExterne: { 
             uiType: 'etablissement', 
             onChange(v, _, etablissementS) {
+                // set every "etablissement" fields in v, with prefix "etablissement_"
                 Object.keys(etablissementS).forEach(k => v[`etablissement_${k}`] = etablissementS[k]);
             },
         },
