@@ -16,6 +16,8 @@ export interface VRaw extends VCommon {
 export interface V extends VCommon {
     birthDay?: Date;
     noInteraction?: boolean;
+    startdate?: Date;
+    enddate?: Date;
 }
 export interface SVRaw {
     v: VRaw;
@@ -102,9 +104,9 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         export function fromWs(v: VRaw): V {
             var v_: V = <any> Helpers.copy(v);
             //v.birthDay = "19751002000000Z"; //"1975-10-02";
-            if (v.birthDay) {
-                v_.birthDay = new Date(v.birthDay);
-            }
+            [ 'birthDay', 'startdate', 'enddate' ].forEach(attr => {
+                if (v[attr]) v_[attr] = new Date(v[attr]);
+            });
             if (v.jpegPhoto) {
                 v_.jpegPhoto = _base64_to_jpeg_data_URL(v.jpegPhoto);
             }
