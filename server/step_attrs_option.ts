@@ -66,14 +66,15 @@ function validate(key: string, opt: StepAttrOption, val) {
         }
 }
 
-function compute_flat_attrs(attrs: StepAttrsOption, v) {
+function compute_flat_attrs(attrs: StepAttrsOption) {
     let r = {};
     function one_level(attrs : StepAttrsOption) {
         _.each(attrs, (opt, key) => {
             r[key] = { ...(r[key] || {}), ...opt };
-            if (key in v && opt.choices) {
-                const choice = find_choice(opt.choices, v[key]);
-                if (choice && choice.sub) one_level(choice.sub);
+            if (opt.choices) {
+                opt.choices.forEach(choice => {
+                    if (choice && choice.sub) one_level(choice.sub);
+                });
             }
         });
     }
@@ -83,7 +84,7 @@ function compute_flat_attrs(attrs: StepAttrsOption, v) {
 
 /* before sending to client, remove sensible information */
 export function export_v(attrs: StepAttrsOption, v) {
-    const flat_attrs = compute_flat_attrs(attrs, v);
+    const flat_attrs = compute_flat_attrs(attrs);
     return _.omitBy(v, (_val, key) => ( 
         !flat_attrs[key] || flat_attrs[key].hidden
     ));

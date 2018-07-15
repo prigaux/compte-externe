@@ -35,7 +35,7 @@ describe('export_v', () => {
             { key: "1", sub: { sn: {} } }, 
             { key: "2" },
         ] } }
-        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2" });
+        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2", sn: "Rigaux" });
         test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
     });
 });
