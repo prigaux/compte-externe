@@ -5,10 +5,10 @@
 
         <form novalidate v-if="step.acl_subvs || step.attrs.profilename_to_modify" class="form-horizontal">
             <my-bootstrap-form-group :name="uid" label="Choisir un utilisateur">
-          <typeahead :minChars="3" :editable="false"
-                    @input="withUser"
-             :options="people_search"
-             :formatting="e => e.givenName + ' ' + e.sn"></typeahead>
+                <typeahead :minChars="3" :editable="false"
+                            @input="withUser"
+                    :options="people_search"
+                    :formatting="e => e.givenName + ' ' + e.sn"></typeahead>
                 <div v-if="profiles" style="padding-top: 1rem">
                     {{user.givenName}} {{user.sn}} a plusieurs profiles. Veuillez choisir le profile à modifier.
         </div>
