@@ -10,11 +10,17 @@
                     :options="people_search"
                     :formatting="e => e.givenName + ' ' + e.sn"></typeahead>
                 <div v-if="profiles" style="padding-top: 1rem">
-                    {{user.givenName}} {{user.sn}} a plusieurs profiles. Veuillez choisir le profile à modifier.
-        </div>
+                    <span v-if="profiles.choices.length">
+                        {{user.givenName}} {{user.sn}} a plusieurs profiles. Veuillez choisir le profile à modifier.
+                    </span>
+                    <span v-else>
+                        Ce compte n'a pas de profile géré par cette application.
+                    </span>
+                </div>
             </my-bootstrap-form-group>
-
-            <genericAttr name="profilename" :opts="profiles" v-model="profile" :submitted="false" v-if="profiles"></genericAttr>
+            <genericAttr name="profilename" :opts="profiles" v-model="profile" :submitted="false" 
+                    v-if="profiles && profiles.choices.length">
+            </genericAttr>
         </form>
 
         <div v-else>
@@ -71,6 +77,9 @@ export default Vue.extend({
              const choices = need_profile.choices.filter(function (choice) {
                  return includes(u.global_profilename, choice.key);
              });
+             if (need_profile.optional) {
+                 choices.unshift({ key: '', name: 'Créer un nouveau profile' })
+             }
              if (choices.length === 1) {
                  this.gotoStep(u, choices[0].key);
              } else {

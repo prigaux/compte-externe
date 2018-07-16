@@ -62,9 +62,11 @@ export const getExistingUser: simpleAction = (req, _sv)  => (
 );
 
 export const getExistingUserWithProfile: simpleAction = (req, _sv)  => (
-    onePerson(filters.eq("uid", req.query.uid)).then(v => (
-        { v: selectUserProfile(v, req.query.profilename_to_modify) }
-    ))
+    onePerson(filters.eq("uid", req.query.uid)).then(v => {
+        const profilename = req.query.profilename_to_modify;
+        if (profilename) v = selectUserProfile(v, profilename);
+        return { v };
+    })
 );
 
 export const add_full_v: simpleAction = (_req, sv)  => (
