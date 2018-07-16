@@ -39,7 +39,7 @@ export default {
         barcode: "Code barre",
         mifare: "Code Mifare",
         profilename: "Type de compte",
-        etablissementExterneOrNew: "Etablissement",
+        etablissementExterneOrNew: "Etablissement de provenance",
         etablissement_description: "Raison sociale",
         etablissement_postalAddress: "Adresse de l'établissement",
         etablissement_labeledURI: "Site web de l'établissement",
