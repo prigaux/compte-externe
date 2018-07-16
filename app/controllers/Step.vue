@@ -23,7 +23,7 @@
  </div>
  <div v-else>
 
-    <div v-if="attrs.profilename && v.uid">
+    <div v-if="attrs.profilename && v.uid && !v.profilename_to_modify">
         <p style="height: 2em"></p>
             <div class="alert alert-danger" >
                 Le compte sera fusionné avec le compte existant {{v.uid}}.
