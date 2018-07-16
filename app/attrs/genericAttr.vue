@@ -7,7 +7,7 @@
   </DateAttr>
 
   <DateThreeInputsAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'dateThreeInputs'"
-    :minYear="opts.minYear" :maxYear="opts.maxYear" :submitted="submitted">
+    :opts="opts" :submitted="submitted">
   </DateThreeInputsAttr>
 
   <AddressAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'postalAddress'"

@@ -2,19 +2,19 @@
   <my-bootstrap-form-group name="day" multi="true" :label="label">
     <div class="col-xs-2" :class="{'has-error': submitted && !validity.day.valid }">
         <div>
-        <input-with-validity name="day" v-model="day" type="number" min="1" :max="maxDay" placeholder="Jour" required :validity.sync="validity.day"></input-with-validity>
+        <input-with-validity name="day" v-model="day" type="number" min="1" :max="maxDay" placeholder="Jour" :required="!opts.optional" :validity.sync="validity.day"></input-with-validity>
         <validation-errors name="day" :validity="validity"></validation-errors>
         </div>
     </div>
     <div class="col-xs-2" :class="{'has-error': submitted && !validity.month.valid }">
         <div>
-        <input-with-validity name="month" v-model="month" type="number" min="1" max="12" placeholder="Mois" required :validity.sync="validity.month"></input-with-validity>
+        <input-with-validity name="month" v-model="month" type="number" min="1" max="12" placeholder="Mois" :required="!opts.optional" :validity.sync="validity.month"></input-with-validity>
         <validation-errors name="month" :validity="validity"></validation-errors>
         </div>
     </div>
     <div class="col-xs-5" :class="{'has-error': submitted && !validity.year.valid }">
         <div>
-        <input-with-validity name="year" v-model="year" type="number" :min="minYear" :max="maxYear" placeholder="Année" required  :validity.sync="validity.year"></input-with-validity>
+        <input-with-validity name="year" v-model="year" type="number" :min="opts.minYear" :max="opts.maxYear" placeholder="Année" :required="!opts.optional" :validity.sync="validity.year"></input-with-validity>
         <validation-errors name="year" :validity="validity"></validation-errors>
         </div>
     </div>
@@ -40,7 +40,7 @@ const month2maxDay = [undefined,
 
 
 export default Vue.extend({
-    props: ['value', 'label', 'submitted', 'minYear', 'maxYear'],
+    props: ['value', 'label', 'submitted', 'opts'],
     data() {
         return {
             validity: { year: {}, month: {}, day: {}, submitted: false },
