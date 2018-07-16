@@ -1,6 +1,6 @@
 <template> 
   <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="opts.labels">      
-    <typeahead :name="name" v-model="val" :options="search" :minChars="3" :formatting="function (e) { return e && e.description }"
+    <typeahead :name="name" v-model="val" :options="search" :minChars="3" :formatting="function (e) { return e && (e.description || e.displayName) }"
         placeholder="Entrez une raison sociale ou un SIRET"
         :editable="false" :validity.sync="validity[name]"></typeahead>
   </my-bootstrap-form-group>

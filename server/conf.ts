@@ -65,7 +65,7 @@ const conf = {
         
         etablissements: {
             types: {
-                key: '', description: '',
+                key: '', description: '', displayName: '',
                 siret: '',
                 postalAddress: '', labeledURI: '', telephoneNumber: '', facsimileTelephoneNumber: '',
             },
