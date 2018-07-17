@@ -110,11 +110,7 @@ const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannM
     }
     //console.log("homonymes", sns, givenNames, birthDay);
     const sizeLimit = 99; // big enough to handle many results, eg for "Philippe Martin"
-    return ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, { sizeLimit }).then(l => {
-                              return homonymes_scoring(l).filter(e => (
-                                  e.score > 0
-                              ));
-                          });
+    return ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, { sizeLimit }).then(homonymes_scoring);
 };
 
 const _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(<{}> v, attrs));
