@@ -112,6 +112,11 @@ const conf = {
                 enddate: new Date(),
                 duration: 0,
 
+                accountStatus: '',
+                up1KrbPrincipal: '',
+                mailHost: '',
+                supannEmpId: '',
+                
                 up1Profile: [],
             },
 

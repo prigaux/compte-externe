@@ -90,13 +90,23 @@ function homonymes_filter(sns: string[], givenNames: string[], birthDay: Date, s
 
 export type Homonyme = typeof conf.ldap.people.types & { score: number }
 
+const _homonymes_accountStatus_score = {
+    "active": 3,
+    "": 2,
+    "disabled": 1,
+    "deleted": 0
+}
+
 function homonymes_scoring(l: typeof conf.ldap.people.types[]): Homonyme[] {
     let l_ = _.map(l, e => {
-      let score = 3;
-      if (score === 3) {
-         score += e.global_eduPersonPrimaryAffiliation === 'student' ? 2 : 
-                (e.global_eduPersonAffiliation || []).includes('member') ? 1 : 0;
-      }   
+      let scores = [ 
+            _homonymes_accountStatus_score[e.accountStatus || ''] || 0,
+            e.up1KrbPrincipal ? 1 : 0, // has password
+            e.mailHost ? 1 : 0, // has email address
+            e.supannEmpId ? 1 : 0, // SIHAM user. Why prefer it over ???
+            e.global_eduPersonPrimaryAffiliation === 'student' ? 1 : 0, // still prefer student ???
+      ];
+      let score = scores.reduce((score, subscore) => score * 10 + subscore, 0);
       return <Homonyme> _.merge({ score }, e);
     });
     return _.sortBy(l_, 'score').reverse();
