@@ -260,9 +260,9 @@ const body_to_v = (o) => (
     }) as v
 );
 
-function homonymes(req: req, id: id): Promise<search_ldap.Homonyme[]> {
+function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
     return getRaw(req, id, undefined).then(sv => {
-        // acls are checked => removing is allowed
+        if (!_.isEmpty(v)) sv.v = merge_v(step(sv).attrs, sv.v, v);        
         return search_ldap.homonymes(sv.v).then(l => {
                 console.log(`homonymes found for ${sv.v.givenName} ${sv.v.sn}: ${l.map(v => v.uid)}`);
                 const attrs = { score: {}, ...step(sv).attrs };
@@ -330,7 +330,10 @@ router.delete('/comptes/:id/:step?', (req: req, res) => {
 });
 
 router.get('/homonymes/:id', (req: req, res) => {
-    respondJson(req, res, homonymes(req, req.params.id));
+    respondJson(req, res, homonymes(req, req.params.id, {} as v));
+});
+router.post('/homonymes/:id', (req: req, res) => {
+    respondJson(req, res, homonymes(req, req.params.id, body_to_v(req.body)));
 });
 
 function search_for_typeahead(req: req, search : (token: string, sizeLimit: number) => Promise<any>) {
