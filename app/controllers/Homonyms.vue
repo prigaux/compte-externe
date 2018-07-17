@@ -18,13 +18,12 @@
 <script lang="ts">
 import Vue from 'vue'
 import CompareUsers from './CompareUsers.vue';
-import * as Ws from '../services/ws';
 
 export default Vue.extend({
-  props: ['v', 'id'],
+  props: ['v', 'l'],
   data() {
       return { 
-        homonymes: [],
+        homonymes: this.l,
       };
   },
 
@@ -34,12 +33,6 @@ export default Vue.extend({
       homonymes(l) {
         this.$emit('homonymes', l);
       },
-  },
-
-  mounted() {
-        Ws.homonymes(this.id).then(l => {
-            this.homonymes = l;
-        });
   },
 
   methods: {

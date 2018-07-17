@@ -19,7 +19,9 @@
 <div v-if="!imported">
 
  <div v-if="check_homonyms && (!potential_homonyms || potential_homonyms.length) && !v.uid">
-    <Homonyms :v="v" :id="id" @merge="merge" @homonymes="l => potential_homonyms = l"></Homonyms>
+    <Homonyms :v="v" :l="all_potential_homonyms" @merge="merge" @homonymes="l => potential_homonyms = l"
+        v-if="all_potential_homonyms">
+    </Homonyms>
  </div>
  <div v-else>
 
@@ -69,6 +71,7 @@ function AttrsForm_data() {
       resp: undefined,
       to_import: undefined,
       imported: <any[]> undefined,
+      all_potential_homonyms: undefined,
       potential_homonyms: undefined,
     };    
 }
@@ -131,9 +134,13 @@ export default Vue.extend({
         init() {
             Ws.getInScope(this, this.id, this.$route.query, this.stepName).then(() => {
                 if (this.noInteraction) this.send();
+                if (this.check_homonyms) this.update_potential_homonyms({});
             });    
         },
-        
+        async update_potential_homonyms(v) {
+            const l = await Ws.homonymes(this.id);
+            this.all_potential_homonyms = l;
+        },
       submit(v, { resolve }) {
           this.v = v;
           let p = this.to_import ? this.send_new_many() : this.send();
