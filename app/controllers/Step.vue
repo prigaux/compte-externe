@@ -21,8 +21,8 @@
  <div v-if="check_homonyms && !all_potential_homonyms">
      Recherche des homonymes, veuillez patienter...
  </div>
- <div v-else-if="check_homonyms && all_potential_homonyms.length">
-    <Homonyms :v="v" :l="all_potential_homonyms" @merge="merge" @no_merge="potential_homonyms = []">
+ <div v-else-if="check_homonyms && potential_homonyms.length">
+    <Homonyms :v="v" :l="potential_homonyms" @merge="merge" @no_merge="no_merge">
     </Homonyms>
  </div>
  <div v-else>
@@ -52,7 +52,7 @@ import conf from '../conf';
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { defaults } from 'lodash';
+import { defaults, isEqual, unionBy } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
 import { compute_subAttrs_and_handle_default_values } from '../services/sub_and_defaults';
 
@@ -74,7 +74,6 @@ function AttrsForm_data() {
       to_import: undefined,
       imported: <any[]> undefined,
       all_potential_homonyms: undefined,
-      potential_homonyms: undefined,
     };    
 }
 
@@ -130,22 +129,39 @@ export default Vue.extend({
             }
             return attrs;
         },
+        potential_homonyms() {
+            return (this.all_potential_homonyms || []).filter(h => !h.ignore);
+    },
     },
 
     methods: {
         init() {
             Ws.getInScope(this, this.id, this.$route.query, this.stepName).then(() => {
                 if (this.noInteraction) this.send();
-                if (this.check_homonyms) this.update_potential_homonyms({});
+                this.may_update_potential_homonyms({});
             });    
         },
+        async may_update_potential_homonyms(v, v_orig = null) {
+            if (this.check_homonyms && !isEqual(v, v_orig)) {
+                await this.update_potential_homonyms(v);
+            }
+        },
         async update_potential_homonyms(v) {
-            const l = await Ws.homonymes(this.id);
-            this.all_potential_homonyms = l;
+            const l = await Ws.homonymes(this.id, v);
+            l.forEach(h => h.ignore = false);
+            this.all_potential_homonyms = unionBy(this.all_potential_homonyms || [], l, 'uid');
+        },
+        async submit_() {
+            await this.may_update_potential_homonyms(this.v, this.v_orig);
+            if (this.check_homonyms && this.potential_homonyms.length) {
+                // we cannot submit, we must display the new potential homonyms
+            } else {
+                await this.to_import ? this.send_new_many() : this.send();
+            }
         },
       submit(v, { resolve }) {
           this.v = v;
-          let p = this.to_import ? this.send_new_many() : this.send();
+          let p = this.submit_();
           Helpers.finallyP(p, resolve);
       },
       nextStep(resp) {
@@ -210,6 +226,9 @@ export default Vue.extend({
                 console.log(this.imported);
             });          
       },        
+      no_merge() {
+          this.potential_homonyms.forEach(h => h.ignore = true);
+      },
       merge(homonyme) {
           // especially for "uid" attr, but also "mifare", "barcode"
           Helpers.eachObject(homonyme, (attr, val) => {

@@ -204,8 +204,9 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             });
         }
 
-        export function homonymes(id) {
-            return axios.get(api_url + '/homonymes/' + id).then((resp) =>
+        export function homonymes(id, v) {
+            const v_ = toWs(v);
+            return axios.post(api_url + '/homonymes/' + id, v_).then((resp) =>
                 (<any>resp.data).map(fromWs)
                 , _handleErr);
         }
