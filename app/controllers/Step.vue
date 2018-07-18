@@ -18,7 +18,7 @@
 
 <div v-if="!imported">
 
- <div v-if="check_homonyms && (!all_potential_homonyms || all_potential_homonyms.length) && !v.uid">
+ <div v-if="check_homonyms && (!all_potential_homonyms || all_potential_homonyms.length)">
     <Homonyms :v="v" :l="all_potential_homonyms" @merge="merge" @no_merge="potential_homonyms = []">
     </Homonyms>
  </div>
@@ -98,7 +98,7 @@ export default Vue.extend({
             return !this.wanted_id && this.stepName;
         },
         check_homonyms() {
-            return !this.initialStep && this.attrs_ && this.attrs_.uid;
+            return !this.initialStep && this.attrs_ && this.attrs_.uid && !this.v.uid;
         },
         noInteraction() {
             return this.v.noInteraction || Object.keys(this.attrs_).length === 0;
