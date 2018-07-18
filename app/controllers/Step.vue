@@ -18,7 +18,10 @@
 
 <div v-if="!imported">
 
- <div v-if="check_homonyms && (!all_potential_homonyms || all_potential_homonyms.length)">
+ <div v-if="check_homonyms && !all_potential_homonyms">
+     Recherche des homonymes, veuillez patienter...
+ </div>
+ <div v-else-if="check_homonyms && all_potential_homonyms.length">
     <Homonyms :v="v" :l="all_potential_homonyms" @merge="merge" @no_merge="potential_homonyms = []">
     </Homonyms>
  </div>
