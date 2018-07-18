@@ -80,7 +80,7 @@ function homonymes_filter(sns: string[], givenNames: string[], birthDay: Date, s
 
     let l = [ filters.and([ cn_filter(), birthDay_filter ]),
               filters.and([ sn_givenName_filter(), birthDay_filter ]),
-              mail_filter() ];
+              filters.and([ mail_filter(), birthDay_filter ]) ];
     if (supannMailPerso) {
         l.push(filters.eq('supannMailPerso', supannMailPerso));
     }
