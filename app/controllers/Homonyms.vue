@@ -29,19 +29,13 @@ export default Vue.extend({
 
   components: { 'compare-users': CompareUsers },
 
-  watch: {
-      homonymes(l) {
-        this.$emit('homonymes', l);
-      },
-  },
-
   methods: {
       merge(homonym) {
         this.$emit('merge', homonym);
-        this.homonymes = [];
       },
       ignore(homonym) {
           this.homonymes = this.homonymes.filter(e => e !== homonym);
+          if (this.homonymes.length === 0) this.$emit('no_merge');
       }
   }
 });
