@@ -22,33 +22,35 @@ const prepare_v = (v: v) => {
 const prepare_crejsonldap_param = (v: v) => {
     let { profilename, priority, startdate, enddate, ...attrs } = prepare_v(v);
     
-    return {
-        id: ["uid"],
-        users: [
-            { profilename, priority, startdate, enddate, attrs } ],
-    };    
+    return { profilename, priority, startdate, enddate, attrs };
 }
 
 // NB: crejsonldap performance:
 // - 200ms minimal response time
 // - 200ms ssh overhead
 // - 14MB RSS memory usage
-export const call = (v: v, opts : options) => {
+const call_many = (vs: v[], opts : options) => {
     let param = JSON.stringify({
         retattrs: ['uid', 'accountStatus'],
-        ...opts, ...prepare_crejsonldap_param(v)
+        ...opts, 
+        id: ["uid"],
+        users: vs.map(prepare_crejsonldap_param),
     });
-    console.log("action createCompte:", param.replace(/"jpegPhoto":"(.*)"/, `"jpegPhoto":"xxx"`));
+    console.log("action createCompte:", param.replace(/"jpegPhoto":"(.*?)"/g, `"jpegPhoto":"xxx"`));
     return callRaw.fn(param).then(data => {
         try { 
             const resp = JSON.parse(data);
-            return resp.users[0];
+            return resp.users;
         } catch (e) {
             console.error(e);
             throw "createCompte error:" + data;
         }
     });
 }
+
+export const call = (v: v, opts: options) => (
+    call_many([v], opts).then(users => users[0])
+);
 
 // exported for tests purpose
 export const callRaw = { fn: (param) => utils.popen(param, 'createCompte', []) };
