@@ -131,7 +131,7 @@ export const createCompteSafe = (l_actions: action[]): action => async (req, sv)
         if (homonymes.length) return { v: orig_v, response: { id: sv.id, in_moderation: true } };
     }
     // ok, let's create it
-    return createCompte_(sv, { dupcreate: "ignore", dupmod: "warn", create: true });
+    return createCompte(req, sv);
 }
 
 export const createCompte: action = (_req, sv) => (
