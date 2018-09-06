@@ -97,9 +97,13 @@ const _homonymes_accountStatus_score = {
     "deleted": 0
 }
 
-function homonymes_scoring(l: typeof conf.ldap.people.types[]): Homonyme[] {
+function homonymes_scoring(l: typeof conf.ldap.people.types[], preferStudent: boolean): Homonyme[] {
     let l_ = _.map(l, e => {
-      let scores = [ 
+      let scores = [
+        ... (preferStudent ? [
+            e.supannEtuId ? 1 : 0, // Apogée user
+            (e.mailHost || '').match(/^malix/) ? 1 : 0,
+        ] : []),
             _homonymes_accountStatus_score[e.accountStatus || ''] || 0,
             e.up1KrbPrincipal ? 1 : 0, // has password
             e.mailHost ? 1 : 0, // has email address
@@ -112,7 +116,7 @@ function homonymes_scoring(l: typeof conf.ldap.people.types[]): Homonyme[] {
     return _.sortBy(l_, 'score').reverse();
 }
 
-const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannMailPerso: string) : Promise<Homonyme[]> => {
+const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannMailPerso: string, preferStudent: boolean) : Promise<Homonyme[]> => {
     let filter = homonymes_filter(sns, givenNames, birthDay, supannMailPerso);
     if (conf.ldap.people.homonymes_restriction) {
         filter = filters.and([filter, conf.ldap.people.homonymes_restriction]);
@@ -120,7 +124,7 @@ const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannM
     }
     //console.log("homonymes", sns, givenNames, birthDay);
     const sizeLimit = 99; // big enough to handle many results, eg for "Philippe Martin"
-    return ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, { sizeLimit }).then(homonymes_scoring);
+    return ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, { sizeLimit }).then(l => homonymes_scoring(l, preferStudent));
 };
 
 const _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(<{}> v, attrs));
@@ -130,7 +134,8 @@ export const homonymes = (v: v) : Promise<Homonyme[]> => {
     let givenNames = _merge_at(v, conf.ldap.people.givenNames);
     if (sns[0] === undefined) return Promise.resolve([]);
     console.log("sns", sns);
-    return homonymes_(sns, givenNames, v.birthDay, v.supannMailPerso);    
+    const preferStudent = conf.ldap.people.homonymes_preferStudent(v.profilename);
+    return homonymes_(sns, givenNames, v.birthDay, v.supannMailPerso, preferStudent);    
 };
 
 export const subv_to_eq_filters = (subv: Partial<v>) => {

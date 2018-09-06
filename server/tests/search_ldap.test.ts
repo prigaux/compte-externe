@@ -126,7 +126,7 @@ describe('homonymes', () => {
         let search_ldap: search_ldap;
         before(() => (
             test_ldap.create().then(({ conf }) => {
-                conf.ldap.people.homonymes_restriction = '(&(eduPersonAffiliation=*)(!(eduPersonAffiliation=student)))';
+                conf.ldap.people.homonymes_restriction = '(eduPersonAffiliation=*)';
                 search_ldap = require_fresh('../search_ldap');
             })
         ));
@@ -134,9 +134,22 @@ describe('homonymes', () => {
         it('should detect simple homonyme', () => (
             search_ldap.homonymes(
                 { sn: 'rigaux', givenName: 'pascal', birthDay: new Date('1975-10-02') } as v).then(l => {
-                    assert.equal(l.length, 1);
+                    console.log(l);
+                    assert.equal(l.length, 2);
                     assert.equal(l[0].uid, "prigaux");
-                    assert.equal(l[0].score, 20000);
+                    assert.equal(l[0].score, 30000);
+                    assert.equal(l[1].uid, "e10000000");
+                    assert.equal(l[1].score, 20100);
+                })
+        ));
+        it('should detect sort according to preferStudent', () => (
+            search_ldap.homonymes(
+                { sn: 'rigaux', givenName: 'pascal', birthDay: new Date('1975-10-02'), profilename: '{COMPTEX}learner.xxx' } as v).then(l => {
+                    assert.equal(l.length, 2);
+                    assert.equal(l[0].uid, "e10000000");
+                    assert.equal(l[0].score, 1120100);
+                    assert.equal(l[1].uid, "prigaux");
+                    assert.equal(l[1].score, 30000);
                 })
         ));
         it('should not detect homonyme with birth date a little different', () => (

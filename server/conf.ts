@@ -117,6 +117,7 @@ const conf = {
                 up1KrbPrincipal: '',
                 mailHost: '',
                 supannEmpId: '',
+                supannEtuId: '',
                 
                 up1Profile: [],
             },
@@ -146,6 +147,8 @@ const conf = {
             sns: ['sn'],
             givenNames: ['givenName'],
             supannCiviliteChoices: sameKeyNameChoices([ 'M.', 'Mme' ]),
+
+            homonymes_preferStudent: profilename => (profilename || '').match(/^\{COMPTEX\}learner\./),
             homonymes_restriction: '(objectClass=inetOrgPerson)',
         },
 
