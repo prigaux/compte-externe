@@ -264,7 +264,7 @@ function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
     return getRaw(req, id, undefined).then(sv => {
         if (!_.isEmpty(v)) sv.v = merge_v(step(sv).attrs, sv.v, v);        
         return search_ldap.homonymes(sv.v).then(l => {
-                console.log(`homonymes found for ${sv.v.givenName} ${sv.v.sn}: ${l.map(v => v.uid)}`);
+                console.log(`homonymes found for ${sv.v.givenName} ${sv.v.sn}: ${l.map(v => v.uid + " (score:" + v.score + ")")}`);
                 const attrs = { score: {}, ...step(sv).attrs };
                 return l.map(v => export_v(attrs, v) as search_ldap.Homonyme)
             })
