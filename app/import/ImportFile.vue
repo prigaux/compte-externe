@@ -39,7 +39,6 @@ import Vue from "vue";
 import * as Ws from '../services/ws';
 
 export default Vue.extend({
-    props: ['global_v'],
     data() {
         return {
             to_import: undefined,
