@@ -18,6 +18,8 @@
                         </span>
                         <span v-else>
                             {{vr.error}}
+                            <br>
+                            <router-link target="_blank" :to='retry_v_on_error(vr.v)'>Corriger manuellement</router-link>
                         </span>
                     </td>
                     <td v-for="field in ordered_fields">{{vr.v[field].toString()}}</td>
@@ -33,7 +35,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { sortBy } from 'lodash';
+import { sortBy, mapKeys } from 'lodash';
 
 export default Vue.extend({
     props: ['imported', 'ordered_fields'],
@@ -41,6 +43,11 @@ export default Vue.extend({
         sorted_imported() {
             // display errors first, then moderation, ok, ignored
             return sortBy(this.imported, vr => vr.error ? 0 : vr.in_moderation ? 1 : vr.ignored ? 3 : 2);
+        },
+    },
+    methods: {
+        retry_v_on_error(v) {
+            return { query: mapKeys(v, (_,k) => `default_${k}`) };
         },
     },
 });
