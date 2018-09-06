@@ -9,7 +9,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="vr in imported">
+                    <tr v-for="vr in sorted_imported">
                     <td>
                         <span v-if="vr.success">
                             <span v-if="vr.ignored">Ignoré</span>
@@ -33,8 +33,15 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { sortBy } from 'lodash';
 
 export default Vue.extend({
     props: ['imported', 'ordered_fields'],
+    computed: {
+        sorted_imported() {
+            // display errors first, then moderation, ok, ignored
+            return sortBy(this.imported, vr => vr.error ? 0 : vr.in_moderation ? 1 : vr.ignored ? 3 : 2);
+        },
+    },
 });
 </script>
