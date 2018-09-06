@@ -239,7 +239,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 (resp) => {
                     let o = resp.data;
                     o.lines.forEach(v => {
-                        if (v.birthDay) v.birthDay = _fromFrenchDate(v.birthDay) || _fromLDAPDate(v.birthDay) || "date invalide";
+                        if (v.birthDay) v.birthDay = _fromFrenchDate(v.birthDay) || _fromLDAPDate(v.birthDay) || new Date(v.birthDay) || "date invalide";
                     });
                     return o;
                 },
