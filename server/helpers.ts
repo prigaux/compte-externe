@@ -15,6 +15,17 @@ if (Promise.prototype.tap === undefined) {
     };
 }
 
+export type promise_defer<T> = { resolve(v : T) : void, reject(err): void, promise : Promise<T> };
+export function promise_defer<T>() {
+    let deferred = {} as promise_defer<T>;
+    deferred.promise = new Promise((resolve, reject) => { deferred.resolve = resolve; deferred.reject = reject });
+    return deferred;
+}
+
+export const setTimeoutPromise = (time) => (
+    new Promise((resolve, _) => setTimeout(resolve, time))
+);
+
 export const promisify_callback = f => (
     (...args) => {
         return new Promise((resolve, reject) => {
