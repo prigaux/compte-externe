@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as utils from './utils';
 import * as ldap from './ldap';
 import * as conf from './conf';
+import grouped_calls from './helper_grouped_calls';
 
 
 export type options = { action: "validate" } | { create: false } | {
@@ -48,9 +49,16 @@ const call_many = (vs: v[], opts : options) => {
     });
 }
 
-export const call = (v: v, opts: options) => (
-    call_many([v], opts).then(users => users[0])
-);
+const grouped_call_many_by_opts : Dictionary<(param: v) => any> = {};
+
+export const call = (v: v, opts: options) => {
+    const opts_s = JSON.stringify(opts);
+    let grouped_call = grouped_call_many_by_opts[opts_s];
+    if (!grouped_call) {
+        grouped_call = grouped_call_many_by_opts[opts_s] = grouped_calls<v, any>(vs => call_many(vs, opts), conf.crejsonldap.grouped_calls);
+    }
+    return grouped_call(v)
+}
 
 // exported for tests purpose
 export const callRaw = { fn: (param) => utils.popen(param, 'createCompte', []) };

@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import sendmailTransport = require('nodemailer-sendmail-transport');
 import * as ldap_convert from './ldap_convert';
 import { sameKeyNameChoices } from './helpers';
+import * as grouped_calls from './helper_grouped_calls';
 
 const ldap_base = "dc=univ,dc=fr";
 const ldap_main = {
@@ -182,6 +183,13 @@ const conf = {
     http_client_CAs: fs.readFileSync('/etc/ssl/certs/ca-certificates.crt').toString().split(/(?=-----BEGIN CERTIFICATE-----)/),
 
     poll_maxTime: 4 * 60 * 1000, // 4 minutes
+
+    crejsonldap: {
+        grouped_calls: {
+            nb_parallel_calls: 5,
+            group_size: 50,
+        } as grouped_calls.options,
+    },
 };
 
 export = conf;
