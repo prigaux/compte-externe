@@ -7,7 +7,7 @@ const typeaheadComponent = Vue.extend({
   <div>
    <div :class="{ 'input-group': loading }">
     <input :id="id" class="form-control" :name="name" :placeholder="placeholder"
-           v-model="query"
+           v-model="query" ref="input"
            type="text" autocomplete="off"
            @keydown.down.prevent="down"
            @keydown.up.prevent="up"
@@ -115,6 +115,7 @@ const typeaheadComponent = Vue.extend({
     },
 
     emitValidity(validity) {
+        this.$refs.input.setCustomValidity(validity.valid ? '' : 'err');
         this.$emit('update:validity', validity);        
     },
 
