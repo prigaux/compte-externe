@@ -76,10 +76,8 @@ const typeaheadComponent = Vue.extend({
     input_changed() {
         if (this.editable) {
             this.$emit('input', this.query);
-            this.checkValidity(this.query);
-        } else {
-            this.emitValidity({ valueMissing: true });
         }
+        this.checkValidity(this.query, 'input');
         this.open();
     },
 
@@ -110,8 +108,12 @@ const typeaheadComponent = Vue.extend({
       })
     },
 
-    checkValidity(v) {
-        if (this.required || !this.editable) this.emitValidity(v === '' || v === undefined || v === null ? { valueMissing: true } : { valid: true });
+    checkValidity(v, from : 'input' | 'parent') {
+        // "v" is an accepted value
+        const valueMissing = v === '' || v === undefined || v === null;        
+        const validity = this.required && valueMissing ? { valueMissing } : 
+                         from === 'input' && !this.editable && !valueMissing ? { badInput: true } : { valid: true };
+        this.emitValidity(validity);
     },
 
     emitValidity(validity) {
