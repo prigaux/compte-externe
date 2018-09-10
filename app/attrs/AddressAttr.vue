@@ -12,7 +12,7 @@
     
  <div v-if="country === 'FRANCE'">
   <my-bootstrap-form-group name="address_lines" :label="attr_labels.address_lines" :validity="validity">
-    <input-with-validity name="address_lines" v-model="lines" placeholder="Numéro, rue" :validity.sync="validity.address_lines" required></input-with-validity>
+    <input-with-validity name="address_lines" v-model="lines" placeholder="Numéro, rue" :validity.sync="validity.address_lines" :required="!opts.optional"></input-with-validity>
     <CurrentLdapValue :value="lines" :ldap_value="ldap_val.lines"></CurrentLdapValue>
   </my-bootstrap-form-group>
   <my-bootstrap-form-group name="address_line2">
@@ -21,14 +21,14 @@
   <my-bootstrap-form-group name="postalCode" multi="true">
     <div class="col-md-offset-3 col-xs-2" :class="{'has-error': validity.submitted && !validity.postalCode.valid}">
       <div>
-        <input-with-validity name="postalCode" v-model="postalCode" real-type="frenchPostalCode" placeholder="Code postal" required :validity.sync="validity.postalCode"></input-with-validity>
+        <input-with-validity name="postalCode" v-model="postalCode" real-type="frenchPostalCode" placeholder="Code postal" :required="!opts.optional" :validity.sync="validity.postalCode"></input-with-validity>
         <CurrentLdapValue :value="postalCode" :ldap_value="ldap_val.postalCode"></CurrentLdapValue>
         <validation-errors name="postalCode" :validity="validity"></validation-errors>
       </div>
     </div>
     <div class="col-xs-7" :class="{'has-error': validity.submitted && !validity.town.valid}">
       <div>
-        <typeahead name="town" v-model="town" :options="towns" placeholder="Ville" :editable="false" :validity.sync="validity.town"></typeahead>
+        <typeahead name="town" v-model="town" :options="towns" placeholder="Ville" :editable="false" :required="!opts.optional" :validity.sync="validity.town"></typeahead>
         <CurrentLdapValue :value="town" :ldap_value="ldap_val.town"></CurrentLdapValue>
         <validation-errors name="town" :validity="validity"></validation-errors>
       </div>
