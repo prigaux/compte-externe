@@ -62,13 +62,13 @@ const typeaheadComponent = Vue.extend({
   },
 
   mounted() {
-    this.checkValidity(this.value);
+    this.checkValidity(this.value, 'parent');
   },
 
   watch: {
     value(v) {
         this.query = this.formatting(v);
-        this.checkValidity(v);
+        this.checkValidity(v, 'parent');
     },
   },
 
