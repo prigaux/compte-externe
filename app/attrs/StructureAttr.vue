@@ -4,7 +4,7 @@
       {{val.description}}
     </div>
     <div v-else>
-      <typeahead name="structure" v-model="val" :options="structures_search" :minChars="3" :formatting="function (e) { return e.description }"
+      <typeahead name="structure" v-model="val" :options="structures_search" :minChars="3" :formatting="function (e) { return e && e.description }"
             :editable="false" :validity.sync="validity.structure"></typeahead>
     </div>
   </my-bootstrap-form-group>

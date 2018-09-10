@@ -8,7 +8,7 @@
                 <typeahead :minChars="3" :editable="false"
                             @input="withUser"
                     :options="people_search"
-                    :formatting="e => e.givenName + ' ' + e.sn"></typeahead>
+                    :formatting="e => e && (e.givenName + ' ' + e.sn)"></typeahead>
                 <div v-if="profiles" style="padding-top: 1rem">
                     <span v-if="profiles.choices.length">
                         {{user.givenName}} {{user.sn}} a plusieurs profiles. Veuillez choisir le profile à modifier.
