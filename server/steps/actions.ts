@@ -199,9 +199,10 @@ export const expireAccount : simpleAction = (_req, sv) => {
 
 export const sendMail = (template: string, params = {}): action => async (req, { v, attrs }) => {
     const v_ = v_display(v, attrs);
-    if (!params['to']) params['to'] = v.mail || v.supannMailPerso;
-    if (!params['to'] && v.various && v.various.full_v) params['to'] = v.various.full_v.mail || v.various.full_v.supannMailPerso;
-    mail.sendWithTemplate(template, { ...params, moderator: req.user, v, v_display: v_ });
+    let to = params['to'];
+    if (!to) to = v.mail || v.supannMailPerso;
+    if (!to && v.various && v.various.full_v) to = v.various.full_v.mail || v.various.full_v.supannMailPerso;
+    mail.sendWithTemplate(template, { ...params, to, moderator: req.user, v, v_display: v_ });
     return { v };
 };
 
