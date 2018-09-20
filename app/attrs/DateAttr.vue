@@ -1,6 +1,7 @@
 <template>
   <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity">
     <input-with-validity :name="name" v-model="val" type="date"
+       :disabled="opts.readonly"
        :min="opts.min" :max="opts.max" :required="!opts.optional" :validity.sync="validity[name]"></input-with-validity>
     <CurrentLdapValue :value="initial_val" :ldap_value="ldap_val"></CurrentLdapValue>
   </my-bootstrap-form-group>
