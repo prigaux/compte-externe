@@ -1,12 +1,13 @@
 'use strict';
 
+import { isEqual } from 'lodash';
 import * as conf from '../conf';
 import * as ldap from '../ldap';
 import { parse_composites } from '../ldap_convert';
 const filters = ldap.filters;
 
 const has_subv = (v: v, subv: Partial<v>) => (
-  !Object.keys(subv).some(k => v[k] !== subv[k])
+  !Object.keys(subv).some(k => !isEqual(v[k], subv[k]))
 );
 
 export const has_one_subvs = (v: v, subvs: Partial<v>[]) => (
