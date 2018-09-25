@@ -54,7 +54,7 @@
         :type="type" :realType="realType" :required="!opts.optional" :pattern="opts.pattern" :allowedChars="opts.allowedChars" :title="opts.labels && opts.labels.tooltip" :validity.sync="validity[name]">
     </input-with-validity>
 
-    <CurrentLdapValue :value="initial_value" :ldap_value="ldap_value"></CurrentLdapValue>
+    <CurrentLdapValue v-model="initial_value" :ldap_value="ldap_value" @input="v => val = v"></CurrentLdapValue>
 
   </my-bootstrap-form-group>
  </div>

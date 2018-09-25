@@ -3,7 +3,7 @@
     <input-with-validity :name="name" v-model="val" type="date"
        :disabled="opts.readonly"
        :min="opts.min" :max="opts.max" :required="!opts.optional" :validity.sync="validity[name]"></input-with-validity>
-    <CurrentLdapValue :value="initial_val" :ldap_value="ldap_val"></CurrentLdapValue>
+    <CurrentLdapValue :value="initial_val" :ldap_value="ldap_val" @input="v => val = v"></CurrentLdapValue>
   </my-bootstrap-form-group>
 </template>
 
