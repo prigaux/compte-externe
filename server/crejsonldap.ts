@@ -22,8 +22,14 @@ const prepare_v = (v: v) => {
 
 const prepare_crejsonldap_param = (v: v) => {
     let { profilename, priority, startdate, enddate, ...attrs } = prepare_v(v);
-    
-    return { profilename, priority, startdate, enddate, attrs };
+    const param = { profilename, priority, startdate, enddate, attrs };
+
+    const prev = v['profilename_to_modify'];
+    if (prev && v.profilename && prev !== v.profilename && v.uid) {
+        return { profiles: [ param, { profilename: prev, enddate: '19700101', attrs: { uid: v.uid } } ] };
+    } else {
+        return param;
+    }
 }
 
 // NB: crejsonldap performance:
