@@ -83,7 +83,7 @@ const conf = {
                 supannCivilite: '',
                 supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '',
                 birthDay: new Date(), birthName: '', altGivenName: [],
-                homePhone: '', telephoneNumber: '', facsimileTelephoneNumber: '', supannAutreTelephone: '', pager: '',
+                homePhone: '', telephoneNumber: '', facsimileTelephoneNumber: '', supannAutreTelephone: [], pager: '',
                 homePostalAddress: '',
                 floorNumber: '', roomAccess: '', roomNumber: '', buildingName: '',
                 jpegPhoto: '',
