@@ -63,7 +63,7 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
 }
 
 function validate(key: string, opt: StepAttrOption, val) {
-        if (val === '' || val === undefined) {
+        if (val === '' || val === undefined || val === null || _.isArray(val) && _.isEmpty(val)) {
             if (!opt.optional)
                 throw `constraint !${key}.optional failed for ${val}`;
             else 

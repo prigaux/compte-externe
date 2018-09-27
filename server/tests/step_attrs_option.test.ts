@@ -79,8 +79,9 @@ describe('merge_v', () => {
         test_fail({ sn: {} }, {}, {}, "constraint !sn.optional failed for undefined");
         test_fail({ sn: {} }, {}, { sn: '' }, "constraint !sn.optional failed for ");
         test_fail({ sn: {} }, prev, {}, "constraint !sn.optional failed for undefined");
-        test({ sn: {} }, {}, { sn: null }, { sn: null });
+        test_fail({ sn: {} }, {}, { sn: null }, "constraint !sn.optional failed for null");
         test({ sn: {} }, prev, v, v);
+        test({ sn: {} }, {}, { sn: new Date('2017-01-31') }, { sn: new Date('2017-01-31') });
     });
     it ("should check pattern", () => {
         test({ sn: { pattern: "x" } }, {}, { sn: 'x' }, { sn: 'x' });
