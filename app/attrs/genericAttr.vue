@@ -10,6 +10,11 @@
     :opts="opts" :submitted="submitted">
   </DateThreeInputsAttr>
 
+  <ArrayAttr v-model="val" :name="name" v-else-if="uiType === 'array'"
+    :ldap_value="ldap_value"
+    :opts="opts" :submitted="submitted">
+  </ArrayAttr>
+
   <AddressAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'postalAddress'"
     :ldap_value="ldap_value"
     :opts="opts" :submitted="submitted">
@@ -49,10 +54,18 @@
       </label>
     </div>
     
-    <input-with-validity :name="name" v-model="val" v-else
+   <div :class="{ 'input-group': allow_remove }" v-else>
+    <input-with-validity :name="name" v-model="val" 
         :disabled="opts.readonly"
         :type="type" :realType="realType" :required="!opts.optional" :pattern="opts.pattern" :allowedChars="opts.allowedChars" :title="opts.labels && opts.labels.tooltip" :validity.sync="validity[name]">
     </input-with-validity>
+
+    <span class="input-group-btn" v-if="allow_remove">
+        <button class="btn btn-danger" type="button" @click="$emit('remove', name)">
+            <i class="glyphicon glyphicon-remove"></i>
+        </button>
+    </span>
+   </div>
 
     <CurrentLdapValue v-model="initial_value" :ldap_value="ldap_value" @input="v => val = v"></CurrentLdapValue>
 
@@ -68,6 +81,7 @@ import { isDateInputSupported } from '../services/helpers';
 import DateAttr from './DateAttr.vue';
 import DateThreeInputsAttr from './DateThreeInputsAttr.vue';
 import AddressAttr from './AddressAttr.vue';
+import ArrayAttr from './ArrayAttr.vue';
 import jpegPhotoAttr from './jpegPhotoAttr.vue';
 import PasswordAttr from './PasswordAttr.vue';
 import StructureAttr from './StructureAttr.vue';
@@ -75,8 +89,8 @@ import EtablissementAttr from './EtablissementAttr.vue';
 import CurrentLdapValue from './CurrentLdapValue.vue';
 
 export default Vue.extend({
-    props: ['value', 'name', 'opts', 'submitted', 'v', 'ldap_value'],
-    components: { DateAttr, DateThreeInputsAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr, EtablissementAttr, CurrentLdapValue },
+    props: ['value', 'name', 'opts', 'submitted', 'v', 'ldap_value', 'allow_remove'],
+    components: { DateAttr, DateThreeInputsAttr, ArrayAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr, EtablissementAttr, CurrentLdapValue },
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },
@@ -89,7 +103,7 @@ export default Vue.extend({
             if (this.opts.uiType === 'date' && !isDateInputSupported()) {
                 return 'dateThreeInputs';
             }
-            return this.opts.uiType || this.opts.choices && (this.opts.choices.length <= 2 ? 'radio' : 'select');
+            return this.opts.uiType || this.opts.choices && (this.opts.choices.length <= 2 ? 'radio' : 'select') || this.opts.items && 'array';
         },
         type() {
             return this.realType || !this.opts.uiType ?

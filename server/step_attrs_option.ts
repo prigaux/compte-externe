@@ -84,6 +84,12 @@ function validate(key: string, opt: StepAttrOption, val) {
                 throw `constraint ${key}.choices ${keys} failed for ${val}`;
             }
         }
+        if (opt.items || opt.uiType === 'array') {
+            if (val !== undefined) {
+                if (!_.isArray(val)) throw `constraint ${key} is array failed for ${val}`;
+                val.forEach((val_, i) => validate(`${key}-${i}`, opt.items, val_));
+            }
+        }
 }
 
 function compute_flat_attrs(attrs: StepAttrsOption) {

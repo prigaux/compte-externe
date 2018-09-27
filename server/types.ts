@@ -45,19 +45,23 @@ interface StepAttrOptionChoices {
   name?: string;
   sub?: StepAttrsOption;
 }
-interface StepAttrOption {
+interface StepAttrItemsOption {
+  uiHidden?: boolean;
+  uiType?: 'radio'|'select'|'checkbox'|'email'|'text' | 'phone'|'mobilePhone'|'frenchPostalCode'|'date'|'dateThreeInputs'|'postalAddress' | 'structure'|'password'|'siret' | 'array';
+
+  pattern?: string;
+  max?: number;
+}
+type StepAttrOption = StepAttrItemsOption & {
   readonly?: boolean;
   hidden?: boolean;
   toUserOnly?: boolean; // implies hidden
   
   default?: string;
-  uiHidden?: boolean;
-  uiType?: 'radio'|'select'|'checkbox'|'email'|'text' | 'phone'|'mobilePhone'|'frenchPostalCode'|'date'|'dateThreeInputs'|'postalAddress' | 'structure'|'password'|'siret';
 
   optional?: boolean;
-  pattern?: string;
-  max?: number;
   choices?: StepAttrOptionChoices[];
+  items?: StepAttrItemsOption,
   labels?: { advice?: string; }
 }
 type StepAttrsOption = Dictionary<StepAttrOption>;

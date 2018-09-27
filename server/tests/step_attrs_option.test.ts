@@ -91,6 +91,15 @@ describe('merge_v', () => {
         test({ sn: { optional: true, pattern: "x" } }, {}, {}, {});
         test({ sn: { optional: true, pattern: "x" } }, {}, { sn: '' }, { sn: '' });
     });
+    it ("should check array", () => {
+        test_fail({ altGivenName: { items: {} } }, {}, {}, 'constraint !altGivenName.optional failed for undefined');
+        test_fail({ altGivenName: { items: {} } }, {}, { altGivenName: 'x' }, 'constraint altGivenName is array failed for x');
+        test_fail({ altGivenName: { items: {}, optional: true } }, {}, { altGivenName: 'x' }, 'constraint altGivenName is array failed for x');
+        test_fail({ altGivenName: { items: {} } }, {}, { altGivenName: [] }, 'constraint !altGivenName.optional failed for ');
+        test({ altGivenName: { items: {}, optional: true } }, {}, {}, {});
+        test({ altGivenName: { items: {}, optional: true } }, {}, { altGivenName: [] }, { altGivenName: [] });
+        test({ altGivenName: { items: {} } }, {}, { altGivenName: ["x"] }, { altGivenName: ["x"] });
+    });
     it ("should check choices", () => {
         const attrs = { duration: { choices: [ { key: "1" } ] } };
         test(attrs, {}, { duration: "1" }, { duration: "1" });
