@@ -82,7 +82,6 @@ export default Vue.extend({
             validity: { [this.name]: {}, submitted: false },
             val: this.value,
             initial_value: this.value,
-            doGet: null,
         };
     },
     computed: {
