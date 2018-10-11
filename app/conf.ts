@@ -99,7 +99,7 @@ export default {
 
     attrs_order: [
         'eduPersonPrincipalName', 'mail',
-        'supannCivilite', 'givenName', 'altGivenName', 'sn', 'birthName', 'displayName', 'birthDay',
+        'supannCivilite', 'sn', 'birthName', 'givenName', 'altGivenName', 'displayName', 'birthDay',
         'homePostalAddress', 'homePhone', 'pager', 'supannMailPerso',
         'jpegPhoto',
         'structureParrain',
