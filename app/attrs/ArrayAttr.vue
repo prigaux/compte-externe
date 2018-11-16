@@ -10,6 +10,9 @@
     <div :class="'col-sm-offset-' + (val.length ? 10 : 7)" class="col-sm-2" style="padding: 0 0 2rem 0">
         <button class="btn btn-info" style="width: 100%" type="button" @click="val.push('')"><i class="glyphicon glyphicon-plus"></i></button>
     </div>
+    <my-bootstrap-form-group>
+        <CurrentLdapValue :value="initial_val.join(' ')" :ldap_value="ldap_val.join(' ')" @input="val = [...ldap_val]"></CurrentLdapValue>
+    </my-bootstrap-form-group>
 </div>
 </template>
 
@@ -18,20 +21,20 @@ import Vue from "vue";
 import CurrentLdapValue from './CurrentLdapValue.vue';
 
 function init(val) {
-    return val || [];
+    return val instanceof Array ? val : val ? [val] : [];
 }
 
 export default Vue.extend({
     props: ['name', 'value', 'ldap_value', 'opts', 'submitted'],
     components: { CurrentLdapValue },
     data() {
-        const val = init(this.value);
+        let val = init(this.value);
         if (val.length === 0 && !this.opts.optional) val.push('');
         return {
             validity: { [this.name]: {}, submitted: false },
             val,
-            ldap_val: init(this.ldap_value).join(' '),
-            initial_val: val.join(' '), 
+            ldap_val: init(this.ldap_value),
+            initial_val: [...val],
         };
     },
     computed: {
