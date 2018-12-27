@@ -29,6 +29,10 @@ function step(sv: sv): step {
     return r;
 }
 
+function sv_attrs(sv: sv): StepAttrsOption {
+    return step(sv).attrs;
+}
+
 function action_pre(req: req, sv: sv) {
     return action(req, sv, 'action_pre');
 }
@@ -55,7 +59,7 @@ async function may_export_v_ldap(sv: sv) {
     if (sv.v && sv.v.uid) {
         let v_ldap = await search_ldap.onePerson(filters.eq("uid", sv.v.uid));
         if (sv.v.profilename) v_ldap = selectUserProfile(v_ldap, sv.v.profilename)
-        v_ldap = export_v(step(sv).attrs, v_ldap) as v;
+        v_ldap = export_v(sv_attrs(sv), v_ldap) as v;
         return { ...sv, v_ldap };
     }
     return sv;
@@ -63,7 +67,7 @@ async function may_export_v_ldap(sv: sv) {
 
 function export_sv(sv: sv) {
     sv = _.clone(sv);
-    sv.v = export_v(step(sv).attrs, sv.v) as v;
+    sv.v = export_v(sv_attrs(sv), sv.v) as v;
     return { ...sv, ...exportStep(step(sv)) };
 }
 
@@ -192,7 +196,7 @@ const checkSetLock = (sv) : Promise<any> => (
 // 4. call action_pre
 // 5. save to DB or remove from DB if one action returned null
 function setRaw(req: req, sv: sv, v: v) : Promise<svr> {
-    sv.v = merge_v(step(sv).attrs, sv.v, v);
+    sv.v = merge_v(sv_attrs(sv), sv.v, v);
     return checkSetLock(sv).then(_ => (
         advance_sv(req, sv)
     )).tap(svr => {
@@ -262,10 +266,10 @@ const body_to_v = (o) => (
 
 function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
     return getRaw(req, id, undefined).then(sv => {
-        if (!_.isEmpty(v)) sv.v = merge_v(step(sv).attrs, sv.v, v);        
+        if (!_.isEmpty(v)) sv.v = merge_v(sv_attrs(sv), sv.v, v);        
         return search_ldap.homonymes(sv.v).then(l => {
                 console.log(`homonymes found for ${sv.v.givenName} ${sv.v.sn}: ${l.map(v => v.uid + " (score:" + v.score + ")")}`);
-                const attrs = { score: {}, ...step(sv).attrs };
+                const attrs = { score: {}, ...sv_attrs(sv) };
                 return l.map(v => export_v(attrs, v) as search_ldap.Homonyme)
             })
     });
