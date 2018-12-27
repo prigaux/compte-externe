@@ -32,7 +32,7 @@ function step(sv: sv): step {
 function add_step_attrs<SV extends sv>(sv: SV) {
     const attrs = step(sv).attrs;
     let sva = sv as SV & { attrs: StepAttrsOption };
-    sva.attrs = attrs;
+    sva.attrs = typeof attrs === "function" ? attrs(sv.v) : attrs;
     return sva;
 }
 
@@ -284,7 +284,7 @@ function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
 
 const exportStep = (step: step) : Partial<step> => (
     {
-        attrs: exportAttrs(step.attrs),
+        attrs: typeof step.attrs === 'function' ? {} : exportAttrs(step.attrs),
         labels: step.labels,
         attrs_pre: step.attrs_pre,
         allow_many: step.allow_many,

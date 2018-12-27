@@ -24,7 +24,9 @@ If ```GET /comptes/:id/:step```
 * read sv from database
 
 With current sv.step:
+* ```.attrs``` is assigned/computed
 * ```.acls``` is used to check authenticated user is allowed
+* ```.v``` is filtered using ```.attrs```
 
 It returns { step, attrs, v }
 

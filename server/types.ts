@@ -91,7 +91,7 @@ type step = {
   attrs_pre?: Dictionary<{}>; // passed to /api/comptes/xxx as query arguments
   allow_many?: boolean; 
   
-  attrs: StepAttrsOption;
+  attrs: StepAttrsOption | ((v) => StepAttrsOption);
   next?: string | ((v) => string);
   notify?: StepNotify;
   action_pre?: action;
