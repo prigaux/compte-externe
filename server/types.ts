@@ -24,15 +24,16 @@ type sv = {
   step: string,
   v: v,
   v_ldap?: v,
-  attrs?: StepAttrsOption,
   lock?: boolean,
 }
+type sva = sv & { attrs: StepAttrsOption };
 
 type r = response & { success: boolean, step?: string, labels?: StepLabels, autoModerate: boolean }
 type vr = {v: v; response?: response }
 type svr = sv & { response?: response }
+type svra = sva & { response?: response }
 type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
-type action = (req: any, sv: sv) => Promise<vr>
+type action = (req: any, sv: sva) => Promise<vr>
 type acl_search = {    
     v_to_users(v: v, attr: string): Promise<string[]>
     user_to_subv(user: v): Promise<Partial<v>[]>

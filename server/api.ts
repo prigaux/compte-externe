@@ -29,14 +29,19 @@ function step(sv: sv): step {
     return r;
 }
 
-function sv_attrs(sv: sv): StepAttrsOption {
-    return step(sv).attrs;
+function add_step_attrs<SV extends sv>(sv: SV) {
+    const attrs = step(sv).attrs;
+    let sva = sv as SV & { attrs: StepAttrsOption };
+    sva.attrs = attrs;
+    return sva;
 }
 
-function action_pre(req: req, sv: sv) {
+const sv_attrs = (sv: sva) => sv.attrs; 
+
+function action_pre(req: req, sv: sv): Promise<svr> {
     return action(req, sv, 'action_pre');
 }
-function action_post(req: req, sv: sv) {
+function action_post(req: req, sv: sva): Promise<svra> {
     return action(req, sv, 'action_post').tap(sv => {
         const accountStatus = sv.response && sv.response.accountStatus;
         if (accountStatus && accountStatus !== 'active') {
@@ -45,7 +50,7 @@ function action_post(req: req, sv: sv) {
         mayNotifyModerators(req, sv, 'accepted');
     });
 }
-function action(req: req, sv: sv, action_name: string): Promise<svr> {
+function action(req: req, sv: sv|sva, action_name: string) {
     let f = step(sv)[action_name];
     if (!f) return Promise.resolve(sv); // nothing to do
     //console.log("calling " + action_name + " for step " + sv.step);
@@ -55,7 +60,7 @@ function action(req: req, sv: sv, action_name: string): Promise<svr> {
     });
 }
 
-async function may_export_v_ldap(sv: sv) {
+async function may_export_v_ldap(sv: sva) {
     if (sv.v && sv.v.uid) {
         let v_ldap = await search_ldap.onePerson(filters.eq("uid", sv.v.uid));
         if (sv.v.profilename) v_ldap = selectUserProfile(v_ldap, sv.v.profilename)
@@ -65,9 +70,10 @@ async function may_export_v_ldap(sv: sv) {
     return sv;
 }
 
-function export_sv(sv: sv) {
+function export_sv(sv: sva) {
     sv = _.clone(sv);
     sv.v = export_v(sv_attrs(sv), sv.v) as v;
+    sv.attrs = exportAttrs(sv.attrs);
     return { ...sv, ...exportStep(step(sv)) };
 }
 
@@ -111,7 +117,7 @@ function first_sv(req: req, wanted_step: string): Promise<sv> {
     return action_pre(req, empty_sv);
 }
 
-function getRaw(req: req, id: id, wanted_step: string): Promise<sv> {
+function getRaw(req: req, id: id, wanted_step: string): Promise<sva> {
     let svP;
     if (id === 'new') {
         svP = first_sv(req, wanted_step);
@@ -125,7 +131,7 @@ function getRaw(req: req, id: id, wanted_step: string): Promise<sv> {
             }
         });
     }
-    return svP.tap(sv => checkAcls(req, sv));
+    return svP.tap(sv => checkAcls(req, sv)).get(add_step_attrs)
 }
 
 function get(req: req, id: id, wanted_step: string) {
@@ -164,7 +170,7 @@ function set(req: req, id: id, wanted_step: string, v: v) {
     });
 }
 
-function advance_sv(req: req, sv: sv) : Promise<svr> {
+function advance_sv(req: req, sv: sva) : Promise<svr> {
     if (!sv.id) {
         // do not rely on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
         sv.id = db.new_id();
@@ -178,11 +184,12 @@ function advance_sv(req: req, sv: sv) : Promise<svr> {
             return svr;
         }
     }).then(svr => {
+        const svra = svr.step ? add_step_attrs(svr) : svr as svra;
         if (svr.response && svr.response.autoModerate) {
             // advance again to next step!
-            return setRaw(req, svr, svr.v);
+            return setRaw(req, svra, svr.v);
         }
-        return svr;
+        return svra;
     });
 }
 
@@ -195,12 +202,12 @@ const checkSetLock = (sv) : Promise<any> => (
 // 3. advance to new step
 // 4. call action_pre
 // 5. save to DB or remove from DB if one action returned null
-function setRaw(req: req, sv: sv, v: v) : Promise<svr> {
+function setRaw(req: req, sv: sva, v: v) : Promise<svr> {
     sv.v = merge_v(sv_attrs(sv), sv.v, v);
     return checkSetLock(sv).then(_ => (
         advance_sv(req, sv)
     )).tap(svr => {
-        let sv = <sv> _.omit(svr, 'response');
+        let sv = <sv> _.omit(svr, 'response', 'attrs');
         if (sv.v.various) delete sv.v.various.diff;
         if (sv.step) {
             return saveRaw(req, sv);
@@ -251,7 +258,7 @@ function listAuthorized(req: req) {
             const valid = sv.step in conf_steps.steps;
             if (!valid) console.error("ignoring sv in db with invalid step " + sv.step);
             return valid;
-        }).map(export_sv)
+        }).map(add_step_attrs).map(export_sv)
     ));
 }
 

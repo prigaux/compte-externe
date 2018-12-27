@@ -78,12 +78,12 @@ export const add_full_v: simpleAction = (_req, sv)  => (
     })
 );
 
-export const if_v = (test_v, action: action): action => async (req, sv: sv) => (
+export const if_v = (test_v, action: action): action => async (req, sv: sva) => (
     test_v(sv.v) ? await action(req, sv) : { v: sv.v, response: {} }
 );
 
 export function chain(l_actions: action[]): action {
-    return (req, sv: sv) => {
+    return (req, sv: sva) => {
         let vr: Promise<vr> = Promise.resolve(sv);
         l_actions.forEach(action => {
             vr = vr.then(vr => (
@@ -138,7 +138,7 @@ export const createCompte: action = (_req, sv) => (
     createCompte_(sv, { dupcreate: "ignore", dupmod: "warn", create: true })
 );
     
-const createCompte_ = async (sv: sv, opts : crejsonldap.options) => {
+const createCompte_ = async (sv: sva, opts : crejsonldap.options) => {
     let v = sv.v;
 
     if (!v.startdate) v.startdate = new Date();
@@ -154,8 +154,7 @@ const createCompte_ = async (sv: sv, opts : crejsonldap.options) => {
     v.uid = resp_subv.uid;
     if (!v.supannAliasLogin) v.supannAliasLogin = resp_subv.uid;
 
-    const attrs = require('../steps/conf').steps[sv.step].attrs;
-    await after_createAccount(v, attrs, resp_subv.accountStatus);
+    await after_createAccount(v, sv.attrs, resp_subv.accountStatus);
 
     return { v, response: {login: v.supannAliasLogin, accountStatus: resp_subv.accountStatus } }
 };
