@@ -117,21 +117,22 @@ function first_sv(req: req, wanted_step: string): Promise<sv> {
     return action_pre(req, empty_sv);
 }
 
-function getRaw(req: req, id: id, wanted_step: string): Promise<sva> {
-    let svP;
+async function getRaw(req: req, id: id, wanted_step: string): Promise<sva> {
+    let sv: sv;
+
     if (id === 'new') {
-        svP = first_sv(req, wanted_step);
+        sv = await first_sv(req, wanted_step);
     } else {
-        svP = db.get(id).tap(sv => {
-            if (!sv) throw "invalid id " + id;
-            if (!sv.step) throw "internal error: missing step for id " + id;
-            if (wanted_step && sv.step !== wanted_step) {
-                console.error("user asked for step " + wanted_step + ", but sv is in state " + sv.step);
-                throw "Bad Request";
-            }
-        });
+        sv = await db.get(id);
+        if (!sv) throw "invalid id " + id;
+        if (!sv.step) throw "internal error: missing step for id " + id;
+        if (wanted_step && sv.step !== wanted_step) {
+            console.error("user asked for step " + wanted_step + ", but sv is in state " + sv.step);
+            throw "Bad Request";
+        }
     }
-    return svP.tap(sv => checkAcls(req, sv)).get(add_step_attrs)
+    await checkAcls(req, sv);
+    return add_step_attrs(sv);
 }
 
 function get(req: req, id: id, wanted_step: string) {
