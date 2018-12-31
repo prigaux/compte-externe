@@ -151,8 +151,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             }
         }
 
-        export function initialSteps() : Promise<InitialSteps> {
-            return axios.get(api_url + '/initialSteps').then(resp => (
+        export function loggedUserInitialSteps() : Promise<InitialSteps> {
+            return axios.get(api_url + '/steps/loggedUserInitialSteps').then(resp => (
                 resp.data
             ));
         }

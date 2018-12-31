@@ -291,7 +291,7 @@ const exportStep = (step: step) : Partial<step> => (
         allow_many: step.allow_many,
     }
 );
-const initialSteps = (req: req) => (
+const loggedUserInitialSteps = (req: req) => (
   acls_allowed_ssubv(req.user).then(allowed_ssubvs => (
     allowed_ssubvs.filter(({ step }) => (
           conf_steps.steps[step].initialStep
@@ -304,8 +304,8 @@ const initialSteps = (req: req) => (
   ))
 );
 
-router.get('/initialSteps', (req : req, res) => {
-    respondJson(req, res, initialSteps(req));
+router.get('/steps/loggedUserInitialSteps', (req : req, res) => {
+    respondJson(req, res, loggedUserInitialSteps(req));
 });
     
 router.get('/comptes', (req : req, res) => {

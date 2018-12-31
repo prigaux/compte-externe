@@ -41,7 +41,7 @@ export default Vue.extend({
   }),
   mounted() {
       this.listRec({});
-      Ws.initialSteps().then(val => this.initialSteps = val);
+      Ws.loggedUserInitialSteps().then(val => this.initialSteps = val);
   },
   beforeDestroy() {
     if (this.cancelP) this.cancelP.cancel("");
