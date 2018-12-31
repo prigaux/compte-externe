@@ -20,14 +20,16 @@ const router = express.Router();
 const bus = utils.eventBus();
 const respondJson = utils.respondJson;
 
-function step(sv: sv): step {
-    let r = conf_steps.steps[sv.step];
+function name2step(name: string): step {
+    let r = conf_steps.steps[name];
     if (!r) {
-        console.trace("invalid step " + sv.step);
-        throw "invalid step " + sv.step;
+        console.trace("invalid step " + name);
+        throw "invalid step " + name;
     }
     return r;
 }
+
+const step = (sv: sv) => name2step(sv.step);
 
 function add_step_attrs<SV extends sv>(sv: SV) {
     const attrs = step(sv).attrs;
