@@ -90,7 +90,6 @@ export default Vue.extend({
             Helpers.assign(this, AttrsForm_data());
             this.init();
         },
-        'v_default': 'handle_default_values',
     },
     computed: {
         id() {
