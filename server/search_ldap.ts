@@ -132,7 +132,7 @@ const _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(<{}> v, attrs));
 export const homonymes = (v: v) : Promise<Homonyme[]> => {
     let sns = _merge_at(v, conf.ldap.people.sns);
     let givenNames = _merge_at(v, conf.ldap.people.givenNames);
-    if (sns[0] === undefined) return Promise.resolve([]);
+    if (sns[0] === undefined || !v.birthDay) return Promise.resolve([]);
     console.log("sns", sns);
     const preferStudent = conf.ldap.people.homonymes_preferStudent(v.profilename);
     return homonymes_(sns, givenNames, v.birthDay, v.supannMailPerso, preferStudent);    
