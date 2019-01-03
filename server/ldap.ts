@@ -236,7 +236,7 @@ export function search<T extends {}>(base: string, filter: filter, attrTypes: T,
 export const searchMany = <T extends {}> (base: string, filters: filter[], idAttr: string, attrTypes: T, attrsConvert: AttrsConvert, options: Options = {}): Promise<T[]> => (
     Promise.all(filters.map(filter => (
         search(base, filter, attrTypes, attrsConvert, options)
-    ))).then(_.flatten).then(l => _.uniqBy(l, idAttr))
+    ))).then(ll => _.flatten(ll)).then(l => _.uniqBy(l, idAttr))
 );
 
 export const searchOne = <T extends LdapEntry> (base: string, filter: filter, attrTypes: T, attrsConvert: AttrsConvert, options: Options = {}) => {
