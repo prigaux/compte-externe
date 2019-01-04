@@ -28,7 +28,7 @@ type sv = {
 }
 type sva = sv & { attrs: StepAttrsOption };
 
-type r = response & { success: boolean, step?: string, labels?: StepLabels, autoModerate: boolean }
+type r = response & { success: boolean, step?: string, labels?: StepLabels }
 type vr = {v: v; response?: response }
 type svr = sv & { response?: response }
 type svra = sva & { response?: response }

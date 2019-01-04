@@ -187,12 +187,7 @@ function advance_sv(req: req, sv: sva) : Promise<svr> {
             return svr;
         }
     }).then(svr => {
-        const svra = svr.step ? add_step_attrs(svr) : svr as svra;
-        if (svr.response && svr.response.autoModerate) {
-            // advance again to next step!
-            return setRaw(req, svra, svr.v);
-        }
-        return svra;
+        return svr.step ? add_step_attrs(svr) : svr as svra;
     });
 }
 

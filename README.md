@@ -48,7 +48,6 @@ With current sv.step:
 
 If sv.step is not null, with new sv.step:
 * ```.action_pre``` is called with params (req, sv)
-  * ```svr.response.autoModerate``` implies going straight to next step
 * sv is saved in database
 * ```.notify.added``` template is mailed to moderators (moderators computed from ```.acls```)
 
