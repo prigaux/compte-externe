@@ -168,6 +168,10 @@ export default Vue.extend({
         if (resp.forceBrowserExit) {
             Helpers.createCookie('forceBrowserExit', 'true', 0);
         }
+        if (resp.nextBrowserStep) {
+            router.push({ path: resp.nextBrowserStep, query: this.v });
+            return;
+        }
         const template = resp.labels && resp.labels.added || this.step && this.step.labels && this.step.labels.accepted;
         if (template) {
             this.templated_response(resp, "<div>" + template + "</div>");

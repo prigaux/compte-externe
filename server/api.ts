@@ -169,6 +169,7 @@ function set(req: req, id: id, wanted_step: string, v: v) {
             r.step = svr.step;
             r.labels = step(svr).labels;
         }
+        r.nextBrowserStep = name2step(wanted_step).nextBrowserStep;
         return r;
     });
 }

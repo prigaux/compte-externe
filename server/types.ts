@@ -28,7 +28,7 @@ type sv = {
 }
 type sva = sv & { attrs: StepAttrsOption };
 
-type r = response & { success: boolean, step?: string, labels?: StepLabels }
+type r = response & { success: boolean, step?: string, labels?: StepLabels, nextBrowserStep: string }
 type vr = {v: v; response?: response }
 type svr = sv & { response?: response }
 type svra = sva & { response?: response }
@@ -93,6 +93,7 @@ type step = {
   
   attrs: StepAttrsOption | ((v) => StepAttrsOption);
   next?: string | ((v) => string);
+  nextBrowserStep?: string;
   notify?: StepNotify;
   action_pre?: action;
   action_post?: action;
