@@ -15,6 +15,7 @@ export interface VRaw extends VCommon {
 }
 export interface V extends VCommon {
     birthDay?: Date;
+    prev?: string;
     noInteraction?: boolean;
     startdate?: Date;
     enddate?: Date;

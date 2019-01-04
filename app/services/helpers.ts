@@ -82,6 +82,15 @@ import { Dictionary } from '../services/ws';
         }
     }
 
+    export function partitionObject<T>(o : Dictionary<T>, fn : (string, T) => boolean) {
+        let with_ = {};
+        let without = {};
+        eachObject(o, (k, val) => {
+            (fn(k, val) ? with_ : without)[k] = val;
+        });
+        return [with_, without];
+    }
+
     export const equalsIgnoreCase = (a: string, b: string) => (
         a.toLowerCase() === b.toLowerCase()
     )

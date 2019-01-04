@@ -52,7 +52,7 @@ import conf from '../conf';
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { defaults, isEqual, unionBy } from 'lodash';
+import { defaults, isEqual, unionBy, isEmpty } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
 import { compute_subAttrs_and_handle_default_values } from '../services/sub_and_defaults';
 
@@ -77,9 +77,17 @@ function AttrsForm_data() {
     };    
 }
 
+let v_from_prevStep = {};
+
 export default Vue.extend({
     mounted() {
-        this.init();
+        const prevStep = this.$route.query && this.$route.query.prev;
+        if (prevStep && isEmpty(v_from_prevStep)) {
+            // we lost information passed through javascript memory, so go back to initial step
+            router.replace({ path: '/' + prevStep });
+        } else {
+            this.init();
+        }
     },
     props: [ 'wanted_id', 'stepName' ],
     data: AttrsForm_data,
@@ -128,6 +136,11 @@ export default Vue.extend({
             }
             return attrs;
         },
+        v_pre() {
+            let v = { ...this.$route.query, ...v_from_prevStep };
+            delete v.prev;
+            return v;
+        },
         potential_homonyms() {
             return (this.all_potential_homonyms || []).filter(h => !h.ignore);
     },
@@ -135,7 +148,7 @@ export default Vue.extend({
 
     methods: {
         init() {
-            Ws.getInScope(this, this.id, this.$route.query, this.stepName).then(() => {
+            Ws.getInScope(this, this.id, this.v_pre, this.stepName).then(() => {
                 if (this.noInteraction) this.send();
                 this.may_update_potential_homonyms({});
             });    
@@ -169,7 +182,7 @@ export default Vue.extend({
             Helpers.createCookie('forceBrowserExit', 'true', 0);
         }
         if (resp.nextBrowserStep) {
-            router.push({ path: resp.nextBrowserStep, query: this.v });
+            this.nextBrowserStep(resp);
             return;
         }
         const template = resp.labels && resp.labels.added || this.step && this.step.labels && this.step.labels.accepted;
@@ -190,6 +203,16 @@ export default Vue.extend({
         }
         this.go_back();
       },
+      nextBrowserStep(resp) {
+        // passwords must NOT be passed as query, pass them in javascript memory
+        // in that cas, add "prev" parameter to correctly handle missing "v_from_prevStep" parameters
+        let query;
+        [ v_from_prevStep, query ] = Helpers.partitionObject(this.v, (k, _) => (this.attrs[k] || {}).uiType === 'password');
+        if (!isEmpty(v_from_prevStep)) {
+            query.prev = this.$route.path.replace(/^\//, '');
+        }
+        router.push({ path: resp.nextBrowserStep, query });
+      },
       templated_response(resp, template: string) {
         this.resp = resp;
         this.resp.component = Vue.extend({ 
@@ -206,7 +229,7 @@ export default Vue.extend({
         }          
       },
       send() {
-          return Ws.set(this.id, this.stepName, this.v, this.$route.query).then(resp => {
+          return Ws.set(this.id, this.stepName, this.v, this.v_pre).then(resp => {
               if (resp.error === "no_moderators") {
                   Ws.structure_get(this.v.structureParrain).then(structure => {
                     alert(conf.error_msg.noModerators(structure.name));
