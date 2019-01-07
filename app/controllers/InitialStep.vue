@@ -1,7 +1,7 @@
 <template>
-<div v-if="description">
+<div v-if="title_in_list">
     <div v-if="allow_reuse">
-        <h4 v-html="description"></h4>
+        <h4 v-html="title_in_list"></h4>
 
         <form novalidate v-if="step.acl_subvs || step.attrs.profilename_to_modify" class="form-horizontal">
             <my-bootstrap-form-group :name="uid" label="Choisir un utilisateur">
@@ -29,7 +29,7 @@
     </div>
     <div v-else>
         <h4>
-            <router-link :to="'/' + step.id" v-html="description"></router-link>
+            <router-link :to="'/' + step.id" v-html="title_in_list"></router-link>
         </h4>
     </div>
     <p style="margin-bottom: 2em"></p>
@@ -57,9 +57,9 @@ export default Vue.extend({
      allow_reuse() {
          return this.step.attrs.uid && !this.step.attrs.uid.uiHidden;
      },
-     description() {
+     title_in_list() {
          const labels = this.step.labels || {};
-         return "description" in labels ? labels.description : labels.title;
+         return "title_in_list" in labels ? labels.title_in_list : labels.title;
      },
    },
    watch: {
