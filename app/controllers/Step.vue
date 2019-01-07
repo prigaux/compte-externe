@@ -214,11 +214,10 @@ export default Vue.extend({
         router.push({ path: resp.nextBrowserStep, query });
       },
       templated_response(resp, template: string) {
-        this.resp = resp;
-        this.resp.component = Vue.extend({ 
-            props: ['resp', 'v'], 
-            template,
-        });
+        this.resp = {
+            ...resp,
+            component: Vue.extend({ props: ['resp', 'v'], template }),
+        };
       },
       go_back() {
         if (this.initialStep) {
