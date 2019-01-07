@@ -6,6 +6,10 @@
  <div v-else-if="v">
   <h4 style="margin-top: 2em" v-html="step.labels.title"></h4>
 
+  <div v-if="step_description">
+    <component :is="step_description" :v_pre="v_pre" :v="v"></component>
+  </div>
+
   <div v-if="step.allow_many">
     
         <div v-if="imported">
@@ -140,6 +144,10 @@ export default Vue.extend({
             let v = { ...this.$route.query, ...v_from_prevStep };
             delete v.prev;
             return v;
+        },
+        step_description() {
+            const template = this.step && this.step.labels && this.step.labels.description;
+            return template && Vue.extend({ props: ['v_pre', 'v'], template: "<div>" + template + "</div>" });
         },
         potential_homonyms() {
             return (this.all_potential_homonyms || []).filter(h => !h.ignore);
