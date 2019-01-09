@@ -78,6 +78,15 @@ You can also ensure the browser does not modify the value:
 
 TODO
 
+# Authentication
+
+* if `.action_pre` or `.action_post` throws exception `Unauthorized`
+* the API will return HTTP status 401 (cf server/utils.ts:respondJson)
+* the javascript code will redirect to `/login/local?then=`*current step* (cf app/services/ws.ts)
+* which will force shibboleth authentication (cf "Apache shibboleth SP configuration" below)
+* `/login/local` will return the Vue.js app (cf catch-all in server/start_server.ts)
+* which will route to `query.then` (cf app/router.ts)
+* the javascript will call API again, with the user now authenticated
 
 # Configuration
 
