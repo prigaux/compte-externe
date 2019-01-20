@@ -10,6 +10,7 @@ export default {
     wsgroupsURL,
     base_pathname: '/',
     
+    // order of keys is used in CompareUsers
     attr_labels: {
         supannCivilite: "Civilité",
         givenName: "Prénom",
@@ -96,26 +97,6 @@ export default {
         etablissement_telephoneNumber: { uiType: 'phone' },
         etablissement_facsimileTelephoneNumber: { uiType: 'phone' },
         },
-
-    attrs_order: [
-        'eduPersonPrincipalName', 'mail',
-        'supannCivilite', 'sn', 'birthName', 'givenName', 'altGivenName', 'displayName', 'birthDay',
-        'homePostalAddress', 'homePhone', 'pager', 'supannMailPerso',
-        'jpegPhoto',
-        'structureParrain',
-        'startdate', 'duration_or_enddate', 'duration', 'enddate',
-        'telephoneNumber', 'supannAutreTelephone', 'facsimileTelephoneNumber', 'roomNumber', 'floorNumber', 'roomAccess',
-        'userPassword', 'profilename',
-        'etablissementExterneOrNew',
-        'etablissementExterne',
-        'etablissement_description',
-        'etablissement_siret',
-        'etablissement_postalAddress',
-        'etablissement_labeledURI',
-        'etablissement_telephoneNumber',
-        'etablissement_facsimileTelephoneNumber',
-        'charter',
-    ],
 
     title: "Gestion de comptes",
 
