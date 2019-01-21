@@ -122,6 +122,10 @@ export default Vue.extend({
             this.val = val;
         },
         val(val) {
+            if (this.opts.normalize) {
+                const val_ = this.opts.normalize(val);
+                if (val_ !== val) { this.val = val = val_ }
+            }
             this.$emit('input', val);
         },
         submitted(b) {

@@ -2,6 +2,7 @@
 
 const accentsRange = '\u00C0-\u00FC';
 const allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
+const normalizeApostrophe = (s : string) => s.replace(/[’′´‘]/g, "'");
 
 const wsgroupsURL = "https://wsgroups.univ-paris1.fr";
 
@@ -73,9 +74,9 @@ export default {
         supannAutreTelephone: { items: { uiType: "phone" } },
         pager: { uiType: "mobilePhone" },
         supannMailPerso: { uiType: "email" },
-        givenName: { allowedChars: allowedCharsInNames },
-        sn: { allowedChars: allowedCharsInNames },
-        birthName: { allowedChars: allowedCharsInNames, labels: { tooltip: "si différent du nom d'usage" } },
+        givenName: { allowedChars: allowedCharsInNames, normalize: normalizeApostrophe },
+        sn: { allowedChars: allowedCharsInNames, normalize: normalizeApostrophe },
+        birthName: { allowedChars: allowedCharsInNames, normalize: normalizeApostrophe, labels: { tooltip: "si différent du nom d'usage" } },
         charter: { uiType: 'checkbox' },
         birthDay: { uiType: 'date', min: new Date('1900'), minYear: '1900', max: new Date(), maxYear: new Date().getUTCFullYear() },
         startdate: { uiType: 'date', min: new Date(), minYear: new Date().getUTCFullYear() },
