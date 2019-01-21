@@ -69,7 +69,7 @@ type StepAttrOption = StepAttrItemsOption & {
   items?: StepAttrItemsOption,
   title?: string;
   description?: string;
-  labels?: { advice?: string; }
+  labels?: { advice?: string; tooltip?: string; }
 }
 type StepAttrsOption = Dictionary<StepAttrOption>;
 
