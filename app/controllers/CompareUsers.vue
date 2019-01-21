@@ -31,7 +31,7 @@ function format(val) {
 function computeComparisons(v, homonyme) {   
         let sameAttrs = {};
         const ignored_attrs = [ 'uid', 'supannAliasLogin', 'score' ];
-        return Object.keys(conf.attr_labels).filter(attr => (
+        return Object.keys(conf.default_attrs_opts).filter(attr => (
             (attr in homonyme) && !_.includes(ignored_attrs, attr) && !attr.match(/^global_/)
         )).map(attr => {
             var val2 = format(homonyme[attr]);

@@ -6,7 +6,7 @@ import * as Helpers from '../services/helpers';
 function attrs_data(vm) {
     let validity = { submitted : false };
     Helpers.eachObject(vm.attrs, (attr) => validity[attr] = {});
-    Helpers.eachObject(conf.attr_labels, (attr) => validity[attr] = {});
+    Helpers.eachObject(conf.default_attrs_opts, (attr) => validity[attr] = {}); // TODO: get rid of this. Hopefully not needed anymore
     return { validity };
 }
 

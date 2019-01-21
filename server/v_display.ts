@@ -14,9 +14,10 @@ const format_various_diff = (diff) => (
 `<table border="1">
   <tr><th>Champ modifié</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
 ` +
-    map(diff, ({ prev, current }, key) => (
-        '  <tr>' + [client_conf.attr_labels[key] || key, prev || '<i>aucune</i>', current || '<i>supprimée</i>'].map(s => `<td>${s}</td>`).join('') + '</tr>'
-    )).join("\n") + `
+    map(diff, ({ prev, current }, key) => {
+        const opts = client_conf.default_attrs_opts[key];
+        return '  <tr>' + [opts && opts.title || key, prev || '<i>aucune</i>', current || '<i>supprimée</i>'].map(s => `<td>${s}</td>`).join('') + '</tr>'
+    }).join("\n") + `
 </table>`
 );
 
