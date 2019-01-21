@@ -65,7 +65,7 @@ type StepAttrOption = StepAttrItemsOption & {
   default?: string;
 
   optional?: boolean;
-  choices?: StepAttrOptionChoices[];
+  oneOf?: StepAttrOptionChoices[];
   items?: StepAttrItemsOption,
   title?: string;
   description?: string;

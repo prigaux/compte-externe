@@ -44,7 +44,7 @@
 
     <select-with-validity :name="name" v-model="val" v-else-if="uiType === 'select'"
         :disabled="opts.readOnly"
-        :choices="opts.choices" :required="!opts.optional" :validity.sync="validity[name]">
+        :choices="opts.oneOf" :required="!opts.optional" :validity.sync="validity[name]">
     </select-with-validity>
 
     <div class="checkbox" v-else-if="uiType === 'checkbox'">
@@ -104,7 +104,7 @@ export default Vue.extend({
             if (this.opts.uiType === 'date' && !isDateInputSupported()) {
                 return 'dateThreeInputs';
             }
-            return this.opts.uiType || this.opts.choices && (this.opts.choices.length <= 2 ? 'radio' : 'select') || this.opts.items && 'array';
+            return this.opts.uiType || this.opts.oneOf && (this.opts.oneOf.length <= 2 ? 'radio' : 'select') || this.opts.items && 'array';
         },
         type() {
             return this.realType || !this.opts.uiType ?
@@ -115,7 +115,7 @@ export default Vue.extend({
             return includes(['phone', 'mobilePhone', 'frenchPostalCode', 'siret'], this.opts.uiType) ? this.opts.uiType : undefined;
         },
         choicesMap() {
-            return this.opts.choices && mapValues(keyBy(this.opts.choices, 'key'), choice => choice['name']);
+            return this.opts.oneOf && mapValues(keyBy(this.opts.oneOf, 'key'), choice => choice['name']);
         },
     },
     watch: {

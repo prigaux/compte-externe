@@ -66,7 +66,7 @@ Read sv from database
 ## ```attrs```
 
 By default, the value is sent to the browser, and can be modified with potential restrictions:
-* ```choices```: restricted list of possbilities (key + name list)
+* ```oneOf```: restricted list of possibilities (key + name list)
 * ```pattern```: regexp the value sent by the browser must match
 * ```max```: max number the value sent by the browser must match
 

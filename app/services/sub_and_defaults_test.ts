@@ -26,7 +26,7 @@ describe('sub_and_defaults', function() {
     });
   
     it('should handle sub', () => {
-        const attrs = { duration: { choices: [ 
+        const attrs = { duration: { oneOf: [ 
             { key: "1", sub: { sn: {} } }, 
             { key: "2" }
             ] } } as StepAttrsOption;
@@ -40,7 +40,7 @@ describe('sub_and_defaults', function() {
     it('should merge sub', () => {
         const attrs = { 
             sn: { pattern: "." },
-            duration: { choices: [ 
+            duration: { oneOf: [ 
                 { key: "1", sub: { sn: { default: "a" } } }, 
                 { key: "2" }
             ] },
@@ -54,9 +54,9 @@ describe('sub_and_defaults', function() {
     });
 
     it('should handle inner sub', () => {
-        const attrs = { duration: { choices: [ 
+        const attrs = { duration: { oneOf: [ 
             { key: "1", sub: { sn: {
-                choices: [
+                oneOf: [
                     { key: "rigaux", sub: {
                         givenName: {},
                     } }
@@ -72,7 +72,7 @@ describe('sub_and_defaults', function() {
     });
     
     it('should handle default', () => {
-        const attrs = { duration: { choices: [ 
+        const attrs = { duration: { oneOf: [ 
             { key: "1", sub: { sn: { default: "a" } } }, 
             { key: "2" }
             ] } } as StepAttrsOption;
@@ -84,7 +84,7 @@ describe('sub_and_defaults', function() {
     });
 
     it('should handle same defaults', () => {
-        const attrs = { duration: { choices: [ 
+        const attrs = { duration: { oneOf: [ 
             { key: "1", sub: { sn: { default: "a" } } }, 
             { key: "2", sub: { sn: { default: "a" } }  }
             ] } } as StepAttrsOption;
@@ -96,7 +96,7 @@ describe('sub_and_defaults', function() {
     });
     
     it('should handle different defaults', () => {
-        const attrs = { duration: { choices: [ 
+        const attrs = { duration: { oneOf: [ 
             { key: "1", sub: { sn: { default: "a" } } }, 
             { key: "2", sub: { sn: { default: "b" } }  }
             ] } } as StepAttrsOption;
@@ -108,7 +108,7 @@ describe('sub_and_defaults', function() {
     });
 
     it('should not modify existing values with defaults', () => {
-        const attrs = { duration: { choices: [ 
+        const attrs = { duration: { oneOf: [ 
             { key: "1", sub: { sn: { default: "a" } } }, 
             ] } } as StepAttrsOption;
             
@@ -117,7 +117,7 @@ describe('sub_and_defaults', function() {
     });
     
     it('should not modify user-modified-values with defaults', () => {
-        const attrs = { duration: { choices: [ 
+        const attrs = { duration: { oneOf: [ 
             { key: "1", sub: { sn: { default: "a" } } }, 
             { key: "2", sub: { sn: { default: "b" } }  }
             ] } } as StepAttrsOption;
@@ -131,11 +131,11 @@ describe('sub_and_defaults', function() {
 
     it('should merge subs', () => {
         const attrs = { 
-            givenName: { default: "a", choices: [ 
+            givenName: { default: "a", oneOf: [ 
                     { key: "a", sub: { sn: {} } }, 
                     { key: "b", sub: { sn: { uiHidden: true } } },
             ] },
-            duration: { choices: [ 
+            duration: { oneOf: [ 
                 { key: "1", sub: { sn: { default: "a" } } }, 
                 { key: "2", sub: { sn: { default: "a" } } }, 
             ] },

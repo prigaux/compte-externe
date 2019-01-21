@@ -61,7 +61,7 @@ describe('mongo_query', () => {
         const allowed_ssubvs = [ { step: "import", subvs: [{"structureParrain":"DGH"}]}];
         assert.deepEqual(acl_checker.mongo_query(allowed_ssubvs), { step: 'import', "v.structureParrain":"DGH" } );
     });
-    it('should handle choices', () => {
+    it('should handle oneOf', () => {
         const allowed_ssubvs = [ 
             {step: "extern", subvs: [{}]}, 
             {step: "import", subvs: [{"structureParrain":"DGHA"},{"structureParrain":"DGH"}]},

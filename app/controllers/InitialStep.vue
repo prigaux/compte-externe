@@ -10,7 +10,7 @@
                     :options="people_search"
                     :formatting="e => e && (e.givenName + ' ' + e.sn)"></typeahead>
                 <div v-if="profiles" style="padding-top: 1rem">
-                    <span v-if="profiles.choices.length">
+                    <span v-if="profiles.oneOf.length">
                         {{user.givenName}} {{user.sn}} a plusieurs profiles. Veuillez choisir le profile à modifier.
                     </span>
                     <span v-else>
@@ -19,7 +19,7 @@
                 </div>
             </my-bootstrap-form-group>
             <genericAttr name="profilename" :opts="profiles" v-model="profile" :submitted="false" 
-                    v-if="profiles && profiles.choices.length">
+                    v-if="profiles && profiles.oneOf.length">
             </genericAttr>
         </form>
 
@@ -74,16 +74,16 @@ export default Vue.extend({
      withUser(u) {
          const need_profile : Ws.StepAttrOption = this.step.attrs.profilename_to_modify;
          if (need_profile) {
-             const choices = need_profile.choices.filter(function (choice) {
+             const oneOf = need_profile.oneOf.filter(function (choice) {
                  return includes(u.global_profilename, choice.key);
              });
              if (need_profile.optional) {
-                 choices.unshift({ key: '', name: 'Créer un nouveau profile' })
+                 oneOf.unshift({ key: '', name: 'Créer un nouveau profile' })
              }
-             if (choices.length === 1) {
-                 this.gotoStep(u, choices[0].key);
+             if (oneOf.length === 1) {
+                 this.gotoStep(u, oneOf[0].key);
              } else {
-                 this.profiles = { ...need_profile, choices };
+                 this.profiles = { ...need_profile, oneOf };
                  this.user = u;
              }
          } else {

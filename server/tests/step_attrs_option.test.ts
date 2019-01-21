@@ -31,7 +31,7 @@ describe('export_v', () => {
         test({}, v, {});
     });
     it("should handle sub", () => {
-        const attrs = { duration: { choices: [
+        const attrs = { duration: { oneOf: [
             { key: "1", sub: { sn: {} } }, 
             { key: "2" },
         ] } }
@@ -100,13 +100,13 @@ describe('merge_v', () => {
         test({ altGivenName: { items: {}, optional: true } }, {}, { altGivenName: [] }, { altGivenName: [] });
         test({ altGivenName: { items: {} } }, {}, { altGivenName: ["x"] }, { altGivenName: ["x"] });
     });
-    it ("should check choices", () => {
-        const attrs = { duration: { choices: [ { key: "1" } ] } };
+    it ("should check oneOf", () => {
+        const attrs = { duration: { oneOf: [ { key: "1" } ] } };
         test(attrs, {}, { duration: "1" }, { duration: "1" });
-        test_fail(attrs, {}, { duration: "2" }, "constraint duration.choices 1 failed for 2");
+        test_fail(attrs, {}, { duration: "2" }, "constraint duration.oneOf 1 failed for 2");
     });
     it ("should handle sub", () => {
-        const attrs = { duration: { choices: [ 
+        const attrs = { duration: { oneOf: [ 
             { key: "1", sub: { sn: {} } }, 
             { key: "2" },
         ] } };

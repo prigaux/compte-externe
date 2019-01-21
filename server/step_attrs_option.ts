@@ -48,8 +48,8 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
                 r[key] = v[key];
             }
         }
-        if (key in r && opt.choices) {
-            const choice = find_choice(opt.choices, r[key]);
+        if (key in r && opt.oneOf) {
+            const choice = find_choice(opt.oneOf, r[key]);
             if (choice && choice.sub) merge_one_level(choice.sub);
         }
       });
@@ -78,10 +78,10 @@ function validate(key: string, opt: StepAttrOption, val) {
             if (!(_.isString(val_) && val_.match("^(" + opt.pattern + ")$")))
                 throw `constraint ${key}.pattern ${opt.pattern} failed for ${val}`;
         }
-        if (opt.choices) {
-            if (val !== undefined && !find_choice(opt.choices, val)) {
-                const keys = opt.choices.map(e => e.key);
-                throw `constraint ${key}.choices ${keys} failed for ${val}`;
+        if (opt.oneOf) {
+            if (val !== undefined && !find_choice(opt.oneOf, val)) {
+                const keys = opt.oneOf.map(e => e.key);
+                throw `constraint ${key}.oneOf ${keys} failed for ${val}`;
             }
         }
         if (opt.items || opt.uiType === 'array') {
@@ -97,8 +97,8 @@ function compute_flat_attrs(attrs: StepAttrsOption) {
     function one_level(attrs : StepAttrsOption) {
         _.each(attrs, (opt, key) => {
             r[key] = { ...(r[key] || {}), ...opt };
-            if (opt.choices) {
-                opt.choices.forEach(choice => {
+            if (opt.oneOf) {
+                opt.oneOf.forEach(choice => {
                     if (choice && choice.sub) one_level(choice.sub);
                 });
             }
@@ -116,7 +116,7 @@ export function export_v(attrs: StepAttrsOption, v) {
     ));
 }
 
-const find_choice = (choices, key) => choices.find(choice => choice.key == key); // allow equality if key is number and choice.key is string
+const find_choice = (oneOf, key) => oneOf.find(choice => choice.key == key); // allow equality if key is number and choice.key is string
 
 const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt}) => (
     toUserOnly ? { optional: true, readOnly: true, ...opt} : opt

@@ -2,7 +2,7 @@ import { V, StepAttrsOption, StepAttrOption } from '../services/ws';
 import { find, forIn, mapValues, pickBy, Dictionary } from 'lodash';
 
 // assign "default" values
-// handle the complex case where "default" values has changed because of "choices" "sub"
+// handle the complex case where "default" values has changed because of "oneOf" "sub"
 
 const may_set_default_value = (k: string, opts: StepAttrOption, v, prev_defaults) => {
     if (!("default" in opts) && !(k in prev_defaults)) {
@@ -23,8 +23,8 @@ export function compute_subAttrs_and_handle_default_values(attrs : StepAttrsOpti
             attrs_[k] = { ...attrs_[k] || {}, ...opts }; // merge
             may_set_default_value(k, attrs_[k], v, prev_defaults || {});
 
-            if (opts.choices && v[k]) {
-                const selected = find(opts.choices, choice => choice.key === v[k]);
+            if (opts.oneOf && v[k]) {
+                const selected = find(opts.oneOf, choice => choice.key === v[k]);
                 if (selected && selected.sub) {
                     add_subAttrs(selected.sub);
                 }

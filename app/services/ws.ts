@@ -38,7 +38,7 @@ export interface StepAttrOption {
   pattern?: string;
   max?: number | Date;
   default?: string;
-  choices?: StepAttrOptionChoices[];
+  oneOf?: StepAttrOptionChoices[];
   format?: 'date-time' | 'data-url';
 }
 export interface Dictionary<T> {
@@ -166,7 +166,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 // recursive merge, especially useful for attr.labels
                 attrs[attr] = merge({}, conf.default_attrs_opts[attr], opts);
                 // also init "sub" attrs
-                (attrs[attr].choices || []).forEach(choice => { if (choice.sub) initAttrs(choice.sub) });
+                (attrs[attr].oneOf || []).forEach(choice => { if (choice.sub) initAttrs(choice.sub) });
             }
             return attrs;
         }

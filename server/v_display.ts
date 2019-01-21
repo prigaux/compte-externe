@@ -2,8 +2,8 @@ import { map } from 'lodash';
 import client_conf from '../app/conf';
 
 function key2name(raw, spec: StepAttrOption) {
-    if (spec && spec.choices) {
-        for (const e of spec.choices) {
+    if (spec && spec.oneOf) {
+        for (const e of spec.oneOf) {
             if (e.key === raw) return e.name;
         }
     }

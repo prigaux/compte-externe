@@ -131,8 +131,8 @@ export const attrsHelpingDiagnoseHomonymes = (
 export const mapAttrs = (attrs: StepAttrsOption, f) => (
     _.mapValues(attrs, (opts, key) => {
         opts = f(opts, key);
-        if (opts.choices)
-            opts.choices = opts.choices.map(choice => (
+        if (opts.oneOf)
+            opts.oneOf = opts.oneOf.map(choice => (
                 choice.sub ? { ...choice, sub: mapAttrs(choice.sub, f) } : choice
             ));
         return opts;        
