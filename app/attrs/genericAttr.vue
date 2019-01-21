@@ -43,6 +43,7 @@
     </radio-with-validity>
 
     <select-with-validity :name="name" v-model="val" v-else-if="uiType === 'select'"
+        :disabled="opts.readonly"
         :choices="opts.choices" :required="!opts.optional" :validity.sync="validity[name]">
     </select-with-validity>
 
