@@ -5,7 +5,7 @@
             <table class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th v-for="field in to_import.fields">{{attr_labels[field]}}</th>
+                    <th v-for="field in to_import.fields">{{default_attrs_title[field]}}</th>
                 </tr>
                 <tr style="font-size: x-small">
                         <th v-for="field in to_import.fields">{{field}}</th>

@@ -5,7 +5,7 @@
     <span class="help-block" v-if="!validity.userPassword.valid">{{error_msg.userPassword}}</span>
   </my-bootstrap-form-group>
 
-  <my-bootstrap-form-group name="userPassword2" :label="attr_labels.userPassword2" :validity="validity" hideErrors=1>
+  <my-bootstrap-form-group name="userPassword2" :label="default_attrs_title.userPassword2" :validity="validity" hideErrors=1>
     <input-with-validity name="userPassword2" v-model="userPassword2" type="password" :same-as="val" required :validity.sync="validity.userPassword2"></input-with-validity>
     <span class="help-block" v-if="validity.userPassword2.patternMismatch && !validity.userPassword.patternMismatch">Les mots de passe ne sont pas identiques</span>
   </my-bootstrap-form-group>

@@ -4,7 +4,7 @@
      <table class="table table-bordered">
        <tbody>
          <tr v-for="{ attr, cmp, skip } in comparisons" v-if="!skip">
-           <td>{{attr_labels[attr] || attr}}</td>
+           <td>{{default_attrs_title[attr] || attr}}</td>
            <td v-html="cmp[0]"></td>
            <td v-html="cmp[1]"></td>
          </tr>

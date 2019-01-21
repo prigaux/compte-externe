@@ -5,7 +5,7 @@
                 <thead>
                     <tr>
                         <th>Résultat</th>
-                        <th v-for="field in ordered_fields">{{attr_labels[field] || field}}</th>
+                        <th v-for="field in ordered_fields">{{default_attrs_title[field] || field}}</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -6,7 +6,7 @@ import * as Helpers from './services/helpers';
 
 export default Vue.extend({
     computed: {
-        attr_labels() { return _.mapValues(conf.default_attrs_opts, (opts) => opts['title']) },
+        default_attrs_title() { return _.mapValues(conf.default_attrs_opts, (opts) => opts['title']) },
         conf() { return conf },
     },
     methods: {
