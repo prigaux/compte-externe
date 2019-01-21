@@ -10,7 +10,8 @@ export default {
     printCardUrl: undefined, //(login) => `http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=${login}`,
     wsgroupsURL,
     base_pathname: '/',
-    
+    title: "Gestion de comptes",
+
     // order of keys is used in CompareUsers
     default_attrs_opts: {
         givenName: { title: "Prénom", allowedChars: allowedCharsInNames, normalize: normalizeApostrophe },
@@ -71,8 +72,6 @@ export default {
             },
         },
     },
-
-    title: "Gestion de comptes",
 
     pattern: {
         frenchPhone: "^(\\+33|0)\\s*[1-9](\\s*[0-9]){8}$", // french
