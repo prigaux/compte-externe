@@ -1,6 +1,6 @@
 <template>
 <div v-if="opts.readonly">
-   <my-bootstrap-form-group name="address_lines" :label="attr_labels.address_lines">
+   <my-bootstrap-form-group name="address_lines">
       <textarea rows="5" :value="value" class="form-control" disabled></textarea>
    </my-bootstrap-form-group>
 </div>
@@ -11,7 +11,7 @@
   </my-bootstrap-form-group>
     
  <div v-if="country === 'FRANCE'">
-  <my-bootstrap-form-group name="address_lines" :label="attr_labels.address_lines" :validity="validity">
+  <my-bootstrap-form-group name="address_lines" :validity="validity">
     <input-with-validity name="address_lines" v-model="lines" placeholder="Numéro, rue" :validity.sync="validity.address_lines" :required="!opts.optional"></input-with-validity>
     <CurrentLdapValue v-model="lines" :ldap_value="ldap_val.lines"></CurrentLdapValue>
   </my-bootstrap-form-group>
@@ -36,7 +36,7 @@
   </my-bootstrap-form-group>
  </div>
  <div v-else>
-   <my-bootstrap-form-group name="address_lines" :label="attr_labels.address_lines" :validity="validity">
+   <my-bootstrap-form-group name="address_lines" :validity="validity">
      <textarea-with-validity rows="5" v-model="lines" class="form-control" required :validity.sync="validity.address_lines"></textarea-with-validity>
    </my-bootstrap-form-group>
  </div>
