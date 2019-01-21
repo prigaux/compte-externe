@@ -263,10 +263,8 @@ export default Vue.extend({
           this.potential_homonyms.forEach(h => h.ignore = true);
       },
       merge(homonyme) {
-          // especially for "uid" attr, but also "mifare", "barcode"
           Helpers.eachObject(homonyme, (attr, val) => {
-            if (attr === "score") return;
-            if (val && (!this.v[attr] || attr === 'supannAliasLogin')) {
+            if (attr.match(/^global_|^(uid|supannAliasLogin)$/)) {
                 console.log("adding " + attr + " = " + val); 
                 this.v[attr] = val;
                 this.v_orig[attr] = val;
