@@ -4,14 +4,14 @@ import { merge_v, exportAttrs, export_v, selectUserProfile } from '../step_attrs
 describe('exportAttrs', () => {
     it("should work", () => {
         assert.deepEqual(exportAttrs({ sn: {} }), { sn: {} });
-        assert.deepEqual(exportAttrs({ sn: { readonly: true, max: 11 } }), { sn: { readonly: true, max: 11 } });
+        assert.deepEqual(exportAttrs({ sn: { readonly: true, maxYear: 11 } }), { sn: { readonly: true, maxYear: 11 } });
     });
     it("should handle hidden", () => {
         assert.deepEqual(exportAttrs({ sn: { hidden: true } }), {});
     });
     it("should handle toUserOnly", () => {
         assert.deepEqual(exportAttrs({ sn: { toUserOnly: true } }), { sn: { optional: true, readonly: true }});
-        assert.deepEqual(exportAttrs({ sn: { toUserOnly: true, max: 22 } }), { sn: { optional: true, readonly: true, max: 22 }});
+        assert.deepEqual(exportAttrs({ sn: { toUserOnly: true, maxYear: 22 } }), { sn: { optional: true, readonly: true, maxYear: 22 }});
     });
 });
 

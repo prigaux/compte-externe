@@ -51,7 +51,10 @@ interface StepAttrItemsOption {
   uiType?: 'radio'|'select'|'checkbox'|'email'|'text'|'url' | 'phone'|'mobilePhone'|'frenchPostalCode'|'date'|'dateThreeInputs'|'postalAddress'|'photo' | 'etablissement'|'structure'|'password'|'siret' | 'array';
 
   pattern?: string;
+  min?: number;
+  minYear?: number;
   max?: number;
+  maxYear?: number;
 }
 type StepAttrOption = StepAttrItemsOption & {
   readonly?: boolean;
