@@ -30,8 +30,8 @@ export default Vue.extend({
         },
         val(val) {
             if (val) {
-                this.$emit('input', val.key);
-                if (this.opts.onChange) this.opts.onChange(this.v, val.key, val);
+                this.$emit('input', val.const);
+                if (this.opts.onChange) this.opts.onChange(this.v, val.const, val);
             }
         },
         submitted(b) {
@@ -42,12 +42,12 @@ export default Vue.extend({
         search: Ws.etablissements_search,
         formatting(e) {
             if (!e) return '';
-            return e.description || e.displayName;
+            return e.title || e.displayName;
         },
         formatting_html(e) {
             if (!e) return '';
-            const formatted_code = e.key.replace(/^\{(.*?)}/, "$1 : ");
-            return (e.description || e.displayName) +
+            const formatted_code = e.const.replace(/^\{(.*?)}/, "$1 : ");
+            return (e.title || e.displayName) +
               `<br><span class="xsmall">${formatted_code + (e.postalAddress ? '  -  ' + e.postalAddress : '') }</span>`;
         },
     },

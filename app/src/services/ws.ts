@@ -31,6 +31,11 @@ interface StepAttrOptionChoices {
   title?: string;
   sub?: StepAttrsOption;
 }
+interface StepAttrOptionChoices_ {
+  const: string;
+  title: string;
+  short_title?: string;
+}
 export interface StepAttrOption {
   uiHidden?: boolean;
   readOnly?: boolean;
@@ -52,17 +57,6 @@ export interface InitialSteps {
     allow_many: boolean;
 }
 
-interface Structure {
-    key: string;
-    name: string;
-    description: string;
-}
-
-interface Etablissement {
-    key: string;
-    description: string;
-}
-
 import conf from '../conf';
 
 const api_url = conf.base_pathname + 'api';
@@ -71,11 +65,11 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
     axios.get(api_url + '/comptes/search/' + step, { params: { token, maxRows } }).then(resp => resp.data as Promise<V[]>)
 );
 
-        export function structures_search(token : string, maxRows? : number) : Promise<Structure[]> {
-            return axios.get(api_url + '/structures', { params: { token, maxRows } }).then((resp) => resp.data as Structure[]);
+        export function structures_search(token : string, maxRows? : number) : Promise<StepAttrOptionChoices_[]> {
+            return axios.get(api_url + '/structures', { params: { token, maxRows } }).then((resp) => resp.data as StepAttrOptionChoices_[]);
         }
-        export function etablissements_search(token : string, maxRows? : number) : Promise<Etablissement[]> {
-            return axios.get(api_url + '/etablissements', { params: { token, maxRows } }).then((resp) => resp.data as Etablissement[]);
+        export function etablissements_search(token : string, maxRows? : number) : Promise<StepAttrOptionChoices_[]> {
+            return axios.get(api_url + '/etablissements', { params: { token, maxRows } }).then((resp) => resp.data as StepAttrOptionChoices_[]);
         }
         export function structure_get(id: string) {
             return structures_search(id, 1).then(resp => resp[0]);

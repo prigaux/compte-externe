@@ -58,22 +58,24 @@ const conf = {
 
         structures: {
             types: {
-                key: '', name: '', description: '',
+                const: '', short_title: '', title: '',
             },
             attrs: {
-                key: { ldapAttr: 'supannCodeEntite' }, 
-                name: { ldapAttr: 'ou' },
+                const: { ldapAttr: 'supannCodeEntite' }, 
+                short_title: { ldapAttr: 'ou' },
+                title: { ldapAttr: 'description' },
             },
         },
         
         etablissements: {
             types: {
-                key: '', description: '', displayName: '',
+                const: '', title: '', displayName: '',
                 siret: '',
                 postalAddress: '', labeledURI: '', telephoneNumber: '', facsimileTelephoneNumber: '',
             },
             attrs: {
-                key: { ldapAttr: 'up1TableKey' },
+                const: { ldapAttr: 'up1TableKey' },
+                title: { ldapAttr: 'description' },
                 siret: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette("{SIRET}") },
                 uai: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette("{UAI}") },
                 postalAddress: { convert: ldap_convert.postalAddress },
