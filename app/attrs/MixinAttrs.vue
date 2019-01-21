@@ -7,7 +7,7 @@ function attrs_data(vm) {
     let validity = { submitted : false };
     Helpers.eachObject(vm.attrs, (attr) => validity[attr] = {});
     Helpers.eachObject(conf.attr_labels, (attr) => validity[attr] = {});
-    return { label: conf.attr_labels, validity };
+    return { validity };
 }
 
 export default Vue.extend({
