@@ -4,7 +4,7 @@
      <table class="table table-bordered">
        <tbody>
          <tr v-for="{ attr, cmp, skip } in comparisons" v-if="!skip">
-           <td>{{label[attr] || attr}}</td>
+           <td>{{attr_labels[attr] || attr}}</td>
            <td v-html="cmp[0]"></td>
            <td v-html="cmp[1]"></td>
          </tr>
@@ -63,9 +63,6 @@ export default Vue.extend({
     computed: {
         comparisons() {
             return computeComparisons(this.v, this.homonyme);
-        },
-        label() {
-            return conf.attr_labels;
         },
     },
 })
