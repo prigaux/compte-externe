@@ -22,7 +22,7 @@ describe('Mustache', () => {
     it("should work with v_display", () => {
         const v = { sn: "bar", givenName: "bar2" } as v;
         
-        const v_ = v_display(v, { sn: { oneOf: [ { key: "bar", name: "BAR"} ] } })
+        const v_ = v_display(v, { sn: { oneOf: [ { const: "bar", title: "BAR"} ] } })
         const r = mustache.render("Foo {{v_display.sn}} {{v_display.givenName}}", { v_display: v_ });
         assert.equal(r, "Foo BAR bar2");
     });

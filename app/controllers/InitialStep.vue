@@ -75,13 +75,13 @@ export default Vue.extend({
          const need_profile : Ws.StepAttrOption = this.step.attrs.profilename_to_modify;
          if (need_profile) {
              const oneOf = need_profile.oneOf.filter(function (choice) {
-                 return includes(u.global_profilename, choice.key);
+                 return includes(u.global_profilename, choice.const);
              });
              if (need_profile.optional) {
-                 oneOf.unshift({ key: '', name: 'Créer un nouveau profile' })
+                 oneOf.unshift({ const: '', title: 'Créer un nouveau profile' })
              }
              if (oneOf.length === 1) {
-                 this.gotoStep(u, oneOf[0].key);
+                 this.gotoStep(u, oneOf[0].const);
              } else {
                  this.profiles = { ...need_profile, oneOf };
                  this.user = u;

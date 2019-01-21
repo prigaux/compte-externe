@@ -32,8 +32,8 @@ describe('export_v', () => {
     });
     it("should handle sub", () => {
         const attrs = { duration: { oneOf: [
-            { key: "1", sub: { sn: {} } }, 
-            { key: "2" },
+            { const: "1", sub: { sn: {} } }, 
+            { const: "2" },
         ] } }
         test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2", sn: "Rigaux" });
         test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
@@ -101,14 +101,14 @@ describe('merge_v', () => {
         test({ altGivenName: { items: {} } }, {}, { altGivenName: ["x"] }, { altGivenName: ["x"] });
     });
     it ("should check oneOf", () => {
-        const attrs = { duration: { oneOf: [ { key: "1" } ] } };
+        const attrs = { duration: { oneOf: [ { const: "1" } ] } };
         test(attrs, {}, { duration: "1" }, { duration: "1" });
         test_fail(attrs, {}, { duration: "2" }, "constraint duration.oneOf 1 failed for 2");
     });
     it ("should handle sub", () => {
         const attrs = { duration: { oneOf: [ 
-            { key: "1", sub: { sn: {} } }, 
-            { key: "2" },
+            { const: "1", sub: { sn: {} } }, 
+            { const: "2" },
         ] } };
         test(attrs, {}, { sn: 'x', duration: "1" }, { duration: "1", sn: 'x' });
         test(attrs, {}, { sn: 'x', duration: "2" }, { duration: "2" }); // sn not allowed, it is removed

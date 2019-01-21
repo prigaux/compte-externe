@@ -115,7 +115,7 @@ export default Vue.extend({
             return includes(['phone', 'mobilePhone', 'frenchPostalCode', 'siret'], this.opts.uiType) ? this.opts.uiType : undefined;
         },
         choicesMap() {
-            return this.opts.oneOf && mapValues(keyBy(this.opts.oneOf, 'key'), choice => choice['name']);
+            return this.opts.oneOf && mapValues(keyBy(this.opts.oneOf, 'const'), choice => choice['title']);
         },
     },
     watch: {

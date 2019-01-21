@@ -27,8 +27,8 @@ export interface SVRaw {
 }
 
 interface StepAttrOptionChoices {
-  key: string;
-  name?: string;
+  const: string;
+  title?: string;
   sub?: StepAttrsOption;
 }
 export interface StepAttrOption {

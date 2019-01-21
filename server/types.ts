@@ -42,8 +42,8 @@ type acl_search = {
 type profileValues = StepAttrOptionChoices & { fv: () => Partial<v> }
 
 interface StepAttrOptionChoices {
-  key: string;
-  name?: string;
+  const: string;
+  title?: string;
   sub?: StepAttrsOption;
 }
 interface StepAttrItemsOption {

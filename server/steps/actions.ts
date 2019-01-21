@@ -20,8 +20,8 @@ export const addAttrs = (v: Partial<v>) => (_req, sv) => {
 }
 
 export const addProfileAttrs = (profiles: profileValues[]) => (_req, sv) => {
-    _.defaults(sv.v, { profilename: profiles[0].key });
-    let profile = _.find(profiles, p => p.key === sv.v.profilename);
+    _.defaults(sv.v, { profilename: profiles[0].const });
+    let profile = _.find(profiles, p => p.const === sv.v.profilename);
     if (!profile) throw "invalid profile " + sv.v.profilename;
     _.assign(sv.v, profile.fv());
     return Promise.resolve(sv);

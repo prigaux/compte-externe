@@ -27,8 +27,8 @@ describe('sub_and_defaults', function() {
   
     it('should handle sub', () => {
         const attrs = { duration: { oneOf: [ 
-            { key: "1", sub: { sn: {} } }, 
-            { key: "2" }
+            { const: "1", sub: { sn: {} } }, 
+            { const: "2" }
             ] } } as StepAttrsOption;
             
         test({ attrs, v: { duration: "2" } as V },
@@ -41,8 +41,8 @@ describe('sub_and_defaults', function() {
         const attrs = { 
             sn: { pattern: "." },
             duration: { oneOf: [ 
-                { key: "1", sub: { sn: { default: "a" } } }, 
-                { key: "2" }
+                { const: "1", sub: { sn: { default: "a" } } }, 
+                { const: "2" }
             ] },
         } as StepAttrsOption;
             
@@ -55,14 +55,14 @@ describe('sub_and_defaults', function() {
 
     it('should handle inner sub', () => {
         const attrs = { duration: { oneOf: [ 
-            { key: "1", sub: { sn: {
+            { const: "1", sub: { sn: {
                 oneOf: [
-                    { key: "rigaux", sub: {
+                    { const: "rigaux", sub: {
                         givenName: {},
                     } }
                 ]
             } } }, 
-            { key: "2" }
+            { const: "2" }
             ] } } as StepAttrsOption;
             
         let params = { attrs, v: { duration: "2", sn: "rigaux" } as V };
@@ -73,8 +73,8 @@ describe('sub_and_defaults', function() {
     
     it('should handle default', () => {
         const attrs = { duration: { oneOf: [ 
-            { key: "1", sub: { sn: { default: "a" } } }, 
-            { key: "2" }
+            { const: "1", sub: { sn: { default: "a" } } }, 
+            { const: "2" }
             ] } } as StepAttrsOption;
             
         test({ attrs, v: { duration: "2" } as V },
@@ -85,8 +85,8 @@ describe('sub_and_defaults', function() {
 
     it('should handle same defaults', () => {
         const attrs = { duration: { oneOf: [ 
-            { key: "1", sub: { sn: { default: "a" } } }, 
-            { key: "2", sub: { sn: { default: "a" } }  }
+            { const: "1", sub: { sn: { default: "a" } } }, 
+            { const: "2", sub: { sn: { default: "a" } }  }
             ] } } as StepAttrsOption;
             
         let params = { attrs, v: { duration: "1" } as V };
@@ -97,8 +97,8 @@ describe('sub_and_defaults', function() {
     
     it('should handle different defaults', () => {
         const attrs = { duration: { oneOf: [ 
-            { key: "1", sub: { sn: { default: "a" } } }, 
-            { key: "2", sub: { sn: { default: "b" } }  }
+            { const: "1", sub: { sn: { default: "a" } } }, 
+            { const: "2", sub: { sn: { default: "b" } }  }
             ] } } as StepAttrsOption;
             
         let params = { attrs, v: { duration: "1" } as V };
@@ -109,7 +109,7 @@ describe('sub_and_defaults', function() {
 
     it('should not modify existing values with defaults', () => {
         const attrs = { duration: { oneOf: [ 
-            { key: "1", sub: { sn: { default: "a" } } }, 
+            { const: "1", sub: { sn: { default: "a" } } }, 
             ] } } as StepAttrsOption;
             
         let params = { attrs, v: { duration: "1", sn: "z" } as V };
@@ -118,8 +118,8 @@ describe('sub_and_defaults', function() {
     
     it('should not modify user-modified-values with defaults', () => {
         const attrs = { duration: { oneOf: [ 
-            { key: "1", sub: { sn: { default: "a" } } }, 
-            { key: "2", sub: { sn: { default: "b" } }  }
+            { const: "1", sub: { sn: { default: "a" } } }, 
+            { const: "2", sub: { sn: { default: "b" } }  }
             ] } } as StepAttrsOption;
             
         let params = { attrs, v: { duration: "1" } as V };
@@ -132,12 +132,12 @@ describe('sub_and_defaults', function() {
     it('should merge subs', () => {
         const attrs = { 
             givenName: { default: "a", oneOf: [ 
-                    { key: "a", sub: { sn: {} } }, 
-                    { key: "b", sub: { sn: { uiHidden: true } } },
+                    { const: "a", sub: { sn: {} } }, 
+                    { const: "b", sub: { sn: { uiHidden: true } } },
             ] },
             duration: { oneOf: [ 
-                { key: "1", sub: { sn: { default: "a" } } }, 
-                { key: "2", sub: { sn: { default: "a" } } }, 
+                { const: "1", sub: { sn: { default: "a" } } }, 
+                { const: "2", sub: { sn: { default: "a" } } }, 
             ] },
         } as StepAttrsOption;
             

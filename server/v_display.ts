@@ -4,7 +4,7 @@ import client_conf from '../app/conf';
 function key2name(raw, spec: StepAttrOption) {
     if (spec && spec.oneOf) {
         for (const e of spec.oneOf) {
-            if (e.key === raw) return e.name;
+            if (e.const === raw) return e.title;
         }
     }
     return raw;

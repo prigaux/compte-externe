@@ -15,14 +15,14 @@ getGroup(fullname) { return GroupFinder.findByName(grouperSession, fullname, fal
 `);
 
     for (const p of profiles) {
-        let [parentStem, id] = p.key.split(':');
+        let [parentStem, id] = p.const.split(':');
         parentStem = parentStem.replace(/^\{COMPTEX\}/, 'students:').replace('.', ':');
         const filter = filters.eq("eduPersonEntitlement", p.fv().eduPersonEntitlement);
         res.write(`
 attrs = new Hashtable();
 attrs{"parentStem"} = "${parentStem}";
 attrs{"id"} = "${id}";
-attrs{"name"} = "${p.name}";
+attrs{"name"} = "${p.title}";
 attrs{"filter"} = "${filter}"
 
 group = getGroup(attrs{"parentStem"} + ":" + attrs{"id"});

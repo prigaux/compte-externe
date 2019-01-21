@@ -24,7 +24,7 @@ export function compute_subAttrs_and_handle_default_values(attrs : StepAttrsOpti
             may_set_default_value(k, attrs_[k], v, prev_defaults || {});
 
             if (opts.oneOf && v[k]) {
-                const selected = find(opts.oneOf, choice => choice.key === v[k]);
+                const selected = find(opts.oneOf, choice => choice.const === v[k]);
                 if (selected && selected.sub) {
                     add_subAttrs(selected.sub);
                 }

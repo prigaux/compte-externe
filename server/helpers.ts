@@ -55,7 +55,7 @@ export const equalsIgnoreCase = (a: string, b: string) => (
 )
 
 export const sameKeyNameChoices = (l: string[]) => (
-    l.map(s => ({ key: s, name: s }))
+    l.map(s => ({ const: s, title: s }))
 )
 
 export function inclusive_range(start: string, end: string): string[];

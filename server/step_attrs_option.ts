@@ -80,7 +80,7 @@ function validate(key: string, opt: StepAttrOption, val) {
         }
         if (opt.oneOf) {
             if (val !== undefined && !find_choice(opt.oneOf, val)) {
-                const keys = opt.oneOf.map(e => e.key);
+                const keys = opt.oneOf.map(e => e.const);
                 throw `constraint ${key}.oneOf ${keys} failed for ${val}`;
             }
         }
@@ -116,7 +116,7 @@ export function export_v(attrs: StepAttrsOption, v) {
     ));
 }
 
-const find_choice = (oneOf, key) => oneOf.find(choice => choice.key == key); // allow equality if key is number and choice.key is string
+const find_choice = (oneOf, val) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
 
 const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt}) => (
     toUserOnly ? { optional: true, readOnly: true, ...opt} : opt

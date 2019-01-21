@@ -14,12 +14,12 @@ describe('v_display', () => {
         test({}, { sn: "Rigaux" }, { sn: "Rigaux" });
     })
 
-    it('should transform oneOf key into name', () => {
+    it('should transform oneOf const into name', () => {
         const attrs = {
             profilename: {
                 oneOf: [
-                    { key: "a", name: "Aaa" },
-                    { key: "b", name: "B bbb" },
+                    { const: "a", title: "Aaa" },
+                    { const: "b", title: "B bbb" },
                 ],
             },
         };
