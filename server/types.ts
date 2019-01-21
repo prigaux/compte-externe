@@ -48,7 +48,7 @@ interface StepAttrOptionChoices {
 }
 interface StepAttrItemsOption {
   uiHidden?: boolean;
-  uiType?: 'radio'|'select'|'checkbox'|'email'|'text' | 'phone'|'mobilePhone'|'frenchPostalCode'|'date'|'dateThreeInputs'|'postalAddress' | 'structure'|'password'|'siret' | 'array';
+  uiType?: 'radio'|'select'|'checkbox'|'email'|'text'|'url' | 'phone'|'mobilePhone'|'frenchPostalCode'|'date'|'dateThreeInputs'|'postalAddress'|'photo' | 'etablissement'|'structure'|'password'|'siret' | 'array';
 
   pattern?: string;
   max?: number;
