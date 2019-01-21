@@ -1,6 +1,6 @@
 <template>
   <my-bootstrap-form-group name="structure" :label="opts.title" :validity="validity">
-    <div v-if="opts.readonly && val">
+    <div v-if="opts.readOnly && val">
       {{val.description}}
     </div>
     <div v-else>

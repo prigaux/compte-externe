@@ -1,5 +1,5 @@
 <template>
-<div v-if="opts.readonly">
+<div v-if="opts.readOnly">
    <my-bootstrap-form-group name="address_lines">
       <textarea rows="5" :value="value" class="form-control" disabled></textarea>
    </my-bootstrap-form-group>

@@ -38,8 +38,8 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
       _.each(attrs, (opt, key) => {
         if (opt.toUserOnly) {
             /* the attr was sent to the user, but we do not propagate it to next steps (eg: display it to the user, but do not propagate to createCompte step) */
-        } else if (opt.hidden || opt.readonly) {
-            /* security: client must NOT modify hidden/readonly information */
+        } else if (opt.hidden || opt.readOnly) {
+            /* security: client must NOT modify hidden/readOnly information */
             if (key in prev) r[key] = prev[key];
         } else {
             validate(key, opt, v[key]);
@@ -119,7 +119,7 @@ export function export_v(attrs: StepAttrsOption, v) {
 const find_choice = (choices, key) => choices.find(choice => choice.key == key); // allow equality if key is number and choice.key is string
 
 const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt}) => (
-    toUserOnly ? { optional: true, readonly: true, ...opt} : opt
+    toUserOnly ? { optional: true, readOnly: true, ...opt} : opt
 );
 
 export const exportAttrs = (attrs: StepAttrsOption) => (

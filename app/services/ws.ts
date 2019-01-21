@@ -33,7 +33,7 @@ interface StepAttrOptionChoices {
 }
 export interface StepAttrOption {
   uiHidden?: boolean;
-  readonly?: boolean;
+  readOnly?: boolean;
   optional?: boolean;
   pattern?: string;
   max?: number | Date;

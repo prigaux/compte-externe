@@ -1,5 +1,5 @@
 <template>
- <div v-if="opts && (!opts.readonly || val)">
+ <div v-if="opts && (!opts.readOnly || val)">
 
   <DateAttr v-model="val" :name="name" v-if="uiType === 'date'"
     :ldap_value="ldap_value"
@@ -43,7 +43,7 @@
     </radio-with-validity>
 
     <select-with-validity :name="name" v-model="val" v-else-if="uiType === 'select'"
-        :disabled="opts.readonly"
+        :disabled="opts.readOnly"
         :choices="opts.choices" :required="!opts.optional" :validity.sync="validity[name]">
     </select-with-validity>
 
@@ -57,7 +57,7 @@
     
    <div :class="{ 'input-group': allow_remove }" v-else>
     <input-with-validity :name="name" v-model="val" 
-        :disabled="opts.readonly"
+        :disabled="opts.readOnly"
         :type="type" :realType="realType" :required="!opts.optional" :pattern="opts.pattern" :allowedChars="opts.allowedChars" :title="opts.labels && opts.labels.tooltip" :validity.sync="validity[name]">
     </input-with-validity>
 

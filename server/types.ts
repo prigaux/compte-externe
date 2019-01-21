@@ -57,7 +57,7 @@ interface StepAttrItemsOption {
   maxYear?: number;
 }
 type StepAttrOption = StepAttrItemsOption & {
-  readonly?: boolean;
+  readOnly?: boolean;
   hidden?: boolean;
   toUserOnly?: boolean; // implies hidden
   format?: 'date' | 'data-url';

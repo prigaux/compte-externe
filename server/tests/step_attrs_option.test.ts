@@ -4,14 +4,14 @@ import { merge_v, exportAttrs, export_v, selectUserProfile } from '../step_attrs
 describe('exportAttrs', () => {
     it("should work", () => {
         assert.deepEqual(exportAttrs({ sn: {} }), { sn: {} });
-        assert.deepEqual(exportAttrs({ sn: { readonly: true, maxYear: 11 } }), { sn: { readonly: true, maxYear: 11 } });
+        assert.deepEqual(exportAttrs({ sn: { readOnly: true, maxYear: 11 } }), { sn: { readOnly: true, maxYear: 11 } });
     });
     it("should handle hidden", () => {
         assert.deepEqual(exportAttrs({ sn: { hidden: true } }), {});
     });
     it("should handle toUserOnly", () => {
-        assert.deepEqual(exportAttrs({ sn: { toUserOnly: true } }), { sn: { optional: true, readonly: true }});
-        assert.deepEqual(exportAttrs({ sn: { toUserOnly: true, maxYear: 22 } }), { sn: { optional: true, readonly: true, maxYear: 22 }});
+        assert.deepEqual(exportAttrs({ sn: { toUserOnly: true } }), { sn: { optional: true, readOnly: true }});
+        assert.deepEqual(exportAttrs({ sn: { toUserOnly: true, maxYear: 22 } }), { sn: { optional: true, readOnly: true, maxYear: 22 }});
     });
 });
 
@@ -24,7 +24,7 @@ describe('export_v', () => {
     it("should export wanted attrs", () => {
         test({ sn: {} }, v, v);
         test({ sn: { toUserOnly: true } }, v, v);
-        test({ sn: { readonly: true } }, v, v);
+        test({ sn: { readOnly: true } }, v, v);
     });
     it("should hide attrs", () => {
         test({ sn: { hidden: true } }, v, {});
@@ -66,13 +66,13 @@ describe('merge_v', () => {
     });
     it("should merge from prev", () => {
         test({ sn: { optional: true, hidden: true } }, prev, v, prev);
-        test({ sn: { optional: true, readonly: true } }, prev, v, prev);
+        test({ sn: { optional: true, readOnly: true } }, prev, v, prev);
     });
     it ("should not validate toUserOnly", () => {
         test({ sn: { toUserOnly: true } }, {}, {}, {});
     });
     it ("should not validate prev", () => {
-        test({ sn: { readonly: true } }, {}, {}, {});
+        test({ sn: { readOnly: true } }, {}, {}, {});
         test({ sn: { hidden: true } }, {}, {}, {});
     });
     it ("should validate required", () => {

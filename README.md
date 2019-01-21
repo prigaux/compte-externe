@@ -72,7 +72,7 @@ By default, the value is sent to the browser, and can be modified with potential
 
 You can also ensure the browser does not modify the value:
 * ```hidden```: not sent to the browser
-* ```readonly```: sent to the browser, but can not be modified by the browser
+* ```readOnly```: sent to the browser, but can not be modified by the browser
 * ```toUserOnly```: sent to the browser, but can not be modified by the browser + do not propagate it to next steps (usage example: display it to the user, but do not propagate to createCompte)
 
 ## ```acls```

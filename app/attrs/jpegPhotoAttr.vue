@@ -1,15 +1,15 @@
 <template>
-  <my-bootstrap-form-group name="jpegPhoto" :label="opts.title" :validity="validity" v-if="!opts.readonly || val">
+  <my-bootstrap-form-group name="jpegPhoto" :label="opts.title" :validity="validity" v-if="!opts.readOnly || val">
       <!-- for validation: -->
       <input-with-validity name="jpegPhoto" :value="val" type="text" style="display: none" required :validity.sync="validity.jpegPhoto"></input-with-validity>
 
       <div v-if="val">
           <img :src="val">
-          <button class="btn btn-default" @click.prevent="val = ''" v-if="!opts.readonly">
+          <button class="btn btn-default" @click.prevent="val = ''" v-if="!opts.readOnly">
               Changer la photo
           </button>
       </div>
-      <div v-else-if="opts.readonly">
+      <div v-else-if="opts.readOnly">
           aucune
       </div>
       <div v-else>
