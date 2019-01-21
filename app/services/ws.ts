@@ -39,6 +39,7 @@ export interface StepAttrOption {
   max?: number | Date;
   default?: string;
   choices?: StepAttrOptionChoices[];
+  format?: 'date-time' | 'data-url';
 }
 export interface Dictionary<T> {
   [index: string]: T;
@@ -104,27 +105,26 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return data_URL.replace(/^data:image\/jpeg;base64,/, '');
         }
 
-        export function fromWs(v: VRaw): V {
-            var v_: V = <any> Helpers.copy(v);
-            //v.birthDay = "19751002000000Z"; //"1975-10-02";
-            [ 'birthDay', 'startdate', 'enddate' ].forEach(attr => {
-                if (v[attr]) v_[attr] = new Date(v[attr]);
-            });
-            if (v.jpegPhoto) {
-                v_.jpegPhoto = _base64_to_jpeg_data_URL(v.jpegPhoto);
+        const attr_format_to_converter = {
+            'date': { fromWs: val => new Date(val), fromCSV: _fromCSVDate },
+            'data-url': { fromWs: _base64_to_jpeg_data_URL, toWs: _jpeg_data_URL_to_base64 },
+        }
+
+        function to_or_from_ws(direction: 'fromWs' | 'fromCSV' | 'toWs', v: {}, attrs: StepAttrsOption): V {
+            var v_ = <any> Helpers.copy(v);
+            for (const attr in v) {
+                const opts = attrs[attr] || {};
+                const converters = attr_format_to_converter[opts.format];
+                const convert = converters && converters[direction];
+                if (convert && v[attr]) v_[attr] = convert(v[attr]);
             }
             return v_;
         }
 
-        const fromWs_one = (attr: string, val) => fromWs({ [attr]: val })[attr]
+        const fromWs = (v: VRaw, attrs: StepAttrsOption) => to_or_from_ws('fromWs', v, attrs);
+        const toWs = (v: V, attrs: StepAttrsOption) => to_or_from_ws('toWs', v, attrs);
 
-        export function toWs(v: V): VRaw {
-            var v_: VRaw = <any>Helpers.copy(v);
-            if (v.jpegPhoto) {
-                v_.jpegPhoto = _jpeg_data_URL_to_base64(v.jpegPhoto);
-            }
-            return v_;
-        }
+        const fromWs_one = (attr: string, val, attrs) => fromWs({ [attr]: val }, attrs)[attr]
 
         let restarting = false;
 
@@ -175,21 +175,22 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             var url = api_url + '/comptes/' + id + "/" + expectedStep;
             return axios.get(url, { params }).then((resp) => {
                 var sv = <any>resp.data;
+                sv.attrs = initAttrs(sv.attrs);
                     if (sv.v) {
-                        sv.v = fromWs(sv.v);
-                        if (sv.v_ldap) sv.v_ldap = fromWs(sv.v_ldap);
+                        sv.v = fromWs(sv.v, sv.attrs);
+                        if (sv.v_ldap) sv.v_ldap = fromWs(sv.v_ldap, sv.attrs);
                         sv.v_orig = Helpers.copy(sv.v);
                     }
                     sv.modifyTimestamp = new Date(sv.modifyTimestamp);
                     Helpers.eachObject(sv.attrs, (attr, _opts) => {
-                        const default_ = fromWs_one(attr, params[`default_${attr}`]);
-                        const set_ = fromWs_one(attr, params[attr] || params[`set_${attr}`]);
+                        const default_ = fromWs_one(attr, params[`default_${attr}`], sv.attrs);
+                        const set_ = fromWs_one(attr, params[attr] || params[`set_${attr}`], sv.attrs);
                         sv.v[attr] = set_ || sv.v[attr] || default_;
                     });
                     $scope.v = sv.v;
                     $scope.v_ldap = sv.v_ldap;
                     $scope.v_orig = sv.v_orig;
-                    $scope.attrs = initAttrs(sv.attrs);
+                    $scope.attrs = sv.attrs;
                     $scope.step = pick(sv, ['allow_many', 'labels']);
             }, err => _handleErr(err, $scope, true));
         }
@@ -207,24 +208,24 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             });
         }
 
-        export function homonymes(id, v) {
-            const v_ = toWs(v);
+        export function homonymes(id, v, attrs) {
+            const v_ = toWs(v, attrs);
             return axios.post(api_url + '/homonymes/' + id, v_).then((resp) =>
-                (<any>resp.data).map(fromWs)
+                (<any>resp.data).map(v => fromWs(v, attrs))
                 , _handleErr);
         }
 
-        export function set(id: string, step: string, v: V, params) {
+        export function set(id: string, step: string, v: V, params, attrs: StepAttrsOption) {
             var url = api_url + '/comptes/' + id + "/" + step;
-            var v_ = toWs(v);
+            var v_ = toWs(v, attrs);
             return axios.put(url, v_, { params }).then(
                 (resp) => resp.data,
                 _handleErr);
         }
 
-        export function new_many(step: string, vs: V[]) {
+        export function new_many(step: string, vs: V[], attrs: StepAttrsOption) {
             var url = api_url + '/comptes/new_many/' + step;
-            var vs_ = vs.map(toWs);
+            var vs_ = vs.map(v => toWs(v, attrs));
             return axios.put(url, vs_).then(
                 (resp) => resp.data,
                 _handleErr);
@@ -237,13 +238,11 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 _handleErr);
         }
 
-        export function csv2json(file: File) : Promise<{ fields: string[], lines: {}[] }> {
+        export function csv2json(file: File, attrs: StepAttrsOption) : Promise<{ fields: string[], lines: {}[] }> {
             return axios.post(conf.base_pathname + 'csv2json', file).then(
                 (resp) => {
                     let o = resp.data;
-                    o.lines.forEach(v => {
-                        if (v.birthDay) v.birthDay = _fromCSVDate(v.birthDay);
-                    });
+                    o.lines = o.lines.map(v => to_or_from_ws('fromCSV', v, attrs));
                     return o;
                 },
                 _handleErr);

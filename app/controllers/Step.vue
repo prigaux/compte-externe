@@ -16,7 +16,7 @@
             <ImportResult :imported="imported" :ordered_fields="to_import.fields" @done="imported = to_import = undefined"></ImportResult>
         </div>
         <div v-else>
-            <ImportFile @change="val => to_import = val"></ImportFile>
+            <ImportFile :attrs="attrs" @change="val => to_import = val"></ImportFile>
         </div>
   </div>
 
@@ -167,7 +167,7 @@ export default Vue.extend({
             }
         },
         async update_potential_homonyms(v) {
-            const l = await Ws.homonymes(this.id, v);
+            const l = await Ws.homonymes(this.id, v, this.attrs);
             l.forEach(h => h.ignore = false);
             this.all_potential_homonyms = unionBy(this.all_potential_homonyms || [], l, 'uid');
         },
@@ -236,7 +236,7 @@ export default Vue.extend({
         }          
       },
       send() {
-          return Ws.set(this.id, this.stepName, this.v, this.v_pre).then(resp => {
+          return Ws.set(this.id, this.stepName, this.v, this.v_pre, this.attrs).then(resp => {
               if (resp.error === "no_moderators") {
                   Ws.structure_get(this.v.structureParrain).then(structure => {
                     alert(conf.error_msg.noModerators(structure.name));
@@ -250,7 +250,7 @@ export default Vue.extend({
       send_new_many() {
             this.to_import.lines.forEach(v => defaults(v, this.v));
 
-            return Ws.new_many(this.stepName, this.to_import.lines).then(resp => {
+            return Ws.new_many(this.stepName, this.to_import.lines, this.attrs).then(resp => {
                 this.imported = resp;
                 this.imported.forEach((resp, i) => {
                     resp.v = this.to_import.lines[i];

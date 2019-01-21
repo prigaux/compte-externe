@@ -39,6 +39,7 @@ import Vue from "vue";
 import * as Ws from '../services/ws';
 
 export default Vue.extend({
+    props: [ 'attrs' ],
     data() {
         return {
             to_import: undefined,
@@ -49,7 +50,7 @@ export default Vue.extend({
     },
     methods: {
         css_import(file: File) {
-          Ws.csv2json(file).then(to_import => {
+          Ws.csv2json(file, this.attrs).then(to_import => {
               this.to_import = to_import;
           });
         },
