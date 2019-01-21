@@ -2,7 +2,7 @@
   <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity">
     <input-with-validity :name="name" v-model="val" type="date"
        :disabled="opts.readonly"
-       :min="opts.min" :max="opts.max" :required="!opts.optional" :validity.sync="validity[name]"></input-with-validity>
+       :min="min" :max="max" :required="!opts.optional" :validity.sync="validity[name]"></input-with-validity>
     <CurrentLdapValue :value="initial_val" :ldap_value="ldap_val" @input="v => val = v"></CurrentLdapValue>
   </my-bootstrap-form-group>
 </template>
@@ -11,9 +11,10 @@
 import Vue from "vue";
 import CurrentLdapValue from './CurrentLdapValue.vue';
 
-function init(date) {
+function toYYYY_MM_DD(date) {
     return date && date.toISOString().replace(/T.*/, '');
 }
+const init = toYYYY_MM_DD;
 
 export default Vue.extend({
     props: ['name', 'value', 'ldap_value', 'label', 'opts', 'submitted'],
@@ -42,6 +43,12 @@ export default Vue.extend({
     computed: {
         date() {
             return new Date(this.val);
+        },
+        min() {
+            return toYYYY_MM_DD(this.opts.min);
+        },
+        max() {
+            return toYYYY_MM_DD(this.opts.max);
         },
     },
 });
