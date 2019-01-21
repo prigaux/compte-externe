@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity">
+  <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity">
     <input-with-validity :name="name" v-model="val" type="date"
        :disabled="opts.readonly"
        :min="min" :max="max" :required="!opts.optional" :validity.sync="validity[name]"></input-with-validity>
@@ -17,7 +17,7 @@ function toYYYY_MM_DD(date) {
 const init = toYYYY_MM_DD;
 
 export default Vue.extend({
-    props: ['name', 'value', 'ldap_value', 'label', 'opts', 'submitted'],
+    props: ['name', 'value', 'ldap_value', 'opts', 'submitted'],
     components: { CurrentLdapValue },
     data() {
         const val = init(this.value);

@@ -5,7 +5,7 @@
    </my-bootstrap-form-group>
 </div>
 <div v-else>
-  <my-bootstrap-form-group name="country" :label="label" :validity="validity">
+  <my-bootstrap-form-group name="country" :label="opts.title" :validity="validity">
      <typeahead name="country" v-model="country" :options="conf.countries" placeholder="Pays" :validity.sync="validity.country" required></typeahead>
      <CurrentLdapValue v-model="country" :ldap_value="ldap_val.country"></CurrentLdapValue>
   </my-bootstrap-form-group>
@@ -50,7 +50,7 @@ import * as Address from '../services/address';
 import CurrentLdapValue from './CurrentLdapValue.vue';
 
 export default Vue.extend({
-    props: ['value', 'ldap_value', 'label', 'opts', 'submitted'],
+    props: ['value', 'ldap_value', 'opts', 'submitted'],
     components: { CurrentLdapValue },
     data() {
         return {

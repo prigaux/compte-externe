@@ -1,7 +1,7 @@
 <template>
 
 <div>
-    <label v-if="val.length === 0" class="col-md-3 control-label">{{label}}</label>
+    <label v-if="val.length === 0" class="col-md-3 control-label">{{opts.title}}</label>
     <div v-for="(item, i) in val">
         <genericAttr :name="name + (i ? '-' + i : '')" :opts="i ? item_opts : first_item_opts" :value="item" @input="v => set_item(i, v)" @remove="_ => remove_item(i)"
                 :allow_remove="opts.optional || i > 0" :submitted="submitted">
@@ -38,9 +38,8 @@ export default Vue.extend({
         };
     },
     computed: {
-        label() { return this.attr_labels[this.name] },
         first_item_opts() { 
-            return { optional: this.opts.optional, ...this.opts.items };
+            return { title: this.opts.title, optional: this.opts.optional, ...this.opts.items };
         },
         item_opts() {
             return { optional: true };

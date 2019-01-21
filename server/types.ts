@@ -67,6 +67,7 @@ type StepAttrOption = StepAttrItemsOption & {
   optional?: boolean;
   choices?: StepAttrOptionChoices[];
   items?: StepAttrItemsOption,
+  title?: string;
   labels?: { advice?: string; }
 }
 type StepAttrsOption = Dictionary<StepAttrOption>;

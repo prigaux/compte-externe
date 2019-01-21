@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group name="structure" :label="label" :validity="validity">
+  <my-bootstrap-form-group name="structure" :label="opts.title" :validity="validity">
     <div v-if="opts.readonly && val">
       {{val.description}}
     </div>
@@ -16,7 +16,7 @@ import Vue from "vue";
 import * as Ws from '../services/ws';
 
 export default Vue.extend({
-    props: ['value', 'label', 'opts', 'submitted'],
+    props: ['value', 'opts', 'submitted'],
     data() {
         return {
           validity: { structure: {}, submitted: false },

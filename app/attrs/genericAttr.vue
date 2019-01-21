@@ -6,7 +6,7 @@
     :opts="opts" :submitted="submitted">
   </DateAttr>
 
-  <DateThreeInputsAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'dateThreeInputs'"
+  <DateThreeInputsAttr v-model="val" v-else-if="uiType === 'dateThreeInputs'"
     :opts="opts" :submitted="submitted">
   </DateThreeInputsAttr>
 
@@ -15,20 +15,20 @@
     :opts="opts" :submitted="submitted">
   </ArrayAttr>
 
-  <AddressAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'postalAddress'"
+  <AddressAttr v-model="val" v-else-if="uiType === 'postalAddress'"
     :ldap_value="ldap_value"
     :opts="opts" :submitted="submitted">
   </AddressAttr>
 
-  <jpegPhotoAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'photo'"
+  <jpegPhotoAttr v-model="val" v-else-if="uiType === 'photo'"
      :opts="opts" :submitted="submitted">
   </jpegPhotoAttr>
 
-  <StructureAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'structure'"
+  <StructureAttr v-model="val" v-else-if="uiType === 'structure'"
      :opts="opts" :submitted="submitted">
   </StructureAttr>
 
-  <PasswordAttr v-model="val" :label="attr_labels[name]" v-else-if="uiType === 'password'"
+  <PasswordAttr v-model="val" v-else-if="uiType === 'password'"
      :submitted="submitted">
   </PasswordAttr>
 
@@ -36,7 +36,7 @@
      :opts="opts" :submitted="submitted">
   </EtablissementAttr>
 
-  <my-bootstrap-form-group :name="name" :label="attr_labels[name]" :validity="validity" :labels="opts.labels" v-else-if="opts">
+  <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" :labels="opts.labels" v-else-if="opts">
 
     <radio-with-validity :name="name" v-model="val" v-if="uiType === 'radio'"
         :values="choicesMap" :required="!opts.optional" :validity.sync="validity[name]">

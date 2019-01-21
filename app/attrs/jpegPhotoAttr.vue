@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group name="jpegPhoto" :label="label" :validity="validity" v-if="!opts.readonly || val">
+  <my-bootstrap-form-group name="jpegPhoto" :label="opts.title" :validity="validity" v-if="!opts.readonly || val">
       <!-- for validation: -->
       <input-with-validity name="jpegPhoto" :value="val" type="text" style="display: none" required :validity.sync="validity.jpegPhoto"></input-with-validity>
 
@@ -23,7 +23,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-    props: ['value', 'label', 'opts', 'submitted'],
+    props: ['value', 'opts', 'submitted'],
     data() {
         return {
             validity: { jpegPhoto: {}, submitted: false },

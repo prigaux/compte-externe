@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group name="day" multi="true" :label="label">
+  <my-bootstrap-form-group name="day" multi="true" :label="opts.title">
     <div class="col-xs-2" :class="{'has-error': submitted && !validity.day.valid }">
         <div>
         <input-with-validity name="day" v-model="day" type="number" min="1" :max="maxDay" placeholder="Jour" :required="!opts.optional" :validity.sync="validity.day"></input-with-validity>
@@ -40,7 +40,7 @@ const month2maxDay = [undefined,
 
 
 export default Vue.extend({
-    props: ['value', 'label', 'submitted', 'opts'],
+    props: ['value', 'submitted', 'opts'],
     data() {
         return {
             validity: { year: {}, month: {}, day: {}, submitted: false },
