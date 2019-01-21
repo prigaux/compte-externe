@@ -11,7 +11,7 @@ function attrs_data(vm) {
 }
 
 export default Vue.extend({
-    props: ['v', 'v_orig', 'attrs', 'submitted'],
+    props: ['v', 'attrs', 'submitted'],
     model: { prop: 'v', event: 'change' },
     data: function() { return attrs_data(this); },
     watch: {
