@@ -2,6 +2,7 @@
 
 import * as _ from 'lodash';
 import * as ldapjs from 'ldapjs';
+import { escape } from 'ldapjs/lib/filters/escape';
 import * as conf from './conf';
 
 const remove_accents = _.deburr;
@@ -269,9 +270,9 @@ export const groupMembers = (cn: string) => (
 */
 
 export const filters = {
-    eq: (attr: string, val: string) => "(" + attr + "=" + val + ")",
-    startsWith: (attr: string, val: string) => "(" + attr + "=" + val + "*)",
-    contains: (attr: string, val: string, prefix: string) => "(" + attr + "=" + (prefix || '') + "*" + val + "*)",
+    eq: (attr: string, val: string) => "(" + escape(attr) + "=" + escape(val) + ")",
+    startsWith: (attr: string, val: string) => "(" + escape(attr) + "=" + escape(val) + "*)",
+    contains: (attr: string, val: string, prefix: string) => "(" + escape(attr) + "=" + escape(prefix || '') + "*" + escape(val) + "*)",
     and: (filters: filter[]) => filters.length === 1 ? filters[0] : "(&" + filters.join('') + ")",
     or: (filters: filter[]) => filters.length === 1 ? filters[0] : "(|" + filters.join('') + ")",
     memberOf: (cn: string) => filters.eq("memberOf", conf.ldap.group_cn_to_memberOf(cn)),
@@ -298,7 +299,7 @@ export const filters = {
 // eg: M'Foo - Bar     =>    M*Foo*Bar
   alike_same_accents: (attr: string, str: string): filter => {
     let pattern = str.replace(/[^a-z\u00C0-\u00FC]+/gi, '*');
-    return filters.eq(attr, pattern);
+    return "(" + escape(attr) + "=" + pattern + ")";
   },
 
   alike_no_accents: (attr: string, str: string): filter => (
