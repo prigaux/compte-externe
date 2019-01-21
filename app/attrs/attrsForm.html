@@ -7,7 +7,9 @@
    </fieldset>
 
    <div v-for="(_, name) in attrs">
-     <genericAttr :name="name" :opts="attrs[name]" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :submitted="submitted"></genericAttr>
+     <genericAttr :name="name" :opts="attrs[name]" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :submitted="submitted"
+         v-if="name != 'barcode' && name != 'mifare'">
+     </genericAttr>
    </div>
 
   <BarcodeAttrs v-model="v" :attrs="attrs" :submitted="submitted" :v_orig="v_orig" v-if="attrs.barcode || attrs.mifare"></BarcodeAttrs>
