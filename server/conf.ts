@@ -102,6 +102,8 @@ const conf = {
                 global_eduPersonPrimaryAffiliation: '',
                 global_supannEtuAnneeInscription: [0],
                 global_profilename: [''],
+                global_barcode: '',
+                global_mifare: '',
 
                 eduPersonPrimaryAffiliation: '',
                 eduPersonEntitlement: '',
@@ -141,7 +143,9 @@ const conf = {
                 eduPersonPrincipalName: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{EPPN}") },                
                 structureParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("supannCodeEntite", ldap_main.base_structures), convert2: ldap_convert.dn("ou", ldap_main.base_structures_old) },
                 barcode: { ldapAttr: 'employeeNumber' },
+                global_barcode: { ldapAttr: 'employeeNumber' },
                 mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
+                global_mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
                 jpegPhoto: { convert: ldap_convert.base64 },
             },
             sns: ['sn'],

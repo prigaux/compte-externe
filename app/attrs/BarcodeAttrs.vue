@@ -49,15 +49,15 @@ export default Vue.extend({
                     this.v.mifare = "";
                     break;
                 case "unchanged":
-                    this.v.barcode = this.v_orig.barcode;
-                    this.v.mifare = this.v_orig.mifare;
+                    this.v.barcode = this.v.global_barcode;
+                    this.v.mifare = this.v.global_mifare;
                     break;                
             }
         },
     },
     computed: {
       allow_unchanged() {
-        return this.v_orig && this.v_orig.mifare;
+        return this.v && this.v.global_mifare;
       },
       defaultCardChoice() {
         return this.allow_unchanged ? "unchanged" : "print";
