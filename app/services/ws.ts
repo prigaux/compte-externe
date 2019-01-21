@@ -93,7 +93,9 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             var m = date.match(/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/);
             return m && _toDate(parseInt(m[3]), parseInt(m[2]), parseInt(m[1]));
         }
-
+        const _fromCSVDate = (val: string) => (
+            _fromFrenchDate(val) || _fromLDAPDate(val) || new Date(val) || "date invalide"
+        );
 
         function _base64_to_jpeg_data_URL(base64: string): string {
             return "data:image/jpeg;base64," + base64;
@@ -240,7 +242,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 (resp) => {
                     let o = resp.data;
                     o.lines.forEach(v => {
-                        if (v.birthDay) v.birthDay = _fromFrenchDate(v.birthDay) || _fromLDAPDate(v.birthDay) || new Date(v.birthDay) || "date invalide";
+                        if (v.birthDay) v.birthDay = _fromCSVDate(v.birthDay);
                     });
                     return o;
                 },
