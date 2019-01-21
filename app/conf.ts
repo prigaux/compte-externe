@@ -45,7 +45,15 @@ export default {
         etablissement_telephoneNumber: { title: "Numéro de téléphone", uiType: 'phone' },
         etablissement_facsimileTelephoneNumber: { title: "Numéro de fax", uiType: 'phone' },
         etablissement_siret: { title: "SIRET", uiType: 'siret' },
-        charter: { title: "Charte", uiType: 'checkbox' },
+        charter: { title: "Charte", uiType: 'checkbox', description: 
+           `Vous acceptez de vous conformer aux chartes informatiques 
+            <a target="_blank" href="http://dsiun.univ-paris1.fr/fileadmin/DSI/Chartes/charte_utilisation_ressources_informatiques_et_internet.html">de l'université</a> 
+            et
+            <a target="_blank" href="http://www.renater.fr/IMG/pdf/Charte_RENATER_Vjanv2014.pdf" >du réseau RENATER</a>.
+            <br>
+            Votre compte et son mot de passe associé sont strictement personnels :
+            vous êtes seul responsable de l'usage qui en est fait.`,
+        },
         duration_or_enddate: { title: "Fin du compte" },
         duration: { title: "Durée" },
         startdate: { title: "Date de début", format: 'date', uiType: 'date', min: new Date(), minYear: new Date().getUTCFullYear() },
@@ -62,14 +70,6 @@ export default {
                 Object.keys(etablissementS).forEach(k => v[`etablissement_${k}`] = etablissementS[k]);
             },
         },
-    },
-    
-    attrs_description: {
-        charter: `Vous acceptez de vous conformer 
-            aux chartes informatiques <a target="_blank" href="http://dsiun.univ-paris1.fr/fileadmin/DSI/Chartes/charte_utilisation_ressources_informatiques_et_internet.html">de l'université</a> 
-            et <a target="_blank" href="http://www.renater.fr/IMG/pdf/Charte_RENATER_Vjanv2014.pdf" >du réseau RENATER</a>.
-            <br>
-            Votre compte et son mot de passe associé sont strictement personnels : vous êtes seul responsable de l'usage qui en est fait.`,
     },
 
     title: "Gestion de comptes",

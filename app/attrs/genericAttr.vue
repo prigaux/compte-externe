@@ -51,7 +51,7 @@
       <label>
         <checkbox-with-validity :name="name" v-model="val" :validity.sync="validity[name]">
         </checkbox-with-validity>
-        <span v-html="conf.attrs_description[name]"></span>
+        <span v-html="opts.description"></span>
       </label>
     </div>
     
