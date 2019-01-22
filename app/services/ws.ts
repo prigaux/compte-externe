@@ -160,13 +160,13 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             ));
         }
 
-        function initAttrs(attrs: StepAttrsOption) {
+        function initAttrs(attrs: StepAttrsOption, all_attrs: StepAttrsOption) {
             for (const attr in attrs) {
                 const opts = attrs[attr];
                 // recursive merge, especially useful for attr.labels
-                attrs[attr] = merge({}, conf.default_attrs_opts[attr], opts);
+                all_attrs[attr] = attrs[attr] = merge({}, conf.default_attrs_opts[attr], opts);
                 // also init "sub" attrs
-                (attrs[attr].oneOf || []).forEach(choice => { if (choice.sub) initAttrs(choice.sub) });
+                (attrs[attr].oneOf || []).forEach(choice => { if (choice.sub) initAttrs(choice.sub, all_attrs) });
             }
             return attrs;
         }
@@ -175,16 +175,17 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             var url = api_url + '/comptes/' + id + "/" + expectedStep;
             return axios.get(url, { params }).then((resp) => {
                 var sv = <any>resp.data;
-                sv.attrs = initAttrs(sv.attrs);
+                var all_attrs = {};
+                sv.attrs = initAttrs(sv.attrs, all_attrs);
                     if (sv.v) {
-                        sv.v = fromWs(sv.v, sv.attrs);
-                        if (sv.v_ldap) sv.v_ldap = fromWs(sv.v_ldap, sv.attrs);
+                        sv.v = fromWs(sv.v, all_attrs);
+                        if (sv.v_ldap) sv.v_ldap = fromWs(sv.v_ldap, all_attrs);
                         sv.v_orig = Helpers.copy(sv.v);
                     }
                     sv.modifyTimestamp = new Date(sv.modifyTimestamp);
-                    Helpers.eachObject(sv.attrs, (attr, _opts) => {
-                        const default_ = fromWs_one(attr, params[`default_${attr}`], sv.attrs);
-                        const set_ = fromWs_one(attr, params[attr] || params[`set_${attr}`], sv.attrs);
+                    Helpers.eachObject(all_attrs, (attr, _opts) => {
+                        const default_ = fromWs_one(attr, params[`default_${attr}`], all_attrs);
+                        const set_ = fromWs_one(attr, params[attr] || params[`set_${attr}`], all_attrs);
                         sv.v[attr] = set_ || sv.v[attr] || default_;
                     });
                     $scope.v = sv.v;
