@@ -18,11 +18,15 @@ const searchPeople = (peopleFilter: string, attr: string) => (
     ldap.searchThisAttr(conf.ldap.base_people, peopleFilter, attr, '' as string)
 );
 
-// "includes" is optional, it will be computed from "list"
 const create = (peopleFilter: string, subvs: Partial<v>[]): acl_search => ({
+    // search users that can moderate "v":
+    // - it first checks that "subv" is a subset of "v"
+    // - it then searches in LDAP users matching "peopleFilter"
+    // Returns: list of users "attr" value (eg: returns a list of "uid" if "attr" is "uid")
     v_to_users: (v, attr: string) => (
         has_one_subvs(v, subvs) ? searchPeople(peopleFilter, attr) : Promise.resolve([])
     ),
+    // Return: "subvs" if the "user" matches "peopleFilter", otherwise []
     user_to_subv: (user) => {
         if (!user.mail) console.error("no user mail!?");
         return searchPeople(peopleFilter, "mail").then(l => l.includes(user.mail) ? subvs : [])

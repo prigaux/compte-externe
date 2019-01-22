@@ -15,6 +15,7 @@ export const moderators = (acls: acl_search[], v: v): Promise<string[]> => {
     ))).then(mails => _.flatten(mails));
 };
 
+// Returns the "subvs" a "user" is allowed for "step.acls"
 export const allowed_subvs = (vuser : v, step: step) => {
     let subvs: Promise<subvs>;
     if (!step.acls) {
