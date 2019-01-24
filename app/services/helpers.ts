@@ -45,7 +45,7 @@ import { Dictionary } from '../services/ws';
 
     export function frenchPostalCodeToTowns(postalcode: string, token: string = ''): Promise<string[]> {
         var url = '//search-towns.univ-paris1.fr/';
-        var params = { postalcode, token, country: 'FR' };
+        var params = { postalcode, token, country: 'FR', maxRows: 99 };
         return axios.get(url, { params }).then((r) => 
             r.data && r.data['towns']
         );
