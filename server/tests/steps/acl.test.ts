@@ -16,24 +16,18 @@ before(() => (
 ));
 
 describe('user_id', () => {
-    let acl_uid;
+    let acl_uid : acl_search;
     before(() => acl_uid = acl.user_id('arigaux'));
 
-    it('v_to_users should work', () => (
-        acl_uid.v_to_users(undefined, 'uid').then(l => (
-            assert.deepEqual(l, ['arigaux'])
+    it('v_to_ldap_filter should work', () => (
+        acl_uid.v_to_ldap_filter(undefined).then(filter => (
+            assert.deepEqual(filter, '(uid=arigaux)')
         ))
     ));
 
-    it('v_to_users should work twice', () => (
-        acl_uid.v_to_users(undefined, 'uid').then(l => (
-            assert.deepEqual(l, ['arigaux'])
-        ))
-    ));
-    
-    it('with eppn, v_to_users should work', () => (
-        acl.user_id('arigaux@univ-paris1.fr').v_to_users(undefined, 'uid').then(l => (
-            assert.deepEqual(l, ['arigaux'])
+    it('with eppn, v_to_ldap_filter should work', () => (
+        acl.user_id('arigaux@univ-paris1.fr').v_to_ldap_filter(undefined).then(filter => (
+            assert.deepEqual(filter, '(eduPersonPrincipalName=arigaux@univ-paris1.fr)')
         ))
     ));
     
@@ -54,9 +48,9 @@ describe('ldapGroup', () => {
     let aclG;
     before(() => aclG = acl.ldapGroup("g1"));
 
-    it('v_to_users should work', () => (
-        aclG.v_to_users(undefined, 'uid').then(l => (
-            assert.deepEqual(l, ['arigaux'])
+    it('v_to_ldap_filter should work', () => (
+        aclG.v_to_ldap_filter(undefined).then(filter => (
+            assert.deepEqual(filter, '(memberOf=cn=g1,ou=groups,dc=univ,dc=fr)')
         ))
     ));
 
@@ -81,18 +75,10 @@ describe('structureRoles', () => {
         ));
     });    
 
-    it('v_to_users should work', () => (
-        acl.structureRoles('structureParrain', "(up1TableKey=*)").v_to_users({ structureParrain: "DGH" } as v, 'uid').then(l => (
-            assert.deepEqual(l, ['arigaux'])
+    it('v_to_ldap_filter should work', () => (
+        acl.structureRoles('structureParrain', "(up1TableKey=*)").v_to_ldap_filter({ structureParrain: "DGH" } as v).then(filter => (
+            assert.deepEqual(filter, '(|(supannRoleEntite=*[role={SUPANN}F10]*[code=DGH]*)(supannRoleEntite=*[role={SUPANN}D30]*[code=DGH]*)(supannRoleEntite=*[role={SUPANN}D10]*[code=DGH]*)(supannRoleEntite=*[role={SUPANN}D00]*[code=DGH]*))')
         ))
-    ));
-
-    it('v_to_users should raise no_moderators', () => (
-        acl.structureRoles('structureParrain', "(up1TableKey=*)").v_to_users({ structureParrain: "xxx" } as v, 'uid').then(_ => {
-            assert.fail("should raise error");
-        }).catch(err => {
-            assert.equal(err, 'no_moderators');
-        })
     ));
     
     const user_2roles = { supannRoleEntite: [

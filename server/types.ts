@@ -35,7 +35,7 @@ type svra = sva & { response?: response }
 type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
 type action = (req: any, sv: sva) => Promise<vr>
 type acl_search = {    
-    v_to_users(v: v, attr: string): Promise<string[]>
+    v_to_ldap_filter(v: v): Promise<string>
     user_to_subv(user: v): Promise<Partial<v>[]>
 }
 

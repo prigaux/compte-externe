@@ -19,10 +19,8 @@ const searchPeople = (peopleFilter: string, attr: string) => (
 );
 
 const create = (peopleFilter: string): acl_search => ({
-    // search users that can moderate "v":
-    v_to_users: (_v, attr: string) => (
-        searchPeople(peopleFilter, attr)
-    ),
+    // LDAP search filter matching users that can moderate "v":
+    v_to_ldap_filter: async (_v) => peopleFilter,
     // Return: match-all-v if the "user" matches "peopleFilter", otherwise match-none
     user_to_subv: (user) => {
         if (!user.mail) console.error("no user mail!?");
@@ -43,14 +41,11 @@ export const _rolesGeneriques = (rolesFilter: string) => {
     return ldap.searchThisAttr(conf.ldap.base_rolesGeneriques, rolesFilter, 'up1TableKey', '' as string)
 };
 export const structureRoles = (code_attr: string, rolesFilter: string): acl_search => ({
-    v_to_users: (v, attr: string) => (    
+    v_to_ldap_filter: (v) => (    
         _rolesGeneriques(rolesFilter).then(roles => {
             let code = v[code_attr];
             let l = roles.map(role => `(supannRoleEntite=*[role=${role}]*[code=${code}]*)`)
-            return searchPeople(filters.or(l), attr).then(vals => {
-                if (!vals.length) throw "no_moderators";
-                return vals;
-            })
+            return filters.or(l);
         })
     ),
     user_to_subv: (user) => (
