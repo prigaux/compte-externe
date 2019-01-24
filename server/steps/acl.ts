@@ -3,6 +3,7 @@
 import { isEqual } from 'lodash';
 import * as conf from '../conf';
 import * as ldap from '../ldap';
+import * as search_ldap from '../search_ldap';
 import { parse_composites } from '../ldap_convert';
 const filters = ldap.filters;
 
@@ -24,7 +25,7 @@ const create = (peopleFilter: string): acl_search => ({
     // Return: match-all-v if the "user" matches "peopleFilter", otherwise match-none
     user_to_subv: (user) => {
         if (!user.mail) console.error("no user mail!?");
-        return searchPeople(peopleFilter, "mail").then(l => l.includes(user.mail) ? [{}] : [])
+        return search_ldap.existPeople(filters.and([ peopleFilter, filters.eq("mail", user.mail) ])).then(ok => ok ? [{}] : [])
     },
 });
 

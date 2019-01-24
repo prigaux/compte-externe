@@ -161,6 +161,10 @@ export let existLogin = (login: string): Promise<boolean> => (
     ))
 );
 
+export const existPeople = (peopleFilter: string): Promise<boolean> => (
+    ldap.searchRaw(conf.ldap.base_people, peopleFilter, ['uid'], { sizeLimit: 1 }).then(l => l.length > 0)
+);
+
 function truncateLogin(login: string) {
     return login.substr(0, maxLoginLength);
 }
