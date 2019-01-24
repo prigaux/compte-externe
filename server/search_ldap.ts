@@ -140,10 +140,12 @@ export const subv_to_eq_filters = (subv: Partial<v>) => {
     return _.map(v_ldap, (val, attr) => filters.eq(attr, val as string));
 }
 
-export function searchPeople_matching_acl_ldap_filter<T extends {}>(filter: acl_ldap_filter, token: string, attrTypes: T, options: ldap.Options): Promise<T[]> {
-    if (filter === false) return Promise.resolve([]);
-    let filter_ = filters.fuzzy(['displayName', 'cn'], token);
-    if (filter !== true) filter_ = filters.and([ filter_, filter ]);
+export function searchPeople_matching_acl_ldap_filter<T extends {}>(acl_filter: acl_ldap_filter, step_filter: string, token: string, attrTypes: T, options: ldap.Options): Promise<T[]> {
+    if (acl_filter === false) return Promise.resolve([]);
+    let and_filters = [ filters.fuzzy(['displayName', 'cn'], token) ];    
+    if (acl_filter !== true) and_filters.push(acl_filter);
+    if (step_filter) and_filters.push(step_filter);
+    const filter_ = filters.and(and_filters);
     console.log("searchPeople_matching_acl_ldap_filter with filter", filter_);
     return ldap.search(conf.ldap.base_people, filter_, attrTypes, conf.ldap.people.attrs, options);
 }

@@ -96,6 +96,7 @@ type step = {
   labels: StepLabels;
   acls?: acl_search[];
 
+  search_filter?: string;
   initialStep?: boolean;
 
   attrs_pre?: Dictionary<{}>; // passed to /api/comptes/xxx as query arguments
