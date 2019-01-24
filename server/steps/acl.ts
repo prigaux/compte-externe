@@ -18,28 +18,25 @@ const searchPeople = (peopleFilter: string, attr: string) => (
     ldap.searchThisAttr(conf.ldap.base_people, peopleFilter, attr, '' as string)
 );
 
-const create = (peopleFilter: string, subvs: Partial<v>[]): acl_search => ({
+const create = (peopleFilter: string): acl_search => ({
     // search users that can moderate "v":
-    // - it first checks that "subv" is a subset of "v"
-    // - it then searches in LDAP users matching "peopleFilter"
-    // Returns: list of users "attr" value (eg: returns a list of "uid" if "attr" is "uid")
-    v_to_users: (v, attr: string) => (
-        has_one_subvs(v, subvs) ? searchPeople(peopleFilter, attr) : Promise.resolve([])
+    v_to_users: (_v, attr: string) => (
+        searchPeople(peopleFilter, attr)
     ),
-    // Return: "subvs" if the "user" matches "peopleFilter", otherwise []
+    // Return: match-all-v if the "user" matches "peopleFilter", otherwise match-none
     user_to_subv: (user) => {
         if (!user.mail) console.error("no user mail!?");
-        return searchPeople(peopleFilter, "mail").then(l => l.includes(user.mail) ? subvs : [])
+        return searchPeople(peopleFilter, "mail").then(l => l.includes(user.mail) ? [{}] : [])
     },
 });
 
-export const ldapGroup = (cn: string, subvs : Partial<v>[] = [{}]): acl_search => (
-    create(filters.memberOf(cn), subvs)
+export const ldapGroup = (cn: string): acl_search => (
+    create(filters.memberOf(cn))
 );
 
-export const user_id = (user_id: string, subvs : Partial<v>[] = [{}]): acl_search => {
+export const user_id = (user_id: string): acl_search => {
     let attr = user_id.match(/@/) ? "eduPersonPrincipalName" : "uid";
-    return create(filters.eq(attr, user_id), subvs);
+    return create(filters.eq(attr, user_id));
 };
 
 export const _rolesGeneriques = (rolesFilter: string) => {
