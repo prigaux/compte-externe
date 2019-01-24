@@ -43,7 +43,7 @@ export const getShibAttrs: simpleAction = async (req, _sv) => {
 
 export const getCasAttrs: simpleAction = async (req, _sv) => {
     if (!isCasUser(req)) throw `Unauthorized`;
-    let filter = filters.eq("eduPersonPrincipalName", req.user.id);
+    let filter = search_ldap.currentUser_to_filter(req.user);
     let v: v = await onePerson(filter);
     v.noInteraction = true;
     return { v };

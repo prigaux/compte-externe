@@ -13,9 +13,13 @@ export const onePerson = (filter: string) => (
     ldap.searchOne(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, {})
 );
 
+export const currentUser_to_filter = (user: CurrentUser) => (
+    filters.eq("eduPersonPrincipalName", user && user.id)
+);
+
 export const vuser = (user: CurrentUser) => {
     if (!user) return Promise.resolve(undefined);
-    return onePerson(filters.eq("eduPersonPrincipalName", user.id)).then(vuser => {
+    return onePerson(currentUser_to_filter(user)).then(vuser => {
         if (!vuser) console.error("unknown user", user)
         return vuser;
     })
