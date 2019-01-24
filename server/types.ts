@@ -99,7 +99,7 @@ type step = {
   allow_many?: boolean; 
   
   attrs: StepAttrsOption | ((v) => StepAttrsOption);
-  next?: string | ((v) => string);
+  next?: string | ((v) => Promise<string>);
   nextBrowserStep?: string;
   notify?: StepNotify;
   action_pre?: action;

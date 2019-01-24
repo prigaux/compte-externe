@@ -179,9 +179,9 @@ function advance_sv(req: req, sv: sva) : Promise<svr> {
         // do not rely on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
         sv.id = db.new_id();
     }
-    return action_post(req, sv).then(svr => {
+    return action_post(req, sv).then(async svr => {
         const nextStep = step(svr).next;
-        svr.step = typeof nextStep === "function" ? nextStep(svr.v) : nextStep;
+        svr.step = typeof nextStep === "function" ? await nextStep(svr.v) : nextStep;
         if (svr.step) {
             return action_pre(req, svr);
         } else {
