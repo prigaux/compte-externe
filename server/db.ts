@@ -34,6 +34,8 @@ function svs() {
   return real_svs;
 }
 
+export const or = (l: Dictionary<any>[]) => l.length === 1 ? l[0] : { $or: l } as Dictionary<any>;
+
 export const get = (id: id) => (
     svs().findOne({ _id: _id(id) }).then(fromDB)
 );

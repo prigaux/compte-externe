@@ -34,9 +34,12 @@ type svr = sv & { response?: response }
 type svra = sva & { response?: response }
 type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
 type action = (req: any, sv: sva) => Promise<vr>
+type acl_ldap_filter = string | boolean
+type acl_mongo_filter = Dictionary<any> | boolean
 type acl_search = {    
     v_to_ldap_filter(v: v): Promise<string>
-    user_to_subv(user: v): Promise<Partial<v>[]>
+    user_to_ldap_filter(user: CurrentUser): Promise<acl_ldap_filter>
+    user_to_mongo_filter(user: CurrentUser): Promise<acl_mongo_filter>
 }
 
 type profileValues = StepAttrOptionChoices & { fv: () => Partial<v> }

@@ -23,14 +23,14 @@ describe('moderators', () => {
         acl_checker.moderators([ acl.user_id("arigaux") ], undefined).then(l => assert.deepEqual(l, [ 'ayme.rigaux@univ-paris1.fr' ]))
     ))
     it('should work on empty case', () => (
-        acl_checker.moderators([], undefined).then(l => assert.deepEqual(l, []))
+        acl_checker.moderators([], undefined).then(_ => assert.fail("should raise")).catch(err => assert.equal(err, "no_moderators"))
     ))
     it('should work on multiple users', () => (
-        acl_checker.moderators([ acl.user_id("arigaux"), acl.user_id("prigaux"), acl.user_id("arigaux") ], undefined).then(l => assert.deepEqual(l, [ 'ayme.rigaux@univ-paris1.fr', undefined, 'ayme.rigaux@univ-paris1.fr' ]))
+        acl_checker.moderators([ acl.user_id("arigaux"), acl.user_id("prigaux"), acl.user_id("arigaux") ], undefined).then(l => assert.deepEqual(l, [ undefined, 'ayme.rigaux@univ-paris1.fr' ]))
     ))
 });
 
-describe('step_acls_allowed_ssubvs', () => {
+describe('allowed_step_ldap_filters', () => {
     let steps, steps2;
     before(() => { 
       steps = { 
@@ -43,21 +43,22 @@ describe('step_acls_allowed_ssubvs', () => {
     });
 
     it('should work', () => (
-        acl_checker.allowed_ssubvs({ mail: "ayme.rigaux@univ-paris1.fr" } as v, steps).then(ssubvs => assert.deepEqual(ssubvs, [ 
-            { step: 'xxx', subvs: [{}] },
+        acl_checker.allowed_step_ldap_filters({ mail: "ayme.rigaux@univ-paris1.fr" } as CurrentUser, steps).then(l => assert.deepEqual(l, [ 
+            { step: 'xxx', filter: undefined },
         ]))
     ))
     it('should deny', () => (
-        acl_checker.allowed_ssubvs({ mail: "pascal.rigaux@univ-paris1.fr" } as v, steps).then(ssubvs => assert.deepEqual(ssubvs, []))
+        acl_checker.allowed_step_ldap_filters({ mail: "pascal.rigaux@univ-paris1.fr" } as CurrentUser, steps).then(l => assert.deepEqual(l, []))
     ))
-    it('should simplify subvs', () => (
-        acl_checker.allowed_ssubvs({ mail: "ayme.rigaux@univ-paris1.fr" } as v, steps2).then(ssubvs => assert.deepEqual(ssubvs, [ 
-            { step: 'xxx', subvs: [{}] },
-            { step: 'yyy', subvs: [{}] },
+    it('should simplify ldap filters', () => (
+        acl_checker.allowed_step_ldap_filters({ mail: "ayme.rigaux@univ-paris1.fr" } as CurrentUser, steps2).then(l => assert.deepEqual(l, [ 
+            { step: 'xxx', filter: undefined },
+            { step: 'yyy', filter: undefined },
         ]))
     ))
 });
 
+/*
 describe('mongo_query', () => {
     it('should work', () => {
         const allowed_ssubvs = [ { step: "import", subvs: [{"structureParrain":"DGH"}]}];
@@ -74,4 +75,5 @@ describe('mongo_query', () => {
         const allowed_ssubvs = [ { step: "import", subvs: [{"structureParrain":"DGH", "profilename": "xx"}]}];
         assert.deepEqual(acl_checker.mongo_query(allowed_ssubvs), { step: 'import', "v.structureParrain":"DGH", "v.profilename": "xx" } );
     });
-});
+});*/
+

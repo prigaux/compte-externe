@@ -1,31 +1,41 @@
 'use strict';
 
-import { isEqual } from 'lodash';
+import * as _ from 'lodash';
 import * as conf from '../conf';
 import * as ldap from '../ldap';
 import * as search_ldap from '../search_ldap';
+import * as db from '../db';
 import { parse_composites } from '../ldap_convert';
 const filters = ldap.filters;
 
-const has_subv = (v: v, subv: Partial<v>) => (
-  !Object.keys(subv).some(k => !isEqual(v[k], subv[k]))
+type simple_acl_search = {    
+    v_to_ldap_filter(v: v): Promise<string>
+    user_to_subv(user: CurrentUser): Promise<Partial<v>[] | boolean>
+}
+
+const _normalize__or_subv = (l : boolean | Partial<v>[]) => (
+    _.isBoolean(l) ? l : l.length === 0 ? false : l
 );
 
-export const has_one_subvs = (v: v, subvs: Partial<v>[]) => (
-    subvs.some(subv => has_subv(v, subv))
-);
+const _convert_simple_acl_search = ({ user_to_subv, ...other } : simple_acl_search): acl_search => ({
+    ...other,
+    async user_to_ldap_filter(user) {
+        const or_subv = _normalize__or_subv(await user_to_subv(user));
+        return _.isBoolean(or_subv) ? or_subv : filters.or(or_subv.map(l => filters.and(search_ldap.subv_to_eq_filters(l))));
+    },
+    async user_to_mongo_filter(user) {
+        const or_subv = _normalize__or_subv(await user_to_subv(user));
+        return _.isBoolean(or_subv) ? or_subv : db.or(or_subv.map(subv => _.mapKeys(subv, (_,k) => "v." + k)));
+    },
+})
 
-const searchPeople = (peopleFilter: string, attr: string) => (
-    ldap.searchThisAttr(conf.ldap.base_people, peopleFilter, attr, '' as string)
-);
-
-const create = (peopleFilter: string): acl_search => ({
-    // LDAP search filter matching users that can moderate "v":
+const create = (peopleFilter: string): acl_search => _convert_simple_acl_search({
+    // search users that can moderate "v":
     v_to_ldap_filter: async (_v) => peopleFilter,
-    // Return: match-all-v if the "user" matches "peopleFilter", otherwise match-none
+    // can the user moderate any "v":
     user_to_subv: (user) => {
         if (!user.mail) console.error("no user mail!?");
-        return search_ldap.existPeople(filters.and([ peopleFilter, filters.eq("mail", user.mail) ])).then(ok => ok ? [{}] : [])
+        return search_ldap.existPeople(filters.and([ peopleFilter, filters.eq("mail", user.mail) ]))
     },
 });
 
@@ -41,7 +51,7 @@ export const user_id = (user_id: string): acl_search => {
 export const _rolesGeneriques = (rolesFilter: string) => {
     return ldap.searchThisAttr(conf.ldap.base_rolesGeneriques, rolesFilter, 'up1TableKey', '' as string)
 };
-export const structureRoles = (code_attr: string, rolesFilter: string): acl_search => ({
+export const structureRoles = (code_attr: string, rolesFilter: string): acl_search => _convert_simple_acl_search({
     v_to_ldap_filter: (v) => (    
         _rolesGeneriques(rolesFilter).then(roles => {
             let code = v[code_attr];
@@ -50,9 +60,11 @@ export const structureRoles = (code_attr: string, rolesFilter: string): acl_sear
         })
     ),
     user_to_subv: (user) => (
+      ldap.searchOne(conf.ldap.base_people, search_ldap.currentUser_to_filter(user), { supannRoleEntite: [''] }, {}).then(user => (
         _rolesGeneriques(rolesFilter).then(roles => {
             const user_roles = user.supannRoleEntite ? parse_composites(user.supannRoleEntite) as { role: string, code: string }[] : [];
             return user_roles.filter(e => roles.includes(e.role)).map(e => ({ [code_attr]: e.code }));
         })
+      ))
     ),
 });

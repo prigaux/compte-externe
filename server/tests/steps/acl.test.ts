@@ -31,32 +31,33 @@ describe('user_id', () => {
         ))
     ));
     
-    it('user_to_subv should work', () => (
-        acl_uid.user_to_subv({ 'mail': 'ayme.rigaux@univ-paris1.fr' } as v).then(l => (
-            assert.deepEqual(l, [{}])
+    it('user_to_ldap_filter should work', () => (
+        acl_uid.user_to_ldap_filter({ 'mail': 'ayme.rigaux@univ-paris1.fr' } as CurrentUser).then(filter => (
+            assert.deepEqual(filter, true)
         ))
     ));
 
-    it('user_to_subv when no match', () => (
-        acl_uid.user_to_subv({ 'mail': 'pascal.rigaux@univ-paris1.fr' } as v).then(l => (
-            assert.deepEqual(l, [])
+    it('user_to_ldap_filter when no match', () => (
+        acl_uid.user_to_ldap_filter({ 'mail': 'pascal.rigaux@univ-paris1.fr' } as CurrentUser).then(filter => (
+            assert.deepEqual(filter, false)
         ))
     ));
+
 });
 
 describe('ldapGroup', () => {
     let aclG : acl_search;
     before(() => aclG = acl.ldapGroup("g1"));
 
-    it('v_to_ldap_filter should work', () => (
+    it('v_to_ldap_users should work', () => (
         aclG.v_to_ldap_filter(undefined).then(filter => (
             assert.deepEqual(filter, '(memberOf=cn=g1,ou=groups,dc=univ,dc=fr)')
         ))
     ));
 
-    it('user_to_subv should work', () => (
-        aclG.user_to_subv({ 'mail': 'ayme.rigaux@univ-paris1.fr' } as v).then(l => (
-            assert.deepEqual(l, [{}])
+    it('user_to_ldap_filter should work', () => (
+        aclG.user_to_ldap_filter({ 'mail': 'ayme.rigaux@univ-paris1.fr' } as CurrentUser).then(filter => (
+            assert.deepEqual(filter, true)
         ))
     ));
 });
@@ -80,20 +81,15 @@ describe('structureRoles', () => {
             assert.deepEqual(filter, '(|(supannRoleEntite=*[role={SUPANN}F10]*[code=DGH]*)(supannRoleEntite=*[role={SUPANN}D30]*[code=DGH]*)(supannRoleEntite=*[role={SUPANN}D10]*[code=DGH]*)(supannRoleEntite=*[role={SUPANN}D00]*[code=DGH]*))')
         ))
     ));
-    
-    const user_2roles = { supannRoleEntite: [
-        "[role={SUPANN}D30][type={SUPANN}S230][code=DGH]",
-        "[role={SUPANN}D10][type={SUPANN}S230][code=DGHA]",
-    ] } as v;
-    it('user_to_subv should work', () => (
-        acl.structureRoles('structureParrain', "(up1TableKey=*)").user_to_subv(user_2roles).then(l => (
-            assert.deepEqual(l, [{ structureParrain: "DGH" }, { structureParrain: "DGHA" }])
+
+    it('user_to_ldap_filter should work', () => (
+        acl.structureRoles('structureParrain', "(up1TableKey=*)").user_to_ldap_filter({ 'id': 'arigaux@univ-paris1.fr' } as CurrentUser).then(filter => (
+            assert.deepEqual(filter, '(supannParrainDN=supannCodeEntite=DGH,ou=structures,dc=univ-paris1,dc=fr)')
         ))
     ));
-    it('user_to_subv if user with no role', () => (
-        acl.structureRoles('structureParrain', "(up1TableKey=*)").user_to_subv({} as v).then(l => (
-            assert.deepEqual(l, [])
+    it('user_to_ldap_filter if user with no role', () => (
+        acl.structureRoles('structureParrain', "(up1TableKey=*)").user_to_ldap_filter({ 'id': 'ayrigaux@univ-paris1.fr' } as CurrentUser).then(filter => (
+            assert.deepEqual(filter, '(|(supannParrainDN=supannCodeEntite=DGH,ou=structures,dc=univ-paris1,dc=fr)(supannParrainDN=supannCodeEntite=DGHA,ou=structures,dc=univ-paris1,dc=fr))')
         ))
     ));
-    
 });

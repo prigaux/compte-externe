@@ -93,21 +93,14 @@ function notifyModerators(req: req, sv: sv, templateName: string) {
     });
 }
 
-const acls_allowed_ssubv = (user: CurrentUser) => (
-    search_ldap.vuser(user).then(vuser => (
-        acl_checker.allowed_ssubvs(vuser, conf_steps.steps)
-    ))//.tap(l => console.log(user && user.id, JSON.stringify(l)))
-);
-
 function checkAcls(req: req, sv: sv) {
-    return acls_allowed_ssubv(req.user).then(allowed_ssubvs => {
-        if (acl_checker.is_sv_allowed(sv, allowed_ssubvs)) {
+    return acl_checker.checkAcl(req.user, sv.v, step(sv).acls).then(check => {
+        if (check === true) {
             console.log("authorizing", req.user, "for step", sv.step);
         } else if (!req.user) {
             throw "Unauthorized";
         } else {
-            const ssubv = allowed_ssubvs.find(ssubv => ssubv.step === sv.step);
-            console.error(req.user, "not authorized for step", sv.step, ssubv && ssubv.subvs, sv.v);
+            console.error(req.user, "not authorized for step", sv.step, check.error, sv.v);
             throw "Forbidden"
         }
     })
@@ -149,10 +142,9 @@ async function search_with_acls(req: req, wanted_step: string) {
     const sizeLimit = parseInt(req.query.maxRows) || 10;
     const step = conf_steps.steps[wanted_step];
 
-    const vuser = await search_ldap.vuser(req.user);
-    const subvs = await acl_checker.allowed_subvs(vuser, step);
+    const acl_ldap_filter = await acl_checker.user_to_ldap_filter(req.user, step.acls);
     const attrTypes = _.pick(conf.ldap.people.types, ['sn', 'givenName', 'uid', 'global_profilename']);
-    const vs = await search_ldap.searchPeople_matching_subvs(subvs, token, attrTypes, { sizeLimit });
+    const vs = await search_ldap.searchPeople_matching_acl_ldap_filter(acl_ldap_filter, token, attrTypes, { sizeLimit });
     return _.sortBy(vs, 'displayName')
 }
 
@@ -237,20 +229,17 @@ function remove(req: req, id: id, wanted_step: string) {
     }).then(_ => ({ success: true }));
 }
 
-const non_initial_with_acls = (allowed_ssubvs: acl_checker.allowed_ssubvs) => (
-    allowed_ssubvs.filter(ssubvs => {
-        const step = conf_steps.steps[ssubvs.step];
-        return step.acls && !step.initialStep;
-    })
-)
+const initial_steps = () => (
+    _.pickBy(conf_steps.steps, (step) => step.initialStep)
+);
+
+const non_initial_steps = () => (
+    _.pickBy(conf_steps.steps, (step) => !step.initialStep)
+);
 
 function listAuthorized(req: req) {
     if (!req.user) return Promise.reject("Unauthorized");
-    return search_ldap.vuser(req.user).then(vuser => (
-        acl_checker.allowed_ssubvs(vuser, conf_steps.steps)
-    )).then(allowed_ssubvs => (
-        acl_checker.mongo_query(non_initial_with_acls(allowed_ssubvs))
-    )).then(query => (
+    return acl_checker.mongo_query(req.user, non_initial_steps()).then(query => (
         db.listByModerator(query)
     )).then(svs => (
         svs && svs.filter(sv => {
@@ -290,12 +279,12 @@ const exportStep = (step: step) : Partial<step> => (
     }
 );
 const loggedUserInitialSteps = (req: req) => (
-  acls_allowed_ssubv(req.user).then(allowed_ssubvs => (
-    allowed_ssubvs.filter(({ step }) => (
+  acl_checker.allowed_step_ldap_filters(req.user, initial_steps()).then(l => (
+    l.filter(({ step }) => (
           conf_steps.steps[step].initialStep
-    )).map(({ step, subvs }) => (
+    )).map(({ step, filter }) => (
         { id: step, 
-          acl_subvs: _.isEqual(subvs, [{}]) ? undefined: subvs, // no subvs means no restriction
+          ldap_filter: filter,
           ...exportStep(conf_steps.steps[step]),
         }
     ))

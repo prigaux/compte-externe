@@ -17,14 +17,6 @@ export const currentUser_to_filter = (user: CurrentUser) => (
     filters.eq("eduPersonPrincipalName", user && user.id)
 );
 
-export const vuser = (user: CurrentUser) => {
-    if (!user) return Promise.resolve(undefined);
-    return onePerson(currentUser_to_filter(user)).then(vuser => {
-        if (!vuser) console.error("unknown user", user)
-        return vuser;
-    })
-};
-
 export const structures = (token: string, sizeLimit: number) => {
     let words_filter = filters.fuzzy(['description', 'ou'], token);
     let many = [filters.eq("supannCodeEntite", token), 
@@ -148,14 +140,12 @@ export const subv_to_eq_filters = (subv: Partial<v>) => {
     return _.map(v_ldap, (val, attr) => filters.eq(attr, val as string));
 }
 
-export function searchPeople_matching_subvs<T extends {}>(subvs: Partial<v>[], token: string, attrTypes: T, options: ldap.Options): Promise<T[]> {
-    const ors = subvs.map(subv => filters.and(subv_to_eq_filters(subv)));
-    const filter = filters.and([
-        filters.fuzzy(['displayName', 'cn'], token),
-        filters.or(ors),
-    ]);
-    console.log("searchPeople_matching_subvs with filter", filter);
-    return ldap.search(conf.ldap.base_people, filter, attrTypes, conf.ldap.people.attrs, options);
+export function searchPeople_matching_acl_ldap_filter<T extends {}>(filter: acl_ldap_filter, token: string, attrTypes: T, options: ldap.Options): Promise<T[]> {
+    if (filter === false) return Promise.resolve([]);
+    let filter_ = filters.fuzzy(['displayName', 'cn'], token);
+    if (filter !== true) filter_ = filters.and([ filter_, filter ]);
+    console.log("searchPeople_matching_acl_ldap_filter with filter", filter_);
+    return ldap.search(conf.ldap.base_people, filter_, attrTypes, conf.ldap.people.attrs, options);
 }
 
 // export it to allow override

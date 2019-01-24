@@ -3,7 +3,7 @@
     <div v-if="allow_reuse">
         <h4 v-html="title_in_list"></h4>
 
-        <form novalidate v-if="step.acl_subvs || step.attrs.profilename_to_modify" class="form-horizontal">
+        <form novalidate v-if="step.ldap_filter || step.attrs.profilename_to_modify" class="form-horizontal">
             <my-bootstrap-form-group :name="uid" label="Choisir un utilisateur">
                 <typeahead :minChars="3" :editable="false"
                             @input="withUser"

@@ -32,7 +32,7 @@ function test_params() {
           ] },
         { uid: "e10000000", sn: "rigaux", givenName: "pascal", cn: "rigaux pascal", displayName: "pascal rigaux", up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','student'], supannEtuId: '22', mailHost: 'malix.univ-paris1.fr', objectClass: [] },
         { uid: "arigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux ayme", displayName: "aymé rigaux", up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [], mail: "ayme.rigaux@univ-paris1.fr", eduPersonPrincipalName: "arigaux@univ-paris1.fr", supannRoleEntite: ["[role={SUPANN}D30][type={SUPANN}S230][code=DGH]"], memberOf: ["cn=g1,ou=groups,dc=univ,dc=fr"] },
-        { uid: "ayrigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux ayme", displayName: "aymé rigaux", up1BirthDay: '19750101000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [] },
+        { uid: "ayrigaux", sn: "rigaux", givenName: "aymé", cn: "rigaux ayme", displayName: "aymé rigaux", up1BirthDay: '19750101000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [], eduPersonPrincipalName: "ayrigaux@univ-paris1.fr", supannRoleEntite: ["[role={SUPANN}D30][type={SUPANN}S230][code=DGH]", "[role={SUPANN}D10][type={SUPANN}S230][code=DGHA]"] },
 /* tslint:enable */
     ];
     let rolesGeneriques = [
