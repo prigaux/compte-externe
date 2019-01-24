@@ -45,7 +45,7 @@ describe('user_id', () => {
 });
 
 describe('ldapGroup', () => {
-    let aclG;
+    let aclG : acl_search;
     before(() => aclG = acl.ldapGroup("g1"));
 
     it('v_to_ldap_filter should work', () => (
