@@ -275,7 +275,7 @@ export default Vue.extend({
         },
       reject(v) {
         this.v = v;
-        Ws.remove(this.id, this.stepName).then(this.nextStep);
+        Ws.remove(this.id, this.stepName).then(this.go_back);
       }
     },
 });
