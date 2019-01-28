@@ -49,6 +49,27 @@ export const getCasAttrs: simpleAction = async (req, _sv) => {
     return { v };
 }
 
+export const esup_activ_bo_validateAccount = (isActivation: boolean) : simpleAction => (req, _sv) => {
+    const userInfo = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, search_ldap.v_from_WS(req.query), {});
+    delete userInfo.code;
+    const { wantedConvert, attrRemapRev } = ldap.convert_and_remap(conf.ldap.people.types, conf.ldap.people.attrs);
+    return esup_activ_bo.validateAccount(userInfo as any, Object.keys(attrRemapRev)).then(o => {
+        if (isActivation && !o.code) throw "Compte déjà activé";
+        if (!isActivation && o.code) throw "Compte non activé";
+        return { ..._.pick(o, 'possibleChannels', 'code'), ... ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert) }
+    }).then(v => ({ v }))
+}
+
+export const esup_activ_bo_sendCode : simpleAction = (_req, { v }) => (
+    esup_activ_bo.sendCode(v.supannAliasLogin, v['channel']).then(_ => ({ v }))
+)
+export const esup_activ_bo_validateCode : simpleAction = (req, sv) => (
+    esup_activ_bo.validateCode(req.query.supannAliasLogin, req.query.code).then(ok => {
+        if (!ok) throw "Code invalide";
+        return sv;
+    })
+)
+
 export const getShibOrCasAttrs: simpleAction = (req, _sv) => (
     (isCasUser(req) ? getCasAttrs : getShibAttrs)(req, _sv)
 )

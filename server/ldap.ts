@@ -99,7 +99,7 @@ const arrayB_to_stringB = (v: RawValueB) => (
     (_.isArray(v) ? v : [v]).map(e => e && e.toString())
 );
 
-function handleAttrsRemapAndType<T extends {}>(o : Dictionary<RawValueB>, attrRemapRev: Dictionary<string[]>, attrTypes : T, wantedConvert: AttrsConvert) {
+export function handleAttrsRemapAndType<T extends {}>(o : Dictionary<RawValueB>, attrRemapRev: Dictionary<string[]>, attrTypes : T, wantedConvert: AttrsConvert) {
     let r = {};
     _.forEach(o, (val, attr) => {
         if (!attrRemapRev[attr] && !(attr in attrTypes)) {
