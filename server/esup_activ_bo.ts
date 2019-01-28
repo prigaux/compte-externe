@@ -52,6 +52,8 @@ function soap(templateName, params, opts : { responseTag: string, fault_to_strin
 
 const fault_detail_key = (fault) => fault.detail && Object.keys(fault.detail)[0]
 
+// Example of response:
+// <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soap:Body><soap:Fault><faultcode>soap:Server</faultcode><faultstring>Identification ...chou..e : (&amp;(supannEmpId=14464)(up1BirthDay=19741002000000Z))</faultstring><detail><AuthentificationException xmlns="http://remote.services.activbo.esupportail.org" /></detail></soap:Fault></soap:Body></soap:Envelope>
 function get_fault(xml, to_string = undefined) {
     let fault = deepGetKey(xml, 'soap:Fault');
     return fault && (to_string && to_string(fault) || fault.faultstring);
