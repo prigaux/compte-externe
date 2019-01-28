@@ -68,7 +68,6 @@ function _validateAccount(uid: string): Promise<string> {
     });
 }
 
-// returns a code which allows setPassword
 function _setPassword(supannAliasLogin: string, code: string, password: string) {
     console.log("esup_activ_bo._setPassword " + supannAliasLogin + " using code " + code);
     let params = { id: supannAliasLogin, code, password };
