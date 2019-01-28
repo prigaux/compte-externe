@@ -74,7 +74,7 @@ function export_sv(sv: sva) {
     sv = _.clone(sv);
     sv.v = export_v(sv_attrs(sv), sv.v) as v;
     sv.attrs = exportAttrs(sv.attrs);
-    return { ...sv, ...exportStep(step(sv)) };
+    return { ...exportStep(step(sv)), ...sv };
 }
 
 function mayNotifyModerators(req: req, sv: sv, notifyKind: string) {
