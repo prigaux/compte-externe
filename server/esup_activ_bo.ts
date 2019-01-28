@@ -87,7 +87,7 @@ function _setPassword(supannAliasLogin: string, code: string, password: string) 
     });
 }
 
-export const setPassword = (uid: string, supannAliasLogin: string, password: string) => (
+export const setNewAccountPassword = (uid: string, supannAliasLogin: string, password: string) => (
     _validateAccount(uid).then(code => (
         code && _setPassword(supannAliasLogin, code, password)
     ))

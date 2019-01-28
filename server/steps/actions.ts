@@ -157,7 +157,7 @@ const createCompte_ = async (sv: sva, opts : crejsonldap.options) => {
 
 const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: crejsonldap.accountStatus) => {
     if (v.userPassword && !accountStatus) {
-        await esup_activ_bo.setPassword(v.uid, v.supannAliasLogin, v.userPassword);
+        await esup_activ_bo.setNewAccountPassword(v.uid, v.supannAliasLogin, v.userPassword);
         // NB: if we have a password, it is a fast registration, so do not send a mail
     }
     if (v.supannMailPerso) {
