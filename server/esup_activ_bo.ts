@@ -67,6 +67,19 @@ function _get_entries(response) {
     return r;
 }
 
+// returns "attrPersoInfo" + code, mail, supannAliasLogin
+// throws: "Authentification invalide pour l'utilisateur xxx"
+// throws: "Login invalide"
+export const authentificateUser = (supannAliasLogin: string, password: string, attrPersoInfo: string[]) => (
+    soap("authentificateUser.xml", { id: supannAliasLogin, password, attrPersoInfo }, 
+         { responseTag: 'ns1:authentificateUserResponse' }).then(_get_entries)
+)
+
+export const authentificateUserWithCas = (supannAliasLogin: string, proxyTicket: string, targetUrl: string, attrPersoInfo: string[]) => (
+    soap("authentificateUserWithCas.xml", { id: supannAliasLogin, proxyTicket, targetUrl, attrPersoInfo }, 
+         { responseTag: 'ns1:authentificateUserWithCasResponse' }).then(_get_entries)
+)
+
 // returns "attrPersoInfo" + possibleChannels, mail, supannAliasLogin + code if account is not activated
 // ("code" is useful for setPassword or validateCode)
 // throws: "AuthentificationException"
@@ -78,11 +91,39 @@ export function validateAccount(userInfoToValidate: Dictionary<string>, attrPers
                 { responseTag: 'ns1:validateAccountResponse', fault_to_string: fault_detail_key }).then(_get_entries);
 }
 
+// throws: "UserPermissionException"
+export const updatePersonalInformations = (supannAliasLogin: string, code: string, userInfo: Dictionary<string>) => {
+    const hashBeanPersoInfo = _.map(userInfo, (value, key) => ({ value, key }));
+    return soap("updatePersonalInformations.xml", { id: supannAliasLogin, code, hashBeanPersoInfo },
+                { responseTag: 'ns1:updatePersonalInformationsResponse', fault_to_string: fault_detail_key })
+}
+    
 async function _getCode(hashInfToValidate: Dictionary<string>): Promise<string> {
     const vals = await validateAccount(hashInfToValidate, []);
     if (!vals.code) throw "esup_activ_bo.validateAccount did not return code for " + JSON.stringify(hashInfToValidate) + ". Account already activated?";
     return vals.code;
 }
+
+// NB: no error in case of unknown channel
+// throws: "Utilisateur xxx inconnu"
+// throws: "Utilisateur sdianat n'a pas de mail perso"
+export const sendCode = (supannAliasLogin: string, channel: string) => (
+    // Response in case of success:
+    // <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soap:Body><ns1:sendCodeResponse xmlns:ns1="http://remote.services.activbo.esupportail.org" /></soap:Body></soap:Envelope>    
+    soap("sendCode.xml", { id: supannAliasLogin, channel },
+         { responseTag: 'ns1:sendCodeResponse' }).then(response => {
+        if (response === '') return; // OK!
+        else throw "unexpected sendCode error: " + JSON.stringify(response);
+    })
+);
+
+export const validateCode = (supannAliasLogin: string, code: string) => (
+    // Response in case of success:
+    // <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soap:Body><ns1:validateCodeResponse xmlns:ns1="http://remote.services.activbo.esupportail.org"><ns1:out>true</ns1:out></ns1:validateCodeResponse></soap:Body></soap:Envelope>
+    soap("validateCode.xml", { id: supannAliasLogin, code }, { responseTag: 'ns1:validateCodeResponse' }).then(response => {
+        return response['ns1:out'] === 'true';
+    })
+);
 
 export function setPassword(supannAliasLogin: string, code: string, password: string) {
     console.log("esup_activ_bo._setPassword " + supannAliasLogin + " using code " + code);
@@ -92,6 +133,10 @@ export function setPassword(supannAliasLogin: string, code: string, password: st
         else throw "unexpected setPassword error: " + JSON.stringify(response);
     });
 }
+
+// TODO
+//export const changeLogin = (supannAliasLogin: string, code: string, newLogin: string, currentPassword: string) => ...
+//export const changeLogin = (supannAliasLogin: string, code: string, newLogin: string) => ...
 
 export const setNewAccountPassword = (uid: string, supannAliasLogin: string, password: string) => (
     _getCode({ uid }).then(code => (

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <soap:Body>
+    <updatePersonalInformations>
+      <in0>{{id}}</in0>
+      <in1>{{code}}</in1>
+      <in2>
+        {{#hashBeanPersoInfo}}
+        <entry xmlns="http://remote.services.activbo.esupportail.org">
+          <key xsi:type="xsd:string">{{key}}</key>
+          <value xsi:type="xsd:string">{{value}}</value>
+        </entry>
+        {{/hashBeanPersoInfo}}
+      </in2>
+    </updatePersonalInformations>
+  </soap:Body>
+</soap:Envelope>
