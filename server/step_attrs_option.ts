@@ -118,10 +118,10 @@ export function export_v(attrs: StepAttrsOption, v) {
 
 const find_choice = (choices, key) => choices.find(choice => choice.key == key); // allow equality if key is number and choice.key is string
 
-const transform_toUserOnly_into_hidden_readonly = ({ toUserOnly, ...opt}) => (
+const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt}) => (
     toUserOnly ? { optional: true, readonly: true, ...opt} : opt
 );
 
 export const exportAttrs = (attrs: StepAttrsOption) => (
-    _.mapValues(_.omitBy(attrs, val => val.hidden), transform_toUserOnly_into_hidden_readonly)
+    _.mapValues(_.omitBy(attrs, val => val.hidden), transform_toUserOnly_into_optional_readonly)
 ) as StepAttrsOption;
