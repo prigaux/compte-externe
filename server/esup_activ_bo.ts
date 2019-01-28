@@ -18,10 +18,10 @@ function deepGetKey(o, k) {
     } else if (k in o) {
         return o[k];
     } else if (_.isArray(o)) {
-        return o.length === 1 && deepGetKey(o[0], k);
+        return o.length === 1 ? deepGetKey(o[0], k) : undefined;
     } else {
         let ks = _.keys(o);
-        return ks.length === 1 && deepGetKey(o[ks[0]], k);
+        return ks.length === 1 ? deepGetKey(o[ks[0]], k) : undefined;
     }
 }
 
@@ -35,35 +35,41 @@ function raw_soap(url, body) {
     ));
 }
 
-function soap(templateName, params) {
+function soap(templateName, params, opts : { responseTag: string, fault_to_string?: (any) => string }) {
     let templateFile = __dirname + "/templates/esup-activ-bo/" + templateName;
     return readFile(templateFile).then(data => (
         Mustache.render(data.toString(), params)
     )).then(body => {
         //console.log(body);
         return raw_soap(conf.esup_activ_bo.url, body);
-    });
+    }).then(xml => {
+        //console.dir(xml, { depth: null });
+        let response = deepGetKey(xml, opts.responseTag);
+        if (response === undefined) throw get_fault(xml, opts.fault_to_string) || JSON.stringify(xml);
+        return response;
+    })
 }
 
-function get_fault(xml) {
+const fault_detail_key = (fault) => fault.detail && Object.keys(fault.detail)[0]
+
+function get_fault(xml, to_string = undefined) {
     let fault = deepGetKey(xml, 'soap:Fault');
-    return fault && fault.faultstring;
+    return fault && (to_string && to_string(fault) || fault.faultstring);
 }
 
 // returns a code which allows setPassword
 function _validateAccount(uid: string): Promise<string> {
     console.log("esup_activ_bo._validateAccount " + uid);
     let params = { uid };
-    return soap("validateAccount.xml", params).then(xml => {
-        //console.dir(xml, { depth: null });
-        let response = deepGetKey(xml, 'ns1:validateAccountResponse');
+    return soap("validateAccount.xml", params, 
+                { responseTag: 'ns1:validateAccountResponse', fault_to_string: fault_detail_key }).then(response => {
         let entries = deepGetKey(response, 'entry');
         if (_.isArray(entries)) {
             let vals = _.zipObject(_.map(entries, 'key'), _.map(entries, 'value'));
             if (!vals['code']) throw "esup_activ_bo.validateAccount did not return code for uid " + uid + ". Account already activated?";
             return vals['code'];
         } else {
-            throw "esup_activ_bo.validateAccount failed: " + (get_fault(xml) || JSON.stringify(xml));
+            throw "esup_activ_bo.validateAccount failed: " + JSON.stringify(response);
         }
     });
 }
@@ -71,11 +77,9 @@ function _validateAccount(uid: string): Promise<string> {
 function _setPassword(supannAliasLogin: string, code: string, password: string) {
     console.log("esup_activ_bo._setPassword " + supannAliasLogin + " using code " + code);
     let params = { id: supannAliasLogin, code, password };
-    return soap("setPassword.xml", params).then(xml => {
-        console.dir(xml, { depth: null });
-        let response = deepGetKey(xml, 'ns1:setPasswordResponse');
+    return soap("setPassword.xml", params, { responseTag: 'ns1:setPasswordResponse' }).then(response => {
         if (response === '') return; // OK!
-        else throw "esup_activ_bo.setPassword failed: " + (get_fault(xml) || JSON.stringify(xml));
+        else throw "unexpected setPassword error: " + JSON.stringify(response);
     });
 }
 
