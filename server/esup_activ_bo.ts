@@ -64,6 +64,7 @@ function _get_entries(response) {
     let entries = deepGetKey(response, 'entry');
     if (!_.isArray(entries)) return undefined;
     let r = _.zipObject(_.map(entries, 'key'), _.map(entries, 'value'));
+    r = _.mapValues(r, val => val.split(conf.esup_activ_bo.multiValue_separator));
     return r;
 }
 
