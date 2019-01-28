@@ -36,6 +36,7 @@ function raw_soap(url, body) {
 }
 
 function soap(templateName, params, opts : { responseTag: string, fault_to_string?: (any) => string }) {
+    if (!conf.esup_activ_bo.url) throw "configuration issue: conf.esup_activ_bo.url is missing";
     let templateFile = __dirname + "/templates/esup-activ-bo/" + templateName;
     return readFile(templateFile).then(data => (
         Mustache.render(data.toString(), params)
