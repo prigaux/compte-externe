@@ -216,6 +216,9 @@ export default Vue.extend({
         // in that cas, add "prev" parameter to correctly handle missing "v_from_prevStep" parameters
         let query;
         [ v_from_prevStep, query ] = Helpers.partitionObject(this.v, (k, _) => (this.attrs[k] || {}).uiType === 'password');
+
+        query = Ws.toWs(query, this.attrs);
+
         if (!isEmpty(v_from_prevStep)) {
             query.prev = this.$route.path.replace(/^\//, '');
         }

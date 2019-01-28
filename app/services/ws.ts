@@ -106,7 +106,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         }
 
         const attr_format_to_converter = {
-            'date': { fromWs: val => new Date(val), fromCSV: _fromCSVDate },
+            'date': { fromWs: val => new Date(val), toWs: val => val.toJSON(), fromCSV: _fromCSVDate },
             'data-url': { fromWs: _base64_to_jpeg_data_URL, toWs: _jpeg_data_URL_to_base64 },
         }
 
@@ -121,8 +121,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return v_;
         }
 
-        const fromWs = (v: VRaw, attrs: StepAttrsOption) => to_or_from_ws('fromWs', v, attrs);
-        const toWs = (v: V, attrs: StepAttrsOption) => to_or_from_ws('toWs', v, attrs);
+        export const fromWs = (v: VRaw, attrs: StepAttrsOption) => to_or_from_ws('fromWs', v, attrs);
+        export const toWs = (v: V, attrs: StepAttrsOption) => to_or_from_ws('toWs', v, attrs);
 
         const fromWs_one = (attr: string, val, attrs) => fromWs({ [attr]: val }, attrs)[attr]
 
