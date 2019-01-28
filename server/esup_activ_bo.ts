@@ -80,8 +80,8 @@ export function validateAccount(userInfoToValidate: Dictionary<string>, attrPers
 
 async function _getCode(hashInfToValidate: Dictionary<string>): Promise<string> {
     const vals = await validateAccount(hashInfToValidate, []);
-    if (!vals['code']) throw "esup_activ_bo.validateAccount did not return code for " + JSON.stringify(hashInfToValidate) + ". Account already activated?";
-    return vals['code'];
+    if (!vals.code) throw "esup_activ_bo.validateAccount did not return code for " + JSON.stringify(hashInfToValidate) + ". Account already activated?";
+    return vals.code;
 }
 
 export function setPassword(supannAliasLogin: string, code: string, password: string) {
