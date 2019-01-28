@@ -3,13 +3,17 @@
   <soap:Body>
     <validateAccount>
       <in0>
+        {{#hashInfToValidate}}
         <entry xmlns="http://remote.services.activbo.esupportail.org">
-          <key xsi:type="xsd:string">uid</key>
-          <value xsi:type="xsd:string">{{uid}}</value>
+          <key xsi:type="xsd:string">{{key}}</key>
+          <value xsi:type="xsd:string">{{value}}</value>
         </entry>
+        {{/hashInfToValidate}}
       </in0>
       <in1>
-        <string>displayName</string>
+        {{#attrPersoInfo}}
+        <string>{{.}}</string>
+        {{/attrPersoInfo}}
       </in1>
     </validateAccount>
   </soap:Body>

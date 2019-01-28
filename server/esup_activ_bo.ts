@@ -67,15 +67,21 @@ function _get_entries(response) {
     return r;
 }
 
-// returns a code which allows setPassword
-function _validateAccount(uid: string): Promise<string> {
-    console.log("esup_activ_bo._validateAccount " + uid);
-    let params = { uid };
+// returns "attrPersoInfo" + possibleChannels, mail, supannAliasLogin + code if account is not activated
+// ("code" is useful for setPassword or validateCode)
+// throws: "AuthentificationException"
+export function validateAccount(userInfoToValidate: Dictionary<string>, attrPersoInfo: string[]): Promise<Dictionary<string>> {
+    console.log("esup_activ_bo._validateAccount " + JSON.stringify(userInfoToValidate));
+    const hashInfToValidate = _.map(userInfoToValidate, (value, key) => ({ value, key }));
+    let params = { hashInfToValidate, attrPersoInfo };
     return soap("validateAccount.xml", params, 
-                { responseTag: 'ns1:validateAccountResponse', fault_to_string: fault_detail_key }).then(_get_entries).then(vals => {
-        if (!vals['code']) throw "esup_activ_bo.validateAccount did not return code for uid " + uid + ". Account already activated?";
-        return vals['code'];
-    })
+                { responseTag: 'ns1:validateAccountResponse', fault_to_string: fault_detail_key }).then(_get_entries);
+}
+
+async function _getCode(hashInfToValidate: Dictionary<string>): Promise<string> {
+    const vals = await validateAccount(hashInfToValidate, []);
+    if (!vals['code']) throw "esup_activ_bo.validateAccount did not return code for " + JSON.stringify(hashInfToValidate) + ". Account already activated?";
+    return vals['code'];
 }
 
 function _setPassword(supannAliasLogin: string, code: string, password: string) {
@@ -88,7 +94,7 @@ function _setPassword(supannAliasLogin: string, code: string, password: string) 
 }
 
 export const setNewAccountPassword = (uid: string, supannAliasLogin: string, password: string) => (
-    _validateAccount(uid).then(code => (
+    _getCode({ uid }).then(code => (
         code && _setPassword(supannAliasLogin, code, password)
     ))
 );
