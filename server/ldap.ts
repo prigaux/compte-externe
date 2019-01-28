@@ -222,11 +222,16 @@ export function searchSimple<T extends {}>(base: string, filter: filter, attrTyp
 
 const defaultLdapAttr = attr => attr.replace(/^global_/, '');
 
-// NB: it should be <T extends LdapEntry> but it is not well handled by typescript
-export function search<T extends {}>(base: string, filter: filter, attrTypes: T, attrsConvert: AttrsConvert, options: Options): Promise<T[]> {
+export function convert_and_remap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert) {
     let wantedConvert = _.mapValues(attrTypes, (_type, attr) => attrsConvert && attrsConvert[attr] || {});
     let attrRemap = _.mapValues(wantedConvert, (c, attr) => c.ldapAttr || defaultLdapAttr(attr));
     let attrRemapRev = _.invertBy(attrRemap);
+    return { wantedConvert, attrRemapRev };
+}
+
+// NB: it should be <T extends LdapEntry> but it is not well handled by typescript
+export function search<T extends {}>(base: string, filter: filter, attrTypes: T, attrsConvert: AttrsConvert, options: Options): Promise<T[]> {
+    let { wantedConvert, attrRemapRev } = convert_and_remap(attrTypes, attrsConvert);
     let attributes = _.keys(attrRemapRev);
     let p = searchRaw(base, filter, attributes, options).then(l => 
           l.map(o => {
