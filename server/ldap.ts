@@ -47,6 +47,9 @@ type RawValue = ldap_RawValue;
 type RawValueB = Buffer | Buffer[]
 
 export function searchRaw(base: string, filter: filter, attributes: string[], options: Options): Promise<Dictionary<RawValueB>[]> {
+    if (!filter) {
+        console.error("internal error: missing ldap filter");
+    }
     if (attributes.length === 0) {
         // workaround asking nothing and getting everything. Bug in ldapjs???
         attributes = ['objectClass'];
