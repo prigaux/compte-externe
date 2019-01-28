@@ -57,21 +57,22 @@ function get_fault(xml, to_string = undefined) {
     return fault && (to_string && to_string(fault) || fault.faultstring);
 }
 
+function _get_entries(response) {
+    let entries = deepGetKey(response, 'entry');
+    if (!_.isArray(entries)) return undefined;
+    let r = _.zipObject(_.map(entries, 'key'), _.map(entries, 'value'));
+    return r;
+}
+
 // returns a code which allows setPassword
 function _validateAccount(uid: string): Promise<string> {
     console.log("esup_activ_bo._validateAccount " + uid);
     let params = { uid };
     return soap("validateAccount.xml", params, 
-                { responseTag: 'ns1:validateAccountResponse', fault_to_string: fault_detail_key }).then(response => {
-        let entries = deepGetKey(response, 'entry');
-        if (_.isArray(entries)) {
-            let vals = _.zipObject(_.map(entries, 'key'), _.map(entries, 'value'));
-            if (!vals['code']) throw "esup_activ_bo.validateAccount did not return code for uid " + uid + ". Account already activated?";
-            return vals['code'];
-        } else {
-            throw "esup_activ_bo.validateAccount failed: " + JSON.stringify(response);
-        }
-    });
+                { responseTag: 'ns1:validateAccountResponse', fault_to_string: fault_detail_key }).then(_get_entries).then(vals => {
+        if (!vals['code']) throw "esup_activ_bo.validateAccount did not return code for uid " + uid + ". Account already activated?";
+        return vals['code'];
+    })
 }
 
 function _setPassword(supannAliasLogin: string, code: string, password: string) {
