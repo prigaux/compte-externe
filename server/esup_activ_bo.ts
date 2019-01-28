@@ -84,7 +84,7 @@ async function _getCode(hashInfToValidate: Dictionary<string>): Promise<string> 
     return vals['code'];
 }
 
-function _setPassword(supannAliasLogin: string, code: string, password: string) {
+export function setPassword(supannAliasLogin: string, code: string, password: string) {
     console.log("esup_activ_bo._setPassword " + supannAliasLogin + " using code " + code);
     let params = { id: supannAliasLogin, code, password };
     return soap("setPassword.xml", params, { responseTag: 'ns1:setPasswordResponse' }).then(response => {
@@ -95,6 +95,6 @@ function _setPassword(supannAliasLogin: string, code: string, password: string) 
 
 export const setNewAccountPassword = (uid: string, supannAliasLogin: string, password: string) => (
     _getCode({ uid }).then(code => (
-        code && _setPassword(supannAliasLogin, code, password)
+        code && setPassword(supannAliasLogin, code, password)
     ))
 );
