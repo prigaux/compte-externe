@@ -250,14 +250,7 @@ function listAuthorized(req: req) {
     ));
 }
 
-const body_to_v = (o) => (
-    _.mapValues(o, (val, attr) => {
-        let attrType = conf.ldap.people.types[attr];
-        return _.isDate(attrType) ? new Date(val) : 
-          _.isNumber(attrType) && val ? parseFloat(val) :
-          val;
-    }) as v
-);
+const body_to_v = search_ldap.v_from_WS;
 
 function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
     return getRaw(req, id, undefined).then(sv => {

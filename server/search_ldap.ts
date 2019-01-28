@@ -13,6 +13,15 @@ export const onePerson = (filter: string) => (
     ldap.searchOne(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, {})
 );
 
+export const v_from_WS = (v) => (
+    _.mapValues(v, (val, attr) => {
+        let attrType = conf.ldap.people.types[attr];
+        return _.isDate(attrType) ? new Date(val) : 
+          _.isNumber(attrType) && val ? parseFloat(val) :
+          val;
+    }) as v
+)
+
 export const currentUser_to_filter = (user: CurrentUser) => (
     filters.eq("eduPersonPrincipalName", user && user.id)
 );
