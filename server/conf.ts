@@ -3,6 +3,7 @@
 import * as fs from 'fs';
 import sendmailTransport = require('nodemailer-sendmail-transport');
 import * as ldap_convert from './ldap_convert';
+import * as _ from 'lodash';
 import { sameKeyNameChoices } from './helpers';
 import * as grouped_calls from './helper_grouped_calls';
 import * as vue_config from '../app/vue.config';
@@ -127,7 +128,10 @@ const conf = {
                 supannEmpId: '',
                 supannEtuId: '',
                 
+                termsOfUse: [''],
+
                 up1Profile: [],
+                '{SMSU}CG': '', '{PHOTO}PUBLIC': '', '{PHOTO}INTRANET': '', '{PHOTO}STUDENT': '',
             },
 
             attrs : { 
@@ -154,6 +158,10 @@ const conf = {
                 mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
                 global_mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
                 jpegPhoto: { convert: ldap_convert.base64 },
+                termsOfUse: { ldapAttr: 'up1TermsOfUse' },
+                ..._.fromPairs(['{SMSU}CG', '{PHOTO}PUBLIC', '{PHOTO}INTRANET', '{PHOTO}STUDENT'].map(value => 
+                    [ value, { ldapAttr: 'up1TermsOfUse', convert: ldap_convert.has_value(value) } ]
+                )),
             },
             supannCiviliteChoices: sameKeyNameChoices([ 'M.', 'Mme' ]),
 
