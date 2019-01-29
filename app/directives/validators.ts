@@ -148,6 +148,7 @@ Vue.component('select-with-validity', {
     },
 });
 
+// Emitted values: '' | true
 Vue.component('checkbox-with-validity', {
     template: `<input type="checkbox" :name="name" :checked="value" @change="onchange">`,
     props: ['value', 'name'],
@@ -157,6 +158,13 @@ Vue.component('checkbox-with-validity', {
     },
     watch: {
       value: 'on_value_set',
+    },
+    methods: {
+        onchange(event) {
+            this.$emit("input", event.target.checked || '');
+            this.checkValidity();
+            return false;
+        },    
     },
 });
   
