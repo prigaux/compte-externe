@@ -52,6 +52,27 @@ describe('ldap', () => {
         });
     });
 
+    describe('has_value conversion', () => {
+        it("should convert toLdap", () => {
+            let attrsConvert = { 
+                'termsOfUse': { ldapAttr: 'up1TermsOfUse' },
+                '{PHOTO}PUBLIC': { ldapAttr: 'up1TermsOfUse', convert: ldap_convert.has_value('{PHOTO}PUBLIC') },
+                '{PHOTO}STUDENT': { ldapAttr: 'up1TermsOfUse', convert: ldap_convert.has_value('{PHOTO}STUDENT') },
+            };
+            function check(v, wanted_rawLdapValue) {
+                let rawLdapValue = ldap.convertToLdap({}, attrsConvert, v, {});
+                assert.deepEqual(rawLdapValue, wanted_rawLdapValue);
+            }
+            check({ '{PHOTO}PUBLIC': '' }, {});
+            check({ '{PHOTO}PUBLIC': true }, { up1TermsOfUse: "{PHOTO}PUBLIC" });
+            check({ '{PHOTO}PUBLIC': true, '{PHOTO}STUDENT': true }, { up1TermsOfUse: [ "{PHOTO}PUBLIC", "{PHOTO}STUDENT" ] });
+            check({ termsOfUse: [], '{PHOTO}STUDENT': true }, { up1TermsOfUse: [ "{PHOTO}STUDENT" ] });
+            check({ termsOfUse: ['{PHOTO}STUDENT'], '{PHOTO}STUDENT': true }, { up1TermsOfUse: [ "{PHOTO}STUDENT" ] });
+            check({ termsOfUse: ['{PHOTO}STUDENT'], '{PHOTO}STUDENT': '' }, { up1TermsOfUse: [] });
+            check({ termsOfUse: ['{PHOTO}PUBLIC'], '{PHOTO}STUDENT': true }, { up1TermsOfUse: [ "{PHOTO}PUBLIC", "{PHOTO}STUDENT" ] });
+        })
+    })
+
     describe("etiquette conversion", () => {
 
         it("should handle simple fromLdap", () => {

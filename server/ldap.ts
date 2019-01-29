@@ -164,7 +164,7 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: 
         }
 }
 
-function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v, opts: { toJson?: boolean }): RawValue {
+function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v, opts: { toJson?: boolean }): RawValue | ldap_modify {
         if (conversion) {
             return opts.toJson && conversion.toLdapJson ? conversion.toLdapJson(v) : conversion.toLdap(v);
         } else if (_.isArray(attrType)) {
@@ -183,20 +183,30 @@ function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ld
         }
 }
 
+const to_ldap_modify = (val : RawValue | ldap_modify) => (
+    _.isArray(val) || _.isString(val) ? { action: 'add', value: val } : val
+)
+
+const to_array = (val: RawValue) => val instanceof Array ? val : [val];
+
 export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert, v: T, opts : { toJson?: boolean }): Dictionary<RawValue> {
     let r = {};
     _.forEach(v, (val, attr) => {
         let conv = attrsConvert[attr] || {};
         let attr_ = opts.toJson && conv.ldapAttrJson || conv.ldapAttr || defaultLdapAttr(attr);
-        // transform to string|string[]
-        let val_ = convertAttrToLdap(attr, attrTypes[attr], conv.convert, val, opts);
-        if (val_ === '') return; // ignore empty string which can not be a valid LDAP string value
-        if (attr_ in r) {
-            // more than one value, transform into an array
-            if (!_.isArray(r[attr_])) r[attr_] = [ r[attr_] ];
-            r[attr_].push(...(val_ instanceof Array ? val_ : [val_]));
+        let modify = to_ldap_modify(convertAttrToLdap(attr, attrTypes[attr], conv.convert, val, opts));
+        if (modify.action === 'add') {
+            const val_ = modify.value;
+            if (val_ === '') return; // ignore empty string which can not be a valid LDAP string value
+            if (attr_ in r) {
+                r[attr_] = _.uniq(to_array(r[attr_]).concat(to_array(val_)))
+            } else {
+                r[attr_] = val_;
+            }
         } else {
-            r[attr_] = val_;
+            if (attr_ in r) {
+                r[attr_] = _.difference(r[attr_], to_array(modify.value));
+            }
         }
     });
     return r;

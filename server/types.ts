@@ -112,13 +112,14 @@ type step = {
 type steps = Dictionary<step>
 
 type ldap_RawValue = string | string[]
+type ldap_modify = { action: 'add'|'delete', value: ldap_RawValue }
 
 type ldap_conversion = {
     fromLdap?(s: string): any;
     fromLdapMulti?(l: string[]): any;
     fromLdapB?(s: Buffer): any;
     fromLdapMultiB?(l: Buffer[]): any;
-    toLdap(v: any): ldap_RawValue;
+    toLdap(v: any): ldap_RawValue | ldap_modify;
     toLdapJson?(v: any): ldap_RawValue;
     applyAttrsRemapAndType?: true, 
 }
