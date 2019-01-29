@@ -49,7 +49,9 @@
 
     <div class="checkbox" v-else-if="uiType === 'checkbox'">
       <label>
-        <checkbox-with-validity :name="name" v-model="val" :validity.sync="validity[name]">
+        <checkbox-with-validity :name="name" v-model="val"
+            :disabled="opts.readOnly"
+            :required="!opts.optional" :validity.sync="validity[name]">
         </checkbox-with-validity>
         <span v-html="opts.description"></span>
       </label>

@@ -149,7 +149,7 @@ Vue.component('select-with-validity', {
 });
 
 Vue.component('checkbox-with-validity', {
-    template: `<input type="checkbox" :name="name" :checked="value" @change="onchange" required>`,
+    template: `<input type="checkbox" :name="name" :checked="value" @change="onchange">`,
     props: ['value', 'name'],
     mixins: [ checkValidity ],
     mounted() {
