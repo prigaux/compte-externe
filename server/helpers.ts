@@ -50,6 +50,14 @@ export const nextDate = (pattern : string, date: Date) => {
     return r;
 }
 
+export const anonymize_phoneNumber = (s: string) => (
+    s && s.replace(/ /g, "").replace(/^\+33/, "0").substring(0, 6) + "****"
+)
+
+export const anonymize_email = (s: string) => (
+    s && "****" + s.substring(4)
+)
+
 export const equalsIgnoreCase = (a: string, b: string) => (
     a.toLowerCase() === b.toLowerCase()
 )

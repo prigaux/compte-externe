@@ -11,6 +11,11 @@ import "./directives/validators";
 import "./directives/Bootstrap";
 import "./directives/typeahead";
 
+// especially needed on MSIE to allow "includes" in step.labels.description Vue.js template
+import array_includes from 'array-includes';
+array_includes.shim()
+
+
 Vue.mixin(GlobalMixin);
 Vue.use(VueRouter)
 Vue.use(AsyncComputed)

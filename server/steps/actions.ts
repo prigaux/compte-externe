@@ -215,6 +215,18 @@ export const pager_to_homePhone_if_no_homePhone : simpleAction = async function(
     return { v };
 }
 
+const map_attrs = (attr2f: Dictionary<(string) => string>) : simpleAction => async (_req, { v }) => {
+    _.each(attr2f, (f, attr) => { if (v[attr]) v[attr] = f(v[attr]) });
+    return { v }
+}
+
+export const anonymize_phoneNumber = (attr: string) => (
+    map_attrs({ [attr]: helpers.anonymize_phoneNumber })
+)
+export const anonymize_email = (attr: string) => (
+    map_attrs({ [attr]: helpers.anonymize_email })
+)
+
 export const sendMailNewEtablissement = (to: string): simpleAction => (_req, sv) => {
     let v = sv.v;
     if (!v['etablissement_description']) {

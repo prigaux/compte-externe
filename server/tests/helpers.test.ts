@@ -29,3 +29,17 @@ describe('addDays', () => {
         assert.equal(d2.toISOString().replace(/T.*/, ''), '2017-02-01');
     })
 });
+
+describe('anonymize_phoneNumber', () => {
+    it("should work", () => {
+        assert.equal(helpers.anonymize_phoneNumber("+33 6 23 45 67 89"), "062345****")
+        assert.equal(helpers.anonymize_phoneNumber(undefined), undefined)
+    })
+})
+
+describe('anonymize_email', () => {
+    it("should work", () => {
+        assert.equal(helpers.anonymize_email("foo@bar.com"), "****bar.com")
+        assert.equal(helpers.anonymize_email("abcdefgh@bar.com"), "****efgh@bar.com")
+    })
+})
