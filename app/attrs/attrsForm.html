@@ -8,7 +8,7 @@
 
    <div v-for="(_, name) in attrs">
      <genericAttr :name="name" :opts="attrs[name]" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :submitted="submitted"
-         v-if="name != 'barcode' && name != 'mifare'">
+         v-if="name != 'barcode' && name != 'mifare' && attrs[name].uiType !== 'homonym'">
      </genericAttr>
    </div>
 
