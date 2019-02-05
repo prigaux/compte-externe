@@ -1,4 +1,5 @@
 import Vue from "vue";
+import { uniq } from "lodash";
 import conf from '../conf';
 import * as Helpers from '../services/helpers';
 
@@ -179,3 +180,37 @@ Vue.component('textarea-with-validity', {
     value: 'on_value_set',
   },
 });
+
+Vue.component('history-textarea-with-validity', {
+  template: `<typeahead :name="name" :value="value" @input="onchange" :is_textarea="true" :rows="rows" :minChars="1" :options="history"></typeahead>`,
+  props: ['name', 'value', 'rows'],
+  data() {
+    return { history: [] };
+  },
+  mixins: [ checkValidity ],
+  computed: {
+    localStorage_key() { return "comptex:history-textarea:" + this.name },
+  },
+  mounted() {
+    try {
+        this.history = JSON.parse(localStorage[this.localStorage_key]) || [];
+    } catch (e) {}
+    this.checkValidity();
+  },
+  beforeDestroy() {
+    if (this.value) {
+        localStorage[this.localStorage_key] = JSON.stringify(uniq([ this.value, ...this.history ]));
+    }
+  },
+  watch: {
+    value: 'on_value_set',
+  },
+  methods: {
+        onchange(val) {
+            this.$emit("input", val || '');
+            this.checkValidity();
+            return false;
+        },    
+  },
+});
+  

@@ -42,6 +42,15 @@
         :values="choicesMap" :required="!opts.optional" :validity.sync="validity[name]">
     </radio-with-validity>
 
+    <history-textarea-with-validity :name="name" v-model="val" v-else-if="uiType === 'textarea' && uiOptions.autocomplete"
+        :rows="uiOptions.rows" :required="!opts.optional" :validity.sync="validity[name]">
+    </history-textarea-with-validity>
+
+    <textarea-with-validity :name="name" v-model="val" v-else-if="uiType === 'textarea'"
+        class="form-control"
+        :disabled="opts.readOnly" :required="!opts.optional" :validity.sync="validity[name]">
+    </textarea-with-validity>
+
     <select-with-validity :name="name" v-model="val" v-else-if="uiType === 'select'"
         :disabled="opts.readOnly"
         :choices="opts.oneOf" :required="!opts.optional" :validity.sync="validity[name]">
@@ -107,6 +116,9 @@ export default Vue.extend({
                 return 'dateThreeInputs';
             }
             return this.opts.uiType || this.opts.oneOf && (this.opts.oneOf.length <= 2 ? 'radio' : 'select') || this.opts.items && 'array';
+        },
+        uiOptions() {
+            return this.opts.uiOptions || {};
         },
         type() {
             return this.realType || !this.opts.uiType ?
