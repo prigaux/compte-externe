@@ -6,7 +6,7 @@ const typeaheadComponent = Vue.extend({
     template: `
   <div>
    <div :class="{ 'input-group': loading }">
-    <input :id="id" class="form-control" :name="name" :placeholder="placeholder"
+    <input :id="id" class="form-control" :name="name" :placeholder="placeholder" v-if="!is_textarea"
            v-model="query" ref="input"
            type="text" autocomplete="off"
            @keydown.down.prevent="down"
@@ -16,20 +16,34 @@ const typeaheadComponent = Vue.extend({
            @blur="stopAndClose"
            @focus="open"
            @input="input_changed">
+    <textarea :id="id" class="form-control" :name="name" :placeholder="placeholder" v-else
+           v-model="query" ref="input"
+           type="text" autocomplete="off" :rows="rows"
+           @keydown.down="mayDown"
+           @keydown.up="mayUp"
+           @keydown.enter="mayHit"
+           @keydown.esc="stopAndClose"
+           @blur="stopAndClose"
+           @click="stopAndClose"
+           @focus="open"
+           @input="input_changed"></textarea>
     <span class="input-group-addon" style="background: #fff" v-if="loading">
      <span class="glyphicon glyphicon-refresh glyphicon-spinning"></span>
     </span>
    </div>
 
    <div style="position: relative">
-    <ul class="dropdown-menu" style="display: block; top: 0; left: 0" v-show="items.length || noResults">
-      <li v-for="(item, $item) in items" 
+    <ul class="dropdown-menu" :class="{ is_textarea }" style="display: block; top: 0; left: 0" v-show="items.length || noResults && !is_textarea">
+      <template v-for="(item, $item) in items">
+       <li role="separator" class="divider" v-if="$item > 0 && is_textarea"></li>
+       <li 
          :class="activeClass($item)"
          @click.prevent="hit"
          @mousemove="setActive($item)"
          @mousedown.prevent=""> <!-- do not blur "input" -->
         <a v-html="formatAndHighlight(item)"></a>
-      </li>
+       </li>
+      </template>
       <li v-if="noResults"><a v-text="noResultsMsg"></a></li>
     </ul>
    </div>
@@ -44,9 +58,11 @@ const typeaheadComponent = Vue.extend({
       formatting: { type: Function, default: (e) => e }, // function (T => String)
       editable: { type: Boolean, default: true },
       required: { type: Boolean, default: false },
+      is_textarea: { type: Boolean, default: false },
       name: { type: String },
       id: { type: String },
       placeholder: { type: String },
+      rows: { type: Number },
   },
 
   data () {
@@ -126,11 +142,13 @@ const typeaheadComponent = Vue.extend({
     },
 
     formatAndHighlight(v) {
-        return this.formatting(v).replace(new RegExp(this.query, "i"), m => `<b>${m}</b>`);
+        let v_ = this.formatting(v).replace(new RegExp(this.query, "i"), m => `<b>${m}</b>`);
+        if (this.is_textarea) v_ = v_.replace(/\n/g, '<br>')
+        return v_;
     },
 
     setOptions(data) {
-        this.current = 0
+        this.current = this.is_textarea ? -1 : 0;
         this.items = this.limit ? data.slice(0, this.limit) : data
         this.noResults = this.items.length === 0
         this.loading = false
@@ -151,6 +169,25 @@ const typeaheadComponent = Vue.extend({
       return {
         active: this.current === index
       }
+    },
+
+    mayHit(event) {
+        if (this.items.length && this.current >= 0) {
+            event.preventDefault();
+            this.hit();
+        }
+    },
+    mayUp(event) {
+        if (this.items.length) {
+            event.preventDefault();
+            this.up();
+        }
+    },
+    mayDown(event) {
+        if (this.items.length) {
+            event.preventDefault();
+            this.down();
+        }
     },
 
     hit () {
@@ -188,7 +225,7 @@ Vue.component("typeahead", {
     }),
     methods: {
         matcher(entry : string) {
-            return entry.match(new RegExp(Helpers.escapeRegexp(this.query), "i"));
+            return entry.match(new RegExp(Helpers.escapeRegexp(this.query || ''), "i"));
         },        
     }
 });
