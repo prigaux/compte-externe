@@ -13,6 +13,7 @@ const app = express();
 _.attempt(() => require('source-map-support').install());
 
 const staticFilesOptions = { maxAge: process.env.NODE_ENV === 'production' ? 60 * 60 * 1000 : 0 };
+const json_limit = '10MB'; // must be kept lower than 16MB for cases when it is stored in mongodb. NB: syntax is https://www.npmjs.com/package/bytes
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/app/favicon.ico'));
@@ -21,7 +22,7 @@ app.use("/", express.static(path.join(__dirname, '../app/dist'), staticFilesOpti
 app.use(utils.express_auth);
 
 app.use('/api',
-     bodyParser.json({type: '*/*'}), // do not bother checking, everything we will get is JSON :)
+     bodyParser.json({type: '*/*', limit: json_limit }), // do not bother checking, everything we will get is JSON :)
      bodyParser.urlencoded({ extended: false }),
      api);
 
