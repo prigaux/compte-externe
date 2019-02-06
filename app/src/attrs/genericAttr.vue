@@ -28,8 +28,8 @@
      :opts="opts" :submitted="submitted">
   </StructureAttr>
 
-  <PasswordAttr v-model="val" v-else-if="uiType === 'password'"
-     :submitted="submitted">
+  <PasswordAttr v-model="val" v-else-if="uiType === 'newPassword'"
+     :opts="opts" :submitted="submitted">
   </PasswordAttr>
 
   <EtablissementAttr v-model="val" :name="name" :v="v" v-else-if="uiType === 'etablissement'"

@@ -34,7 +34,7 @@ export default {
         floorNumber: { title: "Étage" },
         roomNumber: { title: "Numéro de bureau" },
         structureParrain: { title: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)", uiType: 'structure' },
-        userPassword: { title: "Mot de passe", uiType: 'password' },
+        userPassword: { title: "Mot de passe", uiType: 'newPassword' },
         userPassword2: { title: "Confirmer le mot de passe" },
         cardChoice: { title: "Carte" },
         barcode: { title: "Code barre" },
