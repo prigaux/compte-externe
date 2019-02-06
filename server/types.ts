@@ -32,7 +32,7 @@ type r = response & { success: boolean, step?: string, labels?: StepLabels, next
 type vr = {v: v; response?: response }
 type svr = sv & { response?: response }
 type svra = sva & { response?: response }
-type simpleAction = (req: any, sv: {v: v}) => Promise<vr>
+type simpleAction = (req: req, sv: {v: v}) => Promise<vr>
 type action = (req: any, sv: sva) => Promise<vr>
 type acl_ldap_filter = string | boolean
 type acl_mongo_filter = Dictionary<any> | boolean
