@@ -193,9 +193,9 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                         sv.v_orig = Helpers.copy(sv.v);
                     }
                     sv.modifyTimestamp = new Date(sv.modifyTimestamp);
-                    Helpers.eachObject(all_attrs, (attr, _opts) => {
+                    Helpers.eachObject(all_attrs, (attr, opts) => {
                         const default_ = fromWs_one(attr, params[`default_${attr}`], all_attrs);
-                        const set_ = fromWs_one(attr, params[attr] || params[`set_${attr}`], all_attrs);
+                        const set_ = fromWs_one(attr, opts.uiType !== 'newPassword' && params[attr] || params[`set_${attr}`], all_attrs);
                         sv.v[attr] = set_ || sv.v[attr] || default_;
                     });
                     $scope.v = sv.v;
