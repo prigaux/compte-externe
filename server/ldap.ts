@@ -333,7 +333,7 @@ export const filters = {
     return filters.fuzzy_prefixedAttrs(searchedAttrs, token);
   },
 
-// exact match expect non-letters are replaced by wildcard
+// exact match except non-letters are replaced by wildcard
 // eg: M'Foo - Bar     =>    M*Foo*Bar
   alike_same_accents: (attr: string, str: string): filter => {
     let pattern = str.replace(/[^a-z\u00C0-\u00FC]+/gi, '*');
