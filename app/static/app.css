@@ -45,3 +45,7 @@ fieldset {
     font-size: 1.1rem;
     color: #777;
 }
+
+.xsmall {
+    font-size: 1rem;
+}
