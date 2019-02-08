@@ -40,7 +40,7 @@ export const etablissements = (token: string, sizeLimit: number) => {
     } else if (token.match(/[0-9\s-]{5,14}/)) {
         filter = filters.startsWith("up1TableKey", "" + conf.ldap.etablissements.attrs.siret.convert.toLdap(token));
     } else {
-        const words_filter = filters.fuzzy(['description', 'cn', 'displayName'], token);
+        const words_filter = filters.fuzzy(['description', 'cn', 'displayName', 'ou'], token);
         filter = words_filter;
     }
     return ldap.search(conf.ldap.base_etablissements, filter, conf.ldap.etablissements.types, conf.ldap.etablissements.attrs, {sizeLimit})
