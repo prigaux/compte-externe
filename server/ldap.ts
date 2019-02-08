@@ -295,12 +295,31 @@ export const filters = {
     or: (filters: filter[]) => filters.length === 1 ? filters[0] : "(|" + filters.join('') + ")",
     memberOf: (cn: string) => filters.eq("memberOf", conf.ldap.group_cn_to_memberOf(cn)),
 
+    startsOrEndsWith: (attr: string, val: string, prefix: string) => (
+        filters.or([ 
+            "(" + escape(attr) + "=" + escape(prefix || '') + escape(val) + "*)",
+            "(" + escape(attr) + "=" + escape(prefix || '') + "*" + escape(val) + ")",
+        ])
+    ),
+    fuzzy_one: (attr: string, tok: string, prefix: string) => (
+        tok.length < conf.ldap.index_substr_if_minlen ? 
+        filters.eq(attr, (prefix || '') + tok) : 
+      tok.length < conf.ldap.index_substr_any_len ? 
+        filters.startsOrEndsWith(attr, tok, prefix) :
+        filters.contains(attr, tok, prefix)
+    ),
+
   // search for non ordered "token" words
   fuzzy_prefixedAttrs: (searchedAttrs: Dictionary<string>, token: string): filter => {
     let tokens = _.compact(token.split(/[\s,]+/));
+    let to_filter = filters.contains;
+    if (_.max(tokens.map(tok => tok.length)) < conf.ldap.index_substr_any_len) {
+        tokens = [token];
+        to_filter = filters.fuzzy_one;
+    }
     let l = tokens.map(tok => (
         filters.or(_.map(searchedAttrs, (prefix, attr) => (
-            filters.contains(attr, tok, prefix)
+            to_filter(attr, tok, prefix)
         )))
     ));
     return filters.and(l);

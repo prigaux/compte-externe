@@ -25,4 +25,28 @@ describe('ldap filters', () => {
         });
     });
 
+    describe('fuzzy', () => {
+        it("should work handle simple long token", () => {
+            assert.equal(filters.fuzzy(["a"], "abcd"), "(a=*abcd*)")
+        })
+        it("should work handle one char token", () => {
+            assert.equal(filters.fuzzy(["a"], "a"), "(a=a)")
+        })
+        it("should work handle two/three char token", () => {
+            assert.equal(filters.fuzzy(["a"], "ab"), "(|(a=ab*)(a=*ab))")
+        })
+    })
+
+    describe('fuzzy_prefixedAttrs', () => {
+        it("should work handle simple long token", () => {
+            assert.equal(filters.fuzzy_prefixedAttrs({ a: "{FOO}"}, "abcd"), "(a={FOO}*abcd*)")
+        })
+        it("should work handle one char token", () => {
+            assert.equal(filters.fuzzy_prefixedAttrs({ a: "{FOO}" }, "a"), "(a={FOO}a)")
+        })
+        it("should work handle two/three char token", () => {
+            assert.equal(filters.fuzzy_prefixedAttrs({ a: "{FOO}" }, "ab"), "(|(a={FOO}ab*)(a={FOO}*ab))")
+        })
+    })
+
 });
