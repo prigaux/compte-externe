@@ -42,6 +42,7 @@ If ```PUT /comptes/:id/:step```
 With current sv.step:
 * ```.acls``` is used to check authenticated user is allowed
 * ```.attrs``` is used to update sv.v using PUT body
+* ```.v.id``` is created if missing
 * ```.action_post``` is called with params (req, sv)
 * ```.notify.accepted``` template is mailed to moderators (moderators computed from ```.acls```)
 * ```.next``` step is the new sv.step
