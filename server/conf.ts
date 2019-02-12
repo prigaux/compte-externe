@@ -88,7 +88,7 @@ const conf = {
                 homePostalAddress: '',
                 floorNumber: '', roomAccess: '', roomNumber: '', buildingName: '',
                 jpegPhoto: '',
-                structureParrain: '',
+                personParrain: '', structureParrain: '',
 
                 etablissementExterne: '',
                 etablissementInterne: '',
@@ -142,6 +142,7 @@ const conf = {
                 etablissementInterne: { ldapAttr: 'supannEtablissement', convert: ldap_convert.match(s => internal_organizations.includes(s)) },
                 Shib_Identity_Provider: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette('{SAML}') },
                 eduPersonPrincipalName: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{EPPN}") },                
+                personParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("uid", ldap_main.base_people) },
                 structureParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("supannCodeEntite", ldap_main.base_structures), convert2: ldap_convert.dn("ou", ldap_main.base_structures_old) },
                 barcode: { ldapAttr: 'employeeNumber' },
                 global_barcode: { ldapAttr: 'employeeNumber' },
