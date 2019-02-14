@@ -150,7 +150,7 @@ const conf = {
                 global_mifare: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{MIFARE}")  },
                 jpegPhoto: { convert: ldap_convert.base64 },
             },
-            sns: ['sn'],
+            sns: ['sn', 'birthName'],
             givenNames: ['givenName'],
             supannCiviliteChoices: sameKeyNameChoices([ 'M.', 'Mme' ]),
 
