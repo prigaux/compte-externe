@@ -109,6 +109,7 @@ const conf = {
                 eduPersonPrimaryAffiliation: '',
                 eduPersonEntitlement: '',
                 supannRoleEntite: [],
+                supannEntiteAffectationPrincipale: '',
 
                 profilename: '',
                 priority: 0,
