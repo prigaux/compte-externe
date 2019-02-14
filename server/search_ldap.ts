@@ -132,7 +132,7 @@ const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannM
     return ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, { sizeLimit }).then(l => homonymes_scoring(l, preferStudent));
 };
 
-const _merge_at = (v: v, attrs) => <string[]> _.merge(_.at(<{}> v, attrs));
+const _merge_at = (v: v, attrs: string[]) => _.merge(_.at(v, attrs)).filter(s => s)
 
 export const homonymes = (v: v) : Promise<Homonyme[]> => {
     let sns = _merge_at(v, conf.ldap.people.sns);
