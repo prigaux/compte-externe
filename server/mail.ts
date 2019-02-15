@@ -47,6 +47,6 @@ export const sendWithTemplate = (template: string, params: {}, templateName = ""
             if (!m) {
                 console.error("invalid template " + (templateName || template) + ': first line must be "Subject: ..."');
             } else {
-                send({ to: params['to'], subject: m[1], html: m[2] });
+                send({ from: params['from'] || conf.mail.from, to: params['to'], subject: m[1], html: m[2] });
             }
 };
