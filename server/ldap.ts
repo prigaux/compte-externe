@@ -193,7 +193,7 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
     let r = {};
     _.forEach(v, (val, attr) => {
         let conv = attrsConvert[attr] || {};
-        let attr_ = opts.toJson && conv.ldapAttrJson || conv.ldapAttr || defaultLdapAttr(attr);
+        let attr_ = opts.toJson && conv.ldapAttrJson || toLdapAttr(conv, attr);
         let modify = to_ldap_modify(convertAttrToLdap(attr, attrTypes[attr], conv.convert, val, opts));
         if (modify.action === 'add') {
             const val_ = modify.value;
@@ -232,9 +232,11 @@ export function searchSimple<T extends {}>(base: string, filter: filter, attrTyp
 
 const defaultLdapAttr = attr => attr.replace(/^global_/, '');
 
+export const toLdapAttr = (conv, attr) => (conv || {}).ldapAttr || defaultLdapAttr(attr);
+
 export function convert_and_remap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert) {
     let wantedConvert = _.mapValues(attrTypes, (_type, attr) => attrsConvert && attrsConvert[attr] || {});
-    let attrRemap = _.mapValues(wantedConvert, (c, attr) => c.ldapAttr || defaultLdapAttr(attr));
+    let attrRemap = _.mapValues(wantedConvert, toLdapAttr);
     let attrRemapRev = _.invertBy(attrRemap);
     return { wantedConvert, attrRemapRev };
 }
