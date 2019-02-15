@@ -69,7 +69,9 @@ function homonymes_filter(sns: string[], givenNames: string[], birthDay: Date, s
 
     function sn_givenName_filter() {
         let l = [];
-        l.push(filters.alike_many('sn', sns));
+        l.push(filters.or(conf.ldap.people.sns.map(attr =>
+            filters.alike_many(ldap.toLdapAttr(conf.ldap.people.attrs[attr], attr), sns)
+        )));
 
         if (givenNames && givenNames.length) {
             l.push(filters.alike_many('givenName', givenNames));
@@ -135,7 +137,7 @@ const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannM
 const _merge_at = (v: v, attrs: string[]) => _.merge(_.at(v, attrs)).filter(s => s)
 
 export const homonymes = (v: v) : Promise<Homonyme[]> => {
-    let sns = _merge_at(v, conf.ldap.people.sns);
+    let sns = _.compact(_merge_at(v, conf.ldap.people.sns));
     let givenNames = _merge_at(v, conf.ldap.people.givenNames);
     if (sns[0] === undefined || !v.birthDay) return Promise.resolve([]);
     console.log("sns", sns);

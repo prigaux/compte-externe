@@ -142,7 +142,21 @@ describe('homonymes', () => {
                     assert.equal(l[1].score, 20100);
                 })
         ));
-        it('should detect sort according to preferStudent', () => (
+        it('should detect using birthName', () => (
+            search_ldap.homonymes(
+                { sn: 'Nomdavant', givenName: 'pascal', birthDay: new Date('1975-10-02') } as v).then(l => {
+                    assert.equal(l.length, 1);
+                    assert.equal(l[0].uid, "prigaux");
+                })
+        ));
+        it('should detect using birthName 2', () => (
+            search_ldap.homonymes(
+                { sn: 'xxx', birthName: 'Nomdavant', givenName: 'pascal', birthDay: new Date('1975-10-02') } as v).then(l => {
+                    assert.equal(l.length, 1);
+                    assert.equal(l[0].uid, "prigaux");
+                })
+        ));
+        it('should sort according to preferStudent', () => (
             search_ldap.homonymes(
                 { sn: 'rigaux', givenName: 'pascal', birthDay: new Date('1975-10-02'), profilename: '{COMPTEX}learner.xxx' } as v).then(l => {
                     assert.equal(l.length, 2);
