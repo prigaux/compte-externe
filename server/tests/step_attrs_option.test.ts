@@ -121,6 +121,24 @@ describe('merge_v', () => {
         test(attrs, {}, { sn: 'x', duration: "2" }, { duration: "2" }); // sn not allowed, it is removed
         test_fail(attrs, {}, { duration: '1' }, "constraint !sn.optional failed for undefined");
     });
+    it ("should handle sub toUserOnly", () => {
+        const attrs = { duration: { oneOf: [ 
+            { const: "1", sub: { sn: {} } }, 
+            { const: "2", sub: { sn: { toUserOnly: true } } },
+        ] } };
+        test(attrs, { sn: 'y' }, { sn: 'x', duration: "1" }, { duration: "1", sn: 'x' });
+        test(attrs, { sn: 'y' }, { sn: 'x', duration: "2" }, { duration: "2" }); // sn not allowed, it is removed
+        test_fail(attrs, { sn: 'y' }, { duration: '1' }, "constraint !sn.optional failed for undefined");
+    });
+    it ("should handle sub readOnly", () => {
+        const attrs = { duration: { oneOf: [ 
+            { const: "1", sub: { sn: {} } }, 
+            { const: "2", sub: { sn: { readOnly: true } } },
+        ] } };
+        test(attrs, { sn: 'y' }, { sn: 'x', duration: "1" }, { duration: "1", sn: 'x' });
+        test(attrs, { sn: 'y' }, { sn: 'x', duration: "2" }, { duration: "2", sn: 'y' });
+        test_fail(attrs, { sn: 'y' }, { duration: '1' }, "constraint !sn.optional failed for undefined");
+    });
 });
 
 describe('compute_diff', () => {
