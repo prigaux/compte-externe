@@ -68,6 +68,7 @@ export default {
             uiType: 'etablissement', 
             onChange(v, _, etablissementS) {
                 // set every "etablissement" fields in v, with prefix "etablissement_"
+                Object.keys(v).forEach(k => { if (k.match(/^etablissement_/)) v[k] = '' });
                 Object.keys(etablissementS).forEach(k => v[`etablissement_${k}`] = etablissementS[k]);
             },
         },
