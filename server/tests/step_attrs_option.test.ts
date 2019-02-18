@@ -12,6 +12,13 @@ describe('exportAttrs', () => {
     it("should handle toUserOnly", () => {
         assert.deepEqual(exportAttrs({ sn: { toUserOnly: true } }), { sn: { optional: true, readOnly: true }});
         assert.deepEqual(exportAttrs({ sn: { toUserOnly: true, maxYear: 22 } }), { sn: { optional: true, readOnly: true, maxYear: 22 }});
+        assert.deepEqual(exportAttrs({ a_or_b: { oneOf: [
+            { const: "a", sub: { duration: { toUserOnly: true } } },
+            { const: "b", sub: { duration: {} } },
+        ] } }), { a_or_b: { oneOf: [
+            { const: "a", sub: { duration: { optional: true, readOnly: true } } },
+            { const: "b", sub: { duration: {} } },
+        ] } });
     });
 });
 

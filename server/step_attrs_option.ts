@@ -118,9 +118,13 @@ export function export_v(attrs: StepAttrsOption, v) {
 
 const find_choice = (oneOf, val) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
 
-const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt}) => (
-    toUserOnly ? { optional: true, readOnly: true, ...opt} : opt
-);
+const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : StepAttrOption) => {
+    opt = toUserOnly ? { optional: true, readOnly: true, ...opt} : opt;
+    (opt.oneOf || []).forEach(one => {        
+        if (one.sub) one.sub = exportAttrs(one.sub);
+    });
+    return opt;
+}
 
 export const exportAttrs = (attrs: StepAttrsOption) => (
     _.mapValues(_.omitBy(attrs, val => val.hidden), transform_toUserOnly_into_optional_readonly)
