@@ -89,28 +89,18 @@ function validate(key: string, opt: StepAttrOption, val) {
         }
 }
 
-function compute_flat_attrs(attrs: StepAttrsOption) {
-    let r = {};
-    function one_level(attrs : StepAttrsOption) {
-        _.each(attrs, (opt, key) => {
-            r[key] = { ...(r[key] || {}), ...opt };
-            if (opt.oneOf) {
-                opt.oneOf.forEach(choice => {
-                    if (choice && choice.sub) one_level(choice.sub);
-                });
-            }
-        });
-    }
-    one_level(attrs);
-    return r;
-}
-
 /* before sending to client, remove sensible information */
 export function export_v(attrs: StepAttrsOption, v) {
-    const flat_attrs = compute_flat_attrs(attrs);
-    return _.omitBy(v, (_val, key) => ( 
-        !flat_attrs[key] || flat_attrs[key].hidden
-    ));
+    const r = {};
+    function rec(attrs: StepAttrsOption) {
+        _.forEach(attrs, (opts, key) => {
+            if (!opts.hidden && key in v) r[key] = v[key];
+
+            handle_chosen_oneOf_sub(opts, v[key], rec);
+        });
+    }
+    rec(attrs);
+    return r;
 }
 
 const handle_chosen_oneOf_sub = (opts: StepAttrOption, val: string, rec: (StepAttrsOption) => void) => {

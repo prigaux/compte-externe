@@ -1,6 +1,11 @@
 import { assert } from './test_utils';
 import { merge_v, exportAttrs, export_v, selectUserProfile } from '../step_attrs_option';
 
+const a_or_b = { oneOf: [
+    { const: "a", sub: { a: {} } },
+    { const: "b", sub: { a: { toUserOnly: true }, b: {} } },
+] }
+
 describe('exportAttrs', () => {
     it("should work", () => {
         assert.deepEqual(exportAttrs({ sn: {} }), { sn: {} });
@@ -12,12 +17,9 @@ describe('exportAttrs', () => {
     it("should handle toUserOnly", () => {
         assert.deepEqual(exportAttrs({ sn: { toUserOnly: true } }), { sn: { optional: true, readOnly: true }});
         assert.deepEqual(exportAttrs({ sn: { toUserOnly: true, maxYear: 22 } }), { sn: { optional: true, readOnly: true, maxYear: 22 }});
-        assert.deepEqual(exportAttrs({ a_or_b: { oneOf: [
-            { const: "a", sub: { duration: { toUserOnly: true } } },
-            { const: "b", sub: { duration: {} } },
-        ] } }), { a_or_b: { oneOf: [
-            { const: "a", sub: { duration: { optional: true, readOnly: true } } },
-            { const: "b", sub: { duration: {} } },
+        assert.deepEqual(exportAttrs({ a_or_b }), { a_or_b: { oneOf: [
+            { const: "a", sub: { a: {} } },
+            { const: "b", sub: { a: { optional: true, readOnly: true }, b: {} } },
         ] } });
     });
 });
@@ -42,8 +44,13 @@ describe('export_v', () => {
             { const: "1", sub: { sn: {} } }, 
             { const: "2" },
         ] } }
-        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2", sn: "Rigaux" });
+        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2" });
         test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
+    });
+    it("should handle sub different toUserOnly", () => {
+        const attrs = { a_or_b }
+        test(attrs, { a_or_b: "a", a: "aa", b: "bb" }, { a_or_b: "a", a: "aa" });
+        test(attrs, { a_or_b: "b", a: "aa", b: "bb" }, { a_or_b: "b", a: "aa", b: "bb" });
     });
 });
 
