@@ -48,10 +48,7 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
                 r[key] = v[key];
             }
         }
-        if (key in r && opt.oneOf) {
-            const choice = find_choice(opt.oneOf, r[key]);
-            if (choice && choice.sub) merge_one_level(choice.sub);
-        }
+        handle_chosen_oneOf_sub(opt, r[key], merge_one_level);
       });
     }
     merge_one_level(attrs);
@@ -114,6 +111,13 @@ export function export_v(attrs: StepAttrsOption, v) {
     return _.omitBy(v, (_val, key) => ( 
         !flat_attrs[key] || flat_attrs[key].hidden
     ));
+}
+
+const handle_chosen_oneOf_sub = (opts: StepAttrOption, val: string, rec: (StepAttrsOption) => void) => {
+    if (val && opts.oneOf) {
+        const choice = find_choice(opts.oneOf, val);
+        if (choice && choice.sub) rec(choice.sub);
+    }
 }
 
 const find_choice = (oneOf, val) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
