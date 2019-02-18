@@ -1,11 +1,12 @@
 import * as Helpers from './helpers';
+import * as JsDiff from 'diff';
 
 describe('service helpers', function() {
 
     describe('formatDifferences', function(){
 
         let diff = function (val1, val2) {
-            return Helpers.formatDifferences(val1, val2);
+            return Helpers.formatDifferences(val1, val2, JsDiff);
         };
         
         it('should handle same value', () => {

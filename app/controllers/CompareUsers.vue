@@ -18,6 +18,7 @@ import Vue from 'vue';
 import * as _ from 'lodash';
 import conf from '../conf';
 import * as Helpers from '../services/helpers';
+import * as JsDiff from 'diff';
 import ExistingAccountWarning from '../controllers/ExistingAccountWarning.vue';
 
 function format(val) {
@@ -51,7 +52,7 @@ function computeComparisons(v, homonyme) {
                 sameAttrs[attr] = true;
                 cmp = [ val1, same ? "<i>identique</i>" : val2 ];
             } else {
-                cmp = Helpers.formatDifferences(val1, val2);
+                cmp = Helpers.formatDifferences(val1, val2, JsDiff);
             }
             return { attr, cmp, skip };
         });

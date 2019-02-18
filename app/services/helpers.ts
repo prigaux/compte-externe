@@ -1,5 +1,4 @@
 import axios from 'axios';
-import * as JsDiff from 'diff';
 import { memoize } from 'lodash';
 import conf from '../conf';
 import { Dictionary } from '../services/ws';
@@ -18,8 +17,7 @@ import { Dictionary } from '../services/ws';
         );
     }
 
-    export function formatDifferences(val1, val2) {
-        /* globals JsDiff */
+    export function formatDifferences(val1, val2, JsDiff) {
         var diff = JsDiff.diffChars(val1, val2, { ignoreCase: true });
         var fragment1 = '';
         var fragment2 = '';

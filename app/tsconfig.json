@@ -11,7 +11,7 @@
     "types" : [
         "diff", "es6-promise", "jasmine"
     ],
-    "module": "es2015",
+    "module": "esnext",
     "moduleResolution": "node",
     "lib": [
       "dom",

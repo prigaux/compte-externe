@@ -17,7 +17,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import CompareUsers from './CompareUsers.vue';
 
 export default Vue.extend({
   props: ['v', 'l'],
@@ -27,7 +26,7 @@ export default Vue.extend({
       };
   },
 
-  components: { 'compare-users': CompareUsers },
+  components: { 'compare-users': () => import('./CompareUsers.vue') },
 
   methods: {
       merge(homonym) {
