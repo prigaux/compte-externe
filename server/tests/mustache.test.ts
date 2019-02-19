@@ -1,6 +1,8 @@
 import { assert } from './test_utils';
 import * as mustache from 'mustache';
 import v_display from '../v_display';
+import { resolve_mustache_async_params } from '../mail';
+import { setTimeoutPromise } from '../helpers';
 
 describe('Mustache', () => {
     it("should handle fields", () => {
@@ -28,3 +30,20 @@ describe('Mustache', () => {
     });
     
 });
+
+describe('resolve_mustache_async_params + mustache', () => {
+    const render = async (template, params) => (
+         mustache.render(template, await resolve_mustache_async_params(template, params))
+    );
+
+    it("should handle simple async", async () => {
+        const v = { foo: "Foo", bar: setTimeoutPromise(1).then(_ => "Bar") }
+        assert.equal(await render("Foo:{{v.foo}} Bar:{{v.bar}}", { v }), "Foo:Foo Bar:Bar");
+    });
+
+    it("should handle mustache sections", async () => {
+        const v = { foo: "Foo" }
+        assert.equal(await render("{{#v.foo}}Foo:{{v.foo}}{{/v.foo}}{{#v.bar}}Bar:{{v.bar}}{{/v.bar}}", { v }), "Foo:Foo");
+    });
+
+})

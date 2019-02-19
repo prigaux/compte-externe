@@ -26,6 +26,32 @@ export const send = (params: nodemailer.SendMailOptions) => {
     });
 };
 
+export const resolve_mustache_async_params = async (template: string, params: {}) => {
+    function tmpl2paths(template) {
+        let todo = [...Mustache.parse(template)];
+        let r = {};
+        while (todo.length) {
+            const [kind, path, , , sub] = todo.shift();
+            if (kind !== 'text') r[path] = true;
+            todo.push(...(sub || []));
+        }
+        return Object.keys(r);
+    }
+    let params_ = {};
+    await Promise.all(tmpl2paths(template).map(async path => {
+        const val = await _.get(params, path);
+        if (val) {
+            if (typeof val === "object") {
+                const val_ = await val.toString();
+                _.set(params_, path + ".toString", () => val_);
+            } else {
+                _.set(params_, path, val);
+            }
+        }
+    }));
+    return params_;
+}
+
 export const sendWithTemplateFile = (templateName: string, params: {}) => {
     fs.readFile(__dirname + "/templates/mail/" + templateName, (err, data) => {
         if (err) {
@@ -36,6 +62,7 @@ export const sendWithTemplateFile = (templateName: string, params: {}) => {
     });
 }
 export const sendWithTemplate = (template: string, params: {}, templateName = "") => {
+    resolve_mustache_async_params(template, params).then(params => {
             let rawMsg = Mustache.render(template, params);
             if (!rawMsg) return;
             console.log("===========================");
@@ -49,4 +76,5 @@ export const sendWithTemplate = (template: string, params: {}, templateName = ""
             } else {
                 send({ from: params['from'] || conf.mail.from, to: params['to'], subject: m[1], html: m[2] });
             }
+    });
 };
