@@ -74,6 +74,8 @@ type StepAttrOption = StepAttrItemsOption & {
   title?: string;
   description?: string;
   labels?: { advice?: string; tooltip?: string; }
+
+  code2text?: (string) => Promise<string>
 }
 type StepAttrsOption = Dictionary<StepAttrOption>;
 

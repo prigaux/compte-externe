@@ -7,6 +7,9 @@ function key2name(raw, spec: StepAttrOption) {
             if (e.const === raw) return e.title;
         }
     }
+    if (spec && spec.code2text) {
+        return spec.code2text(raw);
+    }
     return raw;
 }
 
