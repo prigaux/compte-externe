@@ -8,7 +8,7 @@ import * as csvtojson from 'csvtojson';
 import concat = require('concat-stream');
 import * as simpleGet from 'simple-get';
 import * as conf from './conf';
-import client_conf from '../app/conf'; // ES6 syntax needed for default export
+import client_conf from '../app/src/conf'; // ES6 syntax needed for default export
 import { EventEmitter } from 'events';
 
 export const express_auth = (req: req, _res: express.Response, next): void => {
@@ -48,7 +48,7 @@ export function respondJson(req: req, res: express.Response, p: Promise<response
     });
 }
 
-if (!client_conf.base_pathname.match(/\/$/)) throw "base_pathname in app/conf.ts must have a trailing slash";
+if (!client_conf.base_pathname.match(/\/$/)) throw "base_pathname in app/src/conf.ts must have a trailing slash";
 
 export const index_html = (_req: req, res: express.Response, _next): void => {
     res.sendFile(path.join(__dirname, "../app/dist/index.html"), console.error)

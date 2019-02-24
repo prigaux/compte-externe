@@ -1,7 +1,7 @@
 {
     "include": [
         "**/*.ts",
-        "../app/conf.ts"
+        "../app/src/conf.ts"
     ],
   "compilerOptions": {
     "sourceMap": true,

@@ -1,5 +1,5 @@
 import { map } from 'lodash';
-import client_conf from '../app/conf';
+import client_conf from '../app/src/conf';
 
 function key2name(raw, spec: StepAttrOption) {
     if (spec && spec.oneOf) {
