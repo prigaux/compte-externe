@@ -240,7 +240,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         }
 
         export function csv2json(file: File, attrs: StepAttrsOption) : Promise<{ fields: string[], lines: {}[] }> {
-            return axios.post(conf.base_pathname + 'csv2json', file).then(
+            return axios.post(api_url + '/csv2json', file).then(
                 (resp) => {
                     let o = resp.data;
                     o.lines = o.lines.map(v => to_or_from_ws('fromCSV', v, attrs));

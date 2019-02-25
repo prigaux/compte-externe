@@ -11,6 +11,7 @@ import * as conf from './conf';
 import * as conf_steps from './steps/conf';
 import { export_v, merge_v, exportAttrs, selectUserProfile } from './step_attrs_option';
 import { filters } from './ldap';
+import gen_gsh_script from './gen_gsh_script';
 require('./helpers');
 
 require('promise.prototype.finally').shim();
@@ -340,5 +341,10 @@ router.get('/structures', (req: req, res) => {
 router.get('/etablissements', (req: req, res) => {
     respondJson(req, res, search_for_typeahead(req, search_ldap.etablissements));
 });
+
+router.get('/csv2json', utils.csv2json);
+
+router.get('/gen_gsh_script', gen_gsh_script);
+
 
 export default router;
