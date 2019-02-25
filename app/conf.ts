@@ -91,7 +91,7 @@ export default {
         frenchPostalCode: 'Le champ doit être un code postal. Exemple: 75013',
         siret: 'Numéro SIRET invalide',
         forbiddenChars: (forbiddenChars) => (
-            forbiddenChars.length == 1 ?
+            forbiddenChars.length === 1 ?
              `Le caractère « ${forbiddenChars} » n'est pas autorisé.` :
              `Les caractères « ${forbiddenChars} » ne sont pas autorisés.`
         ),

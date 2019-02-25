@@ -6,6 +6,8 @@ import ModerateList from './controllers/ModerateList.vue';
 
 import template_welcome from './templates/welcome.html'
 
+export let router;
+
 const _routes = {
     '/login/:kind?': { render(_h) { router.replace(this.$route.query.then) } }, // TODO, use vue-router redirect
     '/steps/:kind?': ModerateList,
@@ -29,4 +31,4 @@ if (process.env.NODE_ENV === 'production') {
     opts.mode = 'history';
 }
 
-export const router = new VueRouter(opts);
+router = new VueRouter(opts);

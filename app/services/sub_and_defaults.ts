@@ -7,7 +7,7 @@ import { find, forIn, mapValues, pickBy, Dictionary } from 'lodash';
 const may_set_default_value = (k: string, opts: StepAttrOption, v, prev_defaults) => {
     if (!("default" in opts) && !(k in prev_defaults)) {
         // never had defaults
-    } else if (!(k in prev_defaults) && !v[k] &&opts.default) {
+    } else if (!(k in prev_defaults) && !v[k] && opts.default) {
         console.log(`${k}: replacing ${v[k]} with default value ${opts.default} (no prev_default)`);
         v[k] = opts.default;
     } else if (opts.default !== prev_defaults[k] && v[k] === prev_defaults[k]) { // opts.default changed AND user did not modify the value

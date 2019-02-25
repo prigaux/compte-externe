@@ -68,13 +68,13 @@ import { Dictionary } from '../services/ws';
 
     export function simpleEach(a, fn) {
         var len = a.length;
-        for(var i = 0; i < len; i++) {
+        for (var i = 0; i < len; i++) {
             fn(a[i], i, a);
         }
     }
 
     export function eachObject<T>(o : T, fn : (string, any, T) => any, { allAttrs = false } = {}) {
-        for(var k in o) {
+        for (var k in o) {
             if (allAttrs || o.hasOwnProperty(k))
                 fn(k, o[k], o);
         }
@@ -198,15 +198,15 @@ import { Dictionary } from '../services/ws';
             even = !even;
         }
 
-        return (check % 10) == 0;
+        return (check % 10) === 0;
     }
 
     // from https://developers.google.com/web/updates/2012/08/Quick-FAQs-on-input-type-date-in-Google-Chrome
     export const isDateInputSupported = memoize(() => {
         let elem = document.createElement('input');
-        elem.setAttribute('type','date');
+        elem.setAttribute('type', 'date');
         elem.value = 'foo';
-        return (elem.type == 'date' && elem.value !== 'foo');
+        return (elem.type === 'date' && elem.value !== 'foo');
     });
 
 

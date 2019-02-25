@@ -47,7 +47,7 @@ export default Vue.extend({
     },
     methods: {
         retry_v_on_error(v) {
-            return { query: mapKeys(v, (_,k) => `default_${k}`) };
+            return { query: mapKeys(v, (_, k) => `default_${k}`) };
         },
     },
 });

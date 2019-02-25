@@ -69,7 +69,7 @@ const typeaheadComponent = Vue.extend({
     return {
       items: [],
       noResults: false,
-      query: this.formatting(this.value),
+      query: (this as any).formatting((this as any).value),
       current: 0,
       loading: false,
       cancel: () => {},

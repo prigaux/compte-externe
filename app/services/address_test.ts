@@ -5,7 +5,7 @@ let raw = (o) => Helpers.assign({}, o);
 
 describe('service ws', function() {
 
-    describe('homePostalAddress', function(){
+    describe('homePostalAddress', function() {
         
         it('should encode/decode homePostalAddress', () => {
             function check(in_, out, in_out?) {
