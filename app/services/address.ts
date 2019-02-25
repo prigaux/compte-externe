@@ -1,7 +1,8 @@
-type PostalAddress =
-    { country: string, 
+type PostalAddress = { 
+      country: string, 
       lines: string,
-      line2?: string, postalCode?: string, town?: string };
+      line2?: string, postalCode?: string, town?: string,
+};
 
 export function fromString(addr: string): PostalAddress {
     if (!addr) return { lines: '', line2: '', postalCode: '', town: '', country: "FRANCE" };
