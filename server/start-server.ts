@@ -7,6 +7,7 @@ import * as bodyParser from 'body-parser';
 import * as db from './db';
 import api from './api';
 import * as utils from './utils';
+import * as conf_steps from './steps/conf';
 const app = express();
 
 _.attempt(() => require('source-map-support').install());
@@ -24,8 +25,8 @@ app.use('/api',
      bodyParser.urlencoded({ extended: false }),
      api);
 
-// catch-all that should be replaced with list of angularjs routes
-app.all("/*", utils.index_html);
+// redo what app/src/router.ts is doing
+app.use([ "login", "steps", ...Object.keys(conf_steps.steps) ].map(path => "/" + path), utils.index_html);
 
 db.init(() => {
     let port = process.env.PORT || 8080;        // set our port
