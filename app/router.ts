@@ -1,8 +1,8 @@
 import VueRouter from "vue-router";
 import conf from './conf';
 import * as Helpers from './services/helpers'; 
-import Step from './controllers/Step';
-import ModerateList from './controllers/ModerateList';
+import Step from './controllers/Step.vue';
+import ModerateList from './controllers/ModerateList.vue';
 
 import template_welcome from './templates/welcome.html'
 
