@@ -16,8 +16,7 @@ const staticFilesOptions = { maxAge: process.env.NODE_ENV === 'production' ? 60 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/app/favicon.ico'));
 app.use(logger(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
-app.get("/", utils.index_html);
-app.use("/static", express.static(path.join(__dirname, '../app/dist/static'), staticFilesOptions));
+app.use("/", express.static(path.join(__dirname, '../app/dist'), staticFilesOptions));
 app.use(utils.express_auth);
 
 app.use('/api',
