@@ -213,4 +213,3 @@ Vue.component('history-textarea-with-validity', {
         },    
   },
 });
-  
