@@ -4,7 +4,7 @@ import * as Helpers from './services/helpers';
 import Step from './controllers/Step.vue';
 import ModerateList from './controllers/ModerateList.vue';
 
-import template_welcome from './templates/welcome.html'
+import template_welcome from '!raw-loader!./templates/welcome.html'
 
 export let router;
 

@@ -3,7 +3,7 @@ import Vue from "vue";
 import genericAttr from './genericAttr.vue';
 import BarcodeAttrs from './BarcodeAttrs.vue';
 
-import template from './attrsForm.html';
+import template from '!raw-loader!./attrsForm.html';
 
 
 export default Vue.extend({
