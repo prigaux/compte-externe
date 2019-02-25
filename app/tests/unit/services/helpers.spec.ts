@@ -1,46 +1,47 @@
-import * as Helpers from './helpers';
+import { assert } from 'chai';
+import * as Helpers from '@/services/helpers';
 import * as JsDiff from 'diff';
 
 describe('service helpers', function() {
 
-    describe('formatDifferences', function(){
+    describe('formatDifferences', function() {
 
         let diff = function (val1, val2) {
             return Helpers.formatDifferences(val1, val2, JsDiff);
         };
         
         it('should handle same value', () => {
-            expect(diff("foo", "foo")).toEqual(['foo', 'foo']);
+            assert.deepEqual(diff("foo", "foo"), ['foo', 'foo']);
         });
         
         it('should handle different value', () => {
-            expect(diff("foo", "bar")).toEqual(['<ins>foo</ins>', '<ins>bar</ins>']);
+            assert.deepEqual(diff("foo", "bar"), ['<ins>foo</ins>', '<ins>bar</ins>']);
         });
         
         it('should handle nearly same value', () => {
-            expect(diff("foo", "Foo")).toEqual(['Foo', 'Foo']);
-            expect(diff("foo", "Fooo")).toEqual(['Foo', 'Foo<ins>o</ins>']);
-            expect(diff("foo", "fooo")).toEqual(['foo', 'foo<ins>o</ins>']);
+            assert.deepEqual(diff("foo", "Foo"), ['Foo', 'Foo']);
+            assert.deepEqual(diff("foo", "Fooo"), ['Foo', 'Foo<ins>o</ins>']);
+            assert.deepEqual(diff("foo", "fooo"), ['foo', 'foo<ins>o</ins>']);
         });
         
     });
 
-    describe('checkLuhn', function(){
+    describe('checkLuhn', function() {
 
         let validSirets = ['19911101400015', '19931238000017', '19751718800011', '19751721200019', '19781944400013', '19751719600014', '18004312700067', '19131842700017', '19931827000014', '19932056500492' ];
 
         it('should work', () => {
-            expect(Helpers.checkLuhn("12345678901234")).toBeFalsy();
+            assert.equal(Helpers.checkLuhn("12345678901234"), false);
 
-            expect(Helpers.checkLuhn("484 404 132")).toBeTruthy();
+            assert.equal(Helpers.checkLuhn("484 404 132"), true);
 
-            expect(Helpers.checkLuhn("484 404 132 00025")).toBeTruthy();
-            expect(Helpers.checkLuhn("484 404 132 00026")).toBeFalsy();
+            assert.equal(Helpers.checkLuhn("484 404 132 00025"), true);
+            assert.equal(Helpers.checkLuhn("484 404 132 00026"), false);
 
-            expect(Helpers.checkLuhn("484 404 132")).toBeTruthy();
+            assert.equal(Helpers.checkLuhn("484 404 132"), true);
 
             for (let siret of validSirets) {
-                expect(Helpers.checkLuhn(siret)).toBeTruthy("for siret " + siret);
+                assert.equal(Helpers.checkLuhn(siret), true, "for siret " + siret);
             }
         });
         

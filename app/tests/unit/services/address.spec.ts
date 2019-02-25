@@ -1,5 +1,6 @@
-import * as Address from './address';
-import * as Helpers from './helpers';
+import { assert } from 'chai';
+import * as Address from '@/services/address';
+import * as Helpers from '@/services/helpers';
 
 let raw = (o) => Helpers.assign({}, o);
 
@@ -10,8 +11,8 @@ describe('service ws', function() {
         it('should encode/decode homePostalAddress', () => {
             function check(in_, out, in_out?) {
                 var r = Address.fromString(in_);
-                expect(raw(r)).toEqual(out);
-                expect(Address.toString(r)).toEqual(in_out || in_);
+                assert.deepEqual(raw(r), out);
+                assert.equal(Address.toString(r), in_out || in_);
             }
             check("44 rue balard\n75015 PARIS\nFRANCE",
                   { postalCode: '75015', town: 'PARIS', country: 'FRANCE', lines: '44 rue balard', line2: '' });

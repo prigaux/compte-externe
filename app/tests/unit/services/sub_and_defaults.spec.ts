@@ -1,6 +1,7 @@
+import { assert } from 'chai';
 import { forIn } from 'lodash';
-import { compute_subAttrs_and_handle_default_values as compute } from './sub_and_defaults';
-import { V, StepAttrsOption } from './ws';
+import { compute_subAttrs_and_handle_default_values as compute } from '@/services/sub_and_defaults';
+import { V, StepAttrsOption } from '@/services/ws';
 
 describe('sub_and_defaults', function() {
 
@@ -8,10 +9,10 @@ describe('sub_and_defaults', function() {
         const r = compute(params.attrs, params.prev_defaults, params.v);
         //console.log('attrs:' + JSON.stringify(r.attrs));
         //console.log('v:' + JSON.stringify(params.v));
-        if (wanted.attrNames) expect(Object.keys(r.attrs).sort().join(' ')).toEqual(wanted.attrNames);
-        forIn(wanted.subAttrs || {}, (opts, k) => expect(r.attrs[k]).toEqual(opts));
-        if (wanted.v) expect(params.v).toEqual(wanted.v);
-        if (wanted.prev_defaults) expect(r.prev_defaults).toEqual(wanted.prev_defaults);
+        if (wanted.attrNames) assert.equal(Object.keys(r.attrs).sort().join(' '), wanted.attrNames);
+        forIn(wanted.subAttrs || {}, (opts, k) => assert.deepEqual(r.attrs[k], opts));
+        if (wanted.v) assert.deepEqual(params.v, wanted.v);
+        if (wanted.prev_defaults) assert.deepEqual(r.prev_defaults, wanted.prev_defaults);
         params.prev_defaults = r.prev_defaults;
     }
 
