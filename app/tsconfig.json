@@ -1,21 +1,47 @@
 {
   "compilerOptions": {
-    // ... other options omitted
-    "sourceMap": true,
+    "target": "es5",
+    "module": "esnext",
+    
+    // our specific options, which differs from https://github.com/vuejs/vue-cli/blob/dev/packages/@vue/cli-plugin-typescript/generator/template/tsconfig.json
     "alwaysStrict": true,
     "strictFunctionTypes": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true, 
-    "types" : [
-        "diff", "es6-promise", "jasmine"
-    ],
-    "module": "esnext",
+    // END
+    
+    "importHelpers": true,
     "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": [
+      "webpack-env",
+      "mocha",
+      "chai"
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
     "lib": [
+      "esnext",
       "dom",
-      "es5"
+      "dom.iterable"
     ]
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
