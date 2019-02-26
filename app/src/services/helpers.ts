@@ -209,4 +209,12 @@ import { Dictionary } from '../services/ws';
         return (elem.type === 'date' && elem.value !== 'foo');
     });
 
-
+export const fileReader = (readAs: 'readAsDataURL' | 'readAsText', file: File) => (
+    new Promise((resolve, reject) => {
+        const reader = new FileReader();           
+        reader.onerror = () => reject(reader.error);
+        reader.onabort = () => reject(reader.error);
+        reader.onload  = () => resolve(reader.result);
+        reader[readAs](file);
+    })
+);

@@ -24,6 +24,10 @@
      :opts="opts" :submitted="submitted">
   </cameraSnapshotAttr>
 
+  <PhotoUploadAttr v-model="val" :name="name" v-else-if="uiType === 'photoUpload'"
+     :opts="opts" :submitted="submitted">
+  </PhotoUploadAttr>
+
   <StructureAttr v-model="val" v-else-if="uiType === 'structure'"
      :opts="opts" :submitted="submitted">
   </StructureAttr>
@@ -102,7 +106,10 @@ import CurrentLdapValue from './CurrentLdapValue.vue';
 
 export default Vue.extend({
     props: ['value', 'name', 'opts', 'submitted', 'v', 'ldap_value', 'allow_remove'],
-    components: { DateAttr, DateThreeInputsAttr, ArrayAttr, AddressAttr, cameraSnapshotAttr, PasswordAttr, StructureAttr, EtablissementAttr, CurrentLdapValue },
+    components: { 
+        DateAttr, DateThreeInputsAttr, ArrayAttr, AddressAttr, cameraSnapshotAttr, PasswordAttr, StructureAttr, EtablissementAttr, CurrentLdapValue,
+        PhotoUploadAttr: () => import('./PhotoUploadAttr.vue'),
+    },
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },
