@@ -8,11 +8,22 @@
   "scripts": {
     "postinstall": "cd app && npm install",
     "prestart": "npm install",
-    "build": "concurrently 'tsc -p server' 'cd app && npm run build'",
-    "build:w": "concurrently 'tsc --watch -p server' 'cd app && npm run build:w'",
-    "dev": "concurrently 'tsc --watch -p server' 'cd app && npm run dev'",
-    "start:w": "concurrently 'tsc --watch -p server/' 'cd app && npm run build:w' 'NODE_ENV=test nodemon --watch server/ start-server.js'",
-    "test:w": "mocha --require source-map-support/register --recursive --watch server/tests"
+
+    "build": "concurrently npm:server-build npm:client-build",
+    "build:w": "concurrently npm:server-build:w npm:client-build:w",
+    "dev": "concurrently npm:server-build:w npm:client-dev",
+    "start:w": "concurrently npm:server-build:w npm:client-build:w npm:server-start:dev",
+
+    "client-build": "cd app && npm run build",
+    "client-build:w": "cd app && npm run build:w",
+    "client-dev": "cd app && npm run dev",
+
+    "server-build": "tsc -p server",
+    "server-build:w": "tsc -p server --watch",
+    "server-start": "nodemon start-server.js",
+    "server-start:dev": "NODE_ENV=test nodemon --watch server/ --inspect start-server.js",
+    "server-test": "mocha --require source-map-support/register --recursive server/tests",
+    "server-test:w": "npm run server-test -- --watch"
   },
   "engines": {
     "node": "^6.4"
@@ -57,7 +68,7 @@
     "xml2js": "^0.4.9"
   },
   "devDependencies": {
-    "concurrently": "^3.4.0",
+    "concurrently": "^4.1.0",
     "eslint": "^4.13.1",
     "eslint-plugin-vue": "^4.0.0-beta.2",
     "live-reload": "^1.1.0",
