@@ -11,12 +11,12 @@
 
     "build": "concurrently npm:server-build npm:client-build",
     "build:w": "concurrently npm:server-build:w npm:client-build:w",
-    "dev": "concurrently npm:server-build:w npm:client-dev",
+    "dev": "concurrently npm:server-build:w npm:client-serve",
     "start:w": "concurrently npm:server-build:w npm:client-build:w npm:server-start:dev",
 
     "client-build": "cd app && npm run build",
-    "client-build:w": "cd app && npm run build:w",
-    "client-dev": "cd app && npm run dev",
+    "client-build:w": "cd app && npm run build -- --watch",
+    "client-serve": "cd app && npm run serve",
 
     "server-build": "tsc -p server",
     "server-build:w": "tsc -p server --watch",
