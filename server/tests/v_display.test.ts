@@ -42,13 +42,13 @@ describe('v_display', () => {
 </table>`);
     })
 
-    it('should format v', () => {
+    it('should format v', async () => {
         const v_ = v_display({
             supannMailPerso: "foo@bar.com",
             birthName: "Rigaux",
             sn: "Rigaux",
         } as v, { sn: { title: "SN" }});
-        assert.equal(""+v_, 
+        assert.equal(await v_.toString(), 
 `<dl>
   <dt>Email personnel</dt><dd>foo@bar.com</dd>
   <dt>Nom de naissance</dt><dd>Rigaux</dd>

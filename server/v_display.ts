@@ -13,14 +13,14 @@ function key2name(raw, spec: StepAttrOption) {
     return raw;
 }
 
-const format_v = (v: v, attrs) => (
+const format_v = async (v: v, attrs) => (
     `<dl>
 ` +
-      map(v, (val, key) => {
+      (await Promise.all(map(v, async (val, key) => {
           if (key === 'various') return '';
           const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
-          return '  <dt>' + (opts && opts.title || key) + '</dt><dd>' + val + '</dd>'
-      }).join("\n") + `\n</dl>`
+          return '  <dt>' + (opts && opts.title || key) + '</dt><dd>' + await key2name(val, opts) + '</dd>'
+      }))).join("\n") + `\n</dl>`
 )
 
 const format_various_diff = (diff, attrs) => (
@@ -44,7 +44,9 @@ const various_proxy = {
 
 const v_proxy = {
     get({ v, attrs }, attr) {        
-        if (attr === Symbol['toPrimitive']) return _ => format_v(v, attrs);
+        // "toString" is called for most implicit conversions to string (which is what Mustache is doing)
+        if (attr === 'toString') return () => format_v(v, attrs);
+
         return attr === 'various' ? 
             new Proxy({ various: v[attr] || {}, attrs }, various_proxy) :
             key2name(v[attr], attrs[attr]);

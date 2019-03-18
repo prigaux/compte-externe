@@ -46,4 +46,15 @@ describe('resolve_mustache_async_params + mustache', () => {
         assert.equal(await render("{{#v.foo}}Foo:{{v.foo}}{{/v.foo}}{{#v.bar}}Bar:{{v.bar}}{{/v.bar}}", { v }), "Foo:Foo");
     });
 
+    it("should work with v_display", async () => {
+        const v = { sn: "bar", givenName: "bar2" } as v;
+        
+        const v_ = v_display(v, { sn: { oneOf: [ { const: "bar", title: "BAR"} ] } })
+        const r = await render("Foo {{v_display.sn}} {{v_display.givenName}} {{{v_display}}}", { v_display: v_ });
+        assert.equal(r, `Foo BAR bar2 <dl>
+  <dt>Nom d'usage</dt><dd>BAR</dd>
+  <dt>Prénom</dt><dd>bar2</dd>
+</dl>`);
+    });
+
 })
