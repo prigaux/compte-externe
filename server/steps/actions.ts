@@ -8,6 +8,7 @@ import * as crejsonldap from '../crejsonldap';
 import { onePerson } from '../search_ldap';
 import * as search_ldap from '../search_ldap';
 import * as esup_activ_bo from '../esup_activ_bo';
+import { flatten_attrs } from '../step_attrs_option';
 import v_display from '../v_display';
 import * as conf from '../conf';
 import client_conf from '../../app/src/conf'; // ES6 syntax needed for default export
@@ -126,7 +127,7 @@ const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: 
         // NB: if we have a password, it is a fast registration, so do not send a mail
     }
     if (v.supannMailPerso) {
-        const v_ = v_display(v, attrs);
+        const v_ = v_display(v, flatten_attrs(attrs, v));
         mail.sendWithTemplateFile('warn_user_account_created.html', { to: v.supannMailPerso, v, v_display: v_, isActive: !!accountStatus });
     }
     return null;
@@ -159,7 +160,7 @@ export const expireAccount : simpleAction = (_req, sv) => {
 
 export const sendMail = (template: string, params = {}): action => async (req, sv) => {
     const v = sv.v;
-    const v_ = v_display(v, sv.attrs);
+    const v_ = v_display(v, flatten_attrs(sv.attrs, v));
     const sv_url = conf.mainUrl + "/" + sv.step + "/" + sv.id;
     let to = params['to'];
     if (!to) to = v.mail || v.supannMailPerso;

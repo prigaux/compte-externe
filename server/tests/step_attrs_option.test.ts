@@ -1,5 +1,5 @@
 import { assert } from './test_utils';
-import { merge_v, exportAttrs, export_v, selectUserProfile } from '../step_attrs_option';
+import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile } from '../step_attrs_option';
 
 const a_or_b = { oneOf: [
     { const: "a", sub: { a: {} } },
@@ -51,6 +51,23 @@ describe('export_v', () => {
         const attrs = { a_or_b }
         test(attrs, { a_or_b: "a", a: "aa", b: "bb" }, { a_or_b: "a", a: "aa" });
         test(attrs, { a_or_b: "b", a: "aa", b: "bb" }, { a_or_b: "b", a: "aa", b: "bb" });
+    });
+});
+
+describe('flatten_attrs', () => {
+    function test(attrs, v, wanted_attrs) {
+        assert.deepEqual(flatten_attrs(attrs, v), wanted_attrs);
+    }
+    it("should work", () => {
+        test({ sn: {} }, {}, { sn: {} });
+    });
+    it("should handle sub", () => {
+        const duration = { oneOf: [
+            { const: "1", sub: { sn: {} } }, 
+            { const: "2" },
+        ] };
+        test({ duration }, { duration: "2" }, { duration, });
+        test({ duration }, { duration: "1" }, { duration, sn: {} });
     });
 });
 

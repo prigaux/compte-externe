@@ -103,6 +103,18 @@ export function export_v(attrs: StepAttrsOption, v) {
     return r;
 }
 
+export function flatten_attrs(attrs: StepAttrsOption, v: v) {
+    const r = {};
+    function rec(attrs: StepAttrsOption) {
+        _.forEach(attrs, (opts, key) => {
+            r[key] = { ...r[key] || {}, ...opts }; // merge
+            handle_chosen_oneOf_sub(opts, v[key], rec);
+        });
+    }
+    rec(attrs);
+    return r;
+}
+
 const handle_chosen_oneOf_sub = (opts: StepAttrOption, val: string, rec: (StepAttrsOption) => void) => {
     if (val && opts.oneOf) {
         const choice = find_choice(opts.oneOf, val);
