@@ -5,6 +5,7 @@ import sendmailTransport = require('nodemailer-sendmail-transport');
 import * as ldap_convert from './ldap_convert';
 import { sameKeyNameChoices } from './helpers';
 import * as grouped_calls from './helper_grouped_calls';
+import * as vue_config from '../app/vue.config';
 
 const ldap_base = "dc=univ,dc=fr";
 const ldap_main = {
@@ -33,7 +34,7 @@ const internal_organizations = [
 const conf = {
     maxLiveModerators: 100,
 
-    mainUrl: 'https://comptex.univ.fr/test',
+    mainUrl: 'https://comptex.univ.fr' + vue_config.publicPath.replace(/\/$/, ''),
     
     mail: {
         from: 'Assistance <assistance@univ.fr>',
