@@ -4,7 +4,8 @@ import client_conf from '../app/src/conf';
 function key2name(raw, spec: StepAttrOption) {
     if (spec && spec.oneOf) {
         for (const e of spec.oneOf) {
-            if (e.const === raw) return e.title;
+            // allow integer vs string comparison (useful for "duration")
+            if (e.const == raw) return e.title;
         }
     }
     if (spec && spec.code2text) {

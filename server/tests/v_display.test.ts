@@ -27,6 +27,19 @@ describe('v_display', () => {
         test(attrs, { profilename: "b" }, { profilename: "B bbb" });
     })
 
+    it('should transform oneOf const integer into name', () => {
+        const attrs = {
+            duration: {
+                oneOf: [
+                    { const: 1, title: "Aaa" },
+                    { const: 2, title: "B bbb" },
+                ],
+            },
+        };
+        test(attrs, { duration: "1" }, { duration: "Aaa" });
+        test(attrs, { duration: "2" }, { duration: "B bbb" });
+    })
+
     it('should handle various.diff', () => {
         const v_ = v_display({ various: { diff: { 
             supannMailPerso: { prev: "foo@bar.com" },
