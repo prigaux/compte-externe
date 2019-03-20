@@ -195,7 +195,10 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
         let conv = attrsConvert[attr] || {};
         let attr_ = opts.toJson && conv.ldapAttrJson || toLdapAttr(conv, attr);
         let modify = to_ldap_modify(convertAttrToLdap(attr, attrTypes[attr], conv.convert, val, opts));
-        if (modify.action === 'add') {
+        if (!modify) {
+            // TODO: see how to handle this
+            console.error("no convertToLdap for attr " + attr + " with value " + val);
+        } else if (modify.action === 'add') {
             const val_ = modify.value;
             if (val_ === '') return; // ignore empty string which can not be a valid LDAP string value
             if (attr_ in r) {
