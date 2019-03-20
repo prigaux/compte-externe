@@ -121,6 +121,11 @@ const createCompte_ = async (sv: sva, opts : crejsonldap.options) => {
     return { v, response: {login: v.supannAliasLogin, accountStatus: resp_subv.accountStatus } }
 };
 
+const mailFrom = (v) => {
+    const email = v.mailFrom_email;
+    return !email ? conf.mail.from : v.mailFrom_text ? `${v.mailFrom_text} <${email}>` : email;
+}
+
 const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: crejsonldap.accountStatus) => {
     if (v.userPassword && !accountStatus) {
         await esup_activ_bo.setNewAccountPassword(v.uid, v.supannAliasLogin, v.userPassword);
@@ -128,7 +133,7 @@ const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: 
     }
     if (v.supannMailPerso) {
         const v_ = v_display(v, flatten_attrs(attrs, v));
-        mail.sendWithTemplateFile('warn_user_account_created.html', { to: v.supannMailPerso, v, v_display: v_, isActive: !!accountStatus });
+        mail.sendWithTemplateFile('warn_user_account_created.html', { from: mailFrom(v), to: v.supannMailPerso, v, v_display: v_, isActive: !!accountStatus });
     }
     return null;
 }
