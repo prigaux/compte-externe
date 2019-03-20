@@ -56,6 +56,7 @@ const typeaheadComponent = Vue.extend({
       minChars: { type: Number, default: 0 },
       limit: { type: Number, default: 10 },
       formatting: { type: Function, default: (e) => e }, // function (T => String)
+      formatting_html: { type: Function },
       editable: { type: Boolean, default: true },
       required: { type: Boolean, default: false },
       is_textarea: { type: Boolean, default: false },
@@ -142,7 +143,8 @@ const typeaheadComponent = Vue.extend({
     },
 
     formatAndHighlight(v) {
-        let v_ = this.formatting(v).replace(new RegExp(this.query, "i"), m => `<b>${m}</b>`);
+        let v_ = (this.formatting_html || this.formatting)(v);
+        v_ = v_.replace(new RegExp(this.query, "i"), m => `<b>${m}</b>`);
         if (this.is_textarea) v_ = v_.replace(/\n/g, '<br>')
         return v_;
     },

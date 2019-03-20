@@ -1,6 +1,6 @@
 <template> 
   <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" :labels="opts.labels">      
-    <typeahead :name="name" v-model="val" :options="search" :minChars="3" :formatting="formatting"
+    <typeahead :name="name" v-model="val" :options="search" :minChars="3" :formatting="formatting"  :formatting_html="formatting_html"
         placeholder="Entrez une raison sociale ou un SIRET"
         :required="!opts.optional"
         :editable="false" :validity.sync="validity[name]"></typeahead>
@@ -41,6 +41,10 @@ export default Vue.extend({
     methods: {
         search: Ws.etablissements_search,
         formatting(e) {
+            if (!e) return '';
+            return e.description || e.displayName;
+        },
+        formatting_html(e) {
             if (!e) return '';
             const formatted_code = e.key.replace(/^\{(.*?)}/, "$1 : ");
             return (e.description || e.displayName) +
