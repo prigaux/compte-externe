@@ -20,9 +20,9 @@
     :opts="opts" :submitted="submitted">
   </AddressAttr>
 
-  <jpegPhotoAttr v-model="val" v-else-if="uiType === 'photo'"
+  <cameraSnapshotAttr v-model="val" v-else-if="uiType === 'cameraSnapshot'"
      :opts="opts" :submitted="submitted">
-  </jpegPhotoAttr>
+  </cameraSnapshotAttr>
 
   <StructureAttr v-model="val" v-else-if="uiType === 'structure'"
      :opts="opts" :submitted="submitted">
@@ -94,7 +94,7 @@ import DateAttr from './DateAttr.vue';
 import DateThreeInputsAttr from './DateThreeInputsAttr.vue';
 import AddressAttr from './AddressAttr.vue';
 import ArrayAttr from './ArrayAttr.vue';
-import jpegPhotoAttr from './jpegPhotoAttr.vue';
+import cameraSnapshotAttr from './cameraSnapshotAttr.vue';
 import PasswordAttr from './PasswordAttr.vue';
 import StructureAttr from './StructureAttr.vue';
 import EtablissementAttr from './EtablissementAttr.vue';
@@ -102,7 +102,7 @@ import CurrentLdapValue from './CurrentLdapValue.vue';
 
 export default Vue.extend({
     props: ['value', 'name', 'opts', 'submitted', 'v', 'ldap_value', 'allow_remove'],
-    components: { DateAttr, DateThreeInputsAttr, ArrayAttr, AddressAttr, jpegPhotoAttr, PasswordAttr, StructureAttr, EtablissementAttr, CurrentLdapValue },
+    components: { DateAttr, DateThreeInputsAttr, ArrayAttr, AddressAttr, cameraSnapshotAttr, PasswordAttr, StructureAttr, EtablissementAttr, CurrentLdapValue },
     data() {
         return {
             validity: { [this.name]: {}, submitted: false },
