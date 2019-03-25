@@ -19,7 +19,7 @@
             </table>
         </div>
 
-        <button class="btn btn-primary" @click.prevent="to_import = null">
+        <button type="button" class="btn btn-primary" @click="to_import = null">
                 <span class="glyphicon glyphicon-trash"></span>
                 Annuler</button>      
     </div>

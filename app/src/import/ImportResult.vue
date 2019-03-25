@@ -27,7 +27,7 @@
                 </tbody>
               </table>  
 
-        <button class="btn btn-primary" @click.prevent="$emit('done')">
+        <button type="button" class="btn btn-primary" @click="$emit('done')">
                 Ok</button>      
               
 </div>
