@@ -26,7 +26,7 @@ export default {
         homePhone: { title: "Téléphone personnel", uiType: "phone" },
         pager: { title: "Mobile personnel", uiType: "mobilePhone" },
         supannMailPerso: { title: "Email personnel", uiType: "email" },
-        jpegPhoto: { title: "Photo", format: 'data-url', uiType: 'photo' },
+        jpegPhoto: { title: "Photo", format: 'data-url', uiType: 'cameraSnapshot' },
         telephoneNumber: { title: 'Tétéphone fixe', uiType: "phone" },
         facsimileTelephoneNumber: { title: "Fax", uiType: "phone" },
         supannAutreTelephone: { title: 'Autres téléphones', items: { uiType: "phone" } },
