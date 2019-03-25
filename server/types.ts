@@ -51,7 +51,11 @@ interface StepAttrOptionChoices {
 }
 interface StepAttrItemsOption {
   uiHidden?: boolean;
-  uiType?: 'radio'|'select'|'checkbox'|'email'|'password'|'text'|'url' | 'textarea'|'phone'|'mobilePhone'|'frenchPostalCode'|'date'|'dateThreeInputs'|'postalAddress'|'cameraSnapshot' | 'etablissement'|'structure'|'newPassword'|'siret' | 'array' | 'homonym';
+  uiType?: 
+    'radio'|'select'|'checkbox'|'email'|'password'|'text'|'url' |
+    'textarea'|'phone'|'mobilePhone'|'frenchPostalCode'|'date' |
+    'dateThreeInputs'|'postalAddress'|'cameraSnapshot' |
+    'etablissement'|'structure'|'newPassword'|'siret' | 'array' | 'homonym';
   uiOptions?: { rows?: number; autocomplete?: boolean };
 
   pattern?: string;
