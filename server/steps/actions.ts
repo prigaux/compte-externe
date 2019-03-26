@@ -31,6 +31,11 @@ export const esup_activ_bo_sendCode : simpleAction = (_req, { v }) => (
     esup_activ_bo.sendCode(v.supannAliasLogin, v['channel']).then(_ => ({ v }))
 )
 
+export const esup_activ_bo_updatePersonalInformations : simpleAction = (req, { v }) => {
+    const userInfo: any = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, v, { toJson: true });
+    return esup_activ_bo.updatePersonalInformations(req.query.supannAliasLogin, req.query.code, userInfo).then(_ => ({ v }))
+}
+
 export const add_full_v: simpleAction = (_req, sv)  => (
     onePerson(filters.eq("uid", sv.v.uid)).then(full_v => {
         let v = sv.v;

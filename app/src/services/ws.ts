@@ -1,5 +1,5 @@
-import axios, { AxiosError } from 'axios';
-import { merge, pick } from 'lodash';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { merge, pick, omit } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
@@ -171,9 +171,19 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return attrs;
         }
 
+
+        function password_to_auth(params): AxiosRequestConfig {
+            if (params.userPassword && params.supannAliasLogin) {
+                const auth = { username: params.supannAliasLogin, password: params.userPassword }
+                return { params: omit(params, 'userPassword', 'supannAliasLogin'), auth };
+            } else {
+                return { params };
+            }
+        }
+
         export function getInScope($scope, id: string, params, expectedStep: string) : Promise<void> {
             var url = api_url + '/comptes/' + id + "/" + expectedStep;
-            return axios.get(url, { params }).then((resp) => {
+            return axios.get(url, password_to_auth(params)).then((resp) => {
                 var sv = <any>resp.data;
                 var all_attrs = {};
                 sv.attrs = initAttrs(sv.attrs, all_attrs);
@@ -219,7 +229,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         export function set(id: string, step: string, v: V, params, attrs: StepAttrsOption) {
             var url = api_url + '/comptes/' + id + "/" + step;
             var v_ = toWs(v, attrs);
-            return axios.put(url, v_, { params }).then(
+            return axios.put(url, v_, password_to_auth(params)).then(
                 (resp) => resp.data,
                 _handleErr);
         }

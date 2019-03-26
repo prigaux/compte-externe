@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import * as basic_auth from 'basic-auth';
 import * as ldap from '../ldap';
 import { onePerson } from '../search_ldap';
 import * as search_ldap from '../search_ldap';
@@ -63,3 +64,12 @@ export const esup_activ_bo_validateCode : simpleAction = (req, sv) => (
         return sv;
     })
 )
+
+export const esup_activ_bo_authentificateUser : simpleAction = (req, _sv) => {
+    const { wantedConvert, attrRemapRev } = ldap.convert_and_remap(conf.ldap.people.types, conf.ldap.people.attrs);
+    const auth = basic_auth(req);
+    if (!auth) throw "Bad Request";
+    return esup_activ_bo.authentificateUser(auth.name, auth.pass, _.without(Object.keys(attrRemapRev), 'userPassword')).then(o => {
+        return ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert)
+    }).then(v => ({ v }))
+}
