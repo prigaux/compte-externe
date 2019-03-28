@@ -86,7 +86,7 @@ const accountExactMatch = (v: v) => {
     return onePerson(filters.and(filters_));
 }
 
-export const createCompteSafe = (l_actions: action[]): action => async (req, sv) => {
+export const createCompteSafe = (l_actions: action[], afterCreateCompte: action[] = []): action => async (req, sv) => {
     const orig_v = sv.v;
     sv.v = (await chain(l_actions)(req, sv)).v;
     {
@@ -98,7 +98,7 @@ export const createCompteSafe = (l_actions: action[]): action => async (req, sv)
         if (homonymes.length) return { v: orig_v, response: { id: sv.id, in_moderation: true } };
     }
     // ok, let's create it
-    return createCompte(req, sv);
+    return chain([ createCompte, ...afterCreateCompte ])(req, sv);
 }
 
 export const createCompte: action = (_req, sv) => (
