@@ -72,6 +72,7 @@ type StepAttrOption = StepAttrItemsOption & {
   
   default?: string;
 
+  // constraints below are checked when sent by the user. Values from action_pre/action_post are not verified!
   optional?: boolean;
   oneOf?: StepAttrOptionChoices[];
   items?: StepAttrItemsOption,
