@@ -183,6 +183,11 @@ export const sendMail = (template: string, params = {}): action => async (req, s
     return { v: sv.v };
 };
 
+export const sendMailWithFileTemplate = (templateName: string, params = {}): action => async (req, sv) => {
+    mail.sendWithTemplateFile(templateName, prepareMailTemplateParams(req, sv, params));
+    return { v: sv.v };
+}
+
 export const genLogin: simpleAction = (_req, sv) => {
     let createResp = login => {
         let v = <v> _.assign({ supannAliasLogin: login }, sv.v);
