@@ -62,8 +62,8 @@ export const sendWithTemplateFile = (templateName: string, params: {}) => {
     });
 }
 export const sendWithTemplate = (template: string, params: {}, templateName = "") => {
-    resolve_mustache_async_params(template, params).then(params => {
-            let rawMsg = Mustache.render(template, params);
+    resolve_mustache_async_params(template, params).then(params_ => {
+            let rawMsg = Mustache.render(template, params_);
             if (!rawMsg) return;
             console.log("===========================");
             console.log("mustache result for", templateName);
