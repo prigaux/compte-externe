@@ -20,6 +20,8 @@ Helpers.eachObject(_routes, (path, component) => {
     routes.push({ path, component, props: true })
 });
 
+if (!conf.base_pathname.match(/\/$/)) alert("base_pathname in vue.config.js must have a trailing slash");
+
 const opts = {
     mode: undefined,
     base: conf.base_pathname,
