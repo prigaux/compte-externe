@@ -11,10 +11,10 @@
                     :formatting="e => e && (e.givenName + ' ' + e.sn)"></typeahead>
                 <div v-if="profiles" style="padding-top: 1rem">
                     <span v-if="profiles.oneOf.length">
-                        {{user.givenName}} {{user.sn}} a plusieurs profiles. Veuillez choisir le profile à modifier.
+                        {{user.givenName}} {{user.sn}} a plusieurs profiles. Veuillez choisir le profil à modifier.
                     </span>
                     <span v-else>
-                        Ce compte n'a pas de profile géré par cette application.
+                        Ce compte n'a pas de profil géré par cette application.
                     </span>
                 </div>
             </my-bootstrap-form-group>
@@ -78,7 +78,7 @@ export default Vue.extend({
                  return includes(u.global_profilename, choice.const);
              });
              if (need_profile.optional) {
-                 oneOf.unshift({ const: '', title: 'Créer un nouveau profile' })
+                 oneOf.unshift({ const: '', title: 'Créer un nouveau profil' })
              }
              if (oneOf.length === 1) {
                  this.gotoStep(u, oneOf[0].const);
