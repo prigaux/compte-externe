@@ -206,17 +206,18 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             }, err => _handleErr(err, $scope, true));
         }
 
-        export function listInScope($scope, params, cancelToken) : Promise<"ok" | "cancel"> {
-            return axios.get(api_url + '/comptes', { params, cancelToken }).then((resp) => {
+        export async function listInScope($scope, params, cancelToken) : Promise<"ok" | "cancel"> {
+            try {
+                const resp = await axios.get(api_url + '/comptes', { params, cancelToken });           
                 var svs = resp.data;
                 $scope.svs = svs;
                 return "ok";
-            }, (err) => {
+            } catch (err) {
                 if (axios.isCancel(err)) {
                     return "cancel";
                 }
                 return _handleErr(err, $scope);
-            });
+            }
         }
 
         export function homonymes(id, v, attrs) {
