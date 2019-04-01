@@ -3,6 +3,7 @@
 import * as _ from 'lodash';
 import * as conf from './conf';
 import * as ldap from './ldap';
+import * as helpers from './helpers';
 const filters = ldap.filters;
 
 const maxLoginLength = 10;
@@ -39,6 +40,8 @@ export const etablissements = (token: string, sizeLimit: number) => {
         filter = filters.eq("up1TableKey", token);
     } else if (token.match(/^[0-9\s-]{5,14}$/)) {
         filter = filters.startsWith("up1TableKey", "" + conf.ldap.etablissements.attrs.siret.convert.toLdap(token));
+    } else if (helpers.is_valid_uai_code(token)) {
+        filter = filters.startsWith("up1TableKey", "" + conf.ldap.etablissements.attrs.uai.convert.toLdap(token));
     } else {
         const words_filter = filters.fuzzy(['description', 'cn', 'displayName', 'ou'], token);
         filter = words_filter;

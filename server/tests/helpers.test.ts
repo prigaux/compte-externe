@@ -43,3 +43,14 @@ describe('anonymize_email', () => {
         assert.equal(helpers.anonymize_email("abcdefgh@bar.com"), "****efgh@bar.com")
     })
 })
+
+describe('is_valid_uai_code', () => {
+    it("should detect valid UAIs", () => {
+        assert.equal(helpers.is_valid_uai_code("0020743X"), true)
+        assert.equal(helpers.is_valid_uai_code("0020743x"), true)
+        assert.equal(helpers.is_valid_uai_code("0721586H"), true)
+    })
+    it("should detect invalid UAIs", () => {
+        assert.equal(helpers.is_valid_uai_code("0020744x"), false)
+    })
+})

@@ -73,3 +73,17 @@ export function inclusive_range(start, end): any {
         _.range(start, end+1) :
         _.range(start.charCodeAt(0), end.charCodeAt(0) + 1).map(n => String.fromCharCode(n))
 }
+
+export function is_valid_uai_code(uai: string) {    
+    uai = uai.toLowerCase(); // normalize
+
+    if (!uai.match(/^\d{7}[a-z]$/)) return false;
+
+    // alphabet pris en compte (23 lettres, sans I, O et Q)
+    const alphabet_23 = "abcdefghjklmnprstuvwxyz".split('');
+
+    const given_checksum = uai.substr(7, 1);
+    const computed_checksum = alphabet_23[parseInt(uai.substr(0, 7)) % 23];
+    
+    return given_checksum === computed_checksum;
+}
