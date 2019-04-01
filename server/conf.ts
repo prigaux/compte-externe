@@ -84,7 +84,7 @@ const conf = {
             types: {
                 uid: '', sn: '', displayName: '', givenName: '',
                 supannCivilite: '',
-                supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '',
+                supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '', mailForwardingAddress: '',
                 birthDay: new Date(), birthName: '', altGivenName: [],
                 homePhone: '', telephoneNumber: '', facsimileTelephoneNumber: '', supannAutreTelephone: [], pager: '',
                 homePostalAddress: '',
