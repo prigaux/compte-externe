@@ -8,9 +8,9 @@ describe('ldap_convert', () => {
         it ("should work", () => {
             let conv = ldap_convert.dn("ou", "dc=fr")
             assert.equal(conv.toLdap("foo"), "ou=foo,dc=fr");
-            assert.equal(conv.fromLdap("ou=foo,dc=fr"), "foo");
-            assert.equal(conv.fromLdap("ou=foo,"), undefined);
-            assert.equal(conv.fromLdap("ou=foo,dc=fr,"), undefined);
+            assert.equal(conv.fromLdapMulti([ "ou=foo,dc=fr" ]), "foo");
+            assert.equal(conv.fromLdapMulti([ "ou=foo," ]), undefined);
+            assert.equal(conv.fromLdapMulti([ "ou=foo,dc=fr," ]), undefined);
         });
     });
 });
