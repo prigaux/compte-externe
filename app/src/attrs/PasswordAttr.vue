@@ -17,7 +17,7 @@ import Vue from "vue";
 import conf from '../conf';
 
 export default Vue.extend({
-    props: ['value', 'submitted'],
+    props: ['value', 'opts', 'submitted'],
     data() {
         return {
           validity: { userPassword: {}, userPassword2: {}, submitted: false },
