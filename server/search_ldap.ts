@@ -147,7 +147,7 @@ export const homonymes = (v: v) : Promise<Homonyme[]> => {
 
 export const subv_to_eq_filters = (subv: Partial<v>) => {
     // limitation: do not handle multi-valued attrs
-    const v_ldap = ldap.convertToLdap(conf.ldap.people.attrs, conf.ldap.people.attrs, subv as any, {});
+    const v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, subv as any, {});
     return _.map(v_ldap, (val, attr) => filters.eq(attr, val as string));
 }
 
