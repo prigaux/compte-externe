@@ -14,6 +14,13 @@ export const onePerson = (filter: string) => (
     ldap.searchOne(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, {})
 );
 
+export const oneExistingPerson = (filter: string) => (
+    onePerson(filter).then(v => {
+        if (!v) throw "no match for " + filter;
+        return v;
+    })
+)
+
 export const v_from_WS = (v) => (
     _.mapValues(v, (val, attr) => {
         let attrType = conf.ldap.people.types[attr];

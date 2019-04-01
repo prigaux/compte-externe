@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as basic_auth from 'basic-auth';
 import * as ldap from '../ldap';
-import { onePerson } from '../search_ldap';
+import { oneExistingPerson } from '../search_ldap';
 import * as search_ldap from '../search_ldap';
 import { selectUserProfile } from '../step_attrs_option';
 import * as esup_activ_bo from '../esup_activ_bo';
@@ -26,7 +26,7 @@ export const getShibAttrs: simpleAction = async (req, _sv) => {
 export const getCasAttrs: simpleAction = async (req, _sv) => {
     if (!isCasUser(req)) throw `Unauthorized`;
     let filter = search_ldap.currentUser_to_filter(req.user);
-    let v: v = await onePerson(filter);
+    let v: v = await oneExistingPerson(filter);
     v.noInteraction = true;
     return { v };
 }
@@ -36,11 +36,11 @@ export const getShibOrCasAttrs: simpleAction = (req, _sv) => (
 )
 
 export const getExistingUser: simpleAction = (req, _sv)  => (
-    onePerson(filters.eq("uid", req.query.uid)).then(v => ({ v }))
+    oneExistingPerson(filters.eq("uid", req.query.uid)).then(v => ({ v }))
 );
 
 export const getExistingUserWithProfile: simpleAction = (req, _sv)  => (
-    onePerson(filters.eq("uid", req.query.uid)).then(v => {
+    oneExistingPerson(filters.eq("uid", req.query.uid)).then(v => {
         const profilename = req.query.profilename_to_modify;
         if (profilename) v = selectUserProfile(v, profilename);
         return { v };
