@@ -182,10 +182,10 @@ Vue.component('textarea-with-validity', {
 });
 
 Vue.component('history-textarea-with-validity', {
-  template: `<typeahead :name="name" :value="value" @input="onchange" :is_textarea="true" :rows="rows" :minChars="1" :options="history"></typeahead>`,
-  props: ['name', 'value', 'rows'],
+  template: `<typeahead :name="name" :value="value" @input="onchange" :required="required" :is_textarea="true" :rows="rows" :minChars="1" :options="history" :validity.sync="validity"></typeahead>`,
+  props: ['name', 'value', 'required', 'rows'],
   data() {
-    return { history: [] };
+    return { history: [], validity: {} };
   },
   mixins: [ checkValidity ],
   computed: {
@@ -204,6 +204,10 @@ Vue.component('history-textarea-with-validity', {
   },
   watch: {
     value: 'on_value_set',
+    validity(validity) {
+        // re-emit
+        this.$emit('update:validity', validity);
+    },
   },
   methods: {
         onchange(val) {
