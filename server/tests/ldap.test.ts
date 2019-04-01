@@ -60,7 +60,7 @@ describe('ldap', () => {
                 '{PHOTO}STUDENT': { ldapAttr: 'up1TermsOfUse', convert: ldap_convert.has_value('{PHOTO}STUDENT') },
             };
             function check(v, wanted_rawLdapValue) {
-                let rawLdapValue = ldap.convertToLdap({}, attrsConvert, v, {});
+                let rawLdapValue = ldap.convertToLdap({ termsOfUse: [''] }, attrsConvert, v, {});
                 assert.deepEqual(rawLdapValue, wanted_rawLdapValue);
             }
             check({ '{PHOTO}PUBLIC': '' }, {});

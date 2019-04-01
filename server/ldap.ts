@@ -179,7 +179,7 @@ function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ld
             return '';
         } else {
             console.error(`unknown type for attribute ${attr}`);
-            return v;
+            return '';
         }
 }
 
