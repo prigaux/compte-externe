@@ -16,6 +16,7 @@ export default {
 
     // order of keys is used in CompareUsers
     default_attrs_opts: {
+        supannCivilite: { title: "Civilité" },
         givenName: { title: "Prénom", allowedChars: allowedCharsInNames, normalize: normalizeApostrophe },
         altGivenName: { title: 'Autres prénoms', allowedChars: allowedCharsInNames, normalize: normalizeApostrophe },
         sn: { title: "Nom d'usage", allowedChars: allowedCharsInNames, normalize: normalizeApostrophe },
