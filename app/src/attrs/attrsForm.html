@@ -6,9 +6,9 @@
     </my-bootstrap-form-group>
    </fieldset>
 
-   <div v-for="(_, name) in attrs">
-     <genericAttr :name="name" :opts="attrs[name]" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :submitted="submitted" :stepName="stepName"
-         v-if="name != 'barcode' && name != 'mifare' && attrs[name].uiType !== 'homonym'">
+   <div v-for="(opts, name) in attrs">
+     <genericAttr :name="name" :opts="opts" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :submitted="submitted" :stepName="stepName"
+         v-if="name != 'barcode' && name != 'mifare' && opts.uiType !== 'homonym'">
      </genericAttr>
    </div>
 
