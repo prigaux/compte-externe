@@ -42,7 +42,7 @@ export default Vue.extend({
     },
     computed: {
         date() {
-            return new Date(this.val);
+            return this.val && new Date(this.val) || undefined;
         },
         min() {
             return toYYYY_MM_DD(this.opts.minDate);

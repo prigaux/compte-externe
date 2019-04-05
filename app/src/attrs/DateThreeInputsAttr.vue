@@ -68,7 +68,7 @@ export default Vue.extend({
                    day <= maxDay &&
                    (!minYear || minYear <= year) && 
                    (!maxYear || year <= maxYear) &&
-               new Date(Date.UTC(year, month - 1, day));
+               new Date(Date.UTC(year, month - 1, day)) || undefined;
         },
     },
 });
