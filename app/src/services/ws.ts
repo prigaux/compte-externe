@@ -124,7 +124,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             if (resp.status === 401 && $scope && $scope.$route.path !== '/login') {
                 console.log("must relog", resp.headers.toString());
                 restarting = true;
-                document.location.href = conf.base_pathname + 'login/' + ($scope.$route.query.idp || 'local') + '?then=' + encodeURIComponent($scope.$route.fullPath);
+                const type = resp.data && resp.data.authenticate && resp.data.authenticate.type || $scope.$route.query.idp || 'local';
+                document.location.href = conf.base_pathname + 'login/' + type + '?then=' + encodeURIComponent($scope.$route.fullPath);
                 return Promise.reject("logging...");
             } else {
                 const msg = resp.data && resp.data.error || err.message;

@@ -7,6 +7,8 @@ import * as bodyParser from 'body-parser';
 import * as db from './db';
 import api from './api';
 import * as utils from './utils';
+import * as cas from './cas';
+import * as conf from './conf';
 import * as conf_steps from './steps/conf';
 const app = express();
 
@@ -19,7 +21,11 @@ const json_limit = '10MB'; // must be kept lower than 16MB for cases when it is 
 //app.use(favicon(__dirname + '/app/favicon.ico'));
 app.use(logger(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use("/", express.static(path.join(__dirname, '../app/dist'), staticFilesOptions));
-app.use(utils.express_auth);
+if (conf.cas.host) {
+    cas.init(app);
+} else {
+    app.use(utils.shibboleth_express_auth);
+}
 
 app.use('/api',
      bodyParser.json({type: '*/*', limit: json_limit }), // do not bother checking, everything we will get is JSON :)

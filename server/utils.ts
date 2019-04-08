@@ -5,16 +5,27 @@ import * as _ from 'lodash';
 import * as iconv from 'iconv-lite';
 import * as express from 'express';
 import * as csvtojson from 'csvtojson';
+import * as session from 'express-session';
+import * as session_file_store from 'session-file-store';
 import concat = require('concat-stream');
 import * as simpleGet from 'simple-get';
 import * as conf from './conf';
 import { EventEmitter } from 'events';
 
-export const express_auth = (req: req, _res: express.Response, next): void => {
+export const shibboleth_express_auth = (req: req, _res: express.Response, next): void => {
   let user_id = req.header('REMOTE_USER');
   if (user_id) req.user = { id: user_id };
   next();
 };
+
+export function session_store() {
+    const FileStore = session_file_store(session);
+    return session({
+        store: new FileStore({ retries: 0, ...conf.session_store }), 
+        resave: false, saveUninitialized: false,
+        ...conf.session,
+    });
+}
 
 export const post = (url: string, body: string, options: simpleGet.Options) : Promise<string> => {
     options = _.assign({ url, body, ca: conf.http_client_CAs }, options);
