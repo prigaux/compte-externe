@@ -11,6 +11,7 @@ let acl: acl;
 
 before(() => (
     test_ldap.create().then(() => {
+        require_fresh('../search_ldap');
         acl = require_fresh('../steps/acl');
     })
 ));
