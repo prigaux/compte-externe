@@ -6,7 +6,6 @@ declare global {
     
 interface CurrentUser {
   id: string;
-  mail: string;
 }
 type req = express.Request;
 type res = express.Response;

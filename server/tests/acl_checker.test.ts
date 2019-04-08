@@ -43,15 +43,15 @@ describe('allowed_step_ldap_filters', () => {
     });
 
     it('should work', () => (
-        acl_checker.allowed_step_ldap_filters({ mail: "ayme.rigaux@univ-paris1.fr" } as CurrentUser, steps).then(l => assert.deepEqual(l, [ 
+        acl_checker.allowed_step_ldap_filters({ id: "arigaux" } as CurrentUser, steps).then(l => assert.deepEqual(l, [ 
             { step: 'xxx', filter: undefined },
         ]))
     ))
     it('should deny', () => (
-        acl_checker.allowed_step_ldap_filters({ mail: "pascal.rigaux@univ-paris1.fr" } as CurrentUser, steps).then(l => assert.deepEqual(l, []))
+        acl_checker.allowed_step_ldap_filters({ id: "prigaux" } as CurrentUser, steps).then(l => assert.deepEqual(l, []))
     ))
     it('should simplify ldap filters', () => (
-        acl_checker.allowed_step_ldap_filters({ mail: "ayme.rigaux@univ-paris1.fr" } as CurrentUser, steps2).then(l => assert.deepEqual(l, [ 
+        acl_checker.allowed_step_ldap_filters({ id: "arigaux" } as CurrentUser, steps2).then(l => assert.deepEqual(l, [ 
             { step: 'xxx', filter: undefined },
             { step: 'yyy', filter: undefined },
         ]))

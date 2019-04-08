@@ -34,8 +34,8 @@ const create = (peopleFilter: string): acl_search => _convert_simple_acl_search(
     v_to_ldap_filter: async (_v) => peopleFilter,
     // can the user moderate any "v":
     user_to_subv: (user) => {
-        if (!user.mail) console.error("no user mail!?");
-        return search_ldap.existPeople(filters.and([ peopleFilter, filters.eq("mail", user.mail) ]))
+        if (!user.id) console.error("no user id!?");
+        return search_ldap.existPeople(filters.and([ peopleFilter, search_ldap.currentUser_to_filter(user) ]))
     },
 });
 

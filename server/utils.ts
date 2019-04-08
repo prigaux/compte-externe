@@ -12,8 +12,7 @@ import { EventEmitter } from 'events';
 
 export const express_auth = (req: req, _res: express.Response, next): void => {
   let user_id = req.header('REMOTE_USER');
-  let mail = req.header('mail');
-  if (user_id) req.user = { id: user_id, mail };
+  if (user_id) req.user = { id: user_id };
   next();
 };
 

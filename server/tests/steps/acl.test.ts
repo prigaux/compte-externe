@@ -33,13 +33,13 @@ describe('user_id', () => {
     ));
     
     it('user_to_ldap_filter should work', () => (
-        acl_uid.user_to_ldap_filter({ 'mail': 'ayme.rigaux@univ-paris1.fr' } as CurrentUser).then(filter => (
+        acl_uid.user_to_ldap_filter({ id: 'arigaux' }).then(filter => (
             assert.deepEqual(filter, true)
         ))
     ));
 
     it('user_to_ldap_filter when no match', () => (
-        acl_uid.user_to_ldap_filter({ 'mail': 'pascal.rigaux@univ-paris1.fr' } as CurrentUser).then(filter => (
+        acl_uid.user_to_ldap_filter({ id: 'prigaux' }).then(filter => (
             assert.deepEqual(filter, false)
         ))
     ));
@@ -57,7 +57,7 @@ describe('ldapGroup', () => {
     ));
 
     it('user_to_ldap_filter should work', () => (
-        aclG.user_to_ldap_filter({ 'mail': 'ayme.rigaux@univ-paris1.fr' } as CurrentUser).then(filter => (
+        aclG.user_to_ldap_filter({ id: 'arigaux' } as CurrentUser).then(filter => (
             assert.deepEqual(filter, true)
         ))
     ));
