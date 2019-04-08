@@ -44,8 +44,7 @@ export const ldapGroup = (cn: string): acl_search => (
 );
 
 export const user_id = (user_id: string): acl_search => {
-    let attr = user_id.match(/@/) ? "eduPersonPrincipalName" : "uid";
-    return create(filters.eq(attr, user_id));
+    return create(search_ldap.currentUser_to_filter({ id: user_id }));
 };
 
 export const _rolesGeneriques = (rolesFilter: string) => {

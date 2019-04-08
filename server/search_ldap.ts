@@ -31,9 +31,11 @@ export const v_from_WS = (v) => (
     }) as v
 )
 
-export const currentUser_to_filter = (user: CurrentUser) => (
-    filters.eq("eduPersonPrincipalName", user && user.id)
-);
+export const currentUser_to_filter = (user: CurrentUser) => {
+    const user_id = user && user.id
+    const attr = user_id && user_id.match(/@/) ? "eduPersonPrincipalName" : "uid";
+    return filters.eq(attr, user_id)
+}
 
 export const structures = (token: string, sizeLimit: number) => {
     let words_filter = filters.fuzzy(['description', 'ou'], token);
