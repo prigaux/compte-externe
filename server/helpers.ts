@@ -87,3 +87,9 @@ export function is_valid_uai_code(uai: string) {
     
     return given_checksum === computed_checksum;
 }
+
+export function get_delete(o: {}, key: string) {
+    const val = o[key];
+    delete o[key];
+    return val;
+}
