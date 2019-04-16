@@ -13,5 +13,15 @@ export default Vue.extend({
         hasAffiliation(v, ...affiliations) {
             return Helpers.arrayContains(v.global_eduPersonAffiliation || [], affiliations);
         },
+        routerResolveFullHref(location) {
+            const a = document.createElement('a');
+            a.href = this.$router.resolve(location).href;
+            return a.href;
+        },
+        copyToClipboard(elt) {
+            elt.select();
+            document.execCommand('copy');
+            elt.setSelectionRange(0, 0);
+        },
     },
 });
