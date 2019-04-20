@@ -33,7 +33,7 @@ export default {
         roomAccess: { title: "Précision du lieu" },
         floorNumber: { title: "Étage" },
         roomNumber: { title: "Numéro de bureau" },
-        structureParrain: { title: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)", uiType: 'structure' },
+        structureParrain: { title: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)" },
         userPassword: { title: "Mot de passe", uiType: 'newPassword' },
         userPassword2: { title: "Confirmer le mot de passe" },
         cardChoice: { title: "Carte" },
@@ -67,7 +67,6 @@ export default {
         eduPersonPrincipalName: { title: "Identifiant dans l'établissement" },
         mail: { title: "Mail" },
         etablissementExterne: { 
-            uiType: 'etablissement', 
             uiPlaceholder: "Entrez une raison sociale, un SIRET ou un UAI",
             onChange(v, _, etablissementS) {
                 // set every "etablissement" fields in v, with prefix "etablissement_"

@@ -1,12 +1,12 @@
-<template> 
-  <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" :labels="opts.labels">      
+<template>
+  <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" :labels="opts.labels">
     <div v-if="opts.readOnly && val">
       {{val.title}}
     </div>
     <div v-else>
       <typeahead :name="name" v-model="val" :options="search" :minChars="3" :formatting="formatting" :formatting_html="formatting_html"
-            :placeholder="opts.placeholder"
             :required="!opts.optional"
+            :placeholder="opts.placeholder"
             :editable="false" :validity.sync="validity[name]"></typeahead>
     </div>
   </my-bootstrap-form-group>
@@ -17,7 +17,7 @@ import Vue from "vue";
 import * as Ws from '../services/ws';
 
 export default Vue.extend({
-    props: ['value', 'name', 'opts', 'submitted', 'v'],
+    props: ['value', 'name', 'opts', 'submitted', 'v', 'stepName'],
     data() {
         return {
           validity: { [this.name]: {}, submitted: false },
@@ -26,7 +26,7 @@ export default Vue.extend({
     },
     asyncComputed: {
         valueS() {
-            return this.value && Ws.etablissement_get(this.value);
+            return this.value && Ws.search(this.stepName, this.name, this.value, 1).then(l => l && l[0])
         },
     },
     watch: {
@@ -34,6 +34,7 @@ export default Vue.extend({
             this.val = val;
         },
         val(val) {
+            console.log("val changed", val);
             if (val) {
                 this.$emit('input', val.const);
                 if (this.opts.onChange) this.opts.onChange(this.v, val.const, val);
@@ -44,7 +45,9 @@ export default Vue.extend({
         },
     },
     methods: {
-        search: Ws.etablissements_search,
+        search(token) {
+            return Ws.search(this.stepName, this.name, token);
+        },
         formatting(e) { 
             return this.opts.formatting ? this.opts.formatting(e) : e && e.title;
         },

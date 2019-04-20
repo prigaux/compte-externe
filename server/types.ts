@@ -55,7 +55,7 @@ interface StepAttrItemsOption {
     'radio'|'select'|'checkbox'|'email'|'password'|'text'|'url' |
     'textarea'|'phone'|'mobilePhone'|'frenchPostalCode'|'date' |
     'dateThreeInputs'|'postalAddress'|'cameraSnapshot'|'photoUpload' |
-    'etablissement'|'structure'|'newPassword'|'siret' | 'array' | 'homonym';
+    'autocomplete'|'newPassword'|'siret' | 'array' | 'homonym';
   uiOptions?: { rows?: number; autocomplete?: boolean };
   uiPlaceholder?: string;
 
@@ -76,12 +76,11 @@ type StepAttrOption = StepAttrItemsOption & {
   // constraints below are checked when sent by the user. Values from action_pre/action_post are not verified!
   optional?: boolean;
   oneOf?: StepAttrOptionChoices[];
+  oneOf_async?: (token: string, sizeLimit: number) => Promise<StepAttrOptionChoices[]>;
   items?: StepAttrItemsOption,
   title?: string;
   description?: string;
   labels?: { advice?: string; tooltip?: string; }
-
-  code2text?: (string) => Promise<string>
 }
 type StepAttrsOption = Dictionary<StepAttrOption>;
 

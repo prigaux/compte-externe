@@ -148,3 +148,20 @@ export const deep_extend = (o, overrides) => {
     }
 }
 
+export const findStepAttr = (attrs: StepAttrsOption, f: (StepAttrOption, key) => boolean): { key: string, opts: StepAttrOption } => {
+    for (const key in attrs) {
+        const opts = attrs[key];
+
+        if (f(opts, key)) return { key, opts };
+
+        if (opts.oneOf) {
+            for (const choice of opts.oneOf) {
+                if (choice.sub) {
+                    const r = findStepAttr(choice.sub, f);
+                    if (r) return r;
+                }
+            }
+        }
+    }
+    return undefined;
+}

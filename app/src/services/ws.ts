@@ -44,6 +44,7 @@ export interface StepAttrOption {
   max?: number | Date;
   default?: string;
   oneOf?: StepAttrOptionChoices[];
+  oneOf_async?: string;
   format?: 'date-time' | 'data-url';
 }
 export interface Dictionary<T> {
@@ -65,17 +66,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
     axios.get(api_url + '/comptes/search/' + step, { params: { token, maxRows } }).then(resp => resp.data as Promise<V[]>)
 );
 
-        export function structures_search(token : string, maxRows? : number) : Promise<StepAttrOptionChoices_[]> {
-            return axios.get(api_url + '/structures', { params: { token, maxRows } }).then((resp) => resp.data as StepAttrOptionChoices_[]);
-        }
-        export function etablissements_search(token : string, maxRows? : number) : Promise<StepAttrOptionChoices_[]> {
-            return axios.get(api_url + '/etablissements', { params: { token, maxRows } }).then((resp) => resp.data as StepAttrOptionChoices_[]);
-        }
-        export function structure_get(id: string) {
-            return structures_search(id, 1).then(resp => resp[0]);
-        }
-        export function etablissement_get(id: string) {
-            return etablissements_search(id, 1).then(resp => resp[0]);
+        export function search(stepName: string, attr: string, token : string, maxRows? : number) : Promise<StepAttrOptionChoices_[]> {
+            return axios.get(api_url + '/search/' + stepName + '/' + attr, { params: { token, maxRows } }).then((resp) => resp.data as StepAttrOptionChoices_[]);
         }
 
         const _toDate = (year: number, month: number, day: number) => new Date(Date.UTC(year, month - 1, day));

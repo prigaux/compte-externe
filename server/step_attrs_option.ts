@@ -124,8 +124,9 @@ const handle_chosen_oneOf_sub = (opts: StepAttrOption, val: string, rec: (StepAt
 
 const find_choice = (oneOf, val) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
 
-const transform_toUserOnly_into_optional_readonly = ({ code2text: _, toUserOnly, ...opt} : StepAttrOption) => {
+const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : StepAttrOption) => {
     opt = toUserOnly ? { optional: true, readOnly: true, ...opt} : opt;
+    if (opt.oneOf_async) opt.oneOf_async = true as any;
     (opt.oneOf || []).forEach(one => {        
         if (one.sub) one.sub = exportAttrs(one.sub);
     });

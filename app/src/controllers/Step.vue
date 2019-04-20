@@ -41,7 +41,7 @@
     </div>
              
     <attrsForm
-        :v="v" :v_ldap="v_ldap" :attrs="other_attrs" :step_labels="step.labels"
+        :v="v" :v_ldap="v_ldap" :attrs="other_attrs" :step_labels="step.labels" :stepName="stepName"
         @submit="submit" @reject="reject"></attrsForm>
 
  </div> <!-- !homonyms -->

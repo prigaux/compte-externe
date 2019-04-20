@@ -28,17 +28,14 @@
      :opts="opts" :submitted="submitted">
   </PhotoUploadAttr>
 
-  <StructureAttr v-model="val" v-else-if="uiType === 'structure'"
-     :opts="opts" :submitted="submitted">
-  </StructureAttr>
-
   <PasswordAttr v-model="val" v-else-if="uiType === 'newPassword'"
      :opts="opts" :submitted="submitted">
   </PasswordAttr>
 
-  <EtablissementAttr v-model="val" :name="name" :v="v" v-else-if="uiType === 'etablissement'"
+  <AutocompleteAttr v-model="val" :name="name" :v="v" v-else-if="uiType === 'autocomplete'"
+     :stepName="stepName"
      :opts="opts" :submitted="submitted">
-  </EtablissementAttr>
+  </AutocompleteAttr>
 
   <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" :labels="opts.labels" v-else-if="opts">
 
@@ -101,14 +98,13 @@ import AddressAttr from './AddressAttr.vue';
 import ArrayAttr from './ArrayAttr.vue';
 import cameraSnapshotAttr from './cameraSnapshotAttr.vue';
 import PasswordAttr from './PasswordAttr.vue';
-import StructureAttr from './StructureAttr.vue';
-import EtablissementAttr from './EtablissementAttr.vue';
+import AutocompleteAttr from './AutocompleteAttr.vue';
 import CurrentLdapValue from './CurrentLdapValue.vue';
 
 export default Vue.extend({
-    props: ['value', 'name', 'opts', 'submitted', 'v', 'ldap_value', 'allow_remove'],
+    props: ['value', 'name', 'opts', 'submitted', 'v', 'ldap_value', 'stepName', 'allow_remove'],
     components: { 
-        DateAttr, DateThreeInputsAttr, ArrayAttr, AddressAttr, cameraSnapshotAttr, PasswordAttr, StructureAttr, EtablissementAttr, CurrentLdapValue,
+        DateAttr, DateThreeInputsAttr, ArrayAttr, AddressAttr, cameraSnapshotAttr, PasswordAttr, AutocompleteAttr, CurrentLdapValue,
         PhotoUploadAttr: () => import('./PhotoUploadAttr.vue'),
     },
     data() {
@@ -123,7 +119,10 @@ export default Vue.extend({
             if (this.opts.uiType === 'date' && !isDateInputSupported()) {
                 return 'dateThreeInputs';
             }
-            return this.opts.uiType || this.opts.oneOf && (this.opts.oneOf.length <= 2 ? 'radio' : 'select') || this.opts.items && 'array';
+            return this.opts.uiType || 
+                this.opts.oneOf && (this.opts.oneOf.length <= 2 ? 'radio' : 'select') ||
+                this.opts.items && 'array' ||
+                this.opts.oneOf_async && 'autocomplete';
         },
         uiOptions() {
             return this.opts.uiOptions || {};

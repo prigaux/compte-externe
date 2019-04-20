@@ -329,17 +329,18 @@ router.post('/homonymes/:id', (req: req, res) => {
     respondJson(req, res, homonymes(req, req.params.id, body_to_v(req.body)));
 });
 
-function search_for_typeahead(req: req, search : (token: string, sizeLimit: number) => Promise<any>) {
+function search_for_typeahead(req: req, step: string, attr: string) {
+    const { opts } = utils.findStepAttr(name2step(step).attrs, (_, attr_) => attr === attr_)
+    if (!opts || !opts.oneOf_async) {
+        throw "search: invalid step attr " + step + ' ' + attr;
+    }
     let token = req.query.token;
     if (!token) throw "missing token parameter";
     let sizeLimit = parseInt(req.query.maxRows) || 10;
-    return search(token, sizeLimit);
+    return opts.oneOf_async(token, sizeLimit)
 }
-router.get('/structures', (req: req, res) => {
-    respondJson(req, res, search_for_typeahead(req, search_ldap.structures));
-});
-router.get('/etablissements', (req: req, res) => {
-    respondJson(req, res, search_for_typeahead(req, search_ldap.etablissements));
+router.get('/search/:step/:attr', (req : req, res) => {
+    respondJson(req, res, search_for_typeahead(req, req.params.step, req.params.attr))
 });
 
 router.get('/csv2json', utils.csv2json);
