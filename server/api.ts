@@ -33,9 +33,9 @@ function name2step(name: string): step {
 const step = (sv: sv) => name2step(sv.step);
 
 function add_step_attrs<SV extends sv>(sv: SV) {
-    const attrs = step(sv).attrs;
+    const { attrs, attrs_override } = step(sv);
     let sva = sv as SV & { attrs: StepAttrsOption };
-    sva.attrs = typeof attrs === "function" ? attrs(sv.v) : attrs;
+    sva.attrs = attrs_override ? utils.deep_extend(attrs, attrs_override(sv.v)) : attrs;
     return sva;
 }
 

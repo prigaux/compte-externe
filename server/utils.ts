@@ -136,3 +136,15 @@ export const mapAttrs = (attrs: StepAttrsOption, f) => (
     })
 )
 
+export const deep_extend = (o, overrides) => {
+    if (_.isObject(o) && _.isObject(overrides)) {
+        const r = { ...o, ...overrides };
+        for (const attr of _.intersection(Object.keys(o), Object.keys(overrides))) {
+            r[attr] = deep_extend(o[attr], overrides[attr]);
+        }
+        return r;
+    } else {
+        return overrides;
+    }
+}
+

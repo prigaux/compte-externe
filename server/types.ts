@@ -111,7 +111,8 @@ type step = {
   attrs_pre?: Dictionary<{}>; // passed to /api/comptes/xxx as query arguments
   allow_many?: boolean; 
   
-  attrs: StepAttrsOption | ((v) => StepAttrsOption);
+  attrs: StepAttrsOption
+  attrs_override?: ((v) => StepAttrsOption);
   next?: string | ((v) => Promise<string>);
   nextBrowserStep?: string;
   notify?: StepNotify;
