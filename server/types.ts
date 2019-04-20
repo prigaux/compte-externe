@@ -57,6 +57,7 @@ interface StepAttrItemsOption {
     'dateThreeInputs'|'postalAddress'|'cameraSnapshot'|'photoUpload' |
     'etablissement'|'structure'|'newPassword'|'siret' | 'array' | 'homonym';
   uiOptions?: { rows?: number; autocomplete?: boolean };
+  uiPlaceholder?: string;
 
   pattern?: string;
   min?: number;
