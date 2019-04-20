@@ -1,7 +1,7 @@
 <template> 
   <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" :labels="opts.labels">      
     <typeahead :name="name" v-model="val" :options="search" :minChars="3" :formatting="formatting"  :formatting_html="formatting_html"
-        placeholder="Entrez une raison sociale, un SIRET ou un UAI"
+        :placeholder="opts.placeholder"
         :required="!opts.optional"
         :editable="false" :validity.sync="validity[name]"></typeahead>
   </my-bootstrap-form-group>
