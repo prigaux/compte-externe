@@ -97,9 +97,6 @@ export default {
              `Le caractère « ${forbiddenChars} » n'est pas autorisé.` :
              `Les caractères « ${forbiddenChars} » ne sont pas autorisés.`
         ),
-        noModerators: (structureName) => (
-            `Le service ${structureName} n'a pas de responsables déclarés dans le logiciel SIHAM. Il faut que les responsables en fassent la demande vers l'application de gestion de compte de l'ENT`
-        ),
     },        
 
     affiliation_labels: {

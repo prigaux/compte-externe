@@ -241,10 +241,7 @@ export default Vue.extend({
       send() {
           return Ws.set(this.id, this.stepName, this.v, this.v_pre, this.attrs).then(resp => {
               if (resp.error === "no_moderators") {
-                  Ws.structure_get(this.v.structureParrain).then(structure => {
-                    alert(conf.error_msg.noModerators(structure.name));
-                    this.v.structureParrain = undefined;
-                  });
+                alert(resp.error);
               } else {
                 return this.nextStep(resp);
               }
