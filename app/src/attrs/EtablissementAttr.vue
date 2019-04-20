@@ -40,15 +40,11 @@ export default Vue.extend({
     },
     methods: {
         search: Ws.etablissements_search,
-        formatting(e) {
-            if (!e) return '';
-            return e.title || e.displayName;
+        formatting(e) { 
+            return this.opts.formatting ? this.opts.formatting(e) : e && e.title;
         },
         formatting_html(e) {
-            if (!e) return '';
-            const formatted_code = e.const.replace(/^\{(.*?)}/, "$1 : ");
-            return (e.title || e.displayName) +
-              `<br><span class="xsmall">${formatted_code + (e.postalAddress ? '  -  ' + e.postalAddress : '') }</span>`;
+            return this.opts.formatting_html ? this.opts.formatting_html(e) : this.formatting(e);
         },
     },
 });

@@ -73,6 +73,16 @@ export default {
                 Object.keys(v).forEach(k => { if (k.match(/^etablissement_/)) v[k] = '' });
                 Object.keys(etablissementS).forEach(k => v[`etablissement_${k}`] = etablissementS[k]);
             },
+            formatting(e) {
+                if (!e) return '';
+                return e.title || e.displayName;    
+            },
+            formatting_html(e) {
+                if (!e) return '';
+                const formatted_code = e.const.replace(/^\{(.*?)}/, "$1 : ");
+                const details = `<br><span class="xsmall">${formatted_code + (e.postalAddress ? '  -  ' + e.postalAddress : '') }</span>`;
+                return (e.title || e.displayName) + details;
+            },
         },
     },
 
