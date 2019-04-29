@@ -1,5 +1,5 @@
-app/src/conf.js
-app/src/conf.js.map
+shared/**/*.js
+shared/**/*.js.map
 server/**/*.js
 server/**/*.js.map
 logs/*

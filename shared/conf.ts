@@ -1,7 +1,5 @@
 'use strict';
 
-declare var process;
-
 const accentsRange = '\u00C0-\u00FC';
 const allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
 const normalizeApostrophe = (s : string) => s.replace(/[’′´‘]/g, "'");
@@ -11,7 +9,6 @@ const wsgroupsURL = "https://wsgroups.univ-paris1.fr";
 export default {
     printCardUrl: undefined, //(login) => `http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=${login}`,
     wsgroupsURL,
-    base_pathname: process.env.BASE_URL,
     title: "Gestion de comptes",
 
     // order of keys is used in CompareUsers
