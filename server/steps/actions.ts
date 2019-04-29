@@ -11,7 +11,7 @@ import * as esup_activ_bo from '../esup_activ_bo';
 import { flatten_attrs } from '../step_attrs_option';
 import v_display from '../v_display';
 import * as conf from '../conf';
-import client_conf from '../../app/src/conf'; // ES6 syntax needed for default export
+import client_conf from '../../shared/conf'; // ES6 syntax needed for default export
 const filters = ldap.filters;
 
 export const addAttrs = (v: Partial<v>) => (_req, sv) => {
