@@ -2,6 +2,7 @@
 
 import * as _ from 'lodash';
 import * as conf from './conf';
+import shared_conf from '../shared/conf';
 import * as ldap from './ldap';
 import * as helpers from './helpers';
 const filters = ldap.filters;
@@ -79,7 +80,7 @@ function homonymes_filter(sns: string[], givenNames: string[], birthDay: Date, s
 
     function sn_givenName_filter() {
         let l = [];
-        l.push(filters.or(conf.ldap.people.sns.map(attr =>
+        l.push(filters.or(shared_conf.sns.map(attr =>
             filters.alike_many(ldap.toLdapAttr(conf.ldap.people.attrs[attr], attr), sns)
         )));
 
@@ -147,8 +148,8 @@ const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannM
 const _merge_at = (v: v, attrs: string[]) => _.merge(_.at(v, attrs)).filter(s => s)
 
 export const homonymes = (v: v) : Promise<Homonyme[]> => {
-    let sns: string[] = _.compact(_merge_at(v, conf.ldap.people.sns));
-    let givenNames = _merge_at(v, conf.ldap.people.givenNames);
+    let sns: string[] = _.compact(_merge_at(v, shared_conf.sns));
+    let givenNames = _merge_at(v, shared_conf.givenNames);
     if (sns[0] === undefined || !v.birthDay) return Promise.resolve([]);
     console.log("sns", sns);
     const preferStudent = conf.ldap.people.homonymes_preferStudent(v.profilename);
