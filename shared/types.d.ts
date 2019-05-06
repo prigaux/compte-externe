@@ -46,3 +46,5 @@ type MoreStepAttrOption = MinimalStepAttrOption & {
     minDate?: Date;
     maxDate?: Date;
 }
+
+type MoreStepAttrsOption = Dictionary<MoreStepAttrOption>;

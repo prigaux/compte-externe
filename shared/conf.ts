@@ -1,4 +1,4 @@
-'use strict';
+/// <reference path='types.d.ts' />
 
 const accentsRange = '\u00C0-\u00FC';
 const allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
@@ -81,7 +81,7 @@ export default {
                 return (e.title || e.displayName) + details;
             },
         },
-    },
+    } as MoreStepAttrsOption,
 
     pattern: {
         frenchPhone: "^(\\+33|0)\\s*[1-9](\\s*[0-9]){8}$", // french
