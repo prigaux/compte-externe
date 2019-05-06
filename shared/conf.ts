@@ -1,5 +1,7 @@
 /// <reference path='types.d.ts' />
 
+import checkDisplayName from './validators/displayName';
+
 const accentsRange = '\u00C0-\u00FC';
 const allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
 const normalizeApostrophe = (s : string) => s.replace(/[’′´‘]/g, "'");
@@ -17,7 +19,7 @@ export default {
         altGivenName: { title: 'Autres prénoms', allowedChars: allowedCharsInNames, normalize: normalizeApostrophe },
         sn: { title: "Nom d'usage", allowedChars: allowedCharsInNames, normalize: normalizeApostrophe },
         birthName: { title: "Nom de naissance", allowedChars: allowedCharsInNames, normalize: normalizeApostrophe, labels: { tooltip: "si différent du nom d'usage" } },
-        displayName: { title: "Nom annuaire" },
+        displayName: { title: "Nom annuaire", validator: checkDisplayName },
         birthDay: { title: "Date de naissance", format: 'date', uiType: 'date', minDate: new Date('1900'), minYear: 1900, maxDate: new Date(), maxYear: new Date().getUTCFullYear() },
         homePostalAddress: { title: "Adresse personnelle", uiType: 'postalAddress' },
         homePhone: { title: "Téléphone personnel", uiType: "phone" },
