@@ -36,17 +36,11 @@ interface StepAttrOptionChoices_ {
   title: string;
   short_title?: string;
 }
-export interface StepAttrOption {
-  uiHidden?: boolean;
+export type StepAttrOption = MoreStepAttrOption & {
   readOnly?: boolean;
   optional?: boolean;
-  pattern?: string;
-  max?: number;
-  maxDate?: Date;
-  default?: string;
   oneOf?: StepAttrOptionChoices[];
   oneOf_async?: string;
-  format?: 'date-time' | 'data-url';
 }
 export interface Dictionary<T> {
   [index: string]: T;

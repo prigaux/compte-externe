@@ -1,7 +1,3 @@
-declare interface Dictionary<T> {
-  [index: string]: T;
-}
-
 declare namespace Express {
     export interface Request {
        user?: CurrentUser;

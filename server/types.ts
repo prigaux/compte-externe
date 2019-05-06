@@ -49,38 +49,17 @@ interface StepAttrOptionChoices {
   title?: string;
   sub?: StepAttrsOption;
 }
-interface StepAttrItemsOption {
-  uiHidden?: boolean;
-  uiType?: 
-    'radio'|'select'|'checkbox'|'email'|'password'|'text'|'url' |
-    'textarea'|'phone'|'mobilePhone'|'frenchPostalCode'|'date' |
-    'dateThreeInputs'|'postalAddress'|'cameraSnapshot'|'photoUpload' |
-    'autocomplete'|'newPassword'|'siret' | 'array' | 'homonym';
-  uiOptions?: { rows?: number; autocomplete?: boolean };
-  uiPlaceholder?: string;
 
-  pattern?: string;
-  min?: number;
-  minYear?: number;
-  max?: number;
-  maxYear?: number;
-}
-type StepAttrOption = StepAttrItemsOption & {
+type StepAttrOption = MinimalStepAttrOption & {
   readOnly?: boolean;
   hidden?: boolean;
   toUserOnly?: boolean; // implies hidden
-  format?: 'date' | 'data-url';
   
-  default?: string;
-
   // constraints below are checked when sent by the user. Values from action_pre/action_post are not verified!
   optional?: boolean;
   oneOf?: StepAttrOptionChoices[];
   oneOf_async?: (token: string, sizeLimit: number) => Promise<StepAttrOptionChoices[]>;
   items?: StepAttrItemsOption,
-  title?: string;
-  description?: string;
-  labels?: { advice?: string; tooltip?: string; }
 }
 type StepAttrsOption = Dictionary<StepAttrOption>;
 
