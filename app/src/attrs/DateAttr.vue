@@ -45,10 +45,10 @@ export default Vue.extend({
             return new Date(this.val);
         },
         min() {
-            return toYYYY_MM_DD(this.opts.min);
+            return toYYYY_MM_DD(this.opts.minDate);
         },
         max() {
-            return toYYYY_MM_DD(this.opts.max);
+            return toYYYY_MM_DD(this.opts.maxDate);
         },
     },
 });

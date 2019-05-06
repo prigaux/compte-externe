@@ -41,7 +41,8 @@ export interface StepAttrOption {
   readOnly?: boolean;
   optional?: boolean;
   pattern?: string;
-  max?: number | Date;
+  max?: number;
+  maxDate?: Date;
   default?: string;
   oneOf?: StepAttrOptionChoices[];
   oneOf_async?: string;
