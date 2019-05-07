@@ -129,7 +129,8 @@ export default {
         "GRECE", "TUNISIE", "RUSSIE", "COTE D'IVOIRE", "ILE MAURICE", "PAYS BAS", "POLOGNE", "GABON", "AUTRICHE", "REPUBLIQUE DOMINICAINE",
     ],
     
+    // used for homonyms detection & displayName validation
     sns: ['sn', 'birthName'],
-    givenNames: ['givenName'],
+    givenNames: ['givenName', 'altGivenName'],
 };
 
