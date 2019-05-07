@@ -152,6 +152,15 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return attrs;
         }
 
+        function handleAttrsValidators(all_attrs: StepAttrsOption, v_orig: V) {
+            for (const attr in all_attrs) {
+                const opts = all_attrs[attr];
+                const validator = opts.validator;
+                if (validator) {
+                    opts.validator = (val) => validator(val, v_orig);
+                }
+            }
+        }
 
         function password_to_auth(params): AxiosRequestConfig {
             if (params.userPassword && params.supannAliasLogin) {
@@ -172,6 +181,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                         sv.v = fromWs(sv.v, all_attrs);
                         if (sv.v_ldap) sv.v_ldap = fromWs(sv.v_ldap, all_attrs);
                         sv.v_orig = Helpers.copy(sv.v);
+                        handleAttrsValidators(all_attrs, sv.v_orig);
                     }
                     sv.modifyTimestamp = new Date(sv.modifyTimestamp);
                     Helpers.eachObject(all_attrs, (attr, opts) => {

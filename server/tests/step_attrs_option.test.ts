@@ -1,5 +1,6 @@
 import { assert } from './test_utils';
 import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile } from '../step_attrs_option';
+import checkDisplayName from '../../shared/validators/displayName';
 
 const a_or_b = { oneOf: [
     { const: "a", sub: { a: {} } },
@@ -72,19 +73,25 @@ describe('flatten_attrs', () => {
 });
 
 describe('merge_v', () => {
-    function test(attrs, prev, v, wanted_v) {
-        let v_ = merge_v(attrs, prev, v);
+    function test_more(attrs, more_attrs, prev, v, wanted_v) {
+        let v_ = merge_v(attrs, more_attrs, prev, v);
         delete v_.various;
         assert.deepEqual(v_, wanted_v);
     }
     
-    function test_fail(attrs, prev, v, wanted_err) {
+    function test_fail_more(attrs, more_attrs, prev, v, wanted_err) {
         try {
-            merge_v(attrs, prev, v);
+            merge_v(attrs, more_attrs, prev, v);
             assert.fail("should raise error");
         } catch (err) {
             assert.equal(err, wanted_err);
         }
+    }
+    function test(attrs, prev, v, wanted_v) {
+        test_more(attrs, {}, prev, v, wanted_v);
+    }
+    function test_fail(attrs, prev, v, wanted_err) {
+        test_fail_more(attrs, {}, prev, v, wanted_err);
     }
     const prev = { sn: "old" } as any;
     const v = { sn: "new" } as any;
@@ -163,11 +170,21 @@ describe('merge_v', () => {
         test(attrs, { sn: 'y' }, { sn: 'x', duration: "2" }, { duration: "2", sn: 'y' });
         test_fail(attrs, { sn: 'y' }, { duration: '1' }, "constraint !sn.optional failed for undefined");
     });
+
+    it("should check validator", () => {
+        const attrs = { displayName: {} };
+        const more_attrs= { displayName: { validator: checkDisplayName }};
+        const prev = { sn: "Rigaux", givenName: "Pascal" };
+        const v_ok = { displayName: "Pascal Rigaux" } as v;
+
+        test_more(attrs, more_attrs, prev, v_ok, v_ok, );
+        test_fail_more(attrs, more_attrs, prev, { displayName: 'Foo' }, "Le nom annuaire doit comprendre le prénom et le nom");
+    });
 });
 
 describe('compute_diff', () => {
     function test(attrs, prev, current, wanted_diff) {
-        let v_ = merge_v(attrs, prev, current);
+        let v_ = merge_v(attrs, {}, prev, current);
         assert.deepEqual(v_.various.diff, wanted_diff);
     }
 

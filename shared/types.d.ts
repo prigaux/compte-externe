@@ -40,6 +40,7 @@ type MoreStepAttrOption = MinimalStepAttrOption & {
     formatting?: (val) => string;
     formatting_html?: (val) => string;
     onChange?: (v: {}, _: string, val) => void;
+    validator?: (val, v_orig: {}) => string;
 
     items?: MoreStepAttrOption,
 

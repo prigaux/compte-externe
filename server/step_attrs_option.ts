@@ -31,7 +31,7 @@ export const selectUserProfile = (v: v, profilename: string) => {
     return { ...v, ...profile };
 };
 
-export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
+export function merge_v(attrs : StepAttrsOption, more_attrs: MoreStepAttrsOption, prev, v: v): v {
     let r = {};
     let diff = {};
     function merge_one_level(attrs : StepAttrsOption) {
@@ -42,7 +42,7 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
             /* security: client must NOT modify hidden/readOnly information */
             if (key in prev) r[key] = prev[key];
         } else {
-            validate(key, opt, v[key]);
+            validate(key, opt, more_attrs[key], v[key], prev);
             if (key in v) {
                 Object.assign(diff, compute_diff(prev, v, key));
                 r[key] = v[key];
@@ -59,7 +59,7 @@ export function merge_v(attrs : StepAttrsOption, prev, v: v): v {
     return r as v;
 }
 
-function validate(key: string, opt: StepAttrOption, val) {
+function validate(key: string, opt: StepAttrOption, more_opt: MoreStepAttrOption, val, prev) {
         if (val === '' || val === undefined || val === null || _.isArray(val) && _.isEmpty(val)) {
             if (!opt.optional)
                 throw `constraint !${key}.optional failed for ${val}`;
@@ -84,8 +84,12 @@ function validate(key: string, opt: StepAttrOption, val) {
         if (opt.items || opt.uiType === 'array') {
             if (val !== undefined) {
                 if (!_.isArray(val)) throw `constraint ${key} is array failed for ${val}`;
-                val.forEach((val_, i) => validate(`${key}-${i}`, opt.items, val_));
+                val.forEach((val_, i) => validate(`${key}-${i}`, opt.items, more_opt.items, val_, prev));
             }
+        }
+        if (more_opt && more_opt.validator) {
+            const err = more_opt.validator(val, prev);
+            if (err) throw err;
         }
 }
 

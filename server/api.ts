@@ -7,6 +7,7 @@ import * as db from './db';
 import * as utils from './utils';
 import * as search_ldap from './search_ldap';
 import * as mail from './mail';
+import shared_conf from '../shared/conf';
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
 import { export_v, merge_v, exportAttrs, selectUserProfile } from './step_attrs_option';
@@ -195,7 +196,7 @@ const checkSetLock = (sv) : Promise<any> => (
 // 4. call action_pre
 // 5. save to DB or remove from DB if one action returned null
 function setRaw(req: req, sv: sva, v: v) : Promise<svr> {
-    sv.v = merge_v(sv_attrs(sv), sv.v, v);
+    sv.v = merge_v(sv_attrs(sv), shared_conf.default_attrs_opts, sv.v, v);
     return checkSetLock(sv).then(_ => (
         advance_sv(req, sv)
     )).tap(svr => {
@@ -255,7 +256,7 @@ const body_to_v = search_ldap.v_from_WS;
 
 function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
     return getRaw(req, id, undefined).then(sv => {
-        if (!_.isEmpty(v)) sv.v = merge_v(sv_attrs(sv), sv.v, v);        
+        if (!_.isEmpty(v)) sv.v = merge_v(sv_attrs(sv), shared_conf.default_attrs_opts, sv.v, v);        
         return search_ldap.homonymes(sv.v).then(l => {
                 console.log(`homonymes found for ${sv.v.givenName} ${sv.v.sn}: ${l.map(v => v.uid + " (score:" + v.score + ")")}`);
                 const attrs = { score: {}, ...sv_attrs(sv) };

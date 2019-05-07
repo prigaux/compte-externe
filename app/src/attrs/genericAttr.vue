@@ -71,7 +71,8 @@
     <input-with-validity :name="name" v-model="val" 
         :disabled="opts.readOnly"
         :placeholder="opts.uiPlaceholder"
-        :type="type" :realType="realType" :required="!opts.optional" :pattern="opts.pattern" :allowedChars="opts.allowedChars" :title="opts.labels && opts.labels.tooltip" :validity.sync="validity[name]">
+        :type="type" :realType="realType" :required="!opts.optional" :pattern="opts.pattern" :allowedChars="opts.allowedChars" :validator="opts.validator"
+        :title="opts.labels && opts.labels.tooltip" :validity.sync="validity[name]">
     </input-with-validity>
 
     <span class="input-group-btn" v-if="allow_remove">

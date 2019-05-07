@@ -36,7 +36,7 @@ const checkValidity = {
 
 Vue.component('input-with-validity', {
   template: "<input :name='name' :value='value' :type='type'>",
-  props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType', 'pattern', 'min', 'max'],
+  props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType', 'pattern', 'min', 'max', 'validator'],
   mixins: [checkValidity],
   mounted() {
     let element = this.$el;
@@ -60,6 +60,7 @@ Vue.component('input-with-validity', {
     },
     checkValidity() {
         if (this.allowedChars) this._checkAllowedChars();
+        if (this.validator) this._checkValidator();
         if (this.realType) this._checkRealType();
         checkValidity.methods.checkValidity.call(this);
     },
@@ -81,6 +82,10 @@ Vue.component('input-with-validity', {
     _checkAllowedChars() {
         let errChars = (this.$el.value || '').replace(new RegExp(this.allowedChars, "g"), '');
         this._setCustomMsg(errChars !== '' ? conf.error_msg.forbiddenChars(errChars) : '');
+    },
+    _checkValidator() {
+        const err = this.validator(this.$el.value);
+        this._setCustomMsg(err || '');
     },
     _checkRealType() {
         let validity = this.$el.validity;
