@@ -37,7 +37,7 @@ describe('modifyAccount', () => {
 
         fake_callRaw({});
         
-        assert.throws(() => actions.modifyAccount(null, sv), "modifyAccount needs uid");
+        assert.throws(() => actions.modifyAccount(null, sv), /modifyAccount needs uid/);
     });
     
     it ("should handle failure", () => {
