@@ -31,7 +31,7 @@ interface StepAttrOptionChoices {
   title?: string;
   sub?: StepAttrsOption;
 }
-interface StepAttrOptionChoices_ {
+interface StepAttrOptionChoicesWithShort {
   const: string;
   title: string;
   short_title?: string;
@@ -61,8 +61,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
     axios.get(api_url + '/comptes/search/' + step, { params: { token, maxRows } }).then(resp => resp.data as Promise<V[]>)
 );
 
-        export function search(stepName: string, attr: string, token : string, maxRows? : number) : Promise<StepAttrOptionChoices_[]> {
-            return axios.get(api_url + '/search/' + stepName + '/' + attr, { params: { token, maxRows } }).then((resp) => resp.data as StepAttrOptionChoices_[]);
+        export function search(stepName: string, attr: string, token : string, maxRows? : number) : Promise<StepAttrOptionChoicesWithShort[]> {
+            return axios.get(api_url + '/search/' + stepName + '/' + attr, { params: { token, maxRows } }).then((resp) => resp.data as StepAttrOptionChoicesWithShort[]);
         }
 
         const _toDate = (year: number, month: number, day: number) => new Date(Date.UTC(year, month - 1, day));
