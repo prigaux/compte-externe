@@ -42,7 +42,8 @@ function soap(templateName, params, opts : { responseTag: string, fault_to_strin
         Mustache.render(data.toString(), params)
     )).then(body => {
         //console.log(body);
-        return raw_soap(conf.esup_activ_bo.url, body);
+        const operation = conf.esup_activ_bo.url.replace(/\/AccountManagement$/, '') + '/' + (templateName.match(/Cas/) ? 'CasAccountManagement' : 'AccountManagement');
+        return raw_soap(operation, body);
     }).then(xml => {
         //console.dir(xml, { depth: null });
         let response = deepGetKey(xml, opts.responseTag);
