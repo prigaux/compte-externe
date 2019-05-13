@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import * as utils from './utils';
 
 function compute_diff(prev, current, key) {
     const toString = (val) => (
@@ -140,3 +141,22 @@ const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : Ste
 export const exportAttrs = (attrs: StepAttrsOption) => (
     _.mapValues(_.omitBy(attrs, val => val.hidden), transform_toUserOnly_into_optional_readonly)
 ) as StepAttrsOption;
+
+export const eachAttrs = (attrs: StepAttrsOption, f: (StepAttrOption, string, StepAttrsOption) => void) => {
+    _.each(attrs, (opts, key) => {
+        if (opts && opts.oneOf) {
+            for (const choice of opts.oneOf) {
+                if (choice.sub) eachAttrs(choice.sub, f);
+            }
+        }
+        f(opts, key, attrs);
+    })
+}
+
+export const merge_attrs_overrides = (attrs: StepAttrsOption, attrs_override: StepAttrsOption) => {
+    const r = utils.deep_extend(attrs, attrs_override);
+    eachAttrs(r, (opts, key, attrs) => {
+        if (!opts) delete attrs[key];
+    });
+    return r;
+}

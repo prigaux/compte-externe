@@ -1,5 +1,5 @@
 import { assert } from './test_utils';
-import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile } from '../step_attrs_option';
+import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile, merge_attrs_overrides } from '../step_attrs_option';
 import checkDisplayName from '../../shared/validators/displayName';
 
 const a_or_b = { oneOf: [
@@ -240,4 +240,25 @@ describe('selectUserProfile', () => {
         assert.deepEqual(selectUserProfile({ ...v, supannRoleEntite: ["role1"] }, 'A'), { ...profileA, ...v, supannRoleEntite: [] });
         assert.deepEqual(selectUserProfile({ ...v, supannRoleEntite: ["role1", "role2"] }, 'A'), { ...profileA, ...v, supannRoleEntite: ["role2"] });
     });
+})
+
+describe('merge_attrs_overrides', () => {
+    it('should allow adding an attribute', () => {
+        assert.deepEqual(
+            merge_attrs_overrides({ sn: {} }, { sn: { description: 'override' } }), 
+            { sn: { description: 'override' } }
+        );
+    })
+    it('should allow modifying an attribute', () => {
+        assert.deepEqual(
+            merge_attrs_overrides({ sn: { description: 'initial' } }, { sn: { description: 'override' } }), 
+            { sn: { description: 'override' } }
+        );
+    })
+    it('should allow removing an attribute', () => {
+        assert.deepEqual(
+            merge_attrs_overrides({ sn: {} }, { sn: undefined }), 
+            {}
+        );
+    })
 })

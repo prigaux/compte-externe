@@ -10,7 +10,7 @@ import * as mail from './mail';
 import shared_conf from '../shared/conf';
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
-import { export_v, merge_v, exportAttrs, selectUserProfile } from './step_attrs_option';
+import { export_v, merge_v, exportAttrs, merge_attrs_overrides, selectUserProfile } from './step_attrs_option';
 import { filters } from './ldap';
 import gen_gsh_script from './gen_gsh_script';
 require('./helpers');
@@ -36,7 +36,7 @@ const step = (sv: sv) => name2step(sv.step);
 function add_step_attrs<SV extends sv>(sv: SV) {
     const { attrs, attrs_override } = step(sv);
     let sva = sv as SV & { attrs: StepAttrsOption };
-    sva.attrs = attrs_override ? utils.deep_extend(attrs, attrs_override(sv.v)) : attrs;
+    sva.attrs = attrs_override ? merge_attrs_overrides(attrs, attrs_override(sv.v)) : attrs;
     return sva;
 }
 
