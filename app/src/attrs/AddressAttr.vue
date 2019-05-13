@@ -1,7 +1,7 @@
 <template>
 <div v-if="opts.readOnly">
-   <my-bootstrap-form-group name="address_lines">
-      <textarea rows="5" :value="value" class="form-control" disabled></textarea>
+   <my-bootstrap-form-group name="address_lines" :label="opts.title">
+      <textarea :rows="(value||'').split('\n').length" :value="value" class="form-control" disabled></textarea>
    </my-bootstrap-form-group>
 </div>
 <div v-else>
