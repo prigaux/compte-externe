@@ -94,7 +94,10 @@ export function validateAccount(userInfoToValidate: Dictionary<string>, attrPers
 
 // throws: "UserPermissionException"
 export const updatePersonalInformations = (supannAliasLogin: string, code: string, userInfo: Dictionary<string>) => {
-    const hashBeanPersoInfo = _.map(userInfo, (value, key) => ({ value, key }));
+    const hashBeanPersoInfo = _.map(userInfo, (value, key) => {
+        if (_.isArray(value)) value = value.join(conf.esup_activ_bo.multiValue_separator)
+        return { value, key }
+    });
     return soap("updatePersonalInformations.xml", { id: supannAliasLogin, code, hashBeanPersoInfo },
                 { responseTag: 'ns1:updatePersonalInformationsResponse', fault_to_string: fault_detail_key })
 }
