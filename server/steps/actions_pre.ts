@@ -5,6 +5,7 @@ import { oneExistingPerson } from '../search_ldap';
 import * as search_ldap from '../search_ldap';
 import { selectUserProfile } from '../step_attrs_option';
 import * as esup_activ_bo from '../esup_activ_bo';
+import * as cas from '../cas';
 import * as conf from '../conf';
 const filters = ldap.filters;
 
@@ -72,4 +73,14 @@ export const esup_activ_bo_authentificateUser : simpleAction = (req, _sv) => {
     return esup_activ_bo.authentificateUser(auth.name, auth.pass, _.without(Object.keys(attrRemapRev), 'userPassword')).then(o => {
         return ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert)
     }).then(v => ({ v }))
+}
+
+export const esup_activ_bo_authentificateUserWithCas : simpleAction = async (req, _sv) => {
+    const { wantedConvert, attrRemapRev } = ldap.convert_and_remap(conf.ldap.people.types, conf.ldap.people.attrs);
+    const targetUrl = conf.mainUrl; // anything would do... weird esup_activ_bo... 
+    const proxyticket = await cas.get_proxy_ticket(req, targetUrl);
+    if (!proxyticket) throw "failed getting CAS proxy ticket";
+    const o = await esup_activ_bo.authentificateUserWithCas(req.user.id, proxyticket, targetUrl, Object.keys(attrRemapRev));
+    const v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { code: '', ...conf.ldap.people.types }, wantedConvert);
+    return { v };
 }
