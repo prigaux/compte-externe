@@ -76,8 +76,8 @@ export const authentificateUser = (supannAliasLogin: string, password: string, a
          { responseTag: 'ns1:authentificateUserResponse' }).then(_get_entries)
 )
 
-export const authentificateUserWithCas = (supannAliasLogin: string, proxyTicket: string, targetUrl: string, attrPersoInfo: string[]) => (
-    soap("authentificateUserWithCas.xml", { id: supannAliasLogin, proxyTicket, targetUrl, attrPersoInfo }, 
+export const authentificateUserWithCas = (supannAliasLogin: string, proxyticket: string, targetUrl: string, attrPersoInfo: string[]) => (
+    soap("authentificateUserWithCas.xml", { id: supannAliasLogin, proxyticket, targetUrl, attrPersoInfo }, 
          { responseTag: 'ns1:authentificateUserWithCasResponse' }).then(_get_entries)
 )
 
