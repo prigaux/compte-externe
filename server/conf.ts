@@ -87,10 +87,12 @@ const conf = {
             types: {
                 uid: '', sn: '', displayName: '', givenName: '',
                 supannCivilite: '',
-                supannAliasLogin: '', supannMailPerso: '', userPassword: '', mail: '', mailForwardingAddress: '',
+                supannAliasLogin: '', supannMailPerso: '', userPassword: '', 
+                mail: '', mailDeliveryOption: [''], mailForwardingAddress: '',
                 birthDay: new Date(), birthName: '', altGivenName: [],
-                homePhone: '', telephoneNumber: '', facsimileTelephoneNumber: '', supannAutreTelephone: [], pager: '',
+                homePhone: '', telephoneNumber: '', facsimileTelephoneNumber: '', supannAutreTelephone: [], pager: '', mobile: '',
                 homePostalAddress: '',
+                postalAddress: '',
                 floorNumber: '', roomAccess: '', roomNumber: '', buildingName: '',
                 jpegPhoto: '',
                 personParrain: '', structureParrain: '',
@@ -114,7 +116,15 @@ const conf = {
                 eduPersonPrimaryAffiliation: '',
                 eduPersonEntitlement: '',
                 supannRoleEntite: [],
+                supannRoleGenerique: [],
                 supannEntiteAffectationPrincipale: '',
+                supannEntiteAffectation: [''],
+                supannEtuEtape: [''],
+                description: [''],
+                info: [''],
+                employeeType: [''],
+                departmentNumber: '',
+                supannActivite: '',
 
                 profilename: '',
                 priority: 0,
@@ -127,8 +137,10 @@ const conf = {
                 mailHost: '',
                 supannEmpId: '',
                 supannEtuId: '',
+                supannCodeINE: '',
                 
                 termsOfUse: [''],
+                supannListeRouge: '',
 
                 up1Profile: [],
                 '{SMSU}CG': '', '{PHOTO}PUBLIC': '', '{PHOTO}INTRANET': '', '{PHOTO}STUDENT': '',
@@ -136,6 +148,7 @@ const conf = {
 
             attrs : { 
                 homePostalAddress: { convert: ldap_convert.postalAddress },
+                postalAddress: { convert: ldap_convert.postalAddress },
                 birthDay: { ldapAttr: "up1BirthDay", convert: ldap_convert.datetime },
                 birthName: { ldapAttr: 'up1BirthName' },
                 altGivenName: { ldapAttr: 'up1AltGivenName' },
