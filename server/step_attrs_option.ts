@@ -84,7 +84,7 @@ function validate(key: string, opt: StepAttrOption, more_opt: MoreStepAttrOption
         if (opt.items || opt.uiType === 'array') {
             if (val !== undefined) {
                 if (!_.isArray(val)) throw `constraint ${key} is array failed for ${val}`;
-                val.forEach((val_, i) => validate(`${key}-${i}`, opt.items, more_opt.items, val_, prev));
+                val.forEach((val_, i) => validate(`${key}-${i}`, { optional: opt.optional, ...opt.items }, more_opt && more_opt.items, val_, prev));
             }
         }
         if (more_opt && more_opt.validator) {
