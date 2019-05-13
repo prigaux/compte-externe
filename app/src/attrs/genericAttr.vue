@@ -53,10 +53,13 @@
         :disabled="opts.readOnly" :required="!opts.optional" :validity.sync="validity[name]">
     </textarea-with-validity>
 
-    <select-with-validity :name="name" v-model="val" v-else-if="uiType === 'select'"
+    <div v-else-if="uiType === 'select'">
+        <!-- wait until oneOf is computed. <select-with-validity> can NOT handle "value" is in computed "oneOf" -->
+      <select-with-validity :name="name" v-model="val" v-if="oneOf"
         :disabled="opts.readOnly"
-        :choices="opts.oneOf" :required="!opts.optional" :validity.sync="validity[name]">
-    </select-with-validity>
+        :choices="oneOf" :required="!opts.optional" :validity.sync="validity[name]">
+      </select-with-validity>
+    </div>
 
     <div class="checkbox" v-else-if="uiType === 'checkbox'">
       <label>
@@ -94,6 +97,7 @@
 import Vue from "vue";
 import { includes, keyBy, mapValues } from 'lodash';
 import { isDateInputSupported } from '../services/helpers';
+import * as Ws from '../services/ws';
 
 import DateAttr from './DateAttr.vue';
 import DateThreeInputsAttr from './DateThreeInputsAttr.vue';
@@ -105,7 +109,7 @@ import AutocompleteAttr from './AutocompleteAttr.vue';
 import CurrentLdapValue from './CurrentLdapValue.vue';
 
 export default Vue.extend({
-    props: ['value', 'name', 'opts', 'submitted', 'v', 'ldap_value', 'stepName', 'allow_remove'],
+    props: ['value', 'real_name', 'name', 'opts', 'submitted', 'v', 'ldap_value', 'stepName', 'allow_remove'],
     components: { 
         DateAttr, DateThreeInputsAttr, ArrayAttr, AddressAttr, cameraSnapshotAttr, PasswordAttr, AutocompleteAttr, CurrentLdapValue,
         PhotoUploadAttr: () => import('./PhotoUploadAttr.vue'),
@@ -140,6 +144,18 @@ export default Vue.extend({
         },
         choicesMap() {
             return this.opts.oneOf && mapValues(keyBy(this.opts.oneOf, 'const'), choice => choice['title']);
+        },
+    },
+    asyncComputed: {
+        async oneOf() {
+            const opts = this.opts || {};
+            if (opts.oneOf) {
+                return opts.oneOf;
+            } else if (opts.oneOf_async && this.uiType === 'select') {
+                return await Ws.search(this.stepName, this.real_name || this.name, '');
+            } else {
+                return undefined;
+            }
         },
     },
     watch: {

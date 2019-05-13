@@ -46,7 +46,7 @@ export default Vue.extend({
     },
     methods: {
         search(token) {
-            return Ws.search(this.stepName, this.name, token);
+            return Ws.search(this.stepName, this.name, token, 10);
         },
         formatting(e) { 
             return this.opts.formatting ? this.opts.formatting(e) : e && e.title;

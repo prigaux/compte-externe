@@ -3,7 +3,7 @@
 <div>
     <label v-if="val.length === 0" class="col-md-3 control-label">{{opts.title}}</label>
     <div v-for="(item, i) in val">
-        <genericAttr :name="name + (i ? '-' + i : '')" :opts="i ? item_opts : first_item_opts" :value="item" @input="v => set_item(i, v)" @remove="_ => remove_item(i)"
+        <genericAttr :real_name="name" :name="name + (i ? '-' + i : '')" :opts="i ? item_opts : first_item_opts" :value="item" @input="v => set_item(i, v)" @remove="_ => remove_item(i)"
                 :stepName="stepName"
                 :allow_remove="!opts.readOnly && (opts.optional || i > 0)" :submitted="submitted">
         </genericAttr>
