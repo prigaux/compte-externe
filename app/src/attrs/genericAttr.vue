@@ -74,6 +74,7 @@
         :type="type" :realType="realType" :required="!opts.optional" :pattern="opts.pattern" :allowedChars="opts.allowedChars" :validator="opts.validator"
         :title="opts.labels && opts.labels.tooltip" :validity.sync="validity[name]">
     </input-with-validity>
+    <span v-html="opts.description"></span>
 
     <span class="input-group-btn" v-if="allow_remove">
         <button class="btn btn-danger" type="button" @click="$emit('remove', name)">
