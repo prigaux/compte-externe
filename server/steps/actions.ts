@@ -31,9 +31,11 @@ export const esup_activ_bo_sendCode : simpleAction = (_req, { v }) => (
     esup_activ_bo.sendCode(v.supannAliasLogin, v['channel']).then(_ => ({ v }))
 )
 
-export const esup_activ_bo_updatePersonalInformations : simpleAction = (req, { v }) => {
+export const esup_activ_bo_updatePersonalInformations : simpleAction = (_req, { v }) => {
     const userInfo: any = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, v, { toJson: true });
-    return esup_activ_bo.updatePersonalInformations(req.query.supannAliasLogin, req.query.code, userInfo).then(_ => ({ v }))
+    if (!v.supannAliasLogin) return Promise.reject("missing supannAliasLogin");
+    if (!v['code']) return Promise.reject("missing code");
+    return esup_activ_bo.updatePersonalInformations(v.supannAliasLogin, v['code'], userInfo).then(_ => ({ v }))
 }
 
 export const add_full_v: simpleAction = (_req, sv)  => (
