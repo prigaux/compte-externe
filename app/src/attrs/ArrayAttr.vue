@@ -4,6 +4,7 @@
     <label v-if="val.length === 0" class="col-md-3 control-label">{{opts.title}}</label>
     <div v-for="(item, i) in val">
         <genericAttr :name="name + (i ? '-' + i : '')" :opts="i ? item_opts : first_item_opts" :value="item" @input="v => set_item(i, v)" @remove="_ => remove_item(i)"
+                :stepName="stepName"
                 :allow_remove="opts.optional || i > 0" :submitted="submitted">
         </genericAttr>
     </div>
@@ -19,13 +20,14 @@
 <script lang="ts">
 import Vue from "vue";
 import CurrentLdapValue from './CurrentLdapValue.vue';
+import * as _ from 'lodash';
 
 function init(val) {
     return val instanceof Array ? val : val ? [val] : [];
 }
 
 export default Vue.extend({
-    props: ['name', 'value', 'ldap_value', 'opts', 'submitted'],
+    props: ['name', 'value', 'ldap_value', 'opts', 'submitted', 'stepName'],
     components: { CurrentLdapValue },
     data() {
         let val = init(this.value);

@@ -12,6 +12,7 @@
 
   <ArrayAttr v-model="val" :name="name" v-else-if="uiType === 'array'"
     :ldap_value="ldap_value"
+    :stepName="stepName"
     :opts="opts" :submitted="submitted">
   </ArrayAttr>
 
