@@ -125,7 +125,7 @@ export const attrsHelpingDiagnoseHomonymes = (
     _.fromPairs(conf.attrsHelpingDiagnoseHomonymes.map(k => [k, { toUserOnly: true }]))    
 );
 
-export const mapAttrs = (attrs: StepAttrsOption, f) => (
+export const mapAttrs = (attrs: StepAttrsOption, f: (StepAttrOption, string) => StepAttrOption) => (
     _.mapValues(attrs, (opts, key) => {
         opts = f(opts, key);
         if (opts.oneOf)
