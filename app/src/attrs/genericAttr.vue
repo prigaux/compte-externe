@@ -1,5 +1,5 @@
 <template>
- <div v-if="opts && (!opts.readOnly || val)">
+ <div v-if="opts && (!opts.readOnly || validValue)">
 
   <DateAttr v-model="val" :name="name" v-if="uiType === 'date'"
     :ldap_value="ldap_value"
@@ -95,7 +95,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { includes, keyBy, mapValues } from 'lodash';
+import { includes, find, keyBy, mapValues } from 'lodash';
 import { isDateInputSupported } from '../services/helpers';
 import * as Ws from '../services/ws';
 
@@ -144,6 +144,9 @@ export default Vue.extend({
         },
         choicesMap() {
             return this.opts.oneOf && mapValues(keyBy(this.opts.oneOf, 'const'), choice => choice['title']);
+        },
+        validValue() {
+            return this.uiType === 'select' ? this.oneOf && find(this.oneOf, choice => choice.const === this.value) : this.val;
         },
     },
     asyncComputed: {
