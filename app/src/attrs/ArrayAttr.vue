@@ -1,13 +1,13 @@
 <template>
 
-<div>
+<div class="ArrayAttr">
     <label v-if="val.length === 0" class="col-md-3 control-label">{{opts.title}}</label>
-    <div v-for="(item, i) in val">
+    <template v-for="(item, i) in val">
         <genericAttr :real_name="name" :name="name + (i ? '-' + i : '')" :opts="i ? item_opts : first_item_opts" :value="item" @input="v => set_item(i, v)" @remove="_ => remove_item(i)"
                 :stepName="stepName"
                 :allow_remove="!opts.readOnly && (opts.optional || i > 0)" :submitted="submitted">
         </genericAttr>
-    </div>
+    </template>
     <div :class="'col-sm-offset-' + (val.length ? 10 : 7)" class="col-sm-2" style="padding: 0 0 2rem 0" v-if="!opts.readOnly">
         <button class="btn btn-info" style="width: 100%" type="button" @click="val.push('')"><i class="glyphicon glyphicon-plus"></i></button>
     </div>
@@ -44,7 +44,7 @@ export default Vue.extend({
             return { title: this.opts.title, optional: this.opts.optional, ...this.opts.items };
         },
         item_opts() {
-            return { optional: true };
+            return { title: this.opts.title, optional: true };
         },
     },
     watch: {

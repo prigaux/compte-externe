@@ -49,3 +49,8 @@ fieldset {
 .xsmall {
     font-size: 1rem;
 }
+
+/* avoid duplicate labels */
+.ArrayAttr > :not(:first-child) .control-label {
+    visibility: hidden;
+}
