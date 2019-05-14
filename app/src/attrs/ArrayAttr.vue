@@ -42,7 +42,7 @@ export default Vue.extend({
     },
     computed: {
         first_item_opts() { 
-            return { title: this.opts.title, optional: this.opts.optional, ...this.opts.items };
+            return { ..._.pick(this.opts, 'title', 'optional', 'readOnly'), ...this.opts.items };
         },
         item_opts() {
             return { title: this.opts.title, optional: true };
