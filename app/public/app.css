@@ -54,3 +54,7 @@ fieldset {
 .ArrayAttr > :not(:first-child) .control-label {
     visibility: hidden;
 }
+
+.hideIt {
+    display: none;
+}

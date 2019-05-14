@@ -11,8 +11,8 @@
     <div :class="'col-sm-offset-' + (val.length ? 10 : 7)" class="col-sm-2" style="padding: 0 0 2rem 0" v-if="!opts.readOnly">
         <button class="btn btn-info" style="width: 100%" type="button" @click="val.push('')"><i class="glyphicon glyphicon-plus"></i></button>
     </div>
-    <my-bootstrap-form-group>
-        <CurrentLdapValue :value="initial_val.join(' ')" :ldap_value="ldap_val.join(' ')" @input="val = [...ldap_val]"></CurrentLdapValue>
+    <my-bootstrap-form-group :class="{ hideIt: !currentLdapValue_shown }">
+        <CurrentLdapValue :value="initial_val.join(' ')" :ldap_value="ldap_val.join(' ')" @input="val = [...ldap_val]" @shown="val => currentLdapValue_shown = val"></CurrentLdapValue>
     </my-bootstrap-form-group>
 </div>
 </template>
@@ -37,6 +37,7 @@ export default Vue.extend({
             val,
             ldap_val: init(this.ldap_value),
             initial_val: [...val],
+            currentLdapValue_shown: false,
         };
     },
     computed: {
