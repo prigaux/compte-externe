@@ -45,7 +45,7 @@ export default Vue.extend({
             return { ..._.pick(this.opts, 'title', 'optional', 'readOnly'), ...this.opts.items };
         },
         item_opts() {
-            return { title: this.opts.title, optional: true };
+            return { ...this.first_item_opts, optional: true };
         },
     },
     watch: {
