@@ -49,7 +49,7 @@ const conf = {
     },
 
     esup_activ_bo: {
-        url: "http://xxxx.univ.fr:8080/esup-activ-bo/xfire/AccountManagement",
+        url: "http://xxxx.univ.fr:8080/esup-activ-bo/xfire",
         multiValue_separator: '__-',
     },
     
