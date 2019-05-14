@@ -40,7 +40,7 @@ function computeComparisons(v, homonyme) {
             if (!val1 && attr === 'birthName' && val2) {
                 val1 = format(v['sn']);
             }
-            [ val1, val2 ] = [ val1, val2 ].map(Helpers.maybeFormatPhone);
+            [ val1, val2 ] = [ val1, val2 ].map(Helpers.maybeFormatPhone("0"));
             const same = Helpers.equalsIgnoreCase(val1, val2);
             const skip = !val1 && attr === 'altGivenName' && sameAttrs['givenName'];
 

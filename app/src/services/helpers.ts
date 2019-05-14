@@ -149,9 +149,9 @@ import { Dictionary } from '../services/ws';
         }).join('');   
     }
 
-    export function maybeFormatPhone(maybePhone : string) : string {
+    export const maybeFormatPhone = (resultFrenchPrefix: string) => (maybePhone : string) : string => {
         if (maybePhone.match(conf.pattern.frenchPhone)) {
-            return maybePhone.replace(/^(\+33|0)/, '').replace(/\s/g, '').replace(/(.)(..)(..)(..)(..)/, "+33 $1 $2 $3 $4 $5");
+            return maybePhone.replace(/^(\+33|0)/, '').replace(/\s/g, '').replace(/(.)(..)(..)(..)(..)/, resultFrenchPrefix + "$1 $2 $3 $4 $5");
         }
         return maybePhone;
     }

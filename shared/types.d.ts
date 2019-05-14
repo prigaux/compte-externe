@@ -29,7 +29,7 @@ type MinimalStepAttrOption = StepAttrItemsOption & {
     description?: string;  
     labels?: { advice?: string; tooltip?: string; }
 
-    format?: 'date' | 'data-url';    
+    format?: 'date' | 'data-url' | 'phone';
     default?: string;
 
     allowedChars?: string;

@@ -89,6 +89,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         const attr_format_to_converter = {
             'date': { fromWs: val => new Date(val), toWs: val => val.toJSON(), fromCSV: _fromCSVDate },
             'data-url': { fromWs: _base64_to_jpeg_data_URL, toWs: _jpeg_data_URL_to_base64 },
+            'phone': { fromWs: Helpers.maybeFormatPhone("0"), toWs: Helpers.maybeFormatPhone("+33 ") },
         }
 
         function to_or_from_ws(direction: 'fromWs' | 'fromCSV' | 'toWs', v: {}, attrs: StepAttrsOption): V {
