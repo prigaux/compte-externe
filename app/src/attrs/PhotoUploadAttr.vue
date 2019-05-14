@@ -43,6 +43,7 @@
       </label>
 
     </span>
+    <div v-html="opts.description"></div>
   </my-bootstrap-form-group> 
 </template>
 
