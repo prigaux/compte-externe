@@ -164,9 +164,11 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: 
         }
 }
 
-function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v, opts: { toJson?: boolean }): RawValue | ldap_modify {
+function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v, opts: { toJson?: boolean, toEsupActivBo?: boolean }): RawValue | ldap_modify {
         if (conversion) {
-            return opts.toJson && conversion.toLdapJson ? conversion.toLdapJson(v) : conversion.toLdap(v);
+            return opts.toJson && conversion.toLdapJson ? conversion.toLdapJson(v) : 
+                   opts.toEsupActivBo && conversion.toEsupActivBo ? conversion.toEsupActivBo(v) : 
+                   conversion.toLdap(v);
         } else if (_.isArray(attrType)) {
             return v; // we know it's an array, that's a valid RawValue
         } else if (_.isString(attrType)) {
@@ -189,7 +191,7 @@ const to_ldap_modify = (val : RawValue | ldap_modify) => (
 
 const to_array = (val: RawValue) => val instanceof Array ? val : [val];
 
-export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert, v: T, opts : { toJson?: boolean }): Dictionary<RawValue> {
+export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert, v: T, opts : { toJson?: boolean, toEsupActivBo?: boolean }): Dictionary<RawValue> {
     let r = {};
     _.forEach(v, (val, attr) => {
         let conv = attrsConvert[attr] || {};

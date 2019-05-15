@@ -49,7 +49,7 @@ export const getExistingUserWithProfile: simpleAction = (req, _sv)  => (
 );
 
 export const esup_activ_bo_validateAccount = (isActivation: boolean) : simpleAction => (req, _sv) => {
-    const userInfo = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, search_ldap.v_from_WS(req.query), { toJson: true });
+    const userInfo = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, search_ldap.v_from_WS(req.query), { toEsupActivBo: true });
     delete userInfo.code;
     const { wantedConvert, attrRemapRev } = ldap.convert_and_remap(conf.ldap.people.types, conf.ldap.people.attrs);
     return esup_activ_bo.validateAccount(userInfo as any, _.without(Object.keys(attrRemapRev), 'userPassword')).then(o => {
