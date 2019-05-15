@@ -2,12 +2,12 @@
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <soap:Body>
     <authentificateUserWithCas>
-      <in0>{{id}}</in0>
-      <in1>{{proxyticket}}</in1>
-      <in2>{{targetUrl}}</in2>
+      <in0>{{{id}}}</in0>
+      <in1>{{{proxyticket}}}</in1>
+      <in2>{{{targetUrl}}}</in2>
       <in3>
         {{#attrPersoInfo}}
-        <string>{{.}}</string>
+        <string>{{{.}}}</string>
         {{/attrPersoInfo}}
       </in3>
     </authentificateUserWithCas>

@@ -5,14 +5,14 @@
       <in0>
         {{#hashInfToValidate}}
         <entry xmlns="http://remote.services.activbo.esupportail.org">
-          <key xsi:type="xsd:string">{{key}}</key>
-          <value xsi:type="xsd:string">{{value}}</value>
+          <key xsi:type="xsd:string">{{{key}}}</key>
+          <value xsi:type="xsd:string">{{{value}}}</value>
         </entry>
         {{/hashInfToValidate}}
       </in0>
       <in1>
         {{#attrPersoInfo}}
-        <string>{{.}}</string>
+        <string>{{{.}}}</string>
         {{/attrPersoInfo}}
       </in1>
     </validateAccount>

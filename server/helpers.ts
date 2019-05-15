@@ -99,3 +99,27 @@ export function get_delete(o: {}, key: string) {
     delete o[key];
     return val;
 }
+
+const xmlEncodeMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&apos;',
+  };
+
+export const escapeXml = (value: string): string => (
+    String(value).replace(/[&<>"']/g, c => xmlEncodeMap[c])
+)
+
+export function mapLeaves(v, fn) {
+    if (_.isPlainObject(v)) {
+        const r = {};
+        _.each(v, (v_, k) => r[fn(k)] = mapLeaves(v_, fn));
+        return r;
+    } else if (_.isArray(v)) {
+        return v.map(v_ => mapLeaves(v_, fn));
+    } else {
+        return fn(v);
+    }
+}

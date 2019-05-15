@@ -2,11 +2,11 @@
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <soap:Body>
     <authentificateUser>
-      <in0>{{id}}</in0>
-      <in1>{{password}}</in1>
+      <in0>{{{id}}}</in0>
+      <in1>{{{password}}}</in1>
       <in2>
         {{#attrPersoInfo}}
-        <string>{{.}}</string>
+        <string>{{{.}}}</string>
         {{/attrPersoInfo}}
       </in2>
     </authentificateUser>
