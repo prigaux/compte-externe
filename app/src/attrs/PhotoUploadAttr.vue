@@ -156,3 +156,16 @@ export default Vue.extend({
 }
 
 </style>
+
+<style>
+.photoModify .cr-viewport::after {
+    content: "";
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    left: 0; right: 0;
+    top: 30px; bottom: 20px;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+</style>
