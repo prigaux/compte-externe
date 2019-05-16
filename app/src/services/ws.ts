@@ -173,7 +173,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             }
         }
 
-        export function getInScope($scope, id: string, params, expectedStep: string) : Promise<void> {
+        export function getInScope($scope, id: string, params, hash_params, expectedStep: string) : Promise<void> {
             var url = api_url + '/comptes/' + id + "/" + expectedStep;
             return axios.get(url, password_to_auth(params)).then((resp) => {
                 var sv = <any>resp.data;
@@ -187,8 +187,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                     }
                     sv.modifyTimestamp = new Date(sv.modifyTimestamp);
                     Helpers.eachObject(all_attrs, (attr, opts) => {
-                        const default_ = fromWs_one(attr, params[`default_${attr}`], all_attrs);
-                        const set_ = fromWs_one(attr, opts.uiType !== 'newPassword' && params[attr] || params[`set_${attr}`], all_attrs);
+                        const default_ = fromWs_one(attr, params[`default_${attr}`] || hash_params[`default_${attr}`], all_attrs);
+                        const set_ = fromWs_one(attr, opts.uiType !== 'newPassword' && params[attr] || params[`set_${attr}`] || hash_params[`set_${attr}`], all_attrs);
                         sv.v[attr] = set_ || sv.v[attr] || default_;
                     });
                     $scope.v = sv.v;

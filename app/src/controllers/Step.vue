@@ -56,7 +56,7 @@ import conf from '../conf';
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { defaults, isEqual, unionBy, isEmpty } from 'lodash';
+import { defaults, isEqual, unionBy, isEmpty, fromPairs } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
 import { compute_subAttrs_and_handle_default_values } from '../services/sub_and_defaults';
 
@@ -145,6 +145,10 @@ export default Vue.extend({
             delete v.prev;
             return v;
         },
+        hash_params() {
+            if (!this.$route.hash) return {};
+            return fromPairs(this.$route.hash.replace(/^#/, '').split('&').map((s: string) => s.split('=')));
+        },
         step_description() {
             const template = this.step && this.step.labels && this.step.labels.description;
             return template && Vue.extend({ props: ['v_pre', 'v'], template: "<div>" + template + "</div>" });
@@ -156,7 +160,7 @@ export default Vue.extend({
 
     methods: {
         init() {
-            Ws.getInScope(this, this.id, this.v_pre, this.stepName).then(() => {
+            Ws.getInScope(this, this.id, this.v_pre, this.hash_params, this.stepName).then(() => {
                 if (this.noInteraction) this.send();
                 this.may_update_potential_homonyms({});
             });    
