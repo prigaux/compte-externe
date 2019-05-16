@@ -2,9 +2,10 @@ import * as _ from 'lodash';
 import * as utils from './utils';
 
 function compute_diff(prev, current, key) {
-    const toString = (val) => (
-        val instanceof Array ? val.join(', ') : val || ''
-    );
+    const toString = (val) => {
+        const val_ = val instanceof Array ? val.join(', ') : val || ''
+        return val_.length > 1000 ? "<i>valeur cachée</i>" : val_;
+    };
     const one_diff = {
         prev: toString(prev[key]),
         current: toString(current[key]),
