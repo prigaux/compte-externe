@@ -27,6 +27,21 @@ const cas_express_auth = (req: req, _res, next) => {
     next();
 }
 
+const pre_check_PGT = (req: req, _res, next) => {
+    if (req.session && req.session.st && !req.session.pgt) {
+        console.warn("we have a CAS ST but no PGT, ignore existing ST");
+        delete req.session.st;
+    }
+    next();
+}
+
+const post_check_PGT = (req: req, _res, next) => {
+    if (!req.session || !req.session.pgt) {
+        throw "Internal error: no PGT received" + JSON.stringify(req.session);
+    }
+    next();
+}
+
 export const init = (app) => {
     // an express session store is needed to store logged user
     app.use(utils.session_store());
@@ -35,7 +50,7 @@ export const init = (app) => {
 
     const pgtUrl = '/login/cas_pgtCallback';
     app.get(pgtUrl, fake_host(cas.serviceValidate({ pgtUrl })))
-    app.get("/login/cas_with_pgt", fake_host(chain(cas.serviceValidate({ pgtUrl }), cas.authenticate())));
+    app.get("/login/cas_with_pgt", pre_check_PGT, fake_host(chain(cas.serviceValidate({ pgtUrl }), cas.authenticate())), post_check_PGT);
     app.get("/login/cas", fake_host(chain(cas.serviceValidate(), cas.authenticate())));
     app.use(cas_express_auth);
 }
