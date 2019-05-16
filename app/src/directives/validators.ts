@@ -35,8 +35,8 @@ const checkValidity = {
 };
 
 Vue.component('input-with-validity', {
-  template: "<input :name='name' :value='value' :type='type'>",
-  props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType', 'pattern', 'min', 'max', 'validator'],
+  template: "<input :name='name' :value='value' :type='type' :disabled='disabled'>",
+  props: ['value', 'name', 'type', 'sameAs', 'allowedChars', 'realType', 'pattern', 'min', 'max', 'validator', 'disabled'],
   mixins: [checkValidity],
   mounted() {
     let element = this.$el;
@@ -59,9 +59,11 @@ Vue.component('input-with-validity', {
         this.$emit("input", this.$el.value);
     },
     checkValidity() {
-        if (this.allowedChars) this._checkAllowedChars();
-        if (this.validator) this._checkValidator();
-        if (this.realType) this._checkRealType();
+        if (!this.disabled) { 
+            if (this.allowedChars) this._checkAllowedChars();
+            if (this.validator) this._checkValidator();
+            if (this.realType) this._checkRealType();
+        }
         checkValidity.methods.checkValidity.call(this);
     },
     _attrUpdated(name, v) {
