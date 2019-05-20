@@ -14,8 +14,10 @@ const mailTransporter = nodemailer.createTransport(conf.mail.transport);
 export const send = (params: nodemailer.SendMailOptions) => {
     params = _.assign({ from: conf.mail.from }, params);
     if (conf.mail.intercept) {
-        params.subject = '[would be sent to ' + params.to + '] ' + params.subject;
+        const cc = (params.cc || '').toString();
+        params.subject = '[would be sent to ' + params.to + (cc ? " Cc " + cc : '') + '] ' + params.subject;
         params.to = conf.mail.intercept;
+        delete params.cc;
     }
     mailTransporter.sendMail(params, (error, info) => {
         if (error) {
@@ -74,7 +76,7 @@ export const sendWithTemplate = (template: string, params: {}, templateName = ""
             if (!m) {
                 console.error("invalid template " + (templateName || template) + ': first line must be "Subject: ..."');
             } else {
-                send({ from: params['from'] || conf.mail.from, to: params['to'], subject: m[1], html: m[2] });
+                send({ from: params['from'] || conf.mail.from, to: params['to'], cc: params['cc'], subject: m[1], html: m[2] });
             }
     });
 };
