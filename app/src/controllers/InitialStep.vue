@@ -4,8 +4,8 @@
         <h4 v-html="title_in_list"></h4>
 
         <form novalidate v-if="step.ldap_filter || step.attrs.profilename_to_modify" class="form-horizontal">
-            <my-bootstrap-form-group name="uid" label="Choisir un utilisateur">
-                <typeahead :minChars="3" :editable="false"
+            <my-bootstrap-form-group :name="searchUser_inputName" label="Choisir un utilisateur">
+                <typeahead :minChars="3" :editable="false" :name="searchUser_inputName"
                             @input="withUser"
                     :options="people_search"
                     :formatting="e => e && (e.givenName + ' ' + e.sn)"></typeahead>
@@ -18,7 +18,7 @@
                     </span>
                 </div>
             </my-bootstrap-form-group>
-            <genericAttr name="profilename" :opts="profiles" v-model="profile" :submitted="false" 
+            <genericAttr :name="searchUser_inputName + '-profile'" :opts="profiles" v-model="profile" :submitted="false" 
                     v-if="profiles && profiles.oneOf.length">
             </genericAttr>
         </form>
@@ -60,6 +60,9 @@ export default Vue.extend({
      title_in_list() {
          const labels = this.step.labels || {};
          return "title_in_list" in labels ? labels.title_in_list : labels.title;
+     },
+     searchUser_inputName() {
+         return "step-" + this.step.id;
      },
    },
    watch: {
