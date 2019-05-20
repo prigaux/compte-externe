@@ -111,7 +111,7 @@ export default Vue.extend({
             return !this.wanted_id && this.stepName;
         },
         check_homonyms() {
-            return !this.initialStep && this.attrs_ && this.attrs_.uid && !this.v.uid;
+            return !this.initialStep && this.attrs_ && this.attrs_.uid && !this.attrs_.uid.readOnly && !this.v.uid;
         },
         noInteraction() {
             return this.v.noInteraction || Object.keys(this.attrs_).length === 0;
