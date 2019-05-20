@@ -132,7 +132,7 @@ export function mergeSteps(initialSteps: steps, nextSteps: steps): steps {
 }
 
 export const attrsHelpingDiagnoseHomonymes = (
-    _.fromPairs(conf.attrsHelpingDiagnoseHomonymes.map(k => [k, { toUserOnly: true }]))    
+    _.fromPairs(conf.attrsHelpingDiagnoseHomonymes.map(k => [k, { toUserOnly: true, uiType: 'homonym' }]))    
 );
 
 export const mapAttrs = (attrs: StepAttrsOption, f: (StepAttrOption, string) => StepAttrOption) => (
