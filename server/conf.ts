@@ -126,6 +126,7 @@ const conf = {
                 departmentNumber: '',
                 supannActivite: '',
 
+                profilename_to_modify: '',
                 profilename: '',
                 priority: 0,
                 startdate: new Date(),

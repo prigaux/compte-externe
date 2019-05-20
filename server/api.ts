@@ -67,7 +67,7 @@ function action(req: req, sv: sv|sva, action_name: string) {
 async function may_export_v_ldap(sv: sva) {
     if (sv.v && sv.v.uid) {
         let v_ldap = await search_ldap.onePerson(filters.eq("uid", sv.v.uid));
-        if (sv.v.profilename) v_ldap = selectUserProfile(v_ldap, sv.v.profilename)
+        if (sv.v.profilename_to_modify) v_ldap = selectUserProfile(v_ldap, sv.v.profilename_to_modify)
         v_ldap = export_v(sv_attrs(sv), v_ldap) as v;
         return { ...sv, v_ldap };
     }
