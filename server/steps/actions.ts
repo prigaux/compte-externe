@@ -113,7 +113,8 @@ const canAutoMerge = async (v) => {
         if (homonymes.length === 1) {
             const existingAccount = homonymes[0]
             const diffs = compare_v(v, existingAccount);
-            if (diffs.major_change) {
+            const force_merge = diffs.major_change && v.various && v.various.allow_homonyme_merge && v.various.allow_homonyme_merge(existingAccount, v);
+            if (!force_merge && diffs.major_change) {
                 console.log("no automatic merge because of", diffs['major_change']);
                 return { action: 'need_moderation', homonymes, diffs };
             } else if (diffs.minor_change) {
