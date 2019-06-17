@@ -344,7 +344,7 @@ router.get('/search/:step/:attr', (req : req, res) => {
     respondJson(req, res, search_for_typeahead(req, req.params.step, req.params.attr))
 });
 
-router.get('/csv2json', utils.csv2json);
+router.post('/csv2json', utils.csv2json);
 
 router.get('/gen_gsh_script', gen_gsh_script);
 

@@ -27,10 +27,19 @@ if (conf.cas.host) {
     app.use(utils.shibboleth_express_auth);
 }
 
-app.use('/api',
-     bodyParser.json({type: '*/*', limit: json_limit }), // do not bother checking, everything we will get is JSON :)
-     bodyParser.urlencoded({ extended: false }),
-     api);
+const express_if_then_else = (cond, if_true, if_false) => (
+    (req: req, res: res, next) => {
+        (cond(req) ? if_true : if_false)(req, res, next);
+    }
+);
+
+const myBodyParser = express_if_then_else(
+    (req) => req.path === '/csv2json', 
+    bodyParser.raw({type: '*/*'}),
+    bodyParser.json({type: '*/*', limit: json_limit }), // do not bother checking, everything we will get is JSON :)
+);
+
+app.use('/api', myBodyParser, api);
 
 // redo what app/src/router.ts is doing
 app.use([ "login", "steps", ...Object.keys(conf_steps.steps) ].map(path => "/" + path), utils.index_html);
