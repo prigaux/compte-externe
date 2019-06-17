@@ -14,6 +14,8 @@ import * as conf from '../conf';
 import client_conf from '../../shared/conf'; // ES6 syntax needed for default export
 const filters = ldap.filters;
 
+const remove_accents = _.deburr;
+
 export const addAttrs = (v: Partial<v>) => (_req, sv) => {
     _.assign(sv.v, v);
     return Promise.resolve(sv);
@@ -66,34 +68,79 @@ export function chain(l_actions: action[]): action {
     };
 }
 
-const accountExactMatch = (v: v) => {
-    // first lookup exact match in LDAP
-    const ignored_attrs = [
+const ignore_accents_and_case = val => remove_accents(val).toLowerCase()
+
+const compare_v = (v: v, current_v: v) => {
+    const attrs_options = [
+      { kind: 'major_change', 
+        attrs: [ 'supannMailPerso', 'pager', 'birthDay' ] },
+      { kind: 'major_change', simplify: ignore_accents_and_case,
+        attrs: [ 'sn', 'givenName' ] },
+      { kind: 'to_ignore', attrs: [
         'profilename', 'priority', 'startdate', 'enddate', 'duration', // hard to compare (stored in up1Profile)
         'various', // not stored
         'userPassword', // no way
-        'jpegPhoto', // not handled correctly by convertToLdap
-        'homePhone', 'pager', // we would need conversion to have a correct comparison
+        'homePhone', // we would need conversion to have a correct comparison
+      ] },
     ]
-    const attrs_exact_match = _.difference(Object.keys(v), ignored_attrs);
-    const subv = _.pick(v, attrs_exact_match) as v;
+    let attr2opts = {};
+    _.each(attrs_options, opts => opts.attrs.forEach(attr => attr2opts[attr] = opts));
 
-    let v_ldap = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, subv, {});
-    let filters_ = attrs_exact_match.filter(attr => attr in v_ldap).map(attr => filters.eq(attr, v_ldap[attr] as string));
+    let diffs : { major_change?: any; minor_change?: any } = {};
+    for (const attr in v) {
+        let { kind, simplify } = attr2opts[attr] || { kind: undefined, simplify: undefined };
+        if (kind === 'to_ignore') continue;
+        if (!kind) kind = 'minor_change';
+        const val = v[attr];
+        const current_val = current_v[attr];
 
-    if (filters_.length < 3) throw "refusing to create account with so few attributes. Expecting at least 3 of " + attrs_exact_match.join(',');
-    return onePerson(filters.and(filters_));
+        if (!_.isEqual(val, current_val)) {
+            if (simplify) {
+                const [ val_, current_val_ ] = [ val, current_val ].map(simplify);
+                if (_.isEqual(val_, current_val_)) kind = 'minor_change';
+            }
+            diffs[kind] = { attr, val, current_val };
+        }
+    }
+    return diffs;
+}
+
+const canAutoMerge = async (v) => {
+    let homonymes;
+    if (!v.uid) {
+        homonymes = await search_ldap.homonymes(v);
+        if (homonymes.length) console.log(`createCompteSafe: homonymes found for ${v.givenName} ${v.sn}: ${homonymes.map(v => v.uid + " (score:" + v.score + ")")}`)
+        if (homonymes.length === 1) {
+            const existingAccount = homonymes[0]
+            const diffs = compare_v(v, existingAccount);
+            if (diffs.major_change) {
+                console.log("no automatic merge because of", diffs['major_change']);
+                return { action: 'need_moderation', homonymes, diffs };
+            } else if (diffs.minor_change) {
+                console.log("automatic merge with", existingAccount.uid);
+                //console.log("automatic merge", diffs, v, existingAccount);
+                return { action: 'modify_account', diffs, existingAccount };
+            } else {
+                console.log("skipping user already created and unmodified:", existingAccount.uid);
+                return { action: 'nothing_to_do', existingAccount };
+            }
+        }
+    }
+    const action = homonymes && homonymes.length > 0 ? 'need_moderation' : 'create_account';
+    return { action, homonymes };
 }
 
 export const createCompteSafe = (l_actions: action[], afterCreateCompte: action[] = []): action => async (req, sv) => {
     const orig_v = sv.v;
     sv.v = (await chain(l_actions)(req, sv)).v;
-    if (!sv.v.uid) {
-        const existingAccount = await accountExactMatch(sv.v);
-        if (existingAccount) return { v: existingAccount, response: { ignored: true } };
-        
-        const homonymes = await search_ldap.homonymes(sv.v);
-        if (homonymes.length) return { v: orig_v, response: { id: sv.id, in_moderation: true } };
+    const suggestion = await canAutoMerge(sv.v);
+
+    // return { v: { uid: 'dry_run' } as v, response: suggestion };
+
+    switch (suggestion.action) {
+        case 'nothing_to_do': return { v: suggestion.existingAccount, response: { ignored: true } };
+        case 'need_moderation': return { v: orig_v, response: { id: sv.id, in_moderation: true } };
+        case 'modify_account': sv.v.uid = suggestion.existingAccount.uid;
     }
     // ok, let's create it
     return chain([ createCompte, ...afterCreateCompte ])(req, sv);
