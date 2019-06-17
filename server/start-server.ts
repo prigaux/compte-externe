@@ -16,6 +16,7 @@ _.attempt(() => require('source-map-support').install());
 
 const staticFilesOptions = { maxAge: process.env.NODE_ENV === 'production' ? 60 * 60 * 1000 : 0 };
 const json_limit = '10MB'; // must be kept lower than 16MB for cases when it is stored in mongodb. NB: syntax is https://www.npmjs.com/package/bytes
+const csv_limit = '1MB';
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/app/favicon.ico'));
@@ -35,7 +36,7 @@ const express_if_then_else = (cond, if_true, if_false) => (
 
 const myBodyParser = express_if_then_else(
     (req) => req.path === '/csv2json', 
-    bodyParser.raw({type: '*/*'}),
+    bodyParser.raw({type: '*/*', limit: csv_limit }),
     bodyParser.json({type: '*/*', limit: json_limit }), // do not bother checking, everything we will get is JSON :)
 );
 
