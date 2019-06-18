@@ -312,6 +312,7 @@ router.get('/comptes/:id/:step', (req : req, res) => {
 });
 
 router.put('/comptes/new_many/:step', (req: req, res) => {
+    req.setTimeout(0, undefined); // disable timeout, import may take a looong time    
     respondJson(req, res, set_new_many(req, req.params.step, req.body.map(body_to_v)));
 });
 
