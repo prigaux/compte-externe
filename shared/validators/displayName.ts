@@ -12,8 +12,8 @@ const compute_allowed = (allowed_elts: string[]) => {
     let prev;
     for (const s of allowed_elts) {
         for (const word of s.split(' ')) {
-            allowed[word] = true;
-            if (prev) allowed[prev + word] = true; // to match "landier-edmond" with sn:edmond up1BirthName:landier
+            allowed[word] = 1;
+            if (prev) allowed[prev + word] = 2; // to match "landier-edmond" with sn:edmond up1BirthName:landier
             prev = word;
         }
     }
@@ -42,7 +42,7 @@ const remove_allowed_words = (words: string[], minRemaining: number, allowed: {}
     }
     //console.log(removed, minRemaining, words);
     if (!removed || !minRemaining && words.length) {
-        const allowed_ = Object.keys(allowed)
+        const allowed_ = Object.keys(_.pickBy(allowed, v => v !== 2))
         return `« ${words[0]} » n'est pas autorisé. ${allowed_.length > 1 ? 'Autorisés' : 'Autorisé'} : ${allowed_.join(', ')}`;
     } else {
         return undefined;
