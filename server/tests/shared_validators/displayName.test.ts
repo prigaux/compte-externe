@@ -12,6 +12,7 @@ describe('validators/displayName', () => {
         assert.equal(checkDisplayName("Rémi Rigaux", { sn: 'Rigaux', altGivenName: 'Rémi', givenName: 'Pascal' }), undefined);
 
         assert.equal(checkDisplayName("Pierre Rigaux", { sn: 'Rigaux', givenName: 'Pascal' }), "« pierre » n'est pas autorisé. Autorisé : pascal");
+        assert.equal(checkDisplayName("Pascal Dupond", { sn: 'Rigaux', givenName: 'Pascal' }), "« dupond » n'est pas autorisé. Autorisé : rigaux");
         assert.equal(checkDisplayName("Rigaux", { sn: 'Rigaux', givenName: 'Pascal' }), "Le nom annuaire doit comprendre le prénom et le nom");
     });        
 
