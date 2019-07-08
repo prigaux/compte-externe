@@ -218,7 +218,10 @@ const conf = {
         'mail', 'altGivenName', 'global_eduPersonAffiliation', 'global_eduPersonPrimaryAffiliation', 'global_supannEtuAnneeInscription',
     ],
 
-    session: { secret: 'xx' },
+    session: { 
+        secret: 'xx', 
+        cookie: { secure: true, sameSite: 'lax' },
+    },
     session_store: { path: "/tmp" },
 
     cas: {
