@@ -1,6 +1,7 @@
 /// <reference path='types.d.ts' />
 
 import checkDisplayName from './validators/displayName';
+import * as helpers from './helpers';
 
 const accentsRange = '\u00C0-\u00FC';
 const allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
@@ -58,7 +59,7 @@ export default {
         },
         duration_or_enddate: { title: "Fin du compte" },
         duration: { title: "Durée" },
-        startdate: { title: "Date de début", format: 'date', uiType: 'date', minDate: new Date(), minYear: new Date().getUTCFullYear() },
+        startdate: { title: "Date de début", format: 'date', uiType: 'date', minDate: helpers.addDays(new Date(), -45), minYear: new Date().getUTCFullYear() },
         enddate: { title: "Date de fin", format: 'date', uiType: 'date', minDate: new Date(), minYear: new Date().getUTCFullYear() },
         supannAliasLogin: { title: 'Identifiant' },
         supannEtuId: { title: "N° Étudiant" },
