@@ -1,6 +1,7 @@
 'use strict';
 
 import * as _ from 'lodash';
+import * as shared_helpers from '../shared/helpers';
 
 if (Promise.prototype.tap === undefined) {
     // https://github.com/kriskowal/q/wiki/API-Reference#promisetaponfulfilled
@@ -43,11 +44,7 @@ export const addYears = (date : Date, years : number) => {
     return r;
 }
 
-export const addDays = (date : Date, days : number) => {
-    let r = new Date(date);
-    r.setTime(r.getTime() + days * 60 * 60 * 24 * 1000);
-    return r;
-}
+export const addDays = shared_helpers.addDays;
 
 export const nextDate = (pattern : string, date: Date) => {
     let s = pattern.replace(/^XXXX-/, "" + date.getFullYear() + "-");
