@@ -111,3 +111,8 @@ If `.action_pre` or `.action_post` throws exception `Unauthorized`
   ShibRequestSetting entityID https://idp.univ.fr
 </LocationMatch>
 ```
+
+When using Shibboleth authentication, you should protect against CSRF using:
+```xml
+<Sessions ... cookieProps="; path=/; HttpOnly; Secure; SameSite=lax">
+```
