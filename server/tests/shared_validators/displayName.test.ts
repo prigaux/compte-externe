@@ -32,7 +32,7 @@ describe('validators/displayName', () => {
     });
 
     it("should not allow removing space between giveName and sn", () => {
-        assert.equal(checkDisplayName("Pascal FooRigaux", { givenName: "Pascal Foo", altGivenName: "foo", sn: "Rigaux", birthName: 'Plaquet' }), "« foorigaux » n'est pas autorisé. Autorisés : rigaux, plaquet");
+        assert.equal(checkDisplayName("Pascal FooRigaux", { givenName: "Pascal Foo", altGivenName: "foo", sn: "Rigaux", birthName: 'Plaquet' }), "« foorigaux » n'est pas autorisé. Autorisés : foo, rigaux, plaquet");
     });
 
     it("should keeping part of sn/givenName", () => {

@@ -26,7 +26,8 @@ const get_and_remove = (o: {}, key: string) => {
     return val;
 }
 
-const remove_allowed_words = (words: string[], minRemaining: number, allowed: {}) => {
+const remove_allowed_words = (words: string[], allowed: {}, prev_allowed: {}) => {
+    const minRemaining = prev_allowed ? 0 : 1;
     let removed = false;
     //console.log(removed, minRemaining, words, allowed);
     while (words.length > minRemaining) {
@@ -42,7 +43,7 @@ const remove_allowed_words = (words: string[], minRemaining: number, allowed: {}
     }
     //console.log(removed, minRemaining, words);
     if (!removed || !minRemaining && words.length) {
-        const allowed_ = Object.keys(_.pickBy(allowed, v => v !== 2))
+        const allowed_ = Object.keys(_.pickBy({ ...(!removed && prev_allowed), ...allowed }, v => v !== 2))
         return `« ${words[0]} » n'est pas autorisé. ${allowed_.length > 1 ? 'Autorisés' : 'Autorisé'} : ${allowed_.join(', ')}`;
     } else {
         return undefined;
@@ -57,12 +58,12 @@ export default (displayName: string, v_orig: {}) => {
     const get = (fields): string[] => _merge_at(v_orig, fields).map(prepare_for_compare);
 
     let toCheck = prepare_for_compare(displayName).split(' ');
-    let sns = get(shared_conf.sns);
-    let givenNames = get(shared_conf.givenNames);
+    let allowed_sns = compute_allowed(get(shared_conf.sns));
+    let allowed_givenNames = compute_allowed(get(shared_conf.givenNames));
 
     const err =
       toCheck.length <= 1 && "Le nom annuaire doit comprendre le prénom et le nom" ||
-      remove_allowed_words(toCheck, 1, compute_allowed(givenNames)) ||
-      remove_allowed_words(toCheck, 0, compute_allowed(sns));
+      remove_allowed_words(toCheck, allowed_givenNames, undefined) ||
+      remove_allowed_words(toCheck, allowed_sns, allowed_givenNames);
     return err;
 }
