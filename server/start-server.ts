@@ -40,7 +40,13 @@ const myBodyParser = express_if_then_else(
     bodyParser.json({type: '*/*', limit: json_limit }), // do not bother checking, everything we will get is JSON :)
 );
 
-app.use('/api', myBodyParser, api);
+// needed for MSIE
+const force_noCache = (_req: req, res: res, next) => {
+    res.header('Cache-Control', 'private, no-cache, no-store');
+    next();
+}
+
+app.use('/api', myBodyParser, force_noCache, api);
 
 // redo what app/src/router.ts is doing
 app.use([ "login", "steps", ...Object.keys(conf_steps.steps) ].map(path => "/" + path), utils.index_html);
