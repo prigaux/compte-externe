@@ -46,8 +46,6 @@ export default Vue.extend({
         };
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true }).then(success).catch(err);
-        } else if (navigator['webkitGetUserMedia']) {
-            navigator['webkitGetUserMedia']({ video: true }, success, err);
         } else {
             err("not handled by your browser");
         }
