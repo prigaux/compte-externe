@@ -39,7 +39,7 @@ export default Vue.extend({
         if (this.height) elt.height = this.height;
         
         let success = (stream) => {
-            elt.src = window.URL.createObjectURL(stream);
+            elt.srcObject = stream;
         };
         let err = (error) => {
             this.$emit('error', error)
