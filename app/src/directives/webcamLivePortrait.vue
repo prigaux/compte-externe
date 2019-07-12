@@ -33,21 +33,16 @@ function may_crop_portrait(canvas, { width, height }) {
 
 export default Vue.extend({
     props: ['width', 'height', 'doget'],
-    mounted() {
+    async mounted() {
         let elt = this.$refs.video;
         
         if (this.height) elt.height = this.height;
         
-        let success = (stream) => {
-            elt.srcObject = stream;
-        };
-        let err = (error) => {
-            this.$emit('error', error)
-        };
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true }).then(success).catch(err);
-        } else {
-            err("not handled by your browser");
+        try {
+            elt.srcObject = await navigator.mediaDevices.getUserMedia({ video: true });
+        } catch (err) {
+            console.error(err);
+            this.$emit('error', err);
         }
    },
    watch: {
