@@ -50,6 +50,7 @@ export function merge_v(attrs : StepAttrsOption, more_attrs: MoreStepAttrsOption
                 r[key] = v[key];
             }
         }
+        if (opt.properties) merge_one_level(opt.properties);
         handle_chosen_oneOf_sub(opt, r[key], merge_one_level);
       });
     }
@@ -101,7 +102,7 @@ export function export_v(attrs: StepAttrsOption, v) {
     function rec(attrs: StepAttrsOption) {
         _.forEach(attrs, (opts, key) => {
             if (!opts.hidden && key in v) r[key] = v[key];
-
+            if (opts.properties) rec(opts.properties);
             handle_chosen_oneOf_sub(opts, v[key], rec);
         });
     }
@@ -114,6 +115,7 @@ export function flatten_attrs(attrs: StepAttrsOption, v: v) {
     function rec(attrs: StepAttrsOption) {
         _.forEach(attrs, (opts, key) => {
             r[key] = { ...r[key] || {}, ...opts }; // merge
+            if (opts.properties) rec(opts.properties);
             handle_chosen_oneOf_sub(opts, v[key], rec);
         });
     }
@@ -133,6 +135,7 @@ const find_choice = (oneOf, val) => oneOf.find(choice => choice.const == val); /
 const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : StepAttrOption) => {
     opt = toUserOnly ? { optional: true, readOnly: true, ...opt} : opt;
     if (opt.oneOf_async) opt.oneOf_async = true as any;
+    if (opt.properties) opt.properties = exportAttrs(opt.properties);
     if (opt.oneOf) {
         opt.oneOf = opt.oneOf.map(one => {        
             if (one.sub) {
@@ -150,6 +153,7 @@ export const exportAttrs = (attrs: StepAttrsOption) => (
 
 export const eachAttrs = (attrs: StepAttrsOption, f: (StepAttrOption, string, StepAttrsOption) => void) => {
     _.each(attrs, (opts, key) => {
+        if (opts && opts.properties) eachAttrs(opts.properties, f);
         if (opts && opts.oneOf) {
             for (const choice of opts.oneOf) {
                 if (choice.sub) eachAttrs(choice.sub, f);

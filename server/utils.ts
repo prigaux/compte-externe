@@ -138,6 +138,7 @@ export const attrsHelpingDiagnoseHomonymes = (
 export const mapAttrs = (attrs: StepAttrsOption, f: (StepAttrOption, string) => StepAttrOption) => (
     _.mapValues(attrs, (opts, key) => {
         opts = f(opts, key);
+        if (opts.properties) opts.properties = mapAttrs(opts.properties, f);
         if (opts.oneOf)
             opts.oneOf = opts.oneOf.map(choice => (
                 choice.sub ? { ...choice, sub: mapAttrs(choice.sub, f) } : choice
@@ -164,6 +165,10 @@ export const findStepAttr = (attrs: StepAttrsOption, f: (StepAttrOption, key) =>
 
         if (f(opts, key)) return { key, opts };
 
+        if (opts.properties) {
+            const r = findStepAttr(opts.properties, f);
+            if (r) return r;
+        }
         if (opts.oneOf) {
             for (const choice of opts.oneOf) {
                 if (choice.sub) {

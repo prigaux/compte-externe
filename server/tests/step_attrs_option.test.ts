@@ -12,9 +12,11 @@ describe('exportAttrs', () => {
         const checkSame = (attrs) => assert.deepEqual(exportAttrs(attrs), attrs);
         checkSame({ sn: {} });
         checkSame({ sn: { readOnly: true, maxYear: 11 } });
+        checkSame({ _foo: { properties: { sn: {} } } });
     });
     it("should handle hidden", () => {
         assert.deepEqual(exportAttrs({ sn: { hidden: true } }), {});
+        assert.deepEqual(exportAttrs({ _foo: { properties: { sn: { hidden: true } } } }), { _foo: { properties: {} }});
     });
     it("should handle toUserOnly", () => {
         assert.deepEqual(exportAttrs({ sn: { toUserOnly: true } }), { sn: { optional: true, readOnly: true }});
@@ -41,7 +43,11 @@ describe('export_v', () => {
         test({ sn: { hidden: true } }, v, {});
         test({}, v, {});
     });
-    it("should handle sub", () => {
+    it("should handle simple properties", () => {
+        const attrs = { _foo: { properties: { sn: {} } } };
+        test(attrs, v, v);
+    });
+    it("should handle oneOf sub", () => {
         const attrs = { duration: { oneOf: [
             { const: "1", sub: { sn: {} } }, 
             { const: "2" },
@@ -49,7 +55,7 @@ describe('export_v', () => {
         test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2" });
         test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
     });
-    it("should handle sub different toUserOnly", () => {
+    it("should handle oneOf sub different toUserOnly", () => {
         const attrs = { a_or_b }
         test(attrs, { a_or_b: "a", a: "aa", b: "bb" }, { a_or_b: "a", a: "aa" });
         test(attrs, { a_or_b: "b", a: "aa", b: "bb" }, { a_or_b: "b", a: "aa", b: "bb" });
@@ -63,13 +69,17 @@ describe('flatten_attrs', () => {
     it("should work", () => {
         test({ sn: {} }, {}, { sn: {} });
     });
-    it("should handle sub", () => {
-        const duration = { oneOf: [
+    it("should handle simple properties", () => {
+        const attrs = { _foo: { properties: { sn: {} } } };
+        test(attrs, {}, { ...attrs, sn: {} });
+    });
+    it("should handle oneOf sub", () => {
+        const attrs = { duration: { oneOf: [
             { const: "1", sub: { sn: {} } }, 
             { const: "2" },
-        ] };
-        test({ duration }, { duration: "2" }, { duration, });
-        test({ duration }, { duration: "1" }, { duration, sn: {} });
+        ] } };
+        test(attrs, { duration: "2" }, { ...attrs });
+        test(attrs, { duration: "1" }, { ...attrs, sn: {} });
     });
 });
 
@@ -144,7 +154,22 @@ describe('merge_v', () => {
         test(attrs, {}, { duration: "1" }, { duration: "1" });
         test_fail(attrs, {}, { duration: "2" }, "constraint duration.oneOf 1 failed for 2");
     });
-    it ("should handle sub", () => {
+    it ("should check simple properties", () => {
+        const attrs = { _foo: { toUserOnly: true, properties: { sn: {} } } };
+        test(attrs, {}, { sn: "foo" }, { sn: "foo" });
+        test(attrs, {}, { sn: "foo", giveName: "bar" }, { sn: "foo" });
+        test_fail(attrs, {}, {}, "constraint !sn.optional failed for undefined");
+    });
+    it ("should check multiple properties", () => {
+        const attrs = { _foo: { toUserOnly: true, properties: { 
+            sn: {},
+            giveName: { optional: true },
+        } } };
+        test(attrs, {}, { sn: "foo" }, { sn: "foo" });
+        test(attrs, {}, { sn: "foo", giveName: "bar" }, { sn: "foo", giveName: "bar" });
+        test_fail(attrs, {}, {}, "constraint !sn.optional failed for undefined");
+    });
+    it ("should handle oneOf sub", () => {
         const attrs = { duration: { oneOf: [ 
             { const: "1", sub: { sn: {} } }, 
             { const: "2" },
@@ -153,7 +178,7 @@ describe('merge_v', () => {
         test(attrs, {}, { sn: 'x', duration: "2" }, { duration: "2" }); // sn not allowed, it is removed
         test_fail(attrs, {}, { duration: '1' }, "constraint !sn.optional failed for undefined");
     });
-    it ("should handle sub toUserOnly", () => {
+    it ("should handle oneOf sub toUserOnly", () => {
         const attrs = { duration: { oneOf: [ 
             { const: "1", sub: { sn: {} } }, 
             { const: "2", sub: { sn: { toUserOnly: true } } },
@@ -162,7 +187,7 @@ describe('merge_v', () => {
         test(attrs, { sn: 'y' }, { sn: 'x', duration: "2" }, { duration: "2" }); // sn not allowed, it is removed
         test_fail(attrs, { sn: 'y' }, { duration: '1' }, "constraint !sn.optional failed for undefined");
     });
-    it ("should handle sub readOnly", () => {
+    it ("should handle oneOf sub readOnly", () => {
         const attrs = { duration: { oneOf: [ 
             { const: "1", sub: { sn: {} } }, 
             { const: "2", sub: { sn: { readOnly: true } } },
@@ -196,6 +221,7 @@ describe('compute_diff', () => {
     });
     it("should handle simple change", () => {
         test(attrs_sn, { sn: "Rigaud" }, { sn: "Rigaux" }, { sn: { prev: "Rigaud", current: "Rigaux" }});
+        test({ _foo: { toUserOnly: true, properties: attrs_sn } }, { sn: "Rigaud" }, { sn: "Rigaux" }, { sn: { prev: "Rigaud", current: "Rigaux" }});
     });
     it("should handle simple creation", () => {
         test(attrs_sn, {}, { sn: "Rigaux" }, { sn: { prev: '', current: "Rigaux" }});
@@ -262,4 +288,25 @@ describe('merge_attrs_overrides', () => {
             {}
         );
     })
+
+    /* having the same attribute in a different "properties" is undefined behaviour */
+    it('should allow adding a properties attribute', () => {
+        assert.deepEqual(
+            merge_attrs_overrides({ _foo: { properties: { sn: {} } } }, { _foo: { properties: { sn: { description: 'override' } } } }), 
+            { _foo: { properties: { sn: { description: 'override' } } } }
+        );
+    })
+    it('should allow modifying a properties attribute', () => {
+        assert.deepEqual(
+            merge_attrs_overrides({ _foo: { properties: { sn: { description: 'initial' } } } }, { _foo: { properties: { sn: { description: 'override' } } } }), 
+            { _foo: { properties: { sn: { description: 'override' } } } }
+        );
+    })
+    it('should allow removing a properties attribute', () => {
+        assert.deepEqual(
+            merge_attrs_overrides({ _foo: { properties: { sn: {} } } }, { _foo: { properties: { sn: undefined } } }),
+            { _foo: { properties: {} } }
+        );
+    })
+    
 })

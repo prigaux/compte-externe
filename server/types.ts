@@ -56,6 +56,7 @@ type StepAttrOption = MinimalStepAttrOption & {
   
   // constraints below are checked when sent by the user. Values from action_pre/action_post are not verified!
   optional?: boolean;
+  properties?: StepAttrsOption;
   oneOf?: StepAttrOptionChoices[];
   oneOf_async?: (token: string, sizeLimit: number) => Promise<StepAttrOptionChoices[]>;
   items?: StepAttrItemsOption,
