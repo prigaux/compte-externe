@@ -9,8 +9,9 @@ const a_or_b = { oneOf: [
 
 describe('exportAttrs', () => {
     it("should work", () => {
-        assert.deepEqual(exportAttrs({ sn: {} }), { sn: {} });
-        assert.deepEqual(exportAttrs({ sn: { readOnly: true, maxYear: 11 } }), { sn: { readOnly: true, maxYear: 11 } });
+        const checkSame = (attrs) => assert.deepEqual(exportAttrs(attrs), attrs);
+        checkSame({ sn: {} });
+        checkSame({ sn: { readOnly: true, maxYear: 11 } });
     });
     it("should handle hidden", () => {
         assert.deepEqual(exportAttrs({ sn: { hidden: true } }), {});
