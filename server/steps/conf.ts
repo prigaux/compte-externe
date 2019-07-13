@@ -10,7 +10,7 @@ import profiles from './conf_profiles';
 
 const attrs: StepAttrsOption = {
     barcode: {},
-    supannCivilite: { choices: conf.ldap.people.supannCiviliteChoices },
+    supannCivilite: { oneOf: conf.ldap.people.supannCiviliteChoices },
     sn: {},
     givenName: {},
     birthName: { optional: true },
@@ -19,7 +19,7 @@ const attrs: StepAttrsOption = {
     homePhone: {},
     supannMailPerso: {},
     structureParrain: {},
-    profilename: { choices: profiles },
+    profilename: { oneOf: profiles },
 };
 
 const moderator_attrs = _.defaults(<StepAttrsOption> {
