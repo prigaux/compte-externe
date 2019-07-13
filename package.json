@@ -8,20 +8,17 @@
   "scripts": {
     "postinstall": "cd app && npm install",
     "prestart": "npm install",
-
     "build": "concurrently npm:server-build npm:client-build",
     "build:w": "concurrently npm:server-build:w npm:client-build:w",
     "dev": "concurrently npm:server-build:w npm:client-serve",
     "start": "concurrently npm:server-build npm:client-build npm:server-start",
     "start:w": "concurrently npm:server-build:w npm:client-build:w npm:server-start:dev",
     "test": "concurrently npm:server-test npm:client-test",
-
     "client-build": "cd app && npm run build",
     "client-build:w": "cd app && npm run build -- --watch",
     "client-serve": "cd app && npm run serve",
     "client-test": "cd app && npm run test:unit",
     "client-test:w": "cd app && npm run test:unit -- --watch",
-
     "server-build": "tsc -p server",
     "server-build:w": "tsc -p server --watch",
     "server-start": "nodemon start-server.js",
