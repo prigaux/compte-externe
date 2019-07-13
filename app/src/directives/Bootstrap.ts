@@ -16,11 +16,28 @@ Vue.component("validation-errors", {
     },
 });
 
+Vue.component("mytooltip", {
+    props: [ "text" ],
+    template: `
+        <div class="mytooltip" v-if="text">
+            <span class="glyphicon glyphicon-question-sign"></span>
+            <div class="mytooltip-popup"><span>
+                <span class="mytooltip-text">
+                    {{text}}
+                </span>
+                <span class="mytooltip-arrow"></span>
+            </span></div>
+        </div>`
+})
+
 Vue.component("my-bootstrap-form-group", {
     props: ['name', 'label', 'multi', 'validity', 'hideErrors', 'labels'],
     template: `
             <div class='form-group' :class="{'has-error': validity && validity.submitted && !validity[name].valid }">
-              <label v-if="label" class="col-md-3 control-label" :for="name">{{label}}</label>
+              <label v-if="label" class="col-md-3 control-label" :for="name">
+                {{label}}
+                <mytooltip :text="labels && labels.tooltip"></mytooltip>
+              </label>
               <div :class="subClass">
                   <slot></slot>
                   <validation-errors v-if="!hideErrors && validity" :name="name" :validity="validity" :custom_message="labels && labels.advice"></validation-errors>

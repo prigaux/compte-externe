@@ -58,3 +58,70 @@ fieldset {
 .hideIt {
     display: none;
 }
+
+.mytooltip {
+    display: inline-block;
+    position: relative;
+}
+
+.mytooltip-popup {
+    position: absolute;
+    top: -20px; left: 50%; transform: translate(-20%,-100%);
+
+    min-width: 300px;
+    text-align: left;
+
+    /* hidden by default */
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.mytooltip:hover .mytooltip-popup {
+    visibility: visible;
+    opacity: 1;
+}
+   
+/* intermediate span useful if text is shorter than min-width above */   
+.mytooltip-popup > span {
+    display: inline-block;
+    z-index: 99999999;
+    padding: 10px 14px 10px 19px;
+    border-radius: 4px;
+    box-shadow: 1px 1px 2px 0px #777;
+}
+
+.mytooltip-popup > span,
+.mytooltip-arrow::after {
+    background-color: white; transition: background-color 2s;
+}
+.mytooltip:hover .mytooltip-popup > span,
+.mytooltip:hover .mytooltip-arrow::after {
+    background-color: #B5C1DA;
+}
+
+.mytooltip-text {
+    display: inline-block;
+    color: #333;
+    font-weight: normal;
+    font-size: 13px;
+    text-align: left;
+}
+
+.mytooltip-arrow {
+    position: absolute;
+    top: 100%;
+    left: 20%;
+    margin-left: -15px;
+    width: 30px;
+    height: 15px;
+    overflow: hidden;
+}
+.mytooltip-arrow::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 50%;
+    transform: translate(-50%,-50%) rotate(45deg);
+    box-shadow: 2px 0px 2px 0px #777;;
+}

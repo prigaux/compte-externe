@@ -1,7 +1,10 @@
 <template>
 
 <div class="ArrayAttr">
-    <label v-if="val.length === 0" class="col-md-3 control-label">{{opts.title}}</label>
+    <label v-if="val.length === 0" class="col-md-3 control-label">
+        {{opts.title}}
+        <mytooltip :text="opts.labels && opts.labels.tooltip"></mytooltip>
+    </label>
     <template v-for="(item, i) in val">
         <genericAttr :real_name="name" :name="name + (i ? '-' + i : '')" :opts="i ? item_opts : first_item_opts" :value="item" @input="v => set_item(i, v)" @remove="_ => remove_item(i)"
                 :stepName="stepName"
@@ -42,7 +45,7 @@ export default Vue.extend({
     },
     computed: {
         first_item_opts() { 
-            return { ..._.pick(this.opts, 'title', 'optional', 'readOnly', 'oneOf_async'), ...this.opts.items };
+            return { ..._.pick(this.opts, 'title', 'labels', 'optional', 'readOnly', 'oneOf_async'), ...this.opts.items };
         },
         item_opts() {
             return { ...this.first_item_opts, optional: true };
