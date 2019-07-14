@@ -39,6 +39,7 @@ interface StepAttrOptionChoicesWithShort {
 export type StepAttrOption = MoreStepAttrOption & {
   readOnly?: boolean;
   optional?: boolean;
+  properties?: StepAttrsOption;
   oneOf?: StepAttrOptionChoices[];
   oneOf_async?: string;
 }
@@ -61,6 +62,7 @@ export function eachAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | 'ne
     function rec(attrs) {
         for (const attr in attrs) {
             const opts = attrs[attr];
+            if (opts && opts.properties) rec(opts.properties);
             if (opts && opts.oneOf) {
                 if (oneOfTraversal === 'always') {
                     for (const choice of opts.oneOf) {

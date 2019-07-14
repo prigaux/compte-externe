@@ -26,7 +26,16 @@ describe('sub_and_defaults', function() {
              { v: { sn: 'a' } });
     });
   
-    it('should handle sub', () => {
+    it('should handle properties', () => {
+        const attrs = { _foo: { properties: { 
+            sn: { default: 'a' },
+        } } } as StepAttrsOption;
+            
+        test({ attrs, v: {} as V },
+             { v: { sn: 'a' } });
+    });
+
+    it('should handle oneOf sub', () => {
         const attrs = { duration: { oneOf: [ 
             { const: "1", sub: { sn: {} } }, 
             { const: "2" }
@@ -130,7 +139,7 @@ describe('sub_and_defaults', function() {
         test(params, { v: { duration: "2", sn: "z" } });
     });
 
-    it('should merge subs', () => {
+    it('should merge oneOf subs', () => {
         const attrs = { 
             givenName: { default: "a", oneOf: [ 
                     { const: "a", sub: { sn: {} } }, 

@@ -58,7 +58,7 @@ import * as Ws from '../services/ws';
 import { router } from '../router';
 import { defaults, isEqual, unionBy, isEmpty, fromPairs } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
-import { compute_subAttrs_and_handle_default_values } from '../services/sub_and_defaults';
+import { compute_subAttrs_and_handle_default_values, filterAttrs } from '../services/sub_and_defaults';
 
 import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
@@ -124,7 +124,8 @@ export default Vue.extend({
             let { attrs, current_defaults } = compute_subAttrs_and_handle_default_values(this.attrs, this.prev_defaults, this.v);
             this.prev_defaults = current_defaults;
 
-            attrs = Helpers.filter(attrs, (opts, k) => (
+            // no need to go through chosen oneOf, since "compute_subAttrs_and_handle_default_values" has already merged things
+            attrs = filterAttrs(attrs, 'never', (opts, k) => (
                 !opts.uiHidden &&
                 !(this.to_import && this.to_import.fields.includes(k)) &&
                 !(this.$route.query && (k in this.$route.query)) // do not display things that have been forced in the url

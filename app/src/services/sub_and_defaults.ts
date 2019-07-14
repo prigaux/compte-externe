@@ -12,6 +12,26 @@ const handle_chosen_oneOf_sub = (opts: StepAttrOption, val: string, rec: (StepAt
     }
 }
 
+export function filterAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | 'never', f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption) => boolean): StepAttrsOption {
+    function rec(attrs: StepAttrsOption) {
+        let r = {};  
+        forIn(attrs, (opts, key) => {
+            if (!f(opts, key, attrs)) return;
+            r[key] = opts = { ...opts };
+            if (opts && opts.properties) opts.properties = rec(opts.properties);
+            if (opts && opts.oneOf) {
+                if (oneOfTraversal === 'always') {
+                    opts.oneOf = opts.oneOf.map(choice => (
+                        choice.sub ? { ...choice, sub: rec(choice.sub) } : choice
+                    ));
+                }
+            }
+        });
+        return r;
+    }
+    return rec(attrs);
+}
+
 // assign "default" values
 // handle the complex case where "default" values has changed because of "oneOf" "sub"
 
@@ -35,6 +55,7 @@ export function compute_subAttrs_and_handle_default_values(attrs : StepAttrsOpti
             may_set_default_value(k, attrs_[k], v, prev_defaults || {});
             if ("default" in opts) current_defaults[k] = opts.default;
 
+            if (opts.properties) attrs_[k].properties = rec(opts.properties, {});
             handle_chosen_oneOf_sub(opts, v[k], attrs => rec(attrs, attrs_));
         });
         return attrs_;
