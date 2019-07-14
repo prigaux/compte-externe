@@ -26,7 +26,7 @@ export interface SVRaw {
     error?: string;
 }
 
-interface StepAttrOptionChoices {
+export interface StepAttrOptionChoices {
   const: string;
   title?: string;
   sub?: StepAttrsOption;

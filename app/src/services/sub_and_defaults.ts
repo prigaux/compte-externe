@@ -1,5 +1,16 @@
-import { V, StepAttrsOption, StepAttrOption } from '../services/ws';
+import { V, StepAttrsOption, StepAttrOption, StepAttrOptionChoices } from '../services/ws';
 import { find, forIn, mapValues, pickBy, Dictionary } from 'lodash';
+
+const find_choice = (oneOf: StepAttrOptionChoices[], val) => (
+    find(oneOf, choice => choice.const === val)
+)
+
+const handle_chosen_oneOf_sub = (opts: StepAttrOption, val: string, rec: (StepAttrsOption) => void) => {
+    if (val && opts.oneOf) {
+        const choice = find_choice(opts.oneOf, val);
+        if (choice && choice.sub) rec(choice.sub);
+    }
+}
 
 // assign "default" values
 // handle the complex case where "default" values has changed because of "oneOf" "sub"
@@ -22,12 +33,7 @@ export function compute_subAttrs_and_handle_default_values(attrs : StepAttrsOpti
             attrs_[k] = { ...attrs_[k] || {}, ...opts }; // merge
             may_set_default_value(k, attrs_[k], v, prev_defaults || {});
 
-            if (opts.oneOf && v[k]) {
-                const selected = find(opts.oneOf, choice => choice.const === v[k]);
-                if (selected && selected.sub) {
-                    rec(selected.sub, attrs_);
-                }
-            }
+            handle_chosen_oneOf_sub(opts, v[k], attrs => rec(attrs, attrs_));
         });
         return attrs_;
     }
