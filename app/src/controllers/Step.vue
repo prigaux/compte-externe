@@ -123,16 +123,12 @@ export default Vue.extend({
         other_attrs(): StepAttrsOption {
             let { attrs, prev_defaults } = compute_subAttrs_and_handle_default_values(this.attrs, this.prev_defaults, this.v);
             this.prev_defaults = prev_defaults;
-            
-            attrs = Helpers.filter(attrs, (opts) => !opts.uiHidden);
 
-            if (this.to_import && attrs) {
-                attrs = Helpers.filter(attrs, (_, k) => !this.to_import.fields.includes(k));
-            }
-            if (this.$route.query && attrs) {
-                // do not display things that have been forced in the url
-                attrs = Helpers.filter(attrs, (_, k) => !(k in this.$route.query));
-            }
+            attrs = Helpers.filter(attrs, (opts, k) => (
+                !opts.uiHidden &&
+                !(this.to_import && this.to_import.fields.includes(k)) &&
+                !(this.$route.query && (k in this.$route.query)) // do not display things that have been forced in the url
+            ));
             return attrs;
         },
         v_pre() {
