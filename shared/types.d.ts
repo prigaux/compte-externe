@@ -6,7 +6,8 @@ type uiTypes =
     'radio'|'select'|'checkbox'|'email'|'password'|'text'|'url' |
     'textarea'|'phone'|'mobilePhone'|'frenchPostalCode'|'date' |
     'dateThreeInputs'|'postalAddress'|'cameraSnapshot'|'photoUpload' |
-    'autocomplete'|'newPassword'|'siret' | 'array' | 'homonym';
+    'autocomplete'|'newPassword'|'siret' | 'array' | 'homonym' |
+    'tab';
 
 interface StepAttrItemsOption {
     uiPlaceholder?: string;

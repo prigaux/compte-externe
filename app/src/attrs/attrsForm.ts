@@ -1,5 +1,6 @@
 import Vue from "vue";
 
+import { pickBy } from 'lodash';
 import genericAttr from './genericAttr.vue';
 import BarcodeAttrs from './BarcodeAttrs.vue';
 
@@ -10,12 +11,21 @@ export default Vue.extend({
     props: ['v', 'v_ldap', 'attrs', 'step_labels', 'stepName'],
     data() {
         return {
+            selectedTab: undefined,
             submitted: false,
         };
     },
     template,
     components: { genericAttr, BarcodeAttrs },
 
+    computed: {
+        selectedTab_() {
+            return this.selectedTab || Object.keys(this.tabs)[0];
+        },
+        tabs() {
+            return this.attrs ? pickBy(this.attrs, opts => opts.properties) : {};
+        },
+    },
     methods: {
       submit(event) {
           console.log("submit");
