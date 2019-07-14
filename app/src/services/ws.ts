@@ -57,13 +57,15 @@ import conf from '../conf';
 
 const api_url = conf.base_pathname + 'api';
 
-export function eachAttrs(attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption) => void) {
+export function eachAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | 'never', f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption) => void) {
     function rec(attrs) {
         for (const attr in attrs) {
             const opts = attrs[attr];
             if (opts && opts.oneOf) {
-                for (const choice of opts.oneOf) {
-                    if (choice.sub) rec(choice.sub);
+                if (oneOfTraversal === 'always') {
+                    for (const choice of opts.oneOf) {
+                        if (choice.sub) rec(choice.sub);
+                    }
                 }
             }
         f(opts, attr, attrs);
@@ -159,7 +161,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         }
 
         function initAttrs(root_attrs: StepAttrsOption) {
-            eachAttrs(root_attrs, (opts, attr, attrs) => {
+            eachAttrs(root_attrs, 'always', (opts, attr, attrs) => {
                 // recursive merge, especially useful for attr.labels
                 attrs[attr] = merge({}, conf.default_attrs_opts[attr], opts);
             })
@@ -167,7 +169,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
 
         function all_attrs_flat(root_attrs: StepAttrsOption) {
             let all_attrs: StepAttrsOption = {};
-            eachAttrs(root_attrs, (opts, attr) => { all_attrs[attr] = opts })
+            eachAttrs(root_attrs, 'always', (opts, attr) => { all_attrs[attr] = opts })
             return all_attrs;
         }
 
