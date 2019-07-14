@@ -126,11 +126,6 @@ export default Vue.extend({
             
             attrs = Helpers.filter(attrs, (opts) => !opts.uiHidden);
 
-            Helpers.eachObject(attrs, (attr, _opts) => {
-                // ensure Vue.js reactivity works
-                if (!(attr in this.v)) Vue.set(this.v, attr, undefined);
-            });
-
             if (this.to_import && attrs) {
                 attrs = Helpers.filter(attrs, (_, k) => !this.to_import.fields.includes(k));
             }
