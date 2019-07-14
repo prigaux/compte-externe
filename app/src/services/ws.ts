@@ -158,12 +158,17 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             ));
         }
 
-        function initAttrs(attrs: StepAttrsOption, all_attrs: StepAttrsOption) {
-            eachAttrs(attrs, (opts, attr) => {
+        function initAttrs(root_attrs: StepAttrsOption) {
+            eachAttrs(root_attrs, (opts, attr, attrs) => {
                 // recursive merge, especially useful for attr.labels
-                all_attrs[attr] = attrs[attr] = merge({}, conf.default_attrs_opts[attr], opts);
-            }
-            return attrs;
+                attrs[attr] = merge({}, conf.default_attrs_opts[attr], opts);
+            })
+        }
+
+        function all_attrs_flat(root_attrs: StepAttrsOption) {
+            let all_attrs: StepAttrsOption = {};
+            eachAttrs(root_attrs, (opts, attr) => { all_attrs[attr] = opts })
+            return all_attrs;
         }
 
         function handleAttrsValidators(all_attrs: StepAttrsOption, v_orig: V) {
@@ -189,8 +194,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             var url = api_url + '/comptes/' + id + "/" + expectedStep;
             return axios.get(url, password_to_auth(params)).then((resp) => {
                 var sv = <any>resp.data;
-                var all_attrs = {};
-                sv.attrs = initAttrs(sv.attrs, all_attrs);
+                initAttrs(sv.attrs);
+                let all_attrs = all_attrs_flat(sv.attrs);
                     if (sv.v) {
                         sv.v = fromWs(sv.v, all_attrs);
                         if (sv.v_ldap) sv.v_ldap = fromWs(sv.v_ldap, all_attrs);
