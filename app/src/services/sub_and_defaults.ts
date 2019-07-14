@@ -17,8 +17,7 @@ const may_set_default_value = (k: string, opts: StepAttrOption, v, prev_defaults
 };
  
 export function compute_subAttrs_and_handle_default_values(attrs : StepAttrsOption, prev_defaults: Dictionary<string>, v: V) {
-    let attrs_ = {};
-    const rec = (attrs : StepAttrsOption) => {
+    const rec = (attrs : StepAttrsOption, attrs_: StepAttrsOption) => {
         forIn(attrs, (opts : StepAttrOption, k) => {
             attrs_[k] = { ...attrs_[k] || {}, ...opts }; // merge
             may_set_default_value(k, attrs_[k], v, prev_defaults || {});
@@ -26,12 +25,13 @@ export function compute_subAttrs_and_handle_default_values(attrs : StepAttrsOpti
             if (opts.oneOf && v[k]) {
                 const selected = find(opts.oneOf, choice => choice.const === v[k]);
                 if (selected && selected.sub) {
-                    rec(selected.sub);
+                    rec(selected.sub, attrs_);
                 }
             }
         });
+        return attrs_;
     }
-    rec(attrs);
+    let attrs_ = rec(attrs, {});
 
     //console.log(JSON.stringify(attrs_.duration, null, ' '), JSON.stringify(v.duration, null, ' '));
 
