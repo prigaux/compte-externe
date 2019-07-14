@@ -57,6 +57,21 @@ import conf from '../conf';
 
 const api_url = conf.base_pathname + 'api';
 
+export function eachAttrs(attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption) => void) {
+    function rec(attrs) {
+        for (const attr in attrs) {
+            const opts = attrs[attr];
+            if (opts && opts.oneOf) {
+                for (const choice of opts.oneOf) {
+                    if (choice.sub) rec(choice.sub);
+                }
+            }
+        f(opts, attr, attrs);
+      }
+    }
+    rec(attrs);
+}
+
 export const people_search = (step: string, token: string, maxRows? : number) : Promise<V[]> => (
     axios.get(api_url + '/comptes/search/' + step, { params: { token, maxRows } }).then(resp => resp.data as Promise<V[]>)
 );
@@ -144,12 +159,9 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         }
 
         function initAttrs(attrs: StepAttrsOption, all_attrs: StepAttrsOption) {
-            for (const attr in attrs) {
-                const opts = attrs[attr];
+            eachAttrs(attrs, (opts, attr) => {
                 // recursive merge, especially useful for attr.labels
                 all_attrs[attr] = attrs[attr] = merge({}, conf.default_attrs_opts[attr], opts);
-                // also init "sub" attrs
-                (attrs[attr].oneOf || []).forEach(choice => { if (choice.sub) initAttrs(choice.sub, all_attrs) });
             }
             return attrs;
         }
