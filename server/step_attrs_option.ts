@@ -151,7 +151,7 @@ export const exportAttrs = (attrs: StepAttrsOption) => (
     _.mapValues(_.omitBy(attrs, val => val.hidden), transform_toUserOnly_into_optional_readonly)
 ) as StepAttrsOption;
 
-export const eachAttrs = (attrs: StepAttrsOption, f: (StepAttrOption, string, StepAttrsOption) => void) => {
+export const eachAttrs = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption) => void) => {
     _.each(attrs, (opts, key) => {
         if (opts && opts.properties) eachAttrs(opts.properties, f);
         if (opts && opts.oneOf) {
