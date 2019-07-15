@@ -139,6 +139,43 @@ describe('sub_and_defaults', function() {
         test(params, { v: { duration: "2", sn: "z" } });
     });
 
+    it('should handle oneOf sub then default', () => {
+        const attrs = { 
+            givenName: { oneOf: [ 
+                    { const: "a", sub: { sn: { default: "SN" } } }, 
+                    { const: "b" },
+            ] },
+        } as StepAttrsOption;
+            
+        test({ attrs, v: { givenName: "a" } as V },
+             { v: { givenName: "a", sn: "SN" } });
+    });
+
+    it('should handle default then oneOf sub', () => {
+        const attrs = { 
+            givenName: { default: "a", oneOf: [ 
+                    { const: "a", sub: { sn: {} } }, 
+                    { const: "b" },
+            ] },
+        } as StepAttrsOption;
+            
+        test({ attrs, v: {} as V },
+             { subAttrs: { sn: {} } });
+    });
+
+    it('should handle default then oneOf sub then default', () => {
+        const attrs = { 
+            givenName: { default: "a", oneOf: [ 
+                    { const: "a", sub: { sn: { default: "SN" } } }, 
+                    { const: "b" },
+            ] },
+        } as StepAttrsOption;
+            
+        test({ attrs, v: {} as V },
+             { v: { givenName: "a", sn: "SN" } });
+    });
+
+
     it('should merge oneOf subs', () => {
         const attrs = { 
             givenName: { default: "a", oneOf: [ 
