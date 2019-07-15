@@ -39,9 +39,7 @@ export function compute_subAttrs_and_handle_default_values(attrs : StepAttrsOpti
     }
     let attrs_ = rec(attrs, {});
 
-    //console.log(JSON.stringify(attrs_.duration, null, ' '), JSON.stringify(v.duration, null, ' '));
+    let current_defaults = mapValues(pickBy(attrs_, (opts) => "default" in opts), (opts) => opts['default']);
 
-    prev_defaults = mapValues(pickBy(attrs_, (opts) => "default" in opts), (opts) => opts['default']);
-
-    return { attrs: attrs_, prev_defaults };
+    return { attrs: attrs_, current_defaults };
 }

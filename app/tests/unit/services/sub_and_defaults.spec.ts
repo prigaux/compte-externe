@@ -12,8 +12,8 @@ describe('sub_and_defaults', function() {
         if (wanted.attrNames) assert.equal(Object.keys(r.attrs).sort().join(' '), wanted.attrNames);
         forIn(wanted.subAttrs || {}, (opts, k) => assert.deepEqual(r.attrs[k], opts));
         if (wanted.v) assert.deepEqual(params.v, wanted.v);
-        if (wanted.prev_defaults) assert.deepEqual(r.prev_defaults, wanted.prev_defaults);
-        params.prev_defaults = r.prev_defaults;
+        if (wanted.current_defaults) assert.deepEqual(r.current_defaults, wanted.prev_defaults);
+        params.prev_defaults = r.current_defaults;
     }
 
     it('should handle default', () => {

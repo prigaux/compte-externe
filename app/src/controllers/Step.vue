@@ -121,8 +121,8 @@ export default Vue.extend({
         },
 
         other_attrs(): StepAttrsOption {
-            let { attrs, prev_defaults } = compute_subAttrs_and_handle_default_values(this.attrs, this.prev_defaults, this.v);
-            this.prev_defaults = prev_defaults;
+            let { attrs, current_defaults } = compute_subAttrs_and_handle_default_values(this.attrs, this.prev_defaults, this.v);
+            this.prev_defaults = current_defaults;
 
             attrs = Helpers.filter(attrs, (opts, k) => (
                 !opts.uiHidden &&
