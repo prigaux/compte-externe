@@ -44,14 +44,20 @@
         :values="choicesMap" :required="!opts.optional" :validity.sync="validity[name]">
     </radio-with-validity>
 
-    <history-textarea-with-validity :name="name" v-model="val" v-else-if="uiType === 'textarea' && uiOptions.autocomplete"
+    <div v-else-if="uiType === 'textarea' && uiOptions.autocomplete">
+      <history-textarea-with-validity :name="name" v-model="val"
         :rows="uiOptions.rows" :required="!opts.optional" :validity.sync="validity[name]">
-    </history-textarea-with-validity>
+      </history-textarea-with-validity>
+      <span v-html="opts.description"></span>
+    </div>
 
-    <textarea-with-validity :name="name" v-model="val" v-else-if="uiType === 'textarea'"
+    <div v-else-if="uiType === 'textarea'">
+      <textarea-with-validity :name="name" v-model="val"
         class="form-control"
         :disabled="opts.readOnly" :required="!opts.optional" :validity.sync="validity[name]">
-    </textarea-with-validity>
+      </textarea-with-validity>
+      <span v-html="opts.description"></span>
+    </div>
 
     <div v-else-if="uiType === 'select'">
         <!-- wait until oneOf is computed. <select-with-validity> can NOT handle "value" is in computed "oneOf" -->
