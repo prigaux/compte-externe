@@ -45,7 +45,7 @@
         :disabled="opts.readOnly" :required="!opts.optional" :validity.sync="validity[name]">
     </radio-with-validity>
 
-    <div v-else-if="uiType === 'textarea' && uiOptions.autocomplete">
+    <div v-else-if="uiType === 'textarea' && uiOptions.autocomplete && !opts.readOnly">
       <history-textarea-with-validity :name="name" v-model="val"
         :rows="uiOptions.rows" :required="!opts.optional" :validity.sync="validity[name]">
       </history-textarea-with-validity>
