@@ -115,11 +115,11 @@ Vue.component('radio-with-validity', {
   template: `
   <span>
     <label class="radio-inline" v-for="(descr, val) in values">
-       <input type="radio" :name="name" :value="val" :checked="val == value" @change="onchange" :required="required">
+       <input type="radio" :name="name" :value="val" :checked="val == value" @change="onchange" :required="required" :disabled="disabled">
        {{descr}}
     </label>
   </span>`,
-  props: ['value', 'name', 'values', 'required'],
+  props: ['value', 'name', 'values', 'required', 'disabled'],
   mixins: [ checkValidity ],
   mounted() {
     this.checkValidity();

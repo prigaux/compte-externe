@@ -41,7 +41,8 @@
   <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" :labels="opts.labels" v-else-if="opts">
 
     <radio-with-validity :name="name" v-model="val" v-if="uiType === 'radio'"
-        :values="choicesMap" :required="!opts.optional" :validity.sync="validity[name]">
+        :values="choicesMap"
+        :disabled="opts.readOnly" :required="!opts.optional" :validity.sync="validity[name]">
     </radio-with-validity>
 
     <div v-else-if="uiType === 'textarea' && uiOptions.autocomplete">
