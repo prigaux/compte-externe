@@ -235,8 +235,12 @@ const initial_steps = () => (
     _.pickBy(conf_steps.steps, (step) => step.initialStep)
 );
 
+const title_in_list = labels => (
+    "title_in_list" in labels ? labels.title_in_list : labels.title
+)
+
 const non_initial_steps = () => (
-    _.pickBy(conf_steps.steps, (step) => !step.initialStep)
+    _.pickBy(conf_steps.steps, (step) => !step.initialStep && title_in_list(step.labels))
 );
 
 function listAuthorized(req: req) {
