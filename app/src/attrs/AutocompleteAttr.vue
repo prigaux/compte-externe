@@ -1,7 +1,7 @@
 <template>
   <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" :labels="opts.labels">
-    <div v-if="opts.readOnly && val">
-      {{val.title}}
+    <div v-if="opts.readOnly">
+      {{val ? val.title : ''}}
     </div>
     <div v-else>
       <typeahead :name="name" v-model="val" :options="search" :minChars="3" :formatting="formatting" :formatting_html="formatting_html"
@@ -20,7 +20,7 @@ export default Vue.extend({
     props: ['value', 'name', 'opts', 'submitted', 'v', 'stepName'],
     data() {
         return {
-          validity: { [this.name]: {}, submitted: false },
+          validity: !this.opts.readOnly && { [this.name]: {}, submitted: false },
           val: undefined,
         };
     },
@@ -41,7 +41,7 @@ export default Vue.extend({
             }
         },
         submitted(b) {
-            this.validity.submitted = b;
+            if (this.validity) this.validity.submitted = b;
         },
     },
     methods: {
