@@ -47,7 +47,7 @@ const may_set_default_value = (k: string, opts: StepAttrOption, v, prev_defaults
     }
 };
  
-export function compute_subAttrs_and_handle_default_values(attrs : StepAttrsOption, prev_defaults: Dictionary<string>, v: V) {
+export function compute_mppp_and_handle_default_values(attrs : StepAttrsOption, prev_defaults: Dictionary<string>, v: V) {
     let current_defaults = {};
     const rec = (attrs : StepAttrsOption, attrs_: StepAttrsOption) => {
         forIn(attrs, (opts : StepAttrOption, k) => {

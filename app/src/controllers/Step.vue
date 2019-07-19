@@ -58,7 +58,7 @@ import * as Ws from '../services/ws';
 import { router } from '../router';
 import { defaults, isEqual, unionBy, isEmpty, fromPairs } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
-import { compute_subAttrs_and_handle_default_values, filterAttrs } from '../services/sub_and_defaults';
+import { compute_mppp_and_handle_default_values, filterAttrs } from '../services/mppp_and_defaults';
 
 import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
@@ -121,10 +121,10 @@ export default Vue.extend({
         },
 
         other_attrs(): StepAttrsOption {
-            let { attrs, current_defaults } = compute_subAttrs_and_handle_default_values(this.attrs, this.prev_defaults, this.v);
+            let { attrs, current_defaults } = compute_mppp_and_handle_default_values(this.attrs, this.prev_defaults, this.v);
             this.prev_defaults = current_defaults;
 
-            // no need to go through chosen oneOf, since "compute_subAttrs_and_handle_default_values" has already merged things
+            // no need to go through chosen oneOf, since "compute_mppp_and_handle_default_values" has already merged things
             attrs = filterAttrs(attrs, 'never', (opts, k) => (
                 !opts.uiHidden &&
                 !(this.to_import && this.to_import.fields.includes(k)) &&
