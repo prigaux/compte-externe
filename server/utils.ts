@@ -141,7 +141,7 @@ export const mapAttrs = (attrs: StepAttrsOption, f: (StepAttrOption, string) => 
         if (opts.properties) opts.properties = mapAttrs(opts.properties, f);
         if (opts.oneOf)
             opts.oneOf = opts.oneOf.map(choice => (
-                choice.sub ? { ...choice, sub: mapAttrs(choice.sub, f) } : choice
+                choice.merge_patch_parent_properties ? { ...choice, merge_patch_parent_properties: mapAttrs(choice.merge_patch_parent_properties, f) } : choice
             ));
         return opts;        
     })
@@ -171,8 +171,8 @@ export const findStepAttr = (attrs: StepAttrsOption, f: (StepAttrOption, key) =>
         }
         if (opts.oneOf) {
             for (const choice of opts.oneOf) {
-                if (choice.sub) {
-                    const r = findStepAttr(choice.sub, f);
+                if (choice.merge_patch_parent_properties) {
+                    const r = findStepAttr(choice.merge_patch_parent_properties, f);
                     if (r) return r;
                 }
             }

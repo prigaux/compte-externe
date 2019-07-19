@@ -35,9 +35,9 @@ describe('sub_and_defaults', function() {
              { v: { sn: 'a' } });
     });
 
-    it('should handle oneOf sub', () => {
+    it('should handle oneOf merge_patch_parent_properties', () => {
         const attrs = { duration: { oneOf: [ 
-            { const: "1", sub: { sn: {} } }, 
+            { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2" }
             ] } } as StepAttrsOption;
             
@@ -47,11 +47,11 @@ describe('sub_and_defaults', function() {
              { attrNames: 'duration sn' })
     });
 
-    it('should merge sub', () => {
+    it('should merge merge_patch_parent_properties', () => {
         const attrs = { 
             sn: { pattern: "." },
             duration: { oneOf: [ 
-                { const: "1", sub: { sn: { default: "a" } } }, 
+                { const: "1", merge_patch_parent_properties: { sn: { default: "a" } } }, 
                 { const: "2" }
             ] },
         } as StepAttrsOption;
@@ -63,11 +63,11 @@ describe('sub_and_defaults', function() {
                v: { duration: "1", sn: "a" } })
     });
 
-    it('should handle inner sub', () => {
+    it('should handle inner merge_patch_parent_properties', () => {
         const attrs = { duration: { oneOf: [ 
-            { const: "1", sub: { sn: {
+            { const: "1", merge_patch_parent_properties: { sn: {
                 oneOf: [
-                    { const: "rigaux", sub: {
+                    { const: "rigaux", merge_patch_parent_properties: {
                         givenName: {},
                     } }
                 ]
@@ -83,7 +83,7 @@ describe('sub_and_defaults', function() {
     
     it('should handle default', () => {
         const attrs = { duration: { oneOf: [ 
-            { const: "1", sub: { sn: { default: "a" } } }, 
+            { const: "1", merge_patch_parent_properties: { sn: { default: "a" } } }, 
             { const: "2" }
             ] } } as StepAttrsOption;
             
@@ -95,8 +95,8 @@ describe('sub_and_defaults', function() {
 
     it('should handle same defaults', () => {
         const attrs = { duration: { oneOf: [ 
-            { const: "1", sub: { sn: { default: "a" } } }, 
-            { const: "2", sub: { sn: { default: "a" } }  }
+            { const: "1", merge_patch_parent_properties: { sn: { default: "a" } } }, 
+            { const: "2", merge_patch_parent_properties: { sn: { default: "a" } }  }
             ] } } as StepAttrsOption;
             
         let params = { attrs, v: { duration: "1" } as V };
@@ -107,8 +107,8 @@ describe('sub_and_defaults', function() {
     
     it('should handle different defaults', () => {
         const attrs = { duration: { oneOf: [ 
-            { const: "1", sub: { sn: { default: "a" } } }, 
-            { const: "2", sub: { sn: { default: "b" } }  }
+            { const: "1", merge_patch_parent_properties: { sn: { default: "a" } } }, 
+            { const: "2", merge_patch_parent_properties: { sn: { default: "b" } }  }
             ] } } as StepAttrsOption;
             
         let params = { attrs, v: { duration: "1" } as V };
@@ -119,7 +119,7 @@ describe('sub_and_defaults', function() {
 
     it('should not modify existing values with defaults', () => {
         const attrs = { duration: { oneOf: [ 
-            { const: "1", sub: { sn: { default: "a" } } }, 
+            { const: "1", merge_patch_parent_properties: { sn: { default: "a" } } }, 
             ] } } as StepAttrsOption;
             
         let params = { attrs, v: { duration: "1", sn: "z" } as V };
@@ -128,8 +128,8 @@ describe('sub_and_defaults', function() {
     
     it('should not modify user-modified-values with defaults', () => {
         const attrs = { duration: { oneOf: [ 
-            { const: "1", sub: { sn: { default: "a" } } }, 
-            { const: "2", sub: { sn: { default: "b" } }  }
+            { const: "1", merge_patch_parent_properties: { sn: { default: "a" } } }, 
+            { const: "2", merge_patch_parent_properties: { sn: { default: "b" } }  }
             ] } } as StepAttrsOption;
             
         let params = { attrs, v: { duration: "1" } as V };
@@ -139,10 +139,10 @@ describe('sub_and_defaults', function() {
         test(params, { v: { duration: "2", sn: "z" } });
     });
 
-    it('should handle oneOf sub then default', () => {
+    it('should handle oneOf merge_patch_parent_properties then default', () => {
         const attrs = { 
             givenName: { oneOf: [ 
-                    { const: "a", sub: { sn: { default: "SN" } } }, 
+                    { const: "a", merge_patch_parent_properties: { sn: { default: "SN" } } }, 
                     { const: "b" },
             ] },
         } as StepAttrsOption;
@@ -151,10 +151,10 @@ describe('sub_and_defaults', function() {
              { v: { givenName: "a", sn: "SN" } });
     });
 
-    it('should handle default then oneOf sub', () => {
+    it('should handle default then oneOf merge_patch_parent_properties', () => {
         const attrs = { 
             givenName: { default: "a", oneOf: [ 
-                    { const: "a", sub: { sn: {} } }, 
+                    { const: "a", merge_patch_parent_properties: { sn: {} } }, 
                     { const: "b" },
             ] },
         } as StepAttrsOption;
@@ -163,10 +163,10 @@ describe('sub_and_defaults', function() {
              { subAttrs: { sn: {} } });
     });
 
-    it('should handle default then oneOf sub then default', () => {
+    it('should handle default then oneOf merge_patch_parent_properties then default', () => {
         const attrs = { 
             givenName: { default: "a", oneOf: [ 
-                    { const: "a", sub: { sn: { default: "SN" } } }, 
+                    { const: "a", merge_patch_parent_properties: { sn: { default: "SN" } } }, 
                     { const: "b" },
             ] },
         } as StepAttrsOption;
@@ -176,15 +176,15 @@ describe('sub_and_defaults', function() {
     });
 
 
-    it('should merge oneOf subs', () => {
+    it('should merge oneOf merge_patch_parent_properties', () => {
         const attrs = { 
             givenName: { default: "a", oneOf: [ 
-                    { const: "a", sub: { sn: {} } }, 
-                    { const: "b", sub: { sn: { uiHidden: true } } },
+                    { const: "a", merge_patch_parent_properties: { sn: {} } }, 
+                    { const: "b", merge_patch_parent_properties: { sn: { uiHidden: true } } },
             ] },
             duration: { oneOf: [ 
-                { const: "1", sub: { sn: { default: "a" } } }, 
-                { const: "2", sub: { sn: { default: "a" } } }, 
+                { const: "1", merge_patch_parent_properties: { sn: { default: "a" } } }, 
+                { const: "2", merge_patch_parent_properties: { sn: { default: "a" } } }, 
             ] },
         } as StepAttrsOption;
             

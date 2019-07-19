@@ -51,7 +51,7 @@ export function merge_v(attrs : StepAttrsOption, more_attrs: MoreStepAttrsOption
             }
         }
         if (opt.properties) merge_one_level(opt.properties);
-        handle_chosen_oneOf_sub(opt, r[key], merge_one_level);
+        handle_chosen_oneOf_mppp(opt, r[key], merge_one_level);
       });
     }
     merge_one_level(attrs);
@@ -103,7 +103,7 @@ export function export_v(attrs: StepAttrsOption, v) {
         _.forEach(attrs, (opts, key) => {
             if (!opts.hidden && key in v) r[key] = v[key];
             if (opts.properties) rec(opts.properties);
-            handle_chosen_oneOf_sub(opts, v[key], rec);
+            handle_chosen_oneOf_mppp(opts, v[key], rec);
         });
     }
     rec(attrs);
@@ -116,17 +116,17 @@ export function flatten_attrs(attrs: StepAttrsOption, v: v) {
         _.forEach(attrs, (opts, key) => {
             r[key] = { ...r[key] || {}, ...opts }; // merge
             if (opts.properties) rec(opts.properties);
-            handle_chosen_oneOf_sub(opts, v[key], rec);
+            handle_chosen_oneOf_mppp(opts, v[key], rec);
         });
     }
     rec(attrs);
     return r;
 }
 
-const handle_chosen_oneOf_sub = (opts: StepAttrOption, val: string, rec: (StepAttrsOption) => void) => {
+const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption) => void) => {
     if (val && opts.oneOf) {
         const choice = find_choice(opts.oneOf, val);
-        if (choice && choice.sub) rec(choice.sub);
+        if (choice && choice.merge_patch_parent_properties) rec(choice.merge_patch_parent_properties);
     }
 }
 
@@ -138,8 +138,8 @@ const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : Ste
     if (opt.properties) opt.properties = exportAttrs(opt.properties);
     if (opt.oneOf) {
         opt.oneOf = opt.oneOf.map(one => {        
-            if (one.sub) {
-                one = { ...one, sub: exportAttrs(one.sub) };
+            if (one.merge_patch_parent_properties) {
+                one = { ...one, merge_patch_parent_properties: exportAttrs(one.merge_patch_parent_properties) };
             }
             return one;
         });
@@ -156,7 +156,7 @@ export const eachAttrs = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key:
         if (opts && opts.properties) eachAttrs(opts.properties, f);
         if (opts && opts.oneOf) {
             for (const choice of opts.oneOf) {
-                if (choice.sub) eachAttrs(choice.sub, f);
+                if (choice.merge_patch_parent_properties) eachAttrs(choice.merge_patch_parent_properties, f);
             }
         }
         f(opts, key, attrs);

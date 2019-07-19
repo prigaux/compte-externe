@@ -29,7 +29,7 @@ export interface SVRaw {
 export interface StepAttrOptionChoices {
   const: string;
   title?: string;
-  sub?: StepAttrsOption;
+  merge_patch_parent_properties?: StepAttrsOption;
 }
 interface StepAttrOptionChoicesWithShort {
   const: string;
@@ -66,7 +66,7 @@ export function eachAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | 'ne
             if (opts && opts.oneOf) {
                 if (oneOfTraversal === 'always') {
                     for (const choice of opts.oneOf) {
-                        if (choice.sub) rec(choice.sub);
+                        if (choice.merge_patch_parent_properties) rec(choice.merge_patch_parent_properties);
                     }
                 }
             }

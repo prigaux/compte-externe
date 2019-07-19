@@ -46,7 +46,7 @@ type profileValues = StepAttrOptionChoices & { fv: () => Partial<v> }
 interface StepAttrOptionChoices {
   const: string;
   title?: string;
-  sub?: StepAttrsOption;
+  merge_patch_parent_properties?: StepAttrsOption;
 }
 
 type StepAttrOption = MinimalStepAttrOption & {

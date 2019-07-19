@@ -194,7 +194,7 @@ const conf = {
         },
 
         // cf "man slapd.conf"
-        index_substr_any_len: 4, // minimum size for full sub search: *xxxx*
+        index_substr_any_len: 4, // minimum size for full merge_patch_parent_properties search: *xxxx*
         index_substr_if_minlen: 2, // minimum size for subinitial or subfinal (if = initial / final)
 
         disconnectWhenIdle_duration: 1 * 60 * 1000, // in milliseconds

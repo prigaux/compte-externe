@@ -5,10 +5,10 @@ const find_choice = (oneOf: StepAttrOptionChoices[], val) => (
     find(oneOf, choice => choice.const === val)
 )
 
-const handle_chosen_oneOf_sub = (opts: StepAttrOption, val: string, rec: (StepAttrsOption) => void) => {
+const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (StepAttrsOption) => void) => {
     if (val && opts.oneOf) {
         const choice = find_choice(opts.oneOf, val);
-        if (choice && choice.sub) rec(choice.sub);
+        if (choice && choice.merge_patch_parent_properties) rec(choice.merge_patch_parent_properties);
     }
 }
 
@@ -22,7 +22,7 @@ export function filterAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | '
             if (opts && opts.oneOf) {
                 if (oneOfTraversal === 'always') {
                     opts.oneOf = opts.oneOf.map(choice => (
-                        choice.sub ? { ...choice, sub: rec(choice.sub) } : choice
+                        choice.merge_patch_parent_properties ? { ...choice, merge_patch_parent_properties: rec(choice.merge_patch_parent_properties) } : choice
                     ));
                 }
             }
@@ -33,7 +33,7 @@ export function filterAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | '
 }
 
 // assign "default" values
-// handle the complex case where "default" values has changed because of "oneOf" "sub"
+// handle the complex case where "default" values has changed because of "oneOf" "merge_patch_parent_properties"
 
 const may_set_default_value = (k: string, opts: StepAttrOption, v, prev_defaults) => {
     if (!("default" in opts) && !(k in prev_defaults)) {
@@ -56,7 +56,7 @@ export function compute_subAttrs_and_handle_default_values(attrs : StepAttrsOpti
             if ("default" in opts) current_defaults[k] = opts.default;
 
             if (opts.properties) attrs_[k].properties = rec(opts.properties, {});
-            handle_chosen_oneOf_sub(opts, v[k], attrs => rec(attrs, attrs_));
+            handle_chosen_oneOf_mppp(opts, v[k], attrs => rec(attrs, attrs_));
         });
         return attrs_;
     }

@@ -33,9 +33,9 @@ export const resolve_mustache_async_params = async (template: string, params: {}
         let todo = [...Mustache.parse(template)];
         let r = {};
         while (todo.length) {
-            const [kind, path, , , sub] = todo.shift();
+            const [kind, path, , , merge_patch_parent_properties] = todo.shift();
             if (kind !== 'text') r[path] = true;
-            todo.push(...(sub || []));
+            todo.push(...(merge_patch_parent_properties || []));
         }
         return Object.keys(r);
     }
