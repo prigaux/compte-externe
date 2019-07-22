@@ -130,7 +130,7 @@ const handle_chosen_oneOf_sub = (opts: StepAttrOption, val: string, rec: (StepAt
     }
 }
 
-const find_choice = (oneOf, val) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
+const find_choice = (oneOf: StepAttrOptionChoices[], val) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
 
 const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : StepAttrOption) => {
     opt = toUserOnly ? { optional: true, readOnly: true, ...opt} : opt;
