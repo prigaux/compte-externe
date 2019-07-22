@@ -26,10 +26,15 @@ export interface SVRaw {
     error?: string;
 }
 
+export interface MergePatchOptions {
+    newRootProperties?: 'ignore'
+}
+
 export interface StepAttrOptionChoices {
   const: string;
   title?: string;
   merge_patch_parent_properties?: StepAttrsOption;
+  merge_patch_options?: MergePatchOptions, 
 }
 interface StepAttrOptionChoicesWithShort {
   const: string;

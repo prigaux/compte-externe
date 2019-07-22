@@ -43,10 +43,15 @@ type acl_search = {
 
 type profileValues = StepAttrOptionChoices & { fv: () => Partial<v> }
 
+interface MergePatchOptions {
+    newRootProperties?: 'ignore'
+}
+
 interface StepAttrOptionChoices {
   const: string;
   title?: string;
   merge_patch_parent_properties?: StepAttrsOption;
+  merge_patch_options?: MergePatchOptions, // if given, "merge_patch_parent_properties" is only used on client-side
 }
 
 type StepAttrOption = MinimalStepAttrOption & {

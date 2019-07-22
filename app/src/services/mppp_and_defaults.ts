@@ -1,14 +1,14 @@
-import { V, StepAttrsOption, StepAttrOption, StepAttrOptionChoices } from '../services/ws';
+import { V, StepAttrsOption, StepAttrOption, StepAttrOptionChoices, MergePatchOptions } from '../services/ws';
 import { find, forIn, Dictionary } from 'lodash';
 
 const find_choice = (oneOf: StepAttrOptionChoices[], val) => (
     find(oneOf, choice => choice.const === val)
 )
 
-const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (StepAttrsOption) => void) => {
+const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption, chosen: StepAttrOptionChoices) => void) => {
     if (val && opts.oneOf) {
         const choice = find_choice(opts.oneOf, val);
-        if (choice && choice.merge_patch_parent_properties) rec(choice.merge_patch_parent_properties);
+        if (choice && choice.merge_patch_parent_properties) rec(choice.merge_patch_parent_properties, choice);
     }
 }
 
@@ -49,18 +49,30 @@ const may_set_default_value = (k: string, opts: StepAttrOption, v, prev_defaults
  
 export function compute_mppp_and_handle_default_values(attrs : StepAttrsOption, prev_defaults: Dictionary<string>, v: V) {
     let current_defaults = {};
-    const rec = (attrs : StepAttrsOption, attrs_: StepAttrsOption) => {
+    const rec = (attrs : StepAttrsOption, mp_opts: MergePatchOptions, attrs_: StepAttrsOption) => {
+        let late_patches: StepAttrOptionChoices[] = [];
         forIn(attrs, (opts : StepAttrOption, k) => {
+            if (mp_opts.newRootProperties === 'ignore' && !(k in attrs_)) return;
+            
             attrs_[k] = { ...attrs_[k] || {}, ...opts }; // merge
             may_set_default_value(k, attrs_[k], v, prev_defaults || {});
             if ("default" in opts) current_defaults[k] = opts.default;
 
-            if (opts.properties) attrs_[k].properties = rec(opts.properties, {});
-            handle_chosen_oneOf_mppp(opts, v[k], attrs => rec(attrs, attrs_));
+            if (opts.properties) attrs_[k].properties = rec(opts.properties, mp_opts, {});
+            handle_chosen_oneOf_mppp(opts, v[k], (attrs, chosen) => {
+                if (chosen.merge_patch_options) {
+                    late_patches.push(chosen);
+                } else {
+                    rec(attrs, mp_opts, attrs_);
+                }
+            });
         });
+        for (const mp of late_patches) {
+            rec(mp.merge_patch_parent_properties, mp.merge_patch_options || {}, attrs_);
+        }
         return attrs_;
     }
-    let attrs_ = rec(attrs, {});
+    let attrs_ = rec(attrs, {}, {});
 
     return { attrs: attrs_, current_defaults };
 }
