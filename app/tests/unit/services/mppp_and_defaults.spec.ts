@@ -9,7 +9,7 @@ describe('sub_and_defaults', function() {
         const r = compute(params.attrs, params.prev_defaults, params.v);
         //console.log('attrs:' + JSON.stringify(r.attrs));
         //console.log('v:' + JSON.stringify(params.v));
-        if (wanted.attrNames) assert.equal(Object.keys(r.attrs).sort().join(' '), wanted.attrNames);
+        if (wanted.attrNames) assert.equal(Object.keys(r.attrs).join(' '), wanted.attrNames);
         forIn(wanted.subAttrs || {}, (opts, k) => assert.deepEqual(r.attrs[k], opts));
         if (wanted.v) assert.deepEqual(params.v, wanted.v);
         if (wanted.current_defaults) assert.deepEqual(r.current_defaults, wanted.prev_defaults);
@@ -57,7 +57,7 @@ describe('sub_and_defaults', function() {
         } as StepAttrsOption;
             
         test({ attrs, v: { duration: "2" } as V },
-             { attrNames: 'duration sn' });
+             { attrNames: 'sn duration' });
         test({ attrs, v: { duration: "1" } as V },
              { subAttrs: { sn: { pattern: ".", default: "a" } }, 
                v: { duration: "1", sn: "a" } })
@@ -78,7 +78,7 @@ describe('sub_and_defaults', function() {
         } as StepAttrsOption;
             
         test({ attrs, v: { duration: "2" } as V },
-             { attrNames: 'duration sn' });
+             { attrNames: 'sn duration' });
         test({ attrs, v: { duration: "1" } as V },
              { subAttrs: { sn: { pattern: ".", default: "a" } }, 
                v: { duration: "1", sn: "a" } })
@@ -99,7 +99,7 @@ describe('sub_and_defaults', function() {
         let params = { attrs, v: { duration: "2", sn: "rigaux" } as V };
         test(params, { attrNames: 'duration' });
         params.v['duration'] = "1";
-        test(params, { attrNames: 'duration givenName sn' })
+        test(params, { attrNames: 'duration sn givenName' })
     });
     
     it('should handle default', () => {
