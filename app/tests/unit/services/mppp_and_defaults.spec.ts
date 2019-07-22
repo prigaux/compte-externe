@@ -71,7 +71,6 @@ describe('sub_and_defaults', function() {
                   merge_patch_options: { newRootProperties: 'ignore' },
                   merge_patch_parent_properties: { 
                     sn: { default: "a" },
-                    givenName: { default: "b" },
                 } }, 
                 { const: "2" }
             ] },
@@ -216,5 +215,25 @@ describe('sub_and_defaults', function() {
         test({ attrs, v: { duration: "2", givenName: "b" } as V },
              { subAttrs: { sn: { default: "a", uiHidden: true } }, v: { duration: "2", givenName: "b", sn: "a" } });
     });
-    
+
+    it('should merge oneOf merge_patch_parent_properties and update default', () => {
+        const attrs = { 
+            duration: { oneOf: [ 
+                { const: "1", merge_patch_parent_properties: { sn: { default: "sn-a" } }, merge_patch_options: { newRootProperties: 'ignore' } }, 
+                { const: "2", merge_patch_parent_properties: { sn: { default: "sn-b" } }, merge_patch_options: { newRootProperties: 'ignore' } }, 
+            ] },
+            givenName: { default: "a", oneOf: [ 
+                    { const: "a", merge_patch_parent_properties: { sn: {} } }, 
+                    { const: "b" },
+            ] },
+        } as StepAttrsOption;
+            
+        let params = { attrs, v: { duration: "1" } as V }
+        test(params,
+             { attrNames: "duration givenName sn", subAttrs: { sn: { default: "sn-a" } }, v: { duration: "1", givenName: "a", sn: "sn-a" } });
+        params.v["duration"] = "2";
+        if (0) test(params,
+            { attrNames: "duration givenName sn", subAttrs: { sn: { default: "sn-b" } }, v: { duration: "2", givenName: "a", sn: "sn-b" } });
+   });
+
 });
