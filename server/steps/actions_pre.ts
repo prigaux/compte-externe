@@ -40,12 +40,18 @@ export const getExistingUser: simpleAction = (req, _sv)  => (
     oneExistingPerson(filters.eq("uid", req.query.uid)).then(v => ({ v }))
 );
 
+const handle_profilename_to_modify = (req, v) => {
+    const profilename = req.query.profilename_to_modify;
+    if (profilename) v = { ...selectUserProfile(v, profilename), profilename_to_modify: profilename };
+    return { v };
+}
+
 export const getExistingUserWithProfile: simpleAction = (req, _sv)  => (
-    oneExistingPerson(filters.eq("uid", req.query.uid)).then(v => {
-        const profilename = req.query.profilename_to_modify;
-        if (profilename) v = { ...selectUserProfile(v, profilename), profilename_to_modify: profilename };
-        return { v };
-    })
+    oneExistingPerson(filters.eq("uid", req.query.uid)).then(v => handle_profilename_to_modify(req, v))
+);
+
+export const getCasAttrsWithProfile: simpleAction = (req, _sv)  => (
+    getCasAttrs(req, null).then(sv => handle_profilename_to_modify(req, sv.v))
 );
 
 export const esup_activ_bo_validateAccount = (isActivation: boolean) : simpleAction => (req, _sv) => {
