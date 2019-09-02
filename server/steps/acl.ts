@@ -29,22 +29,22 @@ const _convert_simple_acl_search = ({ user_to_subv, ...other } : simple_acl_sear
     },
 })
 
-const create = (peopleFilter: string): acl_search => _convert_simple_acl_search({
+const peopleFilter = (filter: string): acl_search => _convert_simple_acl_search({
     // search users that can moderate "v":
-    v_to_ldap_filter: async (_v) => peopleFilter,
+    v_to_ldap_filter: async (_v) => filter,
     // can the user moderate any "v":
     user_to_subv: (user) => {
         if (!user.id) console.error("no user id!?");
-        return search_ldap.existPeople(filters.and([ peopleFilter, search_ldap.currentUser_to_filter(user) ]))
+        return search_ldap.existPeople(filters.and([ filter, search_ldap.currentUser_to_filter(user) ]))
     },
 });
 
 export const ldapGroup = (cn: string): acl_search => (
-    create(filters.memberOf(cn))
+    peopleFilter(filters.memberOf(cn))
 );
 
 export const user_id = (user_id: string): acl_search => {
-    return create(search_ldap.currentUser_to_filter({ id: user_id }));
+    return peopleFilter(search_ldap.currentUser_to_filter({ id: user_id }));
 };
 
 export const _rolesGeneriques = (rolesFilter: string) => {
