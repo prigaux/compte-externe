@@ -41,32 +41,40 @@ type acl_search = {
     user_to_mongo_filter(user: CurrentUser): Promise<acl_mongo_filter>
 }
 
-type profileValues = StepAttrOptionChoices & { fv: () => Partial<v> }
-
 interface MergePatchOptions {
     newRootProperties?: 'ignore'
 }
 
-interface StepAttrOptionChoices {
+type profileValuesT<T> = StepAttrOptionChoicesT<T> & { 
+    fv: () => Partial<v>;
+}
+
+interface StepAttrOptionChoicesT<MoreAttrOption> {
   const: string;
   title?: string;
-  merge_patch_parent_properties?: StepAttrsOption;
+  merge_patch_parent_properties?: Dictionary<StepAttrOptionT<MoreAttrOption>>;
   merge_patch_options?: MergePatchOptions, // if given, "merge_patch_parent_properties" is only used on client-side
 }
 
-type StepAttrOption = MinimalStepAttrOption & {
+type StepAttrOptionT<MoreOptions> = MinimalStepAttrOption & MoreOptions & {
   readOnly?: boolean;
   hidden?: boolean;
   toUserOnly?: boolean; // implies hidden
   
   // constraints below are checked when sent by the user. Values from action_pre/action_post are not verified!
   optional?: boolean;
-  properties?: StepAttrsOption;
-  oneOf?: StepAttrOptionChoices[];
+  properties?: Dictionary<StepAttrOptionT<MoreOptions>>;
+  oneOf?: StepAttrOptionChoicesT<MoreOptions>[];
   oneOf_async?: (token: string, sizeLimit: number) => Promise<StepAttrOptionChoices[]>;
   items?: StepAttrItemsOption,
 }
-type StepAttrsOption = Dictionary<StepAttrOption>;
+type StepAttrsOptionT<T> = Dictionary<StepAttrOptionT<T>>;
+
+interface StepAttrOption_no_extensions {}
+type StepAttrOption = StepAttrOptionT<StepAttrOption_no_extensions>;
+type StepAttrsOption = StepAttrsOptionT<StepAttrOption_no_extensions>;
+type StepAttrOptionChoices = StepAttrOptionChoicesT<StepAttrOption>;
+type profileValues = profileValuesT<StepAttrsOption>;
 
 interface StepLabels {
     title_in_list?: string; // an empty description means "hide this step in ModerateList"
