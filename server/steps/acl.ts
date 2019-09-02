@@ -92,3 +92,23 @@ export const group_for_each_attr_codes = (codeAttr: string, code_to_group_cn: (c
       return codes.map(code => ({ [codeAttr]: code }))
     },
 });
+
+// Allow many LDAP groups (using LDAP filter & regex)
+// Usage example:
+//   acl.ldapGroupsMatching(
+//       '(cn=applications.comptex.invite.*-managers)', 
+//       cn => cn.match(/^applications\.comptex\.invite\..*-managers$/))
+export const ldapGroupsMatching = (ldap_group_filter: string, group_cn_to_code: (groupId: string) => string): acl_search => _convert_simple_acl_search({
+    // search users that are memberOf of groups matching "ldap_group_filter"
+    v_to_ldap_filter: async (_v) => {
+        // find all groups matching "ldap_group_filter"
+        const groups = await ldap.searchThisAttr(conf.ldap.base_groups, ldap_group_filter, 'cn', '');
+        // create an LDAP filter matching users member of thoses groups
+        return filters.or(groups.map(cn => filters.memberOf(cn)))
+    },
+    // is "user" memberOf of a group matching "group_cn_to_code"
+    user_to_subv: async (user) => {
+        const codes = await _filter_user_memberOfs(group_cn_to_code, user);
+        return codes.length > 0;
+    },
+});
