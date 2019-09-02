@@ -72,7 +72,8 @@ const _filter_user_memberOfs = async (group_cn_to_code: (cn: string) => string, 
     const user_ = await ldap.searchOne(conf.ldap.base_people, search_ldap.currentUser_to_filter(user), { memberOf: [''] }, {});
     const r = [];
     for (const memberOf of user_.memberOf) {
-        const code = group_cn_to_code(memberOf);
+        const cn = conf.ldap.memberOf_to_group_cn(memberOf);
+        const code = cn && group_cn_to_code(cn);
         if (code) r.push(code);
     }
     return r;
@@ -81,7 +82,7 @@ const _filter_user_memberOfs = async (group_cn_to_code: (cn: string) => string, 
 // Usage example:
 //   acl.group_for_each_attr_codes('structureParrain', 
 //       code => `applications.comptex.invite.${code}-managers`,
-//       memberOf => { const m = memberOf.match(/applications\.comptex\.invite\.(.*)-managers/); return m && m[1] })
+//       cn => { const m = cn.match(/applications\.comptex\.invite\.(.*)-managers/); return m && m[1] })
 export const group_for_each_attr_codes = (codeAttr: string, code_to_group_cn: (code: string) => string, group_cn_to_code: (cn: string) => string): acl_search => _convert_simple_acl_search({
     v_to_ldap_filter: async (v) => (
         filters.memberOf(code_to_group_cn(v[codeAttr]))
