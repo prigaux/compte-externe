@@ -174,7 +174,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             })
         }
 
-        function all_attrs_flat(root_attrs: StepAttrsOption) {
+        function get_all_attrs_flat(root_attrs: StepAttrsOption) {
             let all_attrs: StepAttrsOption = {};
             eachAttrs(root_attrs, 'always', (opts, attr) => { all_attrs[attr] = opts })
             return all_attrs;
@@ -204,7 +204,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return axios.get(url, password_to_auth(params)).then((resp) => {
                 var sv = <any>resp.data;
                 initAttrs(sv.attrs);
-                let all_attrs = all_attrs_flat(sv.attrs);
+                let all_attrs = get_all_attrs_flat(sv.attrs);
                     if (sv.v) {
                         sv.v = fromWs(sv.v, all_attrs);
                         if (sv.v_ldap) sv.v_ldap = fromWs(sv.v_ldap, all_attrs);
@@ -221,6 +221,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                     $scope.v_ldap = sv.v_ldap;
                     $scope.v_orig = sv.v_orig;
                     $scope.attrs = sv.attrs;
+                    $scope.all_attrs_flat = all_attrs;
                     $scope.step = pick(sv, ['allow_many', 'labels']);
             }, err => _handleErr(err, $scope, true));
         }
@@ -239,24 +240,24 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             }
         }
 
-        export function homonymes(id, v, attrs) {
-            const v_ = toWs(v, attrs);
+        export function homonymes(id, v, all_attrs_flat) {
+            const v_ = toWs(v, all_attrs_flat);
             return axios.post(api_url + '/homonymes/' + id, v_).then((resp) =>
-                (<any>resp.data).map(v => fromWs(v, attrs))
+                (<any>resp.data).map(v => fromWs(v, all_attrs_flat))
                 , _handleErr);
         }
 
-        export function set(id: string, step: string, v: V, params, attrs: StepAttrsOption) {
+        export function set(id: string, step: string, v: V, params, all_attrs_flat: StepAttrsOption) {
             var url = api_url + '/comptes/' + id + "/" + step;
-            var v_ = toWs(v, attrs);
+            var v_ = toWs(v, all_attrs_flat);
             return axios.put(url, v_, password_to_auth(params)).then(
                 (resp) => resp.data,
                 _handleErr);
         }
 
-        export function new_many(step: string, vs: V[], attrs: StepAttrsOption) {
+        export function new_many(step: string, vs: V[], all_attrs_flat: StepAttrsOption) {
             var url = api_url + '/comptes/new_many/' + step;
-            var vs_ = vs.map(v => toWs(v, attrs));
+            var vs_ = vs.map(v => toWs(v, all_attrs_flat));
             return axios.put(url, vs_).then(
                 (resp) => resp.data,
                 _handleErr);

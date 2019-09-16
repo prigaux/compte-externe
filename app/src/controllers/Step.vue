@@ -71,6 +71,7 @@ function AttrsForm_data() {
     return {
       step: undefined,
       attrs: <StepAttrsOption> undefined,
+      all_attrs_flat: <StepAttrsOption> undefined,
       v: <V> undefined,
       v_orig: <V> undefined,
       v_ldap: <V> undefined,
@@ -163,7 +164,7 @@ export default Vue.extend({
             }
         },
         async update_potential_homonyms(v) {
-            const l = await Ws.homonymes(this.id, v, this.attrs);
+            const l = await Ws.homonymes(this.id, v, this.all_attrs_flat);
             l.forEach(h => h.ignore = false);
             this.all_potential_homonyms = unionBy(this.all_potential_homonyms || [], l, 'uid');
         },
@@ -213,7 +214,7 @@ export default Vue.extend({
         let query;
         [ v_from_prevStep, query ] = Helpers.partitionObject(this.v, (k, _) => (this.attrs[k] || {}).uiType === 'password');
 
-        query = Ws.toWs(query, this.attrs);
+        query = Ws.toWs(query, this.all_attrs_flat);
 
         if (!isEmpty(v_from_prevStep)) {
             query.prev = this.$route.path.replace(/^\//, '');
@@ -235,7 +236,7 @@ export default Vue.extend({
         }          
       },
       send() {
-          return Ws.set(this.id, this.stepName, this.v, this.v_pre, this.attrs).then(resp => {
+          return Ws.set(this.id, this.stepName, this.v, this.v_pre, this.all_attrs_flat).then(resp => {
               if (resp.error === "no_moderators") {
                 alert(resp.error);
               } else {
@@ -246,7 +247,7 @@ export default Vue.extend({
       send_new_many() {
             this.to_import.lines.forEach(v => defaults(v, this.v));
 
-            return Ws.new_many(this.stepName, this.to_import.lines, this.attrs).then(resp => {
+            return Ws.new_many(this.stepName, this.to_import.lines, this.all_attrs_flat).then(resp => {
                 this.imported = resp;
                 this.imported.forEach((resp, i) => {
                     resp.v = this.to_import.lines[i];
