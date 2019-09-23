@@ -103,7 +103,7 @@ type step = {
   allow_many?: boolean; 
   
   attrs: StepAttrsOption
-  attrs_override?: ((v) => StepAttrsOption);
+  attrs_override?: ((req: req, sv: sv) => Promise<StepAttrsOption>);
   next?: string | ((v) => Promise<string>);
   nextBrowserStep?: string;
   notify?: StepNotify;

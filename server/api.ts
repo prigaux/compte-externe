@@ -32,10 +32,10 @@ function name2step(name: string): step {
 
 const step = (sv: sv) => name2step(sv.step);
 
-function add_step_attrs<SV extends sv>(sv: SV) {
+async function add_step_attrs<SV extends sv>(req: req, sv: SV) {
     const { attrs, attrs_override } = step(sv);
     let sva = sv as SV & { attrs: StepAttrsOption };
-    sva.attrs = attrs_override ? merge_attrs_overrides(attrs, attrs_override(sv.v)) : attrs;
+    sva.attrs = attrs_override ? merge_attrs_overrides(attrs, await attrs_override(req, sv)) : attrs;
     return sva;
 }
 
@@ -128,7 +128,7 @@ async function getRaw(req: req, id: id, wanted_step: string): Promise<sva> {
         }
     }
     await checkAcls(req, sv);
-    return add_step_attrs(sv);
+    return await add_step_attrs(req, sv);
 }
 
 function get(req: req, id: id, wanted_step: string) {
@@ -181,7 +181,7 @@ function advance_sv(req: req, sv: sva) : Promise<svr> {
             return svr;
         }
     }).then(svr => {
-        return svr.step ? add_step_attrs(svr) : svr as svra;
+        return svr.step ? add_step_attrs(req, svr) : svr as svra;
     });
 }
 
@@ -253,7 +253,7 @@ async function listAuthorized(req: req) {
         if (!valid) console.error("ignoring sv in db with invalid step " + sv.step);
         return valid;
     });
-    const svas = svs.map(add_step_attrs)
+    const svas = await Promise.all(svs.map(sv => add_step_attrs(req, sv)))
     return svas.map(export_sv);
 }
 
