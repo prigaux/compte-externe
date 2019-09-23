@@ -263,6 +263,14 @@ export const genLogin = (sn: string, givenName: string): Promise<string> => {
 
 };
 
+export const prefix_suffix_to_group_and_code = (prefix, suffix) => {
+    const regexp_cn_to_code = new RegExp("^" + _.escapeRegExp(prefix) + "(.*)" + _.escapeRegExp(suffix) + "$");
+    return {
+        code_to_group_cn: code => prefix + code + suffix,
+        group_cn_to_code: cn => (cn.match(regexp_cn_to_code) || [])[1],
+    }
+}
+
 export const filter_user_memberOfs = async (group_cn_to_code: (cn: string) => string, user: CurrentUser) => {
     const user_ = await ldap.searchOne(conf.ldap.base_people, currentUser_to_filter(user), { memberOf: [''] }, {});
     const r = [];

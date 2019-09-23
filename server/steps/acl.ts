@@ -69,10 +69,11 @@ export const structureRoles = (code_attr: string, rolesFilter: string): acl_sear
 });
 
 // Usage example:
-//   acl.group_for_each_attr_codes('structureParrain', 
-//       code => `applications.comptex.invite.${code}-managers`,
-//       cn => { const m = cn.match(/applications\.comptex\.invite\.(.*)-managers/); return m && m[1] })
-export const group_for_each_attr_codes = (codeAttr: string, code_to_group_cn: (code: string) => string, group_cn_to_code: (cn: string) => string): acl_search => _convert_simple_acl_search({
+//   acl.group_for_each_attr_codes(
+//      'structureParrain', 
+//       search_ldap.prefix_suffix_to_group_and_code('applications.comptex.invite.', '-managers')
+//   )
+export const group_for_each_attr_codes = (codeAttr: string, { code_to_group_cn, group_cn_to_code }): acl_search => _convert_simple_acl_search({
     v_to_ldap_filter: async (v) => (
         filters.memberOf(code_to_group_cn(v[codeAttr]))
     ),
@@ -85,13 +86,13 @@ export const group_for_each_attr_codes = (codeAttr: string, code_to_group_cn: (c
 // Allow many LDAP groups (using LDAP filter & regex)
 // Usage example:
 //   acl.ldapGroupsMatching(
-//       '(cn=applications.comptex.invite.*-managers)', 
-//       cn => cn.match(/^applications\.comptex\.invite\..*-managers$/))
-export const ldapGroupsMatching = (ldap_group_filter: string, group_cn_to_code: (groupId: string) => string): acl_search => _convert_simple_acl_search({
+//       search_ldap.prefix_suffix_to_group_and_code('applications.comptex.invite.', '-managers')
+//   )
+export const ldapGroupsMatching = ({ code_to_group_cn, group_cn_to_code }): acl_search => _convert_simple_acl_search({
     // search users that are memberOf of groups matching "ldap_group_filter"
     v_to_ldap_filter: async (_v) => {
         // find all groups matching "ldap_group_filter"
-        const groups = await ldap.searchThisAttr(conf.ldap.base_groups, ldap_group_filter, 'cn', '');
+        const groups = await ldap.searchThisAttr(conf.ldap.base_groups, `(cn=${code_to_group_cn('*')})`, 'cn', '');
         // create an LDAP filter matching users member of thoses groups
         return filters.or(groups.map(cn => filters.memberOf(cn)))
     },
