@@ -5,7 +5,6 @@ type one<In, Out> = { param: In } & promise_defer<Out>
 type grouped<In, Out> = one<In, Out>[]
 export interface options { nb_parallel_calls: number, group_size: number }
 
-require('promise.prototype.finally').shim();
 
 function add_to_grouped_calls<In, Out>(grouped: grouped<In, Out>, param: In) {
     const deferred = promise_defer<Out>();

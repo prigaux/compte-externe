@@ -15,7 +15,6 @@ import { filters } from './ldap';
 import gen_gsh_script from './gen_gsh_script';
 require('./helpers');
 
-require('promise.prototype.finally').shim();
 
 const router = express.Router();
 
