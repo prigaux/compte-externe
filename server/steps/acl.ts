@@ -68,17 +68,6 @@ export const structureRoles = (code_attr: string, rolesFilter: string): acl_sear
     ),
 });
 
-const _filter_user_memberOfs = async (group_cn_to_code: (cn: string) => string, user: CurrentUser) => {
-    const user_ = await ldap.searchOne(conf.ldap.base_people, search_ldap.currentUser_to_filter(user), { memberOf: [''] }, {});
-    const r = [];
-    for (const memberOf of user_.memberOf || []) {
-        const cn = conf.ldap.memberOf_to_group_cn(memberOf);
-        const code = cn && group_cn_to_code(cn);
-        if (code) r.push(code);
-    }
-    return r;
-}
-
 // Usage example:
 //   acl.group_for_each_attr_codes('structureParrain', 
 //       code => `applications.comptex.invite.${code}-managers`,
@@ -88,7 +77,7 @@ export const group_for_each_attr_codes = (codeAttr: string, code_to_group_cn: (c
         filters.memberOf(code_to_group_cn(v[codeAttr]))
     ),
     user_to_subv: async (user) => {
-      const codes = await _filter_user_memberOfs(group_cn_to_code, user);
+      const codes = await search_ldap.filter_user_memberOfs(group_cn_to_code, user);
       return codes.map(code => ({ [codeAttr]: code }))
     },
 });
@@ -108,7 +97,7 @@ export const ldapGroupsMatching = (ldap_group_filter: string, group_cn_to_code: 
     },
     // is "user" memberOf of a group matching "group_cn_to_code"
     user_to_subv: async (user) => {
-        const codes = await _filter_user_memberOfs(group_cn_to_code, user);
+        const codes = await search_ldap.filter_user_memberOfs(group_cn_to_code, user);
         return codes.length > 0;
     },
 });
