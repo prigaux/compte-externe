@@ -242,17 +242,19 @@ const non_initial_steps = () => (
     _.pickBy(conf_steps.steps, (step) => !step.initialStep && title_in_list(step.labels))
 );
 
-function listAuthorized(req: req) {
+async function listAuthorized(req: req) {
     if (!req.user) return Promise.reject("Unauthorized");
-    return acl_checker.mongo_query(req.user, non_initial_steps()).then(query => (
-        db.listByModerator(query)
-    )).then(svs => (
-        svs && svs.filter(sv => {
-            const valid = sv.step in conf_steps.steps;
-            if (!valid) console.error("ignoring sv in db with invalid step " + sv.step);
-            return valid;
-        }).map(add_step_attrs).map(export_sv)
-    ));
+    const query = await acl_checker.mongo_query(req.user, non_initial_steps())
+    let svs = await db.listByModerator(query);
+    
+    if (!svs) return null;
+    svs = svs.filter(sv => {
+        const valid = sv.step in conf_steps.steps;
+        if (!valid) console.error("ignoring sv in db with invalid step " + sv.step);
+        return valid;
+    });
+    const svas = svs.map(add_step_attrs)
+    return svas.map(export_sv);
 }
 
 const body_to_v = search_ldap.v_from_WS;
