@@ -124,6 +124,7 @@ export function flatten_attrs(attrs: StepAttrsOption, v: v) {
 }
 
 const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption) => void) => {
+    if (!val) val = opts.default;
     if (val && opts.oneOf) {
         const choice = find_choice(opts.oneOf, val);
         if (choice && choice.merge_patch_parent_properties && !choice.merge_patch_options) {

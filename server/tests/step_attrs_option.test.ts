@@ -55,6 +55,15 @@ describe('export_v', () => {
         test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2" });
         test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
     });
+    it("should handle oneOf merge_patch_parent_properties with default", () => {
+        const attrs = { duration: { default: "1", oneOf: [
+            { const: "1", merge_patch_parent_properties: { sn: {} } }, 
+            { const: "2" },
+        ] } }
+        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2" });
+        test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
+        test(attrs, { sn: "Rigaux" }, { sn: "Rigaux" });
+    });
     it("should handle oneOf merge_patch_parent_properties different toUserOnly", () => {
         const attrs = { a_or_b }
         test(attrs, { a_or_b: "a", a: "aa", b: "bb" }, { a_or_b: "a", a: "aa" });
