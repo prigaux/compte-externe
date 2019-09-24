@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-import { pickBy } from 'lodash';
+import { pickBy, findKey } from 'lodash';
 import genericAttr from './genericAttr.vue';
 import BarcodeAttrs from './BarcodeAttrs.vue';
 
@@ -20,7 +20,7 @@ export default Vue.extend({
 
     computed: {
         selectedTab_() {
-            return this.selectedTab || Object.keys(this.tabs)[0];
+            return this.selectedTab || findKey(this.tabs, (_opts, name) => this.v[name]) || Object.keys(this.tabs)[0];
         },
         tabs() {
             return this.attrs ? pickBy(this.attrs, opts => opts.properties) : {};
