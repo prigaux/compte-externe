@@ -101,7 +101,11 @@ export function export_v(attrs: StepAttrsOption, v) {
     const r = {};
     function rec(attrs: StepAttrsOption) {
         _.forEach(attrs, (opts, key) => {
-            if (!opts.hidden && key in v) r[key] = v[key];
+            if (!opts.hidden && key in v) {
+                let val = v[key];
+                if (opts.anonymize) val = opts.anonymize(v[key]);
+                r[key] = val;
+            }
             if (opts.properties) rec(opts.properties);
             handle_chosen_oneOf_mppp(opts, v[key], rec);
         });
@@ -137,6 +141,7 @@ const find_choice = (oneOf: StepAttrOptionChoices[], val) => oneOf.find(choice =
 
 const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : StepAttrOption) => {
     opt = toUserOnly ? { optional: true, readOnly: true, ...opt} : opt;
+    delete opt.anonymize;
     if (opt.oneOf_async) opt.oneOf_async = true as any;
     if (opt.properties) opt.properties = exportAttrs(opt.properties);
     if (opt.oneOf) {
