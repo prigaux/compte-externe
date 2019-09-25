@@ -4,7 +4,7 @@
 # for initscript
 npm install -g forever
 
-# for ldapjs & phantomjs
+# for tests with phantomjs
 apt-get install git-core bzip2 make
 
 npm install
@@ -24,11 +24,11 @@ If ```GET /comptes/:id/:step```
 * read sv from database
 
 With current sv.step:
-* ```.attrs``` is assigned/computed
 * ```.acls``` is used to check authenticated user is allowed
-* ```.v``` is filtered using ```.attrs```
+* ```sv.attrs``` is assigned from ```.attrs``` merged with optional ```.attrs_override``` (computed using req and current sv)
+* ```sv.v``` is filtered using ```.attrs```
 
-It returns { step, attrs, v }
+It returns sv
 
 ## ```PUT /comptes/```
 
@@ -67,7 +67,7 @@ Read sv from database
 ## ```attrs```
 
 By default, the value is sent to the browser, and can be modified with potential restrictions:
-* ```oneOf```: restricted list of possibilities (const + name list)
+* ```oneOf```: restricted list of possibilities (const + title list)
 * ```pattern```: regexp the value sent by the browser must match
 * ```max```: max number the value sent by the browser must match
 
@@ -82,7 +82,7 @@ TODO
 
 # Authentication
 
-* if `.action_pre` or `.action_post` throws exception `Unauthorized`
+If `.action_pre` or `.action_post` throws exception `Unauthorized`
 * the API will return HTTP status 401 (cf server/utils.ts:respondJson)
 * the javascript code will redirect to `/login/local?then=`*current step* (cf app/services/ws.ts)
 * which will force shibboleth authentication (cf "Apache shibboleth SP configuration" below)
