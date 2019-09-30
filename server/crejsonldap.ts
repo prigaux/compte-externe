@@ -36,7 +36,7 @@ const prepare_crejsonldap_param = (v: v) => {
 // - 200ms minimal response time
 // - 200ms ssh overhead
 // - 14MB RSS memory usage
-const call_many = (vs: v[], opts : options) => {
+export const call_many = (vs: v[], opts : options) => {
     let param = JSON.stringify({
         retattrs: ['uid', 'accountStatus'],
         ...opts, 
