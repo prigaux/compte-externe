@@ -68,6 +68,12 @@ const people_filters_ = (token: string, and_filters: string[]) => (
     people_filters(token).map(filter => filters.and([ ...and_filters, filter ]))
 )
 
+export const people_choices = (filter: string) => async (token: string, sizeLimit: number) => {
+    let filters_ = people_filters_(token, filter ? [filter] : []);
+    const l = await ldap.searchMany(conf.ldap.base_people, filters_, 'uid', { uid: '', displayName: '' }, undefined, { sizeLimit })
+    return l.map(e => ({ const: e.uid, title: `${e.displayName} (${e.uid})` }))
+}
+
 function suggested_mail(sn: string, givenName: string) {
     let s = remove_accents(sn);
     if (givenName) {
