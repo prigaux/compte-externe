@@ -6,7 +6,7 @@ import * as mongodb from 'mongodb';
 import * as conf from './conf';
 import { get_delete } from './helpers';
 
-function renameKey(o, oldK, newK) {
+export function renameKey(o, oldK, newK) {
     if (o && (oldK in o)) {
         o = _.clone(o);
         o[newK] = get_delete(o, oldK);
