@@ -114,7 +114,7 @@ const conf = {
                 global_mifare: '',
 
                 eduPersonPrimaryAffiliation: '',
-                eduPersonEntitlement: '',
+                eduPersonEntitlement: [],
                 supannRoleEntite: [],
                 supannRoleGenerique: [],
                 supannEntiteAffectationPrincipale: '',

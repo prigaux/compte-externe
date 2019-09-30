@@ -17,7 +17,7 @@ getGroup(fullname) { return GroupFinder.findByName(grouperSession, fullname, fal
     for (const p of profiles) {
         let [parentStem, id] = p.const.split(':');
         parentStem = parentStem.replace(/^\{COMPTEX\}/, 'students:').replace('.', ':');
-        const filter = filters.eq("eduPersonEntitlement", p.fv().eduPersonEntitlement);
+        const filter = filters.and(p.fv().eduPersonEntitlement.map(s => filters.eq("eduPersonEntitlement", s)));
         res.write(`
 attrs = new Hashtable();
 attrs{"parentStem"} = "${parentStem}";
