@@ -7,7 +7,7 @@ const checkValidity = {
   methods: {
     onchange(event) {
         this.$emit("input", event.target.value);
-        this.checkValidity();
+        setTimeout(() => this.checkValidity(), 1); // workaround https://bugzilla.mozilla.org/show_bug.cgi?id=1584963
         return false;
     },
     on_value_set(v) {
