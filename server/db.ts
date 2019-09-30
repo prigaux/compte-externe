@@ -26,12 +26,14 @@ function toDB(sv: sv) {
     return sv_;
 }
 
-let real_svs: mongodb.Collection = null;
+let client: mongodb.Db = null;
 
-function svs() {
-  if (!real_svs) throw "db.init not done";
-  return real_svs;
+export const collection = (name: string) => {
+    if (!client) throw "db.init not done";
+    return client.collection(name);  
 }
+
+const svs = () => collection('sv')
 
 export const or = (l: Dictionary<any>[]) => l.length === 1 ? l[0] : { $or: l } as Dictionary<any>;
 
@@ -65,12 +67,12 @@ export const save = (sv: sv) => {
 };
 
 export function init(callback) {
-  mongodb.MongoClient.connect(conf.mongodb.url, (error, client) => {
+  mongodb.MongoClient.connect(conf.mongodb.url, (error, client_) => {
       if (error) {
           console.log(error);
           process.exit(1);
       }
-      real_svs = client.collection('sv');
+      client = client_
 
       callback();
   });
