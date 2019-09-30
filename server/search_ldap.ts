@@ -59,6 +59,15 @@ export const etablissements = (token: string, sizeLimit: number) => {
     return ldap.search(conf.ldap.base_etablissements, filter, conf.ldap.etablissements.types, conf.ldap.etablissements.attrs, {sizeLimit})
 };
 
+const people_filters = (token: string) => ([ 
+    filters.eq('uid', token),
+    filters.fuzzy(['displayName', 'cn'], token),
+])
+
+const people_filters_ = (token: string, and_filters: string[]) => (
+    people_filters(token).map(filter => filters.and([ ...and_filters, filter ]))
+)
+
 function suggested_mail(sn: string, givenName: string) {
     let s = remove_accents(sn);
     if (givenName) {
@@ -166,12 +175,12 @@ export const subv_to_eq_filters = (subv: Partial<v>) => {
 
 export function searchPeople_matching_acl_ldap_filter<T extends {}>(acl_filter: acl_ldap_filter, step_filter: string, token: string, attrTypes: T, options: ldap.Options): Promise<T[]> {
     if (acl_filter === false) return Promise.resolve([]);
-    let and_filters = [ filters.fuzzy(['displayName', 'cn'], token) ];    
-    if (acl_filter !== true) and_filters.push(acl_filter);
-    if (step_filter) and_filters.push(step_filter);
-    const filter_ = filters.and(and_filters);
-    console.log("searchPeople_matching_acl_ldap_filter with filter", filter_);
-    return ldap.search(conf.ldap.base_people, filter_, attrTypes, conf.ldap.people.attrs, options);
+    const many_filters = people_filters_(token, [
+        ... acl_filter !== true ? [acl_filter] : [],
+        ... step_filter ? [step_filter] : [],
+    ])
+    console.log("searchPeople_matching_acl_ldap_filter with filter", many_filters);
+    return ldap.searchMany(conf.ldap.base_people, many_filters, 'uid', attrTypes, conf.ldap.people.attrs, options);
 }
 
 // export it to allow override
