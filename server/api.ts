@@ -280,12 +280,14 @@ const exportStep = (step: step) : Partial<step> => (
 );
 const loggedUserInitialSteps = (req: req) => (
   acl_checker.allowed_step_ldap_filters(req.user, initial_steps()).then(l => (
-    l.filter(({ step }) => (
-          conf_steps.steps[step].initialStep
-    )).map(({ step, filter }) => (
-        { id: step, 
+    l.map(({ step, filter }) => (
+        { id: step, filter, step: conf_steps.steps[step] }
+    )).filter(({ step }) => (
+          step.initialStep
+    )).map(({ id, step, filter }) => (
+        { id, 
           ldap_filter: filter,
-          ...exportStep(conf_steps.steps[step]),
+          ...exportStep(step),
         }
     ))
   ))
