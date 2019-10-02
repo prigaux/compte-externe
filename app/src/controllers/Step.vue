@@ -10,14 +10,11 @@
     <component :is="step_description" :v_pre="v_pre" :v="v"></component>
   </div>
 
-  <div v-if="step.allow_many">
-    
-        <div v-if="imported">
-            <ImportResult :imported="imported" :ordered_fields="to_import.fields" @done="imported = to_import = undefined"></ImportResult>
-        </div>
+  <div v-if="imported">
+    <ImportResult :imported="imported" :ordered_fields="to_import.fields" @done="imported = to_import = undefined"></ImportResult>
   </div>
 
-  <div v-if="!imported">
+  <div v-else>
 
    <div v-if="check_homonyms && !all_potential_homonyms">
        Recherche des homonymes, veuillez patienter...
