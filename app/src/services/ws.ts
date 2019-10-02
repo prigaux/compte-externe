@@ -250,7 +250,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         export function set(id: string, step: string, v: V, params, all_attrs_flat: StepAttrsOption) {
             var url = api_url + '/comptes/' + id + "/" + step;
             var v_ = toWs(v, all_attrs_flat);
-            return axios.put(url, v_, password_to_auth(params)).then(
+            const params_ = password_to_auth(params);
+            return axios.put(url, v_, params_).then(
                 (resp) => resp.data,
                 _handleErr);
         }
