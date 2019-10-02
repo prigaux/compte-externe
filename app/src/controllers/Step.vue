@@ -15,9 +15,6 @@
         <div v-if="imported">
             <ImportResult :imported="imported" :ordered_fields="to_import.fields" @done="imported = to_import = undefined"></ImportResult>
         </div>
-        <div v-else>
-            <ImportFile :attrs="attrs" @change="val => to_import = val"></ImportFile>
-        </div>
   </div>
 
 <div v-if="!imported">
@@ -38,6 +35,10 @@
                 <p/>
                 {{v.givenName}} {{v.sn}} <ExistingAccountWarning :v="v"></ExistingAccountWarning> 
             </div>
+    </div>
+
+    <div v-if="step.allow_many">
+        <ImportFile :attrs="attrs" @change="val => to_import = val"></ImportFile>
     </div>
              
     <attrsForm
