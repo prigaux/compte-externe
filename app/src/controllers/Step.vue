@@ -17,16 +17,16 @@
         </div>
   </div>
 
-<div v-if="!imported">
+  <div v-if="!imported">
 
- <div v-if="check_homonyms && !all_potential_homonyms">
-     Recherche des homonymes, veuillez patienter...
- </div>
- <div v-else-if="check_homonyms && potential_homonyms.length">
-    <Homonyms :v="v" :l="potential_homonyms" @merge="merge" @no_merge="no_merge">
-    </Homonyms>
- </div>
- <div v-else>
+   <div v-if="check_homonyms && !all_potential_homonyms">
+       Recherche des homonymes, veuillez patienter...
+   </div>
+   <div v-else-if="check_homonyms && potential_homonyms.length">
+      <Homonyms :v="v" :l="potential_homonyms" @merge="merge" @no_merge="no_merge">
+      </Homonyms>
+   </div>
+   <div v-else>
 
     <div v-if="attrs.global_eduPersonPrimaryAffiliation && attrs.profilename && v.uid && !v.profilename_to_modify">
         <p style="height: 2em"></p>
@@ -45,9 +45,9 @@
         :v="v" :v_ldap="v_ldap" :attrs="other_attrs" :step_labels="step.labels" :stepName="stepName"
         @submit="submit" @reject="reject"></attrsForm>
 
- </div> <!-- !homonyms -->
-</div> <!-- imported -->
-</div> <!-- v -->
+   </div> <!-- !homonyms -->
+  </div> <!-- imported -->
+ </div> <!-- v -->
 </div>
 </template>
 
