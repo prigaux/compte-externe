@@ -208,20 +208,20 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 let all_attrs = get_all_attrs_flat($scope.attrs);
                 if (sv.v_ldap) $scope.v_ldap = fromWs(sv.v_ldap, all_attrs);
                 let v
-                    if (sv.v) {
-                        v = fromWs(sv.v, all_attrs);
-                        $scope.v_orig = Helpers.copy(v);
-                        // pass v_orig to attrs opts.validator:
-                        handleAttrsValidators(all_attrs, $scope.v_orig);
-                    }
+                if (sv.v) {
+                    v = fromWs(sv.v, all_attrs);
+                    $scope.v_orig = Helpers.copy(v);
+                    // pass v_orig to attrs opts.validator:
+                    handleAttrsValidators(all_attrs, $scope.v_orig);
+                }
                     Helpers.eachObject(all_attrs, (attr, opts) => {
                         const default_ = fromWs_one(attr, params[`default_${attr}`] || hash_params[`default_${attr}`], all_attrs);
                         const set_ = fromWs_one(attr, opts.uiType !== 'newPassword' && params[attr] || params[`set_${attr}`] || hash_params[`set_${attr}`], all_attrs);
                         v[attr] = set_ || v[attr] || default_;
                     });
-                    $scope.v = v;
-                    $scope.all_attrs_flat = all_attrs;
-                    $scope.step = pick(sv, ['allow_many', 'labels']);
+                $scope.v = v;
+                $scope.all_attrs_flat = all_attrs;
+                $scope.step = pick(sv, ['allow_many', 'labels']);
             }, err => _handleErr(err, $scope, true));
         }
 
