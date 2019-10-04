@@ -3,7 +3,8 @@
     <StepV v-for="(v, index) in vs" :key="index"
         :wanted_id="wanted_id" :stepName="stepName"
         :id="id" :v_pre="v_pre"
-        :step="step" :attrs="attrs" :all_attrs_flat="all_attrs_flat" :v="v" :v_orig="vs_orig[index]" :v_ldap="v_ldap"
+        :step="index === 0 ? step : non_first_step" :attrs="attrs" :all_attrs_flat="all_attrs_flat" :v="v" :v_orig="vs_orig[index]" :v_ldap="v_ldap"
+        :onelineForm="onelineForm"
     ></StepV>
 </div>
 </template>
@@ -13,7 +14,7 @@ import Vue from "vue";
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { isEmpty, fromPairs } from 'lodash';
+import { isEmpty, fromPairs, every } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
 
 import { v_from_prevStep } from './StepV.vue';
@@ -63,6 +64,13 @@ export default Vue.extend({
         hash_params() {
             if (!this.$route.hash) return {};
             return fromPairs(this.$route.hash.replace(/^#/, '').split('&').map((s: string) => s.split('=')));
+        },
+        onelineForm() {
+            return this.vs && every(this.all_attrs_flat || [], opts => opts.readOnly)
+        },
+        non_first_step() {
+            const labels = this.step.labels
+            return { ...this.step, labels: { ...labels, title: '' } }
         },
     },
 
