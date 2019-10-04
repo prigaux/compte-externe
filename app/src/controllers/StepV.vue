@@ -54,8 +54,8 @@ import conf from '../conf';
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { defaults, isEqual, unionBy, isEmpty, fromPairs } from 'lodash';
-import { V, StepAttrsOption } from '../services/ws';
+import { defaults, isEqual, unionBy, isEmpty } from 'lodash';
+import { StepAttrsOption } from '../services/ws';
 import { compute_mppp_and_handle_default_values, filterAttrs } from '../services/mppp_and_defaults';
 
 import ImportFile from '../import/ImportFile.vue';
@@ -67,12 +67,6 @@ import ExistingAccountWarning from '../controllers/ExistingAccountWarning.vue';
 
 function AttrsForm_data() {
     return {
-      step: undefined,
-      attrs: <StepAttrsOption> undefined,
-      all_attrs_flat: <StepAttrsOption> undefined,
-      v: <V> undefined,
-      v_orig: <V> undefined,
-      v_ldap: <V> undefined,
       resp: undefined,
       to_import: undefined,
       imported: <any[]> undefined,
@@ -89,16 +83,11 @@ export default Vue.extend({
     props: [
         'wanted_id', 'stepName', 
         'id', 'v_pre',
+        'step', 'attrs', 'all_attrs_flat', 'v', 'v_orig', 'v_ldap',
     ],
     data: AttrsForm_data,
     components: { ImportFile, ImportResult, Homonyms, ExistingAccountWarning, attrsForm },
 
-    watch: {
-        '$route': function() {
-            Helpers.assign(this, AttrsForm_data());
-            this.init();
-        },
-    },
     computed: {
         initialStep() {
             return !this.wanted_id && this.stepName;
@@ -125,10 +114,6 @@ export default Vue.extend({
             ));
             return attrs;
         },
-        hash_params() {
-            if (!this.$route.hash) return {};
-            return fromPairs(this.$route.hash.replace(/^#/, '').split('&').map((s: string) => s.split('=')));
-        },
         step_description() {
             const template = this.step && this.step.labels && this.step.labels.description;
             return template && Vue.extend({ props: ['v_pre', 'v'], template: "<div>" + template + "</div>" });
@@ -140,10 +125,8 @@ export default Vue.extend({
 
     methods: {
         init() {
-            Ws.getInScope(this, this.id, this.v_pre, this.hash_params, this.stepName).then(() => {
-                if (this.noInteraction) this.send();
-                this.may_update_potential_homonyms({});
-            });    
+            if (this.noInteraction) this.send();
+            this.may_update_potential_homonyms({});
         },
         async may_update_potential_homonyms(v, v_orig = null) {
             if (this.check_homonyms && !isEqual(v, v_orig)) {
