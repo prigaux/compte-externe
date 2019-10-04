@@ -84,13 +84,7 @@ export let v_from_prevStep = {};
 
 export default Vue.extend({
     mounted() {
-        const prevStep = this.$route.query && this.$route.query.prev;
-        if (prevStep && isEmpty(v_from_prevStep)) {
-            // we lost information passed through javascript memory, so go back to initial step
-            router.replace({ path: '/' + prevStep });
-        } else {
-            this.init();
-        }
+        this.init();
     },
     props: [
         'wanted_id', 'stepName', 

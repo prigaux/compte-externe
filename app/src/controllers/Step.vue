@@ -9,11 +9,21 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { router } from '../router';
+import { isEmpty } from 'lodash';
+
 import { v_from_prevStep } from './StepV.vue';
 import StepV from './StepV.vue';
 
 
 export default Vue.extend({
+    mounted() {
+        const prevStep = this.$route.query && this.$route.query.prev;
+        if (prevStep && isEmpty(v_from_prevStep)) {
+            // we lost information passed through javascript memory, so go back to initial step
+            router.replace({ path: '/' + prevStep });
+        }
+    },
     props: [ 'wanted_id', 'stepName' ],
     components: { StepV },
 
