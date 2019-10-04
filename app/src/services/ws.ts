@@ -204,23 +204,23 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return axios.get(url, password_to_auth(params)).then((resp) => {
                 var sv = <any>resp.data;
                 initAttrs(sv.attrs);
-                let all_attrs = get_all_attrs_flat(sv.attrs);
+                $scope.attrs = sv.attrs;
+                let all_attrs = get_all_attrs_flat($scope.attrs);
+                let v
                     if (sv.v) {
-                        sv.v = fromWs(sv.v, all_attrs);
-                        if (sv.v_ldap) sv.v_ldap = fromWs(sv.v_ldap, all_attrs);
-                        sv.v_orig = Helpers.copy(sv.v);
-                        handleAttrsValidators(all_attrs, sv.v_orig);
+                        v = fromWs(sv.v, all_attrs);
+                        if (sv.v_ldap) $scope.v_ldap = fromWs(sv.v_ldap, all_attrs);
+                        $scope.v_orig = Helpers.copy(v);
+                        // pass v_orig to attrs opts.validator:
+                        handleAttrsValidators(all_attrs, $scope.v_orig);
                     }
-                    sv.modifyTimestamp = new Date(sv.modifyTimestamp);
+                    sv.modifyTimestamp = new Date(sv.modifyTimestamp); // unused??
                     Helpers.eachObject(all_attrs, (attr, opts) => {
                         const default_ = fromWs_one(attr, params[`default_${attr}`] || hash_params[`default_${attr}`], all_attrs);
                         const set_ = fromWs_one(attr, opts.uiType !== 'newPassword' && params[attr] || params[`set_${attr}`] || hash_params[`set_${attr}`], all_attrs);
-                        sv.v[attr] = set_ || sv.v[attr] || default_;
+                        v[attr] = set_ || v[attr] || default_;
                     });
-                    $scope.v = sv.v;
-                    $scope.v_ldap = sv.v_ldap;
-                    $scope.v_orig = sv.v_orig;
-                    $scope.attrs = sv.attrs;
+                    $scope.v = v;
                     $scope.all_attrs_flat = all_attrs;
                     $scope.step = pick(sv, ['allow_many', 'labels']);
             }, err => _handleErr(err, $scope, true));
