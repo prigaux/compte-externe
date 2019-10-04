@@ -1,9 +1,9 @@
 <template>
 <div>
-    <StepV v-if="v"
+    <StepV v-for="(v, index) in vs" :key="index"
         :wanted_id="wanted_id" :stepName="stepName"
         :id="id" :v_pre="v_pre"
-        :step="step" :attrs="attrs" :all_attrs_flat="all_attrs_flat" :v="v" :v_orig="v_orig" :v_ldap="v_ldap"
+        :step="step" :attrs="attrs" :all_attrs_flat="all_attrs_flat" :v="v" :v_orig="vs_orig[index]" :v_ldap="v_ldap"
     ></StepV>
 </div>
 </template>
@@ -25,8 +25,8 @@ function AttrsForm_data() {
       step: undefined,
       attrs: <StepAttrsOption> undefined,
       all_attrs_flat: <StepAttrsOption> undefined,
-      v: <V> undefined,
-      v_orig: <V> undefined,
+      vs: <V> undefined,
+      vs_orig: <V> undefined,
       v_ldap: <V> undefined,
     };    
 }

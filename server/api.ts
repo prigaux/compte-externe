@@ -76,6 +76,7 @@ async function may_export_v_ldap(sv: sva) {
 function export_sv(sv: sva) {
     sv = _.clone(sv);
     sv.v = export_v(sv_attrs(sv), sv.v) as v;
+    if (sv.vs) sv.vs = sv.vs.map(v => export_v(sv_attrs(sv), v) as v);
     sv.attrs = exportAttrs(sv.attrs);
     return { ...exportStep(step(sv)), ...sv };
 }
