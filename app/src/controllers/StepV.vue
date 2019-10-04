@@ -80,7 +80,7 @@ function AttrsForm_data() {
     };    
 }
 
-let v_from_prevStep = {};
+export let v_from_prevStep = {};
 
 export default Vue.extend({
     mounted() {
@@ -92,7 +92,10 @@ export default Vue.extend({
             this.init();
         }
     },
-    props: [ 'wanted_id', 'stepName' ],
+    props: [
+        'wanted_id', 'stepName', 
+        'id', 'v_pre',
+    ],
     data: AttrsForm_data,
     components: { ImportFile, ImportResult, Homonyms, ExistingAccountWarning, attrsForm },
 
@@ -103,9 +106,6 @@ export default Vue.extend({
         },
     },
     computed: {
-        id() {
-            return this.wanted_id || "new";
-        },
         initialStep() {
             return !this.wanted_id && this.stepName;
         },
@@ -130,11 +130,6 @@ export default Vue.extend({
                 !(this.$route.query && (k in this.$route.query)) // do not display things that have been forced in the url
             ));
             return attrs;
-        },
-        v_pre() {
-            let v = { ...this.$route.query, ...v_from_prevStep };
-            delete v.prev;
-            return v;
         },
         hash_params() {
             if (!this.$route.hash) return {};
