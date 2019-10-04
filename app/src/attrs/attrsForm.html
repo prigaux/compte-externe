@@ -1,4 +1,4 @@
-<form novalidate name="myForm" v-on-submit.prevent="submit" class="form-horizontal">
+<form novalidate name="myForm" v-on-submit.prevent="submit" :class="onelineForm ? 'form-inline' : 'form-horizontal'">
 
    <fieldset>  
     <my-bootstrap-form-group name="Shib_Identity_Provider" label="Etablissement" v-if="v.Shib_Identity_Provider">
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-   <div v-for="(opts, name) in attrs" :key="name">
+   <div v-for="(opts, name) in attrs" :key="name" class="genericAttrs">
      <genericAttr :name="name" :opts="opts" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :submitted="submitted" :stepName="stepName"
          v-if="name != 'barcode' && name != 'mifare' && opts.uiType !== 'homonym' && opts.uiType !== 'tab'">
      </genericAttr>

@@ -1,5 +1,5 @@
 <template>
- <div v-if="opts && (!opts.readOnly || validValue)">
+ <div v-if="opts && (!opts.readOnly || validValue)" class="genericAttr">
 
   <DateAttr v-model="val" :name="name" v-if="uiType === 'date'"
     :ldap_value="ldap_value"

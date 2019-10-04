@@ -40,6 +40,7 @@
              
     <attrsForm
         :v="v" :v_ldap="v_ldap" :attrs="other_attrs" :step_labels="step.labels" :stepName="stepName"
+        :onelineForm="onelineForm"
         @submit="submit" @reject="reject"></attrsForm>
 
    </div> <!-- !homonyms -->
@@ -84,6 +85,7 @@ export default Vue.extend({
         'wanted_id', 'stepName', 
         'id', 'v_pre',
         'step', 'attrs', 'all_attrs_flat', 'v', 'v_orig', 'v_ldap',
+        'onelineForm',
     ],
     data: AttrsForm_data,
     components: { ImportFile, ImportResult, Homonyms, ExistingAccountWarning, attrsForm },
