@@ -206,10 +206,10 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 initAttrs(sv.attrs);
                 $scope.attrs = sv.attrs;
                 let all_attrs = get_all_attrs_flat($scope.attrs);
+                if (sv.v_ldap) $scope.v_ldap = fromWs(sv.v_ldap, all_attrs);
                 let v
                     if (sv.v) {
                         v = fromWs(sv.v, all_attrs);
-                        if (sv.v_ldap) $scope.v_ldap = fromWs(sv.v_ldap, all_attrs);
                         $scope.v_orig = Helpers.copy(v);
                         // pass v_orig to attrs opts.validator:
                         handleAttrsValidators(all_attrs, $scope.v_orig);
