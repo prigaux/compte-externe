@@ -14,9 +14,7 @@
     "types" : [
         "body-parser", "express", "lodash", "mocha", "mongodb", "morgan", "mustache", "node", "nodemailer", "xml2js"
     ],
-    "lib": [
-        "es5", "es2015.promise", "es2015.core", "es2015.proxy", "es2015.symbol", "es2016.array.include"
-    ],
+    "target": "es2018",
     "module": "commonjs"
   }
 }
