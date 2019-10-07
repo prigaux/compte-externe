@@ -301,7 +301,7 @@ router.get('/steps/loggedUserInitialSteps', (req : req, res) => {
 router.get('/comptes', (req : req, res) => {
     if (req.query.poll) {
         // raise the limit above what we want
-        req.setTimeout(conf.poll_maxTime * 2, _ => res.json({ error: "internal error" }));
+        req.setTimeout(conf.poll_maxTime * 2, () => res.json({ error: "internal error" }));
 
         utils.bus_once(bus, 'changed', conf.poll_maxTime).then(() => {
             respondJson(req, res, listAuthorized(req));
