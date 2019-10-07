@@ -288,7 +288,7 @@ export const prefix_suffix_to_group_and_code = (prefix, suffix) => {
 
 export const filter_user_memberOfs = async (group_cn_to_code: (cn: string) => string, user: CurrentUser) => {
     const user_ = await ldap.searchOne(conf.ldap.base_people, currentUser_to_filter(user), { memberOf: [''] }, {});
-    const r = [];
+    const r: string[] = [];
     for (const memberOf of user_.memberOf || []) {
         const cn = conf.ldap.memberOf_to_group_cn(memberOf);
         const code = cn && group_cn_to_code(cn);
