@@ -8,7 +8,7 @@
     <span style="display: inline-block" v-if="!opts.readOnly">
 
       <!-- for validation: -->
-      <input-with-validity :name="name" :value="val" type="text" style="display: none" required :validity.sync="validity.jpegPhoto"></input-with-validity>
+      <input-with-validity :name="name" :value="val" type="text" style="display: none" :required="!opts.optional" :validity.sync="validity.jpegPhoto"></input-with-validity>
 
       <span v-if="toValidate" class="photoModify">
         <div class="photoBorder">

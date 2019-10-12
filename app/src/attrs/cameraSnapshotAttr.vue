@@ -1,7 +1,7 @@
 <template>
   <my-bootstrap-form-group name="jpegPhoto" :label="opts.title" :validity="validity" v-if="!opts.readOnly || val">
       <!-- for validation: -->
-      <input-with-validity name="jpegPhoto" :value="val" type="text" style="display: none" required :validity.sync="validity.jpegPhoto"></input-with-validity>
+      <input-with-validity name="jpegPhoto" :value="val" type="text" style="display: none" :required="!opts.optional" :validity.sync="validity.jpegPhoto"></input-with-validity>
 
       <div v-if="val">
           <img :src="val">
