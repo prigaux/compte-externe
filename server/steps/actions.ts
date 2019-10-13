@@ -35,9 +35,15 @@ export const esup_activ_bo_sendCode : simpleAction = (_req, { v }) => (
 
 export const esup_activ_bo_updatePersonalInformations : simpleAction = (_req, { v }) => {
     const userInfo: any = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, v, { toEsupActivBo: true });
+    delete userInfo.userPassword // password is handled specially ("setPassword" action)
     if (!v.supannAliasLogin) return Promise.reject("missing supannAliasLogin");
     if (!v['code']) return Promise.reject("missing code");
     return esup_activ_bo.updatePersonalInformations(v.supannAliasLogin, v['code'], userInfo).then(_ => ({ v }))
+}
+
+export const esup_activ_bo_setPassword : simpleAction = async (_req, { v }) => {
+    await esup_activ_bo.setPassword(v.supannAliasLogin, v['code'], v.userPassword)
+    return { v }
 }
 
 export const add_full_v: simpleAction = (_req, sv)  => (
