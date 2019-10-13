@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import * as utils from '../utils';
 import * as search_ldap from '../search_ldap';
 
 
@@ -17,3 +18,37 @@ export const group_for_each_attr_codes = (codeAttr: string, { group_cn_to_code }
         return { [codeAttr]: { default: oneOf[0].const, oneOf } } as StepAttrsOption
     }
 )
+
+export interface MoreAttrOption_if { 
+    if?: StepAttrOption_with_if;
+}
+
+type StepAttrOption_with_if = Dictionary<StepAttrOptionT<MoreAttrOption_if>>
+
+const compute_overrides = (allowed_ifs: Dictionary<boolean>, with_ifs: StepAttrOption_with_if) => {
+    const override : StepAttrsOption = {};
+    _.each(with_ifs, (opts, attrName) => {
+        if ("if" in opts) {
+            for (const cond in opts.if) {
+                if (allowed_ifs[cond]) {
+                    override[attrName] = opts.if[cond];
+                    return;
+                }
+            }
+        }
+        if (opts.properties) {
+            override[attrName] = { properties: compute_overrides(allowed_ifs, opts.properties) }
+        }
+    });
+    return override
+}
+
+export const handle_attrs_if = (ifs: Dictionary<(v: v) => boolean>) => (with_ifs: StepAttrOption_with_if) => {
+    const attrs = utils.mapAttrs(with_ifs, (opts) => _.omit(opts, ['if']));
+    const attrs_override = async (_req, sv : sv) => {
+        const allowed_ifs = _.mapValues(ifs, predicate => predicate(sv.v));
+        const override = compute_overrides(allowed_ifs, with_ifs)
+        return override;
+    };
+    return { attrs, attrs_override };
+}
