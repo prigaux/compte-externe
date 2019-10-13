@@ -224,7 +224,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                         v[attr] = set_ || v[attr] || default_;
                     });
                 }
-                $scope.vs = vs;
+                $scope.vs = vs // assign it when it is fully computed. Needed for Vue.js
                 $scope.all_attrs_flat = all_attrs;
                 $scope.step = pick(sv, ['allow_many', 'labels']);
             }, err => _handleErr(err, $scope, true));
