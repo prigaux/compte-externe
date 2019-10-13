@@ -76,7 +76,7 @@ export const esup_activ_bo_authentificateUser : simpleAction = (req, _sv) => {
     const auth = basic_auth(req);
     if (!auth) throw "Bad Request";
     return esup_activ_bo.authentificateUser(auth.name, auth.pass, _.without(Object.keys(attrRemapRev), 'userPassword')).then(o => {
-        return ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert)
+        return { ..._.pick(o, 'code'), ... ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert) }
     }).then(v => ({ v }))
 }
 
