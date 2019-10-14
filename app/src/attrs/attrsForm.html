@@ -12,14 +12,14 @@
                <a :id="'tab_' + id" :aria-controls="'panel_' + id" role="tab" @click="selectedTab = id">{{opts.title}}</a>
            </li>
       </ul>
-      <div v-for="(opts, id) in tabs" :key="id"
+      <fieldset v-for="(opts, id) in tabs" :key="id"
             :id="'panel_' + id" role="tabpanel" :aria-labelledby="'tab_' + id" :hidden="id !== selectedTab_">
             <div v-for="(opts, name) in opts.properties" :key="name" v-if="opts">
                 <genericAttr :name="name" :opts="opts" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :submitted="submitted" :stepName="stepName"
                     v-if="name != 'barcode' && name != 'mifare' && opts.uiType !== 'homonym'">
                 </genericAttr>
             </div>
-      </div>
+      </fieldset>
     </div>
 
    <div v-for="(opts, name) in attrs" :key="name" class="genericAttrs">
