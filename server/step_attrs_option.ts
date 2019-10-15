@@ -3,7 +3,7 @@ import * as utils from './utils';
 
 function compute_diff(prev, current, key) {
     const toString = (val) => {
-        const val_ = val instanceof Array ? val.join(', ') : val || ''
+        const val_ = val instanceof Array ? val.join(', ') : val instanceof Date ? val.toISOString() : val || ''
         return val_.length > 1000 ? "<i>valeur cachée</i>" : val_;
     };
     const one_diff = {
