@@ -40,13 +40,13 @@ describe('v_display', () => {
         test(attrs, { duration: "2" }, { duration: "B bbb" });
     })
 
-    it('should handle various.diff', () => {
+    it('should handle various.diff', async () => {
         const v_ = v_display({ various: { diff: { 
             supannMailPerso: { prev: "foo@bar.com" },
             birthName: { current: "Rigaux" },
             sn: { prev: "Rigaud", current: "Rigaux" },
         } } } as v, {});
-        assert.equal(v_['various'].diff, 
+        assert.equal(await v_['various'].diff, 
 `<table border="1">
   <tr><th>Champ modifié</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
   <tr><td>Email personnel</td><td>foo@bar.com</td><td><i>supprimée</i></td></tr>

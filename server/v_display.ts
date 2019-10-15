@@ -26,19 +26,19 @@ const format_v = async (v: v, attrs) => (
       })).join("\n") + `\n</dl>`
 )
 
-const format_various_diff = (diff, attrs) => (
+const format_various_diff = async (diff, attrs) => (
 `<table border="1">
   <tr><th>Champ modifié</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
 ` +
-    map(diff, ({ prev, current }, key) => {
+    (await pmap(diff, async ({ prev, current }, key) => {
         const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
         const tds = [
             opts && opts.title || key,
-            prev || '<i>aucune</i>',
-            current || '<i>supprimée</i>',
+            prev ? await key2name(prev, opts) : '<i>aucune</i>',
+            current ? await key2name(current, opts) : '<i>supprimée</i>',
         ]
         return '  <tr>' + tds.map(s => `<td>${s}</td>`).join('') + '</tr>'
-    }).join("\n") + `
+    })).join("\n") + `
 </table>`
 );
 
