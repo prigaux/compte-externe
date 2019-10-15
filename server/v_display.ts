@@ -14,14 +14,16 @@ function key2name(raw, spec: StepAttrOption) {
     return raw;
 }
 
+const pmap = (o, f) => Promise.all(map(o, f))
+
 const format_v = async (v: v, attrs) => (
     `<dl>
 ` +
-      (await Promise.all(map(v, async (val, key) => {
+      (await pmap(v, async (val, key) => {
           if (key === 'various') return '';
           const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
           return '  <dt>' + (opts && opts.title || key) + '</dt><dd>' + await key2name(val, opts) + '</dd>'
-      }))).join("\n") + `\n</dl>`
+      })).join("\n") + `\n</dl>`
 )
 
 const format_various_diff = (diff, attrs) => (
