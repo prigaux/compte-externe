@@ -27,7 +27,7 @@ export default Vue.extend({
     },
     computed: {
       passwordPattern() {
-          return "(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])[^ ]{8,}"; 
+          return "(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])[ -~]{8,}"; // must contain digit / uppercase / lowercase. must be printable ASCII chars
       },
       error_msg() {
           return conf.error_msg;
