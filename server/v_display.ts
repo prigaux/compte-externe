@@ -32,7 +32,12 @@ const format_various_diff = (diff, attrs) => (
 ` +
     map(diff, ({ prev, current }, key) => {
         const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
-        return '  <tr>' + [opts && opts.title || key, prev || '<i>aucune</i>', current || '<i>supprimée</i>'].map(s => `<td>${s}</td>`).join('') + '</tr>'
+        const tds = [
+            opts && opts.title || key,
+            prev || '<i>aucune</i>',
+            current || '<i>supprimée</i>',
+        ]
+        return '  <tr>' + tds.map(s => `<td>${s}</td>`).join('') + '</tr>'
     }).join("\n") + `
 </table>`
 );
