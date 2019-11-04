@@ -155,18 +155,18 @@ function set_new_many(req: req, wanted_step: string, vs: v[]) {
     return Promise.all(vs.map(v => set(req, 'new', wanted_step, v).catch(error => (console.log(error), { error }))));
 }
 
-function set(req: req, id: id, wanted_step: string, v: v) {
-    return getRaw(req, id, wanted_step).then(sv => (
-        setRaw(req, sv, v)
-    )).then(svr => {
-        let r = <r> { success: true, ...svr.response };
-        if (svr.step) {
-            r.step = svr.step;
-            r.labels = step(svr).labels;
-        }
-        r.nextBrowserStep = name2step(wanted_step).nextBrowserStep;
-        return r;
-    });
+async function set(req: req, id: id, wanted_step: string, v: v) {
+    const sv = await getRaw(req, id, wanted_step);
+    const svr = await setRaw(req, sv, v);
+
+    let r = <r> { success: true, ...svr.response };
+    if (svr.step) {
+        r.step = svr.step;
+        r.labels = step(svr).labels;
+    }
+
+    r.nextBrowserStep = name2step(wanted_step).nextBrowserStep;
+    return r;
 }
 
 function advance_sv(req: req, sv: sva) : Promise<svr> {
