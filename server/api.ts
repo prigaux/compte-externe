@@ -165,7 +165,10 @@ async function set(req: req, id: id, wanted_step: string, v: v) {
         r.labels = step(svr).labels;
     }
 
-    r.nextBrowserStep = name2step(wanted_step).nextBrowserStep;
+    const nextBrowserStep = name2step(wanted_step).nextBrowserStep;
+    if (nextBrowserStep) {
+        r.nextBrowserStep = typeof nextBrowserStep === "function" ? await nextBrowserStep(svr.v) : nextBrowserStep;
+    }
     return r;
 }
 
