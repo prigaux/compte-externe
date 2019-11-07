@@ -66,7 +66,15 @@ export const get_proxy_ticket = (req: req, targetService: string): Promise<strin
         }
         cas.proxyTicket({ targetService })(req, undefined, () => {
             const pt = get_delete(req.session.pt, targetService); // we will use it, and PT are usually NOT reusable
-            if (pt) resolve(pt); else reject("internal error: no proxy ticket");
+            if (pt) { resolve(pt);
+            } else {
+                // it should be because of "INVALID_TICKET", because our PGT has expired
+                // try with a new pgt
+                console.log(req.session);
+                delete req.session.st;
+                delete req.session.pgt;
+                force_login();
+            }
         });
     })
 )
