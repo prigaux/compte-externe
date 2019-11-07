@@ -60,8 +60,9 @@ export const get_proxy_ticket = (req: req, targetService: string): Promise<strin
         if (!conf.cas.host) {
             reject("Internal error: you must configure cas.host in server/conf.ts (for get_proxy_ticket)");
         }
+        const force_login = () => reject({ code: "Unauthorized", authenticate: { type: "cas_with_pgt" } });
         if (!req.session || !req.session.pgt) {
-            reject({ code: "Unauthorized", authenticate: { type: "cas_with_pgt" } });
+            force_login();
         }
         cas.proxyTicket({ targetService })(req, undefined, () => {
             const pt = get_delete(req.session.pt, targetService); // we will use it, and PT are usually NOT reusable
