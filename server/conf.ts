@@ -192,7 +192,7 @@ const conf = {
         group_member_to_eppn: user_dn => {
             let r = user_dn.match(/^uid=([^,]*)/);
             if (!r) console.log("invalid group member " + user_dn);
-            return r && r[1] + conf.ldap.uid_to_eppn;
+            return r[1] + conf.ldap.uid_to_eppn;
         },
 
         // cf "man slapd.conf"
