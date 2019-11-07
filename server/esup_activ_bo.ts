@@ -130,6 +130,28 @@ export const validateCode = (supannAliasLogin: string, code: string) => (
     })
 );
 
+export function validatePassword(supannAliasLogin: string, password: string) {
+    let params = { supannAliasLogin, password };
+    return soap("validatePassword.xml", params, { responseTag: 'ns1:out' }).then(response => {
+        if (response === '') return; // OK!
+        let err = response
+        err = err.replace(/^kadmin: kadm5_check_password_quality: /, '');
+        // below non translated messages should be caught by app/src/attrs/PasswordAttr.vue "passwordPattern":
+        // "Password doesn't meet complexity requirement." 
+        // "Password too short"
+
+        err = err.replace(/^External password quality program failed: /, '');
+        // below non translated messages should be caught by app/src/attrs/PasswordAttr.vue "passwordPattern":
+        // "Password contains non-ASCII or control characters"
+        // "Password is only letters and spaces"
+        const translate = {
+            "Password does not contain enough unique characters": "Le mot de passe doit contenir plus de caractères différents",
+            "it is based on a dictionary word": "Ce mot de passe est trop proche d'un mot du dictionnaire ou d'un mot de passe connu",
+        }
+        throw translate[err] || err;
+    });
+}
+
 export function setPassword(supannAliasLogin: string, code: string, password: string) {
     console.log("esup_activ_bo._setPassword " + supannAliasLogin + " using code " + code);
     let params = { id: supannAliasLogin, code, password };

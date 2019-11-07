@@ -206,6 +206,13 @@ export const modifyAccount : simpleAction = (_req, sv) => {
     return crejsonldap_simple(sv.v, { create: false });
 };
 
+export const validatePassword : simpleAction = async (_req, sv) => {
+    if (!sv.v.supannAliasLogin) throw "validatePassword needs supannAliasLogin";
+    if (!sv.v.userPassword) throw "validatePassword needs userPassword";
+    await esup_activ_bo.validatePassword(sv.v.supannAliasLogin, sv.v.userPassword)
+    return sv
+}
+
 // throw a list of errors, if any
 export const validateAccount : simpleAction = (_req, sv) => (
     crejsonldap_simple(sv.v, { action: "validate" })
