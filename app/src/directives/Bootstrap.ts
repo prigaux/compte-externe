@@ -17,10 +17,10 @@ Vue.component("validation-errors", {
 });
 
 Vue.component("mytooltip", {
-    props: [ "text" ],
+    props: [ "text", "glyphicon" ],
     template: `
         <div class="mytooltip" v-if="text">
-            <span class="glyphicon glyphicon-question-sign"></span>
+            <span class="glyphicon" :class="glyphicon"></span>
             <div class="mytooltip-popup"><span>
                 <span class="mytooltip-text">
                     {{text}}
@@ -34,7 +34,7 @@ Vue.component("my-label-tooltips", {
     props: [ "labels" ],
     template: `
         <span v-if="labels">
-            <mytooltip :text="labels && labels.tooltip"></mytooltip>
+            <mytooltip :text="labels && labels.tooltip" glyphicon="glyphicon-question-sign"></mytooltip>
         </span>
     `,
 })
