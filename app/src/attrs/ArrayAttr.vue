@@ -3,7 +3,7 @@
 <div class="ArrayAttr">
     <label v-if="val.length === 0" class="col-md-3 control-label">
         {{opts.title}}
-        <mytooltip :text="opts.labels && opts.labels.tooltip"></mytooltip>
+        <my-label-tooltips :labels="opts.labels"></my-label-tooltips>
     </label>
     <template v-for="(item, i) in val">
         <genericAttr :real_name="name" :name="name + (i ? '-' + i : '')" :opts="i ? item_opts : first_item_opts" :value="item" @input="v => set_item(i, v)" @remove="_ => remove_item(i)"

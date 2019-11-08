@@ -30,13 +30,22 @@ Vue.component("mytooltip", {
         </div>`
 })
 
+Vue.component("my-label-tooltips", {
+    props: [ "labels" ],
+    template: `
+        <span v-if="labels">
+            <mytooltip :text="labels && labels.tooltip"></mytooltip>
+        </span>
+    `,
+})
+
 Vue.component("my-bootstrap-form-group", {
     props: ['name', 'label', 'multi', 'validity', 'hideErrors', 'labels'],
     template: `
             <div class='form-group' :class="{'has-error': validity && validity.submitted && !validity[name].valid }">
               <label v-if="label" class="col-md-3 control-label" :for="name">
                 {{label}}
-                <mytooltip :text="labels && labels.tooltip"></mytooltip>
+                <my-label-tooltips :labels="labels"></my-label-tooltips>
               </label>
               <div :class="subClass">
                   <slot></slot>
