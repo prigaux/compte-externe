@@ -35,6 +35,7 @@ Vue.component("my-label-tooltips", {
     template: `
         <span v-if="labels">
             <mytooltip :text="labels && labels.tooltip" glyphicon="glyphicon-question-sign"></mytooltip>
+            <mytooltip :text="labels && labels.warning" glyphicon="glyphicon-warning-sign"></mytooltip>
         </span>
     `,
 })

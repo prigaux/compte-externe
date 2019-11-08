@@ -28,7 +28,7 @@ interface StepAttrItemsOption {
 type MinimalStepAttrOption = StepAttrItemsOption & {
     title?: string;
     description?: string;  
-    labels?: { advice?: string; tooltip?: string; }
+    labels?: { advice?: string; warning?: string; tooltip?: string; }
 
     format?: 'date' | 'data-url' | 'phone';
     default?: string;
