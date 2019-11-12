@@ -120,3 +120,15 @@ export function mapLeaves(v, fn) {
         return fn(v);
     }
 }
+
+// similar to String#split, but without trailing empty string
+// inspired by https://doc.rust-lang.org/std/primitive.str.html#method.split_terminator
+// useful for value==='' : it returns [] instead of ['']
+// NB2: javascript split is similar to python/rust
+//      perl/ruby removes trailing empty strings
+//      java/scala removes trailing empty strings, EXCEPT for input value===''
+export const split_terminator = (value: string, separator: string) => {
+    let l = value.split(separator)
+    if (_.last(l) === '') l.pop()
+    return l
+}

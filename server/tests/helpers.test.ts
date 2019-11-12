@@ -54,3 +54,12 @@ describe('is_valid_uai_code', () => {
         assert.equal(helpers.is_valid_uai_code("0020744x"), false)
     })
 })
+
+describe('split_terminator', () => {
+    it("should work", () => {
+        assert.deepEqual(helpers.split_terminator("a,", ","), ["a"])
+        assert.deepEqual(helpers.split_terminator("a,,", ","), ["a", ""])
+        assert.deepEqual(helpers.split_terminator(",a,,", ","), ["", "a", ""])
+        assert.deepEqual(helpers.split_terminator("", ","), [])
+    })
+})
