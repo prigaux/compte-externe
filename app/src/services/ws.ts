@@ -191,8 +191,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         }
 
         function password_to_auth(params): AxiosRequestConfig {
-            if (params.userPassword && params.supannAliasLogin) {
-                const auth = { username: params.supannAliasLogin, password: params.userPassword }
+            if (params.userPassword) {
+                const auth = { username: params.supannAliasLogin || '', password: params.userPassword }
                 return { params: omit(params, 'userPassword', 'supannAliasLogin'), auth };
             } else {
                 return { params };
