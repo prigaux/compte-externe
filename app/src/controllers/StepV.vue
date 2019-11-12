@@ -191,7 +191,11 @@ export default Vue.extend({
         if (!isEmpty(v_from_prevStep)) {
             query.prev = this.$route.path.replace(/^\//, '');
         }
-        router.push({ path: resp.nextBrowserStep, query });
+        if (resp.nextBrowserStep.match(/^https?:\/\//)) {
+            document.location.href = resp.nextBrowserStep
+        } else {
+            router.push({ path: resp.nextBrowserStep, query });
+        }
       },
       templated_response(resp, template: string) {
         this.resp = {
