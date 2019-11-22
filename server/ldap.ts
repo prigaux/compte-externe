@@ -208,7 +208,6 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
         } else if (modify.action === 'ignore') {
         } else if (modify.action === 'add') {
             const val_ = modify.value;
-            if (val_ === '') return; // ignore empty string which can not be a valid LDAP string value
             if (attr_ in r) {
                 r[attr_] = _.uniq(to_array(r[attr_]).concat(to_array(val_)))
             } else {
