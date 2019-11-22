@@ -44,6 +44,13 @@ const compute_overrides = (allowed_ifs: Dictionary<boolean>, with_ifs: StepAttrO
     return override
 }
 
+export const add_not_ifs = (ifs: Dictionary<(v: v) => boolean>) => {
+    _.each(ifs, (predicate, name) => {
+        ifs[`not_${name}`] = (v) => !predicate(v)
+    })
+    return ifs;
+}
+
 export const handle_attrs_if = (ifs: Dictionary<(v: v) => boolean>) => (with_ifs: StepAttrOption_with_if) => {
     const attrs = utils.mapAttrs(with_ifs, (opts) => _.omit(opts, ['if']));
     const attrs_override = async (_req, sv : sv) => {
