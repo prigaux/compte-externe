@@ -106,7 +106,7 @@ type step = {
   
   attrs: StepAttrsOption
   attrs_override?: ((req: req, sv: sv) => Promise<StepAttrsOption>);
-  next?: string | ((v) => Promise<string>);
+  next?: string | ((v: v) => Promise<string>);
   nextBrowserStep?: string; // either /<step> or a full url
   notify?: StepNotify;
   action_pre?: action;
