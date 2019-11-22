@@ -182,7 +182,7 @@ function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ld
             if (!attr.match(/^(noInteraction|various|comment|mailFrom_email|mailFrom_text|duration_or_enddate|etablissement.*|charter|profilename_to_modify)$/)) {
                 console.error(`not converting attribute ${attr} to LDAP`);
             }
-            return to_ldap_add('');
+            return { action: 'ignore' };
         }
 }
 
@@ -205,6 +205,7 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
         if (!modify) {
             // TODO: see how to handle this
             console.error("no convertToLdap for attr " + attr + " with value " + val);
+        } else if (modify.action === 'ignore') {
         } else if (modify.action === 'add') {
             const val_ = modify.value;
             if (val_ === '') return; // ignore empty string which can not be a valid LDAP string value
