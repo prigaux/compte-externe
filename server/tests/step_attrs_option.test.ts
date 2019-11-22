@@ -291,6 +291,12 @@ describe('merge_attrs_overrides', () => {
             { sn: { description: 'override' } }
         );
     })
+    it('should allow modifying an array attribute', () => {
+        assert.deepEqual(
+            merge_attrs_overrides({ sn: { oneOf: [ { const: "a" } ] } }, { sn: { oneOf: [ { const: "b" } ] } }), 
+            { sn: { oneOf: [ { const: "b" }] } }
+        );
+    })
     it('should allow removing an attribute', () => {
         assert.deepEqual(
             merge_attrs_overrides({ sn: {} }, { sn: undefined }), 
