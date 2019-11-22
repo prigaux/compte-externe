@@ -164,29 +164,34 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: 
         }
 }
 
-function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v, opts: { toJson?: boolean, toEsupActivBo?: boolean }): RawValue | ldap_modify {
+function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v, opts: { toJson?: boolean, toEsupActivBo?: boolean }): ldap_modify {
         if (conversion) {
-            return opts.toJson && conversion.toLdapJson ? conversion.toLdapJson(v) : 
+            const v_ = opts.toJson && conversion.toLdapJson ? conversion.toLdapJson(v) : 
                    opts.toEsupActivBo && conversion.toEsupActivBo ? conversion.toEsupActivBo(v) : 
                    conversion.toLdap(v);
+            return to_ldap_modify(v_);
         } else if (_.isArray(attrType)) {
-            return v; // we know it's an array, that's a valid RawValue
+            return to_ldap_add(v); // we know it's an array, that's a valid RawValue
         } else if (_.isString(attrType)) {
-            return v;
+            return to_ldap_add(v);
         } else if (_.isNumber(attrType)) {
-            return v.toString();
+            return to_ldap_add(v.toString());
         } else if (attr === 'dn' || attr === 'objectClass') {
-            return v.toString();
+            return to_ldap_add(v.toString());
         } else {
             if (!attr.match(/^(noInteraction|various|comment|mailFrom_email|mailFrom_text|duration_or_enddate|etablissement.*|charter|profilename_to_modify)$/)) {
                 console.error(`not converting attribute ${attr} to LDAP`);
             }
-            return '';
+            return to_ldap_add('');
         }
 }
 
-const to_ldap_modify = (val : RawValue | ldap_modify) => (
-    _.isArray(val) || _.isString(val) ? { action: 'add', value: val } : val
+const to_ldap_add = (val : RawValue): ldap_modify => (
+    { action: 'add', value: val }
+)
+
+const to_ldap_modify = (val : RawValue | ldap_modify): ldap_modify => (
+    _.isArray(val) || _.isString(val) ? to_ldap_add(val) : val
 )
 
 const to_array = (val: RawValue) => val instanceof Array ? val : [val];
@@ -196,7 +201,7 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
     _.forEach(v, (val, attr) => {
         let conv = attrsConvert[attr] || {};
         let attr_ = opts.toJson && conv.ldapAttrJson || toLdapAttr(conv, attr);
-        let modify = to_ldap_modify(convertAttrToLdap(attr, attrTypes[attr], conv.convert, val, opts));
+        let modify = convertAttrToLdap(attr, attrTypes[attr], conv.convert, val, opts);
         if (!modify) {
             // TODO: see how to handle this
             console.error("no convertToLdap for attr " + attr + " with value " + val);
