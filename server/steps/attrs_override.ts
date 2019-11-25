@@ -33,12 +33,13 @@ const compute_overrides = (allowed_ifs: Dictionary<boolean>, with_ifs: StepAttrO
                 if (allowed_ifs[cond]) {
                     const val = opts.if[cond];
                     override[attrName] = typeof val === "function" ? val(v) : val
-                    return;
+                    break;
                 }
             }
         }
         if (opts.properties) {
-            override[attrName] = { properties: compute_overrides(allowed_ifs, opts.properties, v) }
+            if (!(attrName in override)) override[attrName] = {};
+            override[attrName] = utils.deep_extend({ properties: compute_overrides(allowed_ifs, opts.properties, v) }, override[attrName])
         }
     });
     return override
