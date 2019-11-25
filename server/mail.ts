@@ -54,6 +54,11 @@ export const resolve_mustache_async_params = async (template: string, params: {}
     return params_;
 }
 
+const mustache_async_render = async (template: string, params: {}) => {
+    const params_ = await resolve_mustache_async_params(template, params);
+    return Mustache.render(template, params_);
+}
+
 export const sendWithTemplateFile = (templateName: string, params: {}) => {
     fs.readFile(__dirname + "/templates/mail/" + templateName, (err, data) => {
         if (err) {
@@ -64,8 +69,7 @@ export const sendWithTemplateFile = (templateName: string, params: {}) => {
     });
 }
 export const sendWithTemplate = (template: string, params: {}, templateName = "") => {
-    resolve_mustache_async_params(template, params).then(params_ => {
-            let rawMsg = Mustache.render(template, params_);
+    mustache_async_render(template, params).then(rawMsg => {
             if (!rawMsg) return;
             console.log("===========================");
             console.log("mustache result for", templateName);
