@@ -44,6 +44,12 @@ export const post = (url: string, body: string, options: simpleGet.Options) : Pr
     });
 };
 
+const http_statuses = {
+    "Bad Request": 400,
+    "Unauthorized": 401,
+    "Forbidden": 403,
+}
+
 export function respondJson(req: req, res: express.Response, p: Promise<response>) {
     let logPrefix = req.method + " " + req.path + ":";
     p.then(r => {
@@ -52,7 +58,7 @@ export function respondJson(req: req, res: express.Response, p: Promise<response
     }, err => {
         console.error(logPrefix, err);
         const errMsg = err.code || "" + err;
-        res.status(errMsg === "Unauthorized" ? 401 : errMsg === "Forbidden" ? 403 : errMsg === "Bad Request" ? 400 : 500);
+        res.status(http_statuses[errMsg] || 500);
         res.json(err.code ? err : {error: errMsg, stack: err.stack});
     });
 }
