@@ -43,6 +43,9 @@ const remove_allowed_words = (words: string[], allowed: {}, prev_allowed: {}) =>
     }
     //console.log(removed, minRemaining, words);
     if (!removed || !minRemaining && words.length) {
+        if (!removed && prev_allowed && prev_allowed[words[0]]) {
+            return "Le nom annuaire doit comprendre de(s) prénom(s) suivi de(s) nom(s)";
+        }
         const allowed_ = Object.keys(_.pickBy({ ...(!removed && prev_allowed), ...allowed }, v => v !== 2))
         return `« ${words[0]} » n'est pas autorisé. ${allowed_.length > 1 ? 'Autorisés' : 'Autorisé'} : ${allowed_.join(', ')}`;
     } else {

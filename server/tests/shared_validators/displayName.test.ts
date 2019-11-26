@@ -35,7 +35,11 @@ describe('validators/displayName', () => {
         assert.equal(checkDisplayName("Pascal FooRigaux", { givenName: "Pascal Foo", altGivenName: "foo", sn: "Rigaux", birthName: 'Plaquet' }), "« foorigaux » n'est pas autorisé. Autorisés : foo, rigaux, plaquet");
     });
 
-    it("should keeping part of sn/givenName", () => {
+    it("should require a sn", () => {
+        assert.equal(checkDisplayName("Pascal Foo", { givenName: "Pascal", altGivenName: "Foo", sn: "Rigaux" }), "Le nom annuaire doit comprendre de(s) prénom(s) suivi de(s) nom(s)");
+    });
+
+    it("should allow keeping part of sn/givenName", () => {
         assert.equal(checkDisplayName("Charles Rigaux", { sn: 'Rigaux', givenName: 'Charles Henri' }), undefined);
 
         assert.equal(checkDisplayName("Charles Rigaux", { sn: 'Rigaux', givenName: 'Charles-Henri' }), "« charles » n'est pas autorisé. Autorisé : charleshenri");
