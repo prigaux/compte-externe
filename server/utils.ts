@@ -48,6 +48,7 @@ const http_statuses = {
     "Bad Request": 400,
     "Unauthorized": 401,
     "Forbidden": 403,
+    "OK": 200,
 }
 
 export function respondJson(req: req, res: express.Response, p: Promise<response>) {

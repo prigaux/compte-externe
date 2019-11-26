@@ -219,6 +219,13 @@ export const fileReader = (readAs: 'readAsDataURL' | 'readAsText', file: File) =
     })
 );
 
+export type promise_defer<T> = { promise : Promise<T>; resolve(v : T) : void, reject(err): void };
+export function promise_defer<T>() {
+    let deferred = {} as promise_defer<T>;
+    deferred.promise = new Promise((resolve, reject) => { deferred.resolve = resolve; deferred.reject = reject });
+    return deferred;
+}
+
 export function isElementInViewport (el : HTMLElement) {
     const rect = el.getBoundingClientRect();
     return (

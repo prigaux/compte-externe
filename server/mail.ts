@@ -54,7 +54,7 @@ export const resolve_mustache_async_params = async (template: string, params: {}
     return params_;
 }
 
-const mustache_async_render = async (template: string, params: {}) => {
+export const mustache_async_render = async (template: string, params: {}) => {
     const params_ = await resolve_mustache_async_params(template, params);
     return Mustache.render(template, params_);
 }

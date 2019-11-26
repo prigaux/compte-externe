@@ -38,6 +38,8 @@
         <ImportFile :attrs="attrs" @change="val => to_import = val"></ImportFile>
     </div>
              
+    <MyModalP ref="MyModalP"></MyModalP>
+
     <attrsForm
         :v="v" :v_ldap="v_ldap" :attrs="other_attrs" :step_labels="step.labels" :stepName="stepName"
         :onelineForm="onelineForm"
@@ -64,6 +66,7 @@ import ImportResult from '../import/ImportResult.vue';
 import Homonyms from '../controllers/Homonyms.vue';
 import attrsForm from '../attrs/attrsForm';
 import ExistingAccountWarning from '../controllers/ExistingAccountWarning.vue';
+import MyModalP from './MyModalP.vue';
 
 
 function AttrsForm_data() {
@@ -88,7 +91,7 @@ export default Vue.extend({
         'onelineForm',
     ],
     data: AttrsForm_data,
-    components: { ImportFile, ImportResult, Homonyms, ExistingAccountWarning, attrsForm },
+    components: { ImportFile, ImportResult, Homonyms, ExistingAccountWarning, attrsForm, MyModalP },
 
     computed: {
         initialStep() {
@@ -215,6 +218,11 @@ export default Vue.extend({
           return Ws.set(this.id, this.stepName, this.v, this.v_pre, this.all_attrs_flat).then(resp => {
               if (resp.error === "no_moderators") {
                 alert(resp.error);
+              } else if (resp.ask_confirmation) {
+                this.$refs.MyModalP.open(resp.ask_confirmation.msg).then(() => {
+                    this.v[resp.ask_confirmation.attr_to_save_confirmation] = true;
+                    this.send();
+                })
               } else {
                 return this.nextStep(resp);
               }
