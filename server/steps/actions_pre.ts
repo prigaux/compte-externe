@@ -90,6 +90,7 @@ export const esup_activ_bo_authentificateUserWithCas : simpleAction = async (req
     const proxyticket = await cas.get_proxy_ticket(req, targetUrl);
     if (!proxyticket) throw "failed getting CAS proxy ticket";
     const o = await esup_activ_bo.authentificateUserWithCas(req.user.id, proxyticket, targetUrl, Object.keys(attrRemapRev));
+    if (!o.code) throw "weird account: CAS is authorized by esup-activ-bo thinks user is not activated"
     const v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { code: '', ...conf.ldap.people.types }, wantedConvert);
     return { v };
 }
