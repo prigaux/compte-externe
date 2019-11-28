@@ -80,7 +80,7 @@ export const esup_activ_bo_authentificateUser = (userAuth: 'useSessionUserId' | 
         if (!auth.name) throw "Bad Request";
     }
     const o = await esup_activ_bo.authentificateUser(auth.name, auth.pass, _.without(Object.keys(attrRemapRev), 'userPassword'));
-    const v = { ..._.pick(o, 'code'), ... ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert) }
+    const v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { code: '', ...conf.ldap.people.types }, wantedConvert)
     return { v }
 }
 
