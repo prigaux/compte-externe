@@ -71,7 +71,7 @@ export const esup_activ_bo_validateCode : simpleAction = (req, sv) => (
     })
 )
 
-export const esup_activ_bo_authentificateUser = (userAuth: 'useSessionUserId' | 'useBasicAuthUser') : simpleAction => (req, _sv) => {
+export const esup_activ_bo_authentificateUser = (userAuth: 'useSessionUserId' | 'useBasicAuthUser') : simpleAction => async (req, _sv) => {
     const { wantedConvert, attrRemapRev } = ldap.convert_and_remap(conf.ldap.people.types, conf.ldap.people.attrs);
     const auth = basic_auth(req);
     if (!auth) throw "Bad Request";
@@ -79,9 +79,9 @@ export const esup_activ_bo_authentificateUser = (userAuth: 'useSessionUserId' | 
         auth.name = req.user.id
         if (!auth.name) throw "Bad Request";
     }
-    return esup_activ_bo.authentificateUser(auth.name, auth.pass, _.without(Object.keys(attrRemapRev), 'userPassword')).then(o => {
-        return { ..._.pick(o, 'code'), ... ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert) }
-    }).then(v => ({ v }))
+    const o = await esup_activ_bo.authentificateUser(auth.name, auth.pass, _.without(Object.keys(attrRemapRev), 'userPassword'));
+    const v = { ..._.pick(o, 'code'), ... ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert) }
+    return { v }
 }
 
 export const esup_activ_bo_authentificateUserWithCas : simpleAction = async (req, _sv) => {
