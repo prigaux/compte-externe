@@ -41,6 +41,9 @@ export default Vue.extend({
         tabs() {
             return this.attrs ? pickBy(this.attrs, opts => opts.properties) : {};
         },
+        attrs_outside_tabs() {
+            return pickBy(this.attrs, (opts, name) => name !== 'barcode' && name !== 'mifare' && opts.uiType !== 'homonym' && opts.uiType !== 'tab');
+        },
     },
     methods: {
       submit(event) {

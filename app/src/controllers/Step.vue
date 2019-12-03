@@ -1,5 +1,5 @@
 <template>
-<div>
+<div :class="'step-' + stepName">
     <StepV v-for="(v, index) in vs" :key="index"
         :wanted_id="wanted_id" :stepName="stepName"
         :id="id" :v_pre="v_pre"
