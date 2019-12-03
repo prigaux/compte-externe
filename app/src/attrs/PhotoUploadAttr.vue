@@ -25,7 +25,7 @@
 
       <span class="withPhoto" v-else-if="val">
         <button type="button" class="btn btn-default" @click="photoToValidate(val)">
-          <span class="glyphicon glyphicon-edit"></span>
+          <span class="glyphicon glyphicon-pencil"></span>
             Modifier la photo
         </button>
         <br>
