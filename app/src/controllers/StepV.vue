@@ -4,7 +4,7 @@
     <component :is="resp.component" :resp="resp" :v="v"></component>
  </div>
  <div v-else-if="v">
-  <h4 style="margin-top: 2em" v-html="step.labels.title"></h4>
+  <h2 style="margin-top: 2em" v-html="step.labels.title" v-if="step.labels.title"></h2>
 
   <div v-if="step_description">
     <component :is="step_description" :v_pre="v_pre" :v="v"></component>

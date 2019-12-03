@@ -4,6 +4,10 @@
     max-width: 1000px;
 }
 
+h2 {
+    font-size: 18px;
+}
+
 ins {
     color: #A94442;
     background-color: #F2DEDE;

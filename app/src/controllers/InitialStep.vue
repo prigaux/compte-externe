@@ -1,7 +1,7 @@
 <template>
 <div v-if="title_in_list">
     <div v-if="allow_reuse">
-        <h4 v-html="title_in_list"></h4>
+        <h2 v-html="title_in_list"></h2>
 
         <form novalidate v-if="step.ldap_filter || step.attrs.profilename_to_modify" class="form-horizontal">
             <my-bootstrap-form-group :name="searchUser_inputName" label="Choisir un utilisateur">
@@ -28,9 +28,9 @@
         </div>
     </div>
     <div v-else>
-        <h4>
+        <h2>
             <router-link :to="'/' + step.id" v-html="title_in_list"></router-link>
-        </h4>
+        </h2>
     </div>
     <p style="margin-bottom: 2em"></p>
 </div>
