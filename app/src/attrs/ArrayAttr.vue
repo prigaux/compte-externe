@@ -12,7 +12,7 @@
         </genericAttr>
     </template>
     <div :class="'col-sm-offset-' + (val.length ? 10 : 7)" class="col-sm-2" style="padding: 0 0 2rem 0" v-if="!opts.readOnly">
-        <button class="btn btn-info" style="width: 100%" type="button" @click="val.push('')">
+        <button class="btn btn-info" style="width: 100%" type="button" @click="val.push('')" aria-label="Ajouter une valeur">
             <i class="glyphicon glyphicon-plus"></i>
         </button>
     </div>
