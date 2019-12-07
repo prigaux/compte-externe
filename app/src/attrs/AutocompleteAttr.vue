@@ -4,7 +4,7 @@
       {{val ? val.title : ''}}
     </div>
     <div v-else>
-      <typeahead :name="name" v-model="val" :options="search" :minChars="3" :formatting="formatting" :formatting_html="formatting_html"
+      <typeahead :id="name" :name="name" v-model="val" :options="search" :minChars="3" :formatting="formatting" :formatting_html="formatting_html"
             :required="!opts.optional"
             :placeholder="opts.placeholder"
             :editable="false" :validity.sync="validity[name]"></typeahead>

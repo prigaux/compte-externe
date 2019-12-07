@@ -6,7 +6,7 @@
 </div>
 <div v-else>
   <my-bootstrap-form-group name="country" :label="opts.title" :validity="validity">
-     <typeahead name="country" v-model="country" :options="conf.countries" v-magic-aria placeholder="Pays" :validity.sync="validity.country" required></typeahead>
+     <typeahead id="country" name="country" v-model="country" :options="conf.countries" v-magic-aria placeholder="Pays" :validity.sync="validity.country" required></typeahead>
      <CurrentLdapValue v-model="country" :ldap_value="ldap_val.country"></CurrentLdapValue>
   </my-bootstrap-form-group>
     
