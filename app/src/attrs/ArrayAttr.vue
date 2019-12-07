@@ -1,7 +1,7 @@
 <template>
 
 <div class="ArrayAttr">
-    <label v-if="val.length === 0" class="col-md-3 control-label">
+    <label v-if="val.length === 0 && !opts.readOnly" class="col-md-3 control-label">
         {{opts.title}}
         <my-label-tooltips :labels="opts.labels"></my-label-tooltips>
     </label>
