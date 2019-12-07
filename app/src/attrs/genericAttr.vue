@@ -66,6 +66,7 @@
         :disabled="opts.readOnly"
         :choices="oneOf" :required="!opts.optional" :validity.sync="validity[name]">
       </select-with-validity>
+      <span v-html="opts.description"></span>
     </div>
 
     <div class="checkbox" v-else-if="uiType === 'checkbox'">
