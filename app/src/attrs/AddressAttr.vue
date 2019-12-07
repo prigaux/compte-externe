@@ -6,22 +6,22 @@
 </div>
 <div v-else>
   <my-bootstrap-form-group name="country" :label="opts.title" :validity="validity">
-     <typeahead name="country" v-model="country" :options="conf.countries" placeholder="Pays" :validity.sync="validity.country" required></typeahead>
+     <typeahead name="country" v-model="country" :options="conf.countries" v-magic-aria placeholder="Pays" :validity.sync="validity.country" required></typeahead>
      <CurrentLdapValue v-model="country" :ldap_value="ldap_val.country"></CurrentLdapValue>
   </my-bootstrap-form-group>
     
  <div v-if="country === 'FRANCE'">
   <my-bootstrap-form-group name="address_lines" :validity="validity">
-    <input-with-validity name="address_lines" v-model="lines" placeholder="Numéro, rue" :validity.sync="validity.address_lines" :required="!opts.optional"></input-with-validity>
+    <input-with-validity name="address_lines" v-model="lines" v-magic-aria placeholder="Numéro, rue" :validity.sync="validity.address_lines" :required="!opts.optional"></input-with-validity>
     <CurrentLdapValue v-model="lines" :ldap_value="ldap_val.lines"></CurrentLdapValue>
   </my-bootstrap-form-group>
   <my-bootstrap-form-group name="address_line2">
-    <input-with-validity name="address_line2" v-model="line2" placeholder="complément d'adresse"></input-with-validity>
+    <input-with-validity name="address_line2" v-model="line2" v-magic-aria placeholder="complément d'adresse"></input-with-validity>
   </my-bootstrap-form-group>
   <my-bootstrap-form-group name="postalCode" multi="true">
     <div class="col-md-offset-3 col-xs-2" :class="{'has-error': validity.submitted && !validity.postalCode.valid}">
       <div>
-        <input-with-validity name="postalCode" v-model="postalCode" real-type="frenchPostalCode" placeholder="Code postal" :required="!opts.optional" :validity.sync="validity.postalCode"></input-with-validity>
+        <input-with-validity name="postalCode" v-model="postalCode" real-type="frenchPostalCode" v-magic-aria placeholder="Code postal" :required="!opts.optional" :validity.sync="validity.postalCode"></input-with-validity>
         <CurrentLdapValue v-model="postalCode" :ldap_value="ldap_val.postalCode"></CurrentLdapValue>
         <validation-errors name="postalCode" :validity="validity"></validation-errors>
       </div>

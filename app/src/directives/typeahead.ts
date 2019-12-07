@@ -6,7 +6,7 @@ const typeaheadComponent = Vue.extend({
     template: `
   <div>
    <div :class="{ 'input-group': loading }">
-    <input :id="id" class="form-control" :name="name" :placeholder="placeholder" v-if="!is_textarea"
+    <input :id="id" class="form-control" :name="name" v-magic-aria :placeholder="placeholder" v-if="!is_textarea"
            v-model="query" ref="input"
            type="text" autocomplete="off"
            @keydown.down.prevent="down"

@@ -62,3 +62,8 @@ Vue.directive('on-submit', function (el : HTMLElement, binding) {
         }, 500));
     };
 })
+
+Vue.directive('magic-aria', function (el: HTMLElement) {
+    const placeholder = el.getAttribute('placeholder')
+    if (placeholder) el.setAttribute('aria-label', placeholder)
+})
