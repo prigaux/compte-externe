@@ -142,6 +142,7 @@ const find_choice = (oneOf: StepAttrOptionChoices[], val) => oneOf.find(choice =
 const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : StepAttrOption) => {
     opt = toUserOnly ? { optional: true, readOnly: true, ...opt} : opt;
     delete opt.anonymize;
+    if (opt.readOnly) opt.optional = true; // readOnly implies optional. Useful when readOnly is set through "attrs_override"
     if (opt.oneOf_async) opt.oneOf_async = true as any;
     if (opt.properties) opt.properties = exportAttrs(opt.properties);
     if (opt.oneOf) {

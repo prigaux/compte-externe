@@ -11,8 +11,8 @@ describe('exportAttrs', () => {
     it("should work", () => {
         const checkSame = (attrs) => assert.deepEqual(exportAttrs(attrs), attrs);
         checkSame({ sn: {} });
-        checkSame({ sn: { readOnly: true, maxYear: 11 } });
         checkSame({ _foo: { properties: { sn: {} } } });
+        assert.deepEqual(exportAttrs({ sn: { readOnly: true, maxYear: 11 } }), { sn: { readOnly: true, optional: true, maxYear: 11 } });
     });
     it("should handle hidden", () => {
         assert.deepEqual(exportAttrs({ sn: { hidden: true } }), {});
