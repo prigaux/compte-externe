@@ -2,7 +2,7 @@
   <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" v-if="!opts.readOnly || val">
 
     <span class="photoShow" v-if="val">
-        <img :src="val" class="photoBorder">
+        <img :src="val" class="photoBorder" alt="">
     </span>
 
     <span style="display: inline-block" v-if="!opts.readOnly">
