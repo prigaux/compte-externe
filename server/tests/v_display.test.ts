@@ -62,10 +62,10 @@ describe('v_display', () => {
             sn: "Rigaux",
         } as v, { sn: { title: "SN" }});
         assert.equal(await v_.toString(), 
-`<dl>
-  <dt>Email personnel</dt><dd>foo@bar.com</dd>
-  <dt>Nom de naissance</dt><dd>Rigaux</dd>
-  <dt>SN</dt><dd>Rigaux</dd>
-</dl>`);
+`<table>
+  <tr><td>Email personnel</td><td>foo@bar.com</td></tr>
+  <tr><td>Nom de naissance</td><td>Rigaux</td></tr>
+  <tr><td>SN</td><td>Rigaux</td></tr>
+</table>`);
     })
 });

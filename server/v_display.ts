@@ -17,13 +17,13 @@ function key2name(raw, spec: StepAttrOption) {
 const pmap = (o, f) => Promise.all(map(o, f))
 
 const format_v = async (v: v, attrs) => (
-    `<dl>
+    `<table>
 ` +
       (await pmap(v, async (val, key) => {
           if (key === 'various') return '';
           const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
-          return '  <dt>' + (opts && opts.title || key) + '</dt><dd>' + await key2name(val, opts) + '</dd>'
-      })).join("\n") + `\n</dl>`
+          return '  <tr><td>' + (opts && opts.title || key) + '</td><td>' + await key2name(val, opts) + '</td></tr>'
+      })).join("\n") + `\n</table>`
 )
 
 const format_various_diff = async (diff, attrs) => (

@@ -51,10 +51,10 @@ describe('resolve_mustache_async_params + mustache', () => {
         
         const v_ = v_display(v, { sn: { oneOf: [ { const: "bar", title: "BAR"} ] } })
         const r = await render("Foo {{v_display.sn}} {{v_display.givenName}} {{{v_display}}}", { v_display: v_ });
-        assert.equal(r, `Foo BAR bar2 <dl>
-  <dt>Nom d'usage</dt><dd>BAR</dd>
-  <dt>Prénom</dt><dd>bar2</dd>
-</dl>`);
+        assert.equal(r, `Foo BAR bar2 <table>
+  <tr><td>Nom d'usage</td><td>BAR</td></tr>
+  <tr><td>Prénom</td><td>bar2</td></tr>
+</table>`);
     });
 
 })
