@@ -169,13 +169,14 @@ const createCompte_ = async (sv: sva, opts : crejsonldap.options) => {
     }
     
     const resp_subv = await crejsonldap.createMayRetryWithoutSupannAliasLogin(v, opts);
-    console.log("createCompteRaw returned", resp_subv.uid);
+    const created = resp_subv.uid && !v.uid;
+    console.log("createCompteRaw ", created ? "created" : "modified", resp_subv.uid);
     v.uid = resp_subv.uid;
     if (!v.supannAliasLogin) v.supannAliasLogin = resp_subv.uid;
 
     await after_createAccount(v, sv.attrs, resp_subv.accountStatus);
 
-    return { v, response: {login: v.supannAliasLogin, accountStatus: resp_subv.accountStatus } }
+    return { v, response: {login: v.supannAliasLogin, created, accountStatus: resp_subv.accountStatus } }
 };
 
 const mailFrom = (v) => {
