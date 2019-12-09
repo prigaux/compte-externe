@@ -53,7 +53,7 @@ function action_post(req: req, sv: sva): Promise<svra> {
         mayNotifyModerators(req, sv, 'accepted');
     });
 }
-function action(req: req, sv: sv|sva, action_name: string) {
+function action<SV extends sv>(req: req, sv: SV, action_name: string): Promise<SV & { response?: response }> {
     let f = step(sv)[action_name];
     if (!f) return Promise.resolve(sv); // nothing to do
     //console.log("calling " + action_name + " for step " + sv.step);
@@ -81,7 +81,7 @@ function export_sv(sv: sva) {
     return { ...exportStep(step(sv)), ...sv };
 }
 
-function mayNotifyModerators(req: req, sv: sv, notifyKind: string) {
+function mayNotifyModerators(req: req, sv: sv|svra, notifyKind: string) {
     let notify = step(sv).notify;
     if (notify) notifyModerators(req, sv, notify[notifyKind]);
 }
