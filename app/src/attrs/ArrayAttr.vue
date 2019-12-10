@@ -47,7 +47,7 @@ export default Vue.extend({
     },
     computed: {
         first_item_opts() { 
-            return { ..._.pick(this.opts, 'title', 'labels', 'optional', 'readOnly', 'oneOf_async'), ...this.opts.items };
+            return { ..._.pick(this.opts, 'title', 'labels', 'uiOptions', 'optional', 'readOnly', 'oneOf_async'), ...this.opts.items };
         },
         item_opts() {
             return { ...this.first_item_opts, optional: true };

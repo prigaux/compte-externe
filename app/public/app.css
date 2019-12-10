@@ -4,6 +4,11 @@
     max-width: 1000px;
 }
 
+/* force the <label>'s height so that it overflows on next entries (to be used when next entries have no <label>s) */
+.label_rowspan { 
+    height: 1em;
+}
+
 h2 {
     font-size: 18px;
 }

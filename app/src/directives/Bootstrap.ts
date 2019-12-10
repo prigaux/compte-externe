@@ -41,10 +41,10 @@ Vue.component("my-label-tooltips", {
 })
 
 Vue.component("my-bootstrap-form-group", {
-    props: ['name', 'label', 'multi', 'validity', 'hideErrors', 'labels'],
+    props: ['name', 'label', 'multi', 'validity', 'hideErrors', 'labels', 'label_rowspan'],
     template: `
             <div class='form-group' :class="{'has-error': validity && validity.submitted && !validity[name].valid }">
-              <label v-if="label" class="col-md-3 control-label" :for="name">
+              <label v-if="label" class="col-md-3 control-label" :for="name" :class="{ label_rowspan }">
                 {{label}}
                 <my-label-tooltips :labels="labels"></my-label-tooltips>
               </label>

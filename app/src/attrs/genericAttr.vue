@@ -38,7 +38,7 @@
      :opts="opts" :submitted="submitted">
   </AutocompleteAttr>
 
-  <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" :labels="opts.labels" v-else-if="opts">
+  <my-bootstrap-form-group :name="name" :label="opts.title" :label_rowspan="uiOptions.title_rowspan" :validity="validity" :labels="opts.labels" v-else-if="opts">
 
     <radio-with-validity :name="name" v-model="val" v-if="uiType === 'radio'"
         :values="choicesMap"
