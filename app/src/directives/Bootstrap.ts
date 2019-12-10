@@ -40,13 +40,33 @@ Vue.component("my-label-tooltips", {
     `,
 })
 
+Vue.component("nowrap-after-text", {
+    props: ['text'],
+    template: `
+        <span>
+          {{text_.before}}
+          <span style="white-space: nowrap; display: inline-block">
+            {{text_.last_word}}
+            <slot></slot>
+          </span>
+        </span>
+    `,
+    computed: {
+        text_() {
+            const m = (this.text || '').match(/(.*) (.*)/);
+            return { before: m ? m[1] : '', last_word: m ? m[2] : this.text }
+        },
+    },
+})
+
 Vue.component("my-bootstrap-form-group", {
     props: ['name', 'label', 'multi', 'validity', 'hideErrors', 'labels', 'label_rowspan'],
     template: `
             <div class='form-group' :class="{'has-error': validity && validity.submitted && !validity[name].valid }">
               <label v-if="label" class="col-md-3 control-label" :for="name" :class="{ label_rowspan }">
-                {{label}}
-                <my-label-tooltips :labels="labels"></my-label-tooltips>
+                <nowrap-after-text :text="label">
+                    <my-label-tooltips :labels="labels"></my-label-tooltips>
+                </nowrap-after-text>
               </label>
               <div :class="subClass">
                   <slot></slot>
