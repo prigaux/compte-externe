@@ -297,3 +297,14 @@ export const filter_user_memberOfs = async (group_cn_to_code: (cn: string) => st
     return r;
 }
 
+export const searchInternalMail = async (email: string): Promise<{ internal?: v; external?: true }> => {
+    if (!email) return { external: true };
+
+    const domain = email.match(/@(.*)/)?.[1]
+    if (!domain) throw "invalid mail address " + email
+    
+    if (!conf.ldap.people.mail_domains.includes(domain)) return { external: true };
+
+    const user = await onePerson(filters.eq('mail', email));
+    return { internal: user }
+}

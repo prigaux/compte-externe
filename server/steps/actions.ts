@@ -315,3 +315,16 @@ export const sendMailNewEtablissement = (to: string): simpleAction => (_req, sv)
     return Promise.resolve({ v });
 };
 
+// if supannMailPerso is an internal mail address, it must exist and not create a loop
+export const validateMailNoLoop = (idAttr): simpleAction => async (_req, { v }) => {
+    const email = v.supannMailPerso
+    const r = await search_ldap.searchInternalMail(email)
+    if (r.external) {
+        // ok
+    } else if (!r.internal) {
+        throw `L'adresse mail ${email} n'existe pas dans notre université. Conseil : utilisez une adresse mail personnelle.`
+    } else if (r.internal[idAttr] === v[idAttr]) {
+        throw `Votre propre adresse mail n'est pas autorisée comme email personnel.`
+    }    
+    return Promise.resolve({ v });
+}
