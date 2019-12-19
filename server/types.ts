@@ -79,14 +79,16 @@ type StepAttrOptionChoices = StepAttrOptionChoicesT<StepAttrOption>;
 type profileValues = profileValuesT<StepAttrsOption>;
 
 interface StepLabels {
+    // vue templates
     title_in_list?: string; // an empty description means "hide this step in ModerateList"
     title?: string;
     description?: string;
     okButton?: string;
     cancelButton?: string;
 
-    added?: string;
-    accepted?: string;
+    // vue templates: can use variable "resp" which is the response of "next" "action_pre" and/or "action_post"
+    added?: string; // displayed reaching this step (through "next"). It will be prefered over "accepted" below.
+    accepted?: string; // displayed when the "action_post" succeeded (but see "added" above if "next" step)
 }
 
 interface StepNotify {
