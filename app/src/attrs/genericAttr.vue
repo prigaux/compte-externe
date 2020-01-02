@@ -81,6 +81,7 @@
     
    <div :class="{ 'input-group': allow_remove }" v-else>
     <input-with-validity :name="name" v-model="val" 
+        v-bind="input_attrs"
         :disabled="opts.readOnly"
         :placeholder="opts.uiPlaceholder"
         :type="type" :realType="realType" :required="!opts.optional" :pattern="opts.pattern" :allowedChars="opts.allowedChars" :validator="opts.validator"
@@ -156,6 +157,9 @@ export default Vue.extend({
         validValue() {
             return this.uiType === 'select' ? this.oneOf && find(this.oneOf, choice => choice.const === this.value) : this.val;
         },
+        input_attrs() {
+            return this.type === 'password' ? { autocomplete: 'current_password' } : {}
+        }
     },
     asyncComputed: {
         async oneOf() {
