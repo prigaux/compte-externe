@@ -179,7 +179,7 @@ describe('merge_v', () => {
         test_fail(attrs, {}, {}, "constraint !sn.optional failed for undefined");
     });
     it ("should handle oneOf merge_patch_parent_properties", () => {
-        const attrs = { duration: { oneOf: [ 
+        const attrs = { duration: { oneOf: [
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2" },
         ] } };
@@ -188,7 +188,7 @@ describe('merge_v', () => {
         test_fail(attrs, {}, { duration: '1' }, "constraint !sn.optional failed for undefined");
     });
     it ("should handle oneOf merge_patch_parent_properties toUserOnly", () => {
-        const attrs = { duration: { oneOf: [ 
+        const attrs = { duration: { oneOf: [
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2", merge_patch_parent_properties: { sn: { toUserOnly: true } } },
         ] } };
@@ -197,7 +197,7 @@ describe('merge_v', () => {
         test_fail(attrs, { sn: 'y' }, { duration: '1' }, "constraint !sn.optional failed for undefined");
     });
     it ("should handle oneOf merge_patch_parent_properties readOnly", () => {
-        const attrs = { duration: { oneOf: [ 
+        const attrs = { duration: { oneOf: [
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2", merge_patch_parent_properties: { sn: { readOnly: true } } },
         ] } };
