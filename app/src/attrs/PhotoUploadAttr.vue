@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" v-if="!opts.readOnly || val">
+  <my-bootstrap-form-group :name="name" :label="opts.title" no_html_label="true" :validity="validity" v-if="!opts.readOnly || val">
 
     <span class="photoShow" v-if="val">
         <img :src="val" class="photoBorder" alt="">
@@ -24,7 +24,7 @@
       </span>
 
       <span class="withPhoto" v-else-if="val">
-        <button type="button" class="btn btn-default" @click="photoToValidate(val)">
+        <button type="button" class="btn btn-default" @click="photoToValidate(val)" aria-label="Modifier la photo">
           <span class="glyphicon glyphicon-pencil"></span>
             Modifier la photo
         </button>

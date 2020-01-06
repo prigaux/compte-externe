@@ -60,11 +60,11 @@ Vue.component("nowrap-after-text", {
 })
 
 Vue.component("my-bootstrap-form-group", {
-    props: ['name', 'label', 'validity', 'hideErrors', 'labels', 'label_rowspan'],
+    props: ['name', 'label', 'validity', 'hideErrors', 'labels', 'label_rowspan', 'no_html_label'],
     template: `
             <div class='form-group' :class="{'has-error': validity && validity.submitted && !validity[name].valid }">
-              <label class="label-and-more">
-                <nowrap-after-text :text="label" class="the-label" v-if="label">
+              <component :is="label && !no_html_label ? 'label' : 'span'" class="label-and-more">
+                <nowrap-after-text :text="label" class="the-label" :class="{ label_rowspan }" v-if="label">
                     <my-label-tooltips :labels="labels"/>
                 </nowrap-after-text>
                 <span class="the-label" v-else/>
@@ -73,7 +73,7 @@ Vue.component("my-bootstrap-form-group", {
                     <slot/>
                     <validation-errors v-if="!hideErrors && validity" :name="name" :validity="validity" :custom_message="labels && labels.advice"/>
                 </div>
-              </label>
+              </component>
             </div>
     `,
 });
