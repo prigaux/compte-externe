@@ -1,21 +1,20 @@
 <template>
 
 <div class="ArrayAttr">
-    <label v-if="val.length === 0 && !opts.readOnly" class="col-md-3 control-label">
-        {{opts.title}}
-        <my-label-tooltips :labels="opts.labels"></my-label-tooltips>
-    </label>
     <template v-for="(item, i) in val">
         <genericAttr :real_name="name" :name="name + (i ? '-' + i : '')" :opts="i ? item_opts : first_item_opts" :value="item" @input="v => set_item(i, v)" @remove="_ => remove_item(i)"
                 :stepName="stepName"
                 :allow_remove="!opts.readOnly && (opts.optional || i > 0)" :submitted="submitted">
         </genericAttr>
     </template>
-    <div :class="'col-sm-offset-' + (val.length ? 10 : 7)" class="col-sm-2" style="padding: 0 0 2rem 0" v-if="!opts.readOnly">
-        <button class="btn btn-info" style="width: 100%" type="button" @click="val.push('')" aria-label="Ajouter une valeur">
-            <i class="glyphicon glyphicon-plus"></i>
-        </button>
-    </div>
+    <my-bootstrap-form-group :label="val.length ? '' : opts.title" :labels="opts.labels" v-if="val.length === 0 || !opts.readOnly">
+        <div class="col-sm-offset-10 col-sm-2" style="padding: 0 0 2rem 0" v-if="!opts.readOnly">
+            <button class="btn btn-info" style="width: 100%" type="button" @click="val.push('')" aria-label="Ajouter une valeur">
+                <i class="glyphicon glyphicon-plus"></i>
+            </button>
+        </div>
+    </my-bootstrap-form-group>
+
     <my-bootstrap-form-group :class="{ hideIt: !currentLdapValue_shown }">
         <CurrentLdapValue :value="initial_val.join(' ')" :ldap_value="ldap_val.join(' ')" @input="val = [...ldap_val]" @shown="val => currentLdapValue_shown = val"></CurrentLdapValue>
     </my-bootstrap-form-group>
