@@ -159,7 +159,7 @@ describe('merge_v', () => {
         test({ altGivenName: { items: {} } }, {}, { altGivenName: ["x"] }, { altGivenName: ["x"] });
     });
     it ("should check oneOf", () => {
-        const attrs = { duration: { oneOf: [ { const: "1" } ] } };
+        const attrs = { duration: { oneOf: [ { const: "1" } ] } };
         test(attrs, {}, { duration: "1" }, { duration: "1" });
         test_fail(attrs, {}, { duration: "2" }, "constraint duration.oneOf 1 failed for 2");
     });

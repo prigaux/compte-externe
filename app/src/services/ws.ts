@@ -100,7 +100,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return m && _toDate(parseInt(m[3]), parseInt(m[2]), parseInt(m[1]));
         }
         const _fromCSVDate = (val: string) => (
-            _fromFrenchDate(val) || _fromLDAPDate(val) || new Date(val) || "date invalide"
+            _fromFrenchDate(val) || _fromLDAPDate(val) || new Date(val) || "date invalide"
         );
 
         function _base64_to_jpeg_data_URL(base64: string): string {

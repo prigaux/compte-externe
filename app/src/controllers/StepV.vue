@@ -141,7 +141,7 @@ export default Vue.extend({
         async update_potential_homonyms(v) {
             const l = await Ws.homonymes(this.id, v, this.all_attrs_flat);
             l.forEach(h => h.ignore = false);
-            this.all_potential_homonyms = unionBy(this.all_potential_homonyms || [], l, 'uid');
+            this.all_potential_homonyms = unionBy(this.all_potential_homonyms || [], l, 'uid');
         },
         async submit_() {
             await this.may_update_potential_homonyms(this.v, this.v_orig);

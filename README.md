@@ -76,7 +76,7 @@ You can also ensure the browser does not modify the value:
 * ```readOnly```: sent to the browser, but can not be modified by the browser
 * ```toUserOnly```: sent to the browser, but can not be modified by the browser + do not propagate it to next steps (usage example: display it to the user, but do not propagate to createCompte)
 
-## ```acls```
+## ```acls```
 
 TODO
 
@@ -92,7 +92,7 @@ If `.action_pre` or `.action_post` throws exception `Unauthorized`
 
 # Configuration
 
-## Apache shibboleth SP configuration
+## Apache shibboleth SP configuration
 
 ```apache
 <Location />

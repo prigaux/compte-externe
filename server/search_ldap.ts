@@ -111,7 +111,7 @@ function homonymes_filter(sns: string[], givenNames: string[], birthDay: Date, s
         return filters.startsWith("mail", suggested_mail(sns[0], givenNames[0]) + '@');
     }
 
-    const [ birthDay_filter ] = subv_to_eq_filters({ birthDay });
+    const [ birthDay_filter ] = subv_to_eq_filters({ birthDay });
 
     let l = [ filters.and([ cn_filter(), birthDay_filter ]),
               filters.and([ sn_givenName_filter(), birthDay_filter ]),

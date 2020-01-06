@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import * as Helpers from '@/services/helpers';
-import * as JsDiff from 'diff';
+import * as JsDiff from 'diff';
 
 describe('service helpers', function() {
 

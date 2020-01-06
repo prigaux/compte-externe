@@ -5,7 +5,7 @@ import * as conf from './conf';
 import grouped_calls from './helper_grouped_calls';
 
 
-export type options = { action: "validate" } | { create: false } | {
+export type options = { action: "validate" } | { create: false } | {
     create: true;
     dupcreate: "ignore"|"warn"|"err";
     dupmod: "ignore"|"warn"|"err";

@@ -18,7 +18,7 @@ import Vue from 'vue';
 import * as _ from 'lodash';
 import conf from '../conf';
 import * as Helpers from '../services/helpers';
-import * as JsDiff from 'diff';
+import * as JsDiff from 'diff';
 import ExistingAccountWarning from '../controllers/ExistingAccountWarning.vue';
 
 function format(val) {
