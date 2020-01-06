@@ -1,5 +1,6 @@
 <template>
-  <my-bootstrap-form-group name="day" multi="true" :label="opts.title">
+  <my-bootstrap-form-group name="day" :label="opts.title">
+   <div class="row">
     <div class="col-xs-2" :class="{'has-error': submitted && !validity.day.valid }">
         <div>
         <input-with-validity name="day" v-model="day" type="number" min="1" :max="maxDay" placeholder="Jour" :required="!opts.optional" :validity.sync="validity.day"></input-with-validity>
@@ -18,6 +19,7 @@
         <validation-errors name="year" :validity="validity"></validation-errors>
         </div>
     </div>
+   </div>
   </my-bootstrap-form-group>
 </template>
 

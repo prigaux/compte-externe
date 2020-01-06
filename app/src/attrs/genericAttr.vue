@@ -62,7 +62,7 @@
 
     <div v-else-if="uiType === 'select'">
         <!-- wait until oneOf is computed. <select-with-validity> can NOT handle "value" is in computed "oneOf" -->
-      <select-with-validity :id="name" :name="name" v-model="val" v-if="oneOf"
+      <select-with-validity :name="name" v-model="val" v-if="oneOf"
         :disabled="opts.readOnly"
         :choices="oneOf" :required="!opts.optional" :validity.sync="validity[name]">
       </select-with-validity>

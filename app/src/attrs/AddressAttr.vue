@@ -18,21 +18,23 @@
   <my-bootstrap-form-group name="address_line2">
     <input-with-validity name="address_line2" v-model="line2" v-magic-aria placeholder="complément d'adresse"></input-with-validity>
   </my-bootstrap-form-group>
-  <my-bootstrap-form-group name="postalCode" multi="true">
-    <div class="col-md-offset-3 col-xs-2" :class="{'has-error': validity.submitted && !validity.postalCode.valid}">
+  <my-bootstrap-form-group name="postalCode">
+   <div class="row">
+    <div class="col-xs-3" :class="{'has-error': validity.submitted && !validity.postalCode.valid}">
       <div>
         <input-with-validity name="postalCode" v-model="postalCode" real-type="frenchPostalCode" v-magic-aria placeholder="Code postal" :required="!opts.optional" :validity.sync="validity.postalCode"></input-with-validity>
         <CurrentLdapValue v-model="postalCode" :ldap_value="ldap_val.postalCode"></CurrentLdapValue>
         <validation-errors name="postalCode" :validity="validity"></validation-errors>
       </div>
     </div>
-    <div class="col-xs-7" :class="{'has-error': validity.submitted && !validity.town.valid}">
+    <div class="col-xs-9" :class="{'has-error': validity.submitted && !validity.town.valid}">
       <div>
         <typeahead name="town" v-model="town" :options="towns" placeholder="Ville" :editable="false" :required="!opts.optional" :validity.sync="validity.town"></typeahead>
         <CurrentLdapValue v-model="town" :ldap_value="ldap_val.town"></CurrentLdapValue>
         <validation-errors name="town" :validity="validity"></validation-errors>
       </div>
     </div>
+   </div>
   </my-bootstrap-form-group>
  </div>
  <div v-else>

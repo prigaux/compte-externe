@@ -60,7 +60,7 @@ fieldset {
 }
 
 /* avoid duplicate labels */
-.ArrayAttr > :not(:first-child) .control-label {
+.ArrayAttr > :not(:first-child) .the-label {
     visibility: hidden;
 }
 
@@ -143,17 +143,41 @@ fieldset {
 .form-inline .genericAttr { 
     display: inline-block;
 }
-.form-inline label[for] {
+.form-inline .the-label {
     display: none;
-}
-.form-inline .col-md-offset-3 {
-    margin-left: 0;
 }
 
 .my-radio-inline {
     padding-top: 5px;
-    font-weight: initial; /* until we remove bootstrap */
 }
 .my-radio-inline:not(:first-child) {
     margin-left: 10px;
+}
+
+label {
+    font-weight: initial; /* until we remove bootstrap */
+}
+
+.label-and-more {
+  display: flex;
+  flex-wrap: wrap;
+  clear: both;
+}
+
+.label-and-more > .the-label {
+    font-weight: 700;
+    flex: 0.3 0 100%;
+    margin: 0 1.5rem;
+}
+.label-and-more > .on-the-right {
+    flex: 1 0;
+    margin: 0 1.5rem;
+}
+
+@media screen and (min-width: 992px) {
+    .label-and-more > .the-label {
+        flex-basis: 0;
+        text-align: right;
+        padding-top: 7px;
+    }
 }

@@ -60,24 +60,21 @@ Vue.component("nowrap-after-text", {
 })
 
 Vue.component("my-bootstrap-form-group", {
-    props: ['name', 'label', 'multi', 'validity', 'hideErrors', 'labels', 'label_rowspan'],
+    props: ['name', 'label', 'validity', 'hideErrors', 'labels', 'label_rowspan'],
     template: `
             <div class='form-group' :class="{'has-error': validity && validity.submitted && !validity[name].valid }">
-              <label v-if="label" class="col-md-3 control-label" :for="name" :class="{ label_rowspan }">
-                <nowrap-after-text :text="label">
-                    <my-label-tooltips :labels="labels"></my-label-tooltips>
+              <label class="label-and-more">
+                <nowrap-after-text :text="label" class="the-label" v-if="label">
+                    <my-label-tooltips :labels="labels"/>
                 </nowrap-after-text>
+                <span class="the-label" v-else/>
+
+                <div class="on-the-right">
+                    <slot/>
+                    <validation-errors v-if="!hideErrors && validity" :name="name" :validity="validity" :custom_message="labels && labels.advice"/>
+                </div>
               </label>
-              <div :class="subClass">
-                  <slot></slot>
-                  <validation-errors v-if="!hideErrors && validity" :name="name" :validity="validity" :custom_message="labels && labels.advice"></validation-errors>
-              </div>
             </div>
     `,
-    computed: {
-        subClass() {
-            return (this.label || this.multi ? '' : 'col-md-offset-3') + ' ' + (this.multi ? '' : 'col-md-9');
-        },
-    },
 });
 

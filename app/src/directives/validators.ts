@@ -41,7 +41,6 @@ Vue.component('input-with-validity', {
   mounted() {
     let element = this.$el;
 
-    element.setAttribute('id', this.name);
     element.classList.add("form-control");
     this._setPattern();
 
