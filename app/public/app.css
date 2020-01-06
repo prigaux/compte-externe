@@ -149,3 +149,11 @@ fieldset {
 .form-inline .col-md-offset-3 {
     margin-left: 0;
 }
+
+.my-radio-inline {
+    padding-top: 5px;
+    font-weight: initial; /* until we remove bootstrap */
+}
+.my-radio-inline:not(:first-child) {
+    margin-left: 10px;
+}
