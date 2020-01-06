@@ -10,7 +10,7 @@
     <my-bootstrap-form-group :label="val.length ? '' : opts.title" :labels="opts.labels" v-if="val.length === 0 || !opts.readOnly">
         <div class="row" v-if="!opts.readOnly">
           <div class="col-sm-offset-10 col-sm-2">
-            <button class="btn btn-info" style="width: 100%" type="button" @click="val.push('')" aria-label="Ajouter une valeur">
+            <button class="btn btn-info ArrayAttr-add" style="width: 100%" type="button" @click="val.push('')" aria-label="Ajouter une valeur">
                 <i class="glyphicon glyphicon-plus"></i>
             </button>
           </div>
