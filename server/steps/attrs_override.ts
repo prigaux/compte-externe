@@ -2,16 +2,23 @@ import * as _ from 'lodash';
 import * as utils from '../utils';
 import * as search_ldap from '../search_ldap';
 
-export const group_for_each_attr_codes = (codeAttr: string, { group_cn_to_code }, code_to_choice) => {
-    const _to_StepAttrOptionChoices = async (code) => {
-        const choices = await code_to_choice(code, 1)
-        const choice: StepAttrOptionChoices = choices.length ? choices[0] : { const: code }
+export const group_for_each_attr_codes = (codeAttr: string, { group_cn_to_code }, code_to_choice, group_cn_to_choice) => {
+    const _to_StepAttrOptionChoices = async (cn_and_const) => {
+        const choices = await code_to_choice(cn_and_const.code, 1)
+        let choice: StepAttrOptionChoices = choices.length ? choices[0] : { const: cn_and_const.code }
+        if (group_cn_to_choice) {
+            choice = group_cn_to_choice(cn_and_const.cn, choice)
+        }
         return choice
     }
     
     return async (req, _sv) => {
-        const codes = await search_ldap.filter_user_memberOfs(group_cn_to_code, req.user);
-        const oneOf = await Promise.all(codes.map(_to_StepAttrOptionChoices));
+        const group_cn_to_ = (cn: string) => {
+            const code = group_cn_to_code(cn);
+            return code && { code, cn }
+        }
+        const cn_and_consts = await search_ldap.filter_user_memberOfs(group_cn_to_, req.user);
+        const oneOf = await Promise.all(cn_and_consts.map(_to_StepAttrOptionChoices));
         if (oneOf.length === 0) {
             console.error("attrs_override.group_for_each_attr_codes: no group found for logged user", req.user.id)
             throw "Forbidden";
