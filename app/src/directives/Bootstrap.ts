@@ -11,7 +11,7 @@ Vue.component("validation-errors", {
     `,
     computed: {
         validity_() {
-            return this.validity && this.validity.submitted && this.validity[this.name] || { valid: true };
+            return this.validity && this.validity[this.name] || { valid: true };
         },
     },
 });

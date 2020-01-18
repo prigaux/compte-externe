@@ -15,7 +15,7 @@
       <fieldset v-for="(opts, id) in tabs" :key="id"
             :id="'panel_' + id" role="tabpanel" :aria-labelledby="'tab_' + id" :hidden="id !== selectedTab_">
             <div v-for="(opts, name) in opts.properties" :key="name" v-if="opts">
-                <genericAttr :name="name" :opts="opts" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :submitted="submitted" :stepName="stepName"
+                <genericAttr :name="name" :opts="opts" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :stepName="stepName"
                     v-if="name != 'barcode' && name != 'mifare' && opts.uiType !== 'homonym'">
                 </genericAttr>
             </div>
@@ -24,12 +24,12 @@
 
     <div class="without-tabs" v-if="Object.keys(attrs_outside_tabs).length">
       <div v-for="(opts, name) in attrs_outside_tabs" :key="name" class="genericAttrs">
-        <genericAttr :name="name" :opts="opts" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :submitted="submitted" :stepName="stepName">
+        <genericAttr :name="name" :opts="opts" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :stepName="stepName">
         </genericAttr>
       </div>
     </div>
 
-  <BarcodeAttrs v-model="v" :attrs="attrs" :submitted="submitted" v-if="attrs.barcode || attrs.mifare"></BarcodeAttrs>
+  <BarcodeAttrs v-model="v" :attrs="attrs" v-if="attrs.barcode || attrs.mifare"></BarcodeAttrs>
  
    <my-bootstrap-form-group>
       <button class="btn btn-primary" type="submit" v-if="step_labels.okButton">

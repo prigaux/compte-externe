@@ -42,10 +42,10 @@ const month2maxDay = [undefined,
 
 
 export default Vue.extend({
-    props: ['value', 'submitted', 'opts'],
+    props: ['value', 'opts'],
     data() {
         return {
-            validity: { year: {}, month: {}, day: {}, submitted: false },
+            validity: { year: {}, month: {}, day: {} },
             ...init(this.value),
         };
     },
@@ -55,9 +55,6 @@ export default Vue.extend({
         },
         currentValue(val) {
             this.$emit('input', val);
-        },
-        submitted(b) {
-            this.validity.submitted = b;
         },
     },
     computed: {

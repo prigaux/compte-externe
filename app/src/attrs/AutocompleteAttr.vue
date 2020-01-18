@@ -17,10 +17,10 @@ import Vue from "vue";
 import * as Ws from '../services/ws';
 
 export default Vue.extend({
-    props: ['value', 'name', 'opts', 'submitted', 'v', 'stepName'],
+    props: ['value', 'name', 'opts', 'v', 'stepName'],
     data() {
         return {
-          validity: !this.opts.readOnly && { [this.name]: {}, submitted: false },
+          validity: !this.opts.readOnly && { [this.name]: {} },
           val: undefined,
         };
     },
@@ -44,9 +44,6 @@ export default Vue.extend({
                 this.$emit('input', val.const);
                 if (this.opts.onChange) this.opts.onChange(this.v, val.const, val);
             }
-        },
-        submitted(b) {
-            if (this.validity) this.validity.submitted = b;
         },
     },
     methods: {

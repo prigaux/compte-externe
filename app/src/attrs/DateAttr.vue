@@ -17,13 +17,13 @@ function toYYYY_MM_DD(date) {
 const init = toYYYY_MM_DD;
 
 export default Vue.extend({
-    props: ['name', 'value', 'ldap_value', 'opts', 'submitted'],
+    props: ['name', 'value', 'ldap_value', 'opts'],
     components: { CurrentLdapValue },
     data() {
         const val = init(this.value);
         const ldap_val = init(this.ldap_value);
         return {
-            validity: { [this.name]: {}, submitted: false },
+            validity: { [this.name]: {} },
             val,
             ldap_val,
             initial_val: val, 
@@ -35,9 +35,6 @@ export default Vue.extend({
         },
         date(date) {
             this.$emit('input', date);
-        },
-        submitted(b) {
-            this.validity.submitted = b;
         },
     },
     computed: {

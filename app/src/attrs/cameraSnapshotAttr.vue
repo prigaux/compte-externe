@@ -23,10 +23,10 @@
 import Vue from "vue";
 
 export default Vue.extend({
-    props: ['value', 'opts', 'submitted'],
+    props: ['value', 'opts'],
     data() {
         return {
-            validity: { jpegPhoto: {}, submitted: false },
+            validity: { jpegPhoto: {} },
             val: this.value,
             doGet: null,
         };
@@ -37,9 +37,6 @@ export default Vue.extend({
         },
         val(val) {
             this.$emit('input', val);
-        },
-        submitted(b) {
-            this.validity.submitted = b;
         },
     },
 });

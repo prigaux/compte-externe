@@ -4,7 +4,7 @@
     <template v-for="(item, i) in val">
         <genericAttr :real_name="name" :name="name + (i ? '-' + i : '')" :opts="i ? item_opts : first_item_opts" :value="item" @input="v => set_item(i, v)" @remove="_ => remove_item(i)"
                 :stepName="stepName"
-                :allow_remove="!opts.readOnly && (opts.optional || i > 0)" :submitted="submitted">
+                :allow_remove="!opts.readOnly && (opts.optional || i > 0)">
         </genericAttr>
     </template>
     <my-bootstrap-form-group :label="val.length ? '' : opts.title" :labels="opts.labels" v-if="val.length === 0 || !opts.readOnly">
@@ -33,13 +33,13 @@ function init(val) {
 }
 
 export default Vue.extend({
-    props: ['name', 'value', 'ldap_value', 'opts', 'submitted', 'stepName'],
+    props: ['name', 'value', 'ldap_value', 'opts', 'stepName'],
     components: { CurrentLdapValue },
     data() {
         let val = init(this.value);
         if (val.length === 0 && !this.opts.optional) val.push('');
         return {
-            validity: { [this.name]: {}, submitted: false },
+            validity: { [this.name]: {} },
             val,
             ldap_val: init(this.ldap_value),
             initial_val: [...val],
@@ -57,9 +57,6 @@ export default Vue.extend({
     watch: {
         value(val) {
             this.val = init(val);
-        },
-        submitted(b) {
-            this.validity.submitted = b;
         },
     },
     methods: {

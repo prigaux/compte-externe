@@ -3,39 +3,39 @@
 
   <DateAttr v-model="val" :name="name" v-if="uiType === 'date'"
     :ldap_value="ldap_value"
-    :opts="opts" :submitted="submitted">
+    :opts="opts">
   </DateAttr>
 
   <DateThreeInputsAttr v-model="val" v-else-if="uiType === 'dateThreeInputs'"
-    :opts="opts" :submitted="submitted">
+    :opts="opts">
   </DateThreeInputsAttr>
 
   <ArrayAttr v-model="val" :name="name" v-else-if="uiType === 'array'"
     :ldap_value="ldap_value"
     :stepName="stepName"
-    :opts="opts" :submitted="submitted">
+    :opts="opts">
   </ArrayAttr>
 
   <AddressAttr v-model="val" v-else-if="uiType === 'postalAddress'"
     :ldap_value="ldap_value"
-    :opts="opts" :submitted="submitted">
+    :opts="opts">
   </AddressAttr>
 
   <cameraSnapshotAttr v-model="val" v-else-if="uiType === 'cameraSnapshot'"
-     :opts="opts" :submitted="submitted">
+     :opts="opts">
   </cameraSnapshotAttr>
 
   <PhotoUploadAttr v-model="val" :name="name" v-else-if="uiType === 'photoUpload'"
-     :opts="opts" :submitted="submitted">
+     :opts="opts">
   </PhotoUploadAttr>
 
   <PasswordAttr v-model="val" v-else-if="uiType === 'newPassword'"
-     :opts="opts" :submitted="submitted">
+     :opts="opts">
   </PasswordAttr>
 
   <AutocompleteAttr v-model="val" :name="name" :v="v" v-else-if="uiType === 'autocomplete'"
      :stepName="stepName"
-     :opts="opts" :submitted="submitted">
+     :opts="opts">
   </AutocompleteAttr>
 
   <my-bootstrap-form-group :name="name" 
@@ -121,14 +121,14 @@ import AutocompleteAttr from './AutocompleteAttr.vue';
 import CurrentLdapValue from './CurrentLdapValue.vue';
 
 export default Vue.extend({
-    props: ['value', 'real_name', 'name', 'opts', 'submitted', 'v', 'ldap_value', 'stepName', 'allow_remove'],
+    props: ['value', 'real_name', 'name', 'opts', 'v', 'ldap_value', 'stepName', 'allow_remove'],
     components: { 
         DateAttr, DateThreeInputsAttr, ArrayAttr, AddressAttr, cameraSnapshotAttr, PasswordAttr, AutocompleteAttr, CurrentLdapValue,
         PhotoUploadAttr: () => import('./PhotoUploadAttr.vue'),
     },
     data() {
         return {
-            validity: { [this.name]: {}, submitted: false },
+            validity: { [this.name]: {} },
             val: this.value,
             initial_value: this.value,
         };
@@ -186,9 +186,6 @@ export default Vue.extend({
                 if (val_ !== val) { this.val = val = val_ }
             }
             this.$emit('input', val);
-        },
-        submitted(b) {
-            this.validity.submitted = b;
         },
     },
 });

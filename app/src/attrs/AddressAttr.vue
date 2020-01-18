@@ -52,11 +52,11 @@ import * as Address from '../services/address';
 import CurrentLdapValue from './CurrentLdapValue.vue';
 
 export default Vue.extend({
-    props: ['value', 'ldap_value', 'opts', 'submitted'],
+    props: ['value', 'ldap_value', 'opts'],
     components: { CurrentLdapValue },
     data() {
         return {
-            validity: { country: {}, address_lines: {}, postalCode: {}, town: {}, submitted: false },
+            validity: { country: {}, address_lines: {}, postalCode: {}, town: {} },
             ...Address.fromString(this.value),
             ldap_val: this.ldap_value && Address.fromString(this.ldap_value) || {},
         };
@@ -67,9 +67,6 @@ export default Vue.extend({
         },
         currentValue(val) {
             this.$emit('input', val);
-        },
-        submitted(b) {
-            this.validity.submitted = b;
         },
         towns(l) {
             if (l && l.length === 1) {

@@ -4,20 +4,17 @@ import conf from '../conf';
 import * as Helpers from '../services/helpers'; 
 
 function attrs_data(vm) {
-    let validity = { submitted : false };
+    let validity = {};
     Helpers.eachObject(vm.attrs, (attr) => validity[attr] = {});
     Helpers.eachObject(conf.default_attrs_opts, (attr) => validity[attr] = {}); // TODO: get rid of this. Hopefully not needed anymore
     return { validity };
 }
 
 export default Vue.extend({
-    props: ['v', 'attrs', 'submitted'],
+    props: ['v', 'attrs'],
     model: { prop: 'v', event: 'change' },
     data: function() { return attrs_data(this); },
     watch: {
-        submitted(b) {
-            this.validity.submitted = b;
-        },
         v: {
             deep: false,
             handler(v) {
