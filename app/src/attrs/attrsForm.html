@@ -1,4 +1,4 @@
-<form novalidate name="myForm" v-on-submit.prevent="submit" :class="onelineForm ? 'form-inline' : 'form-horizontal'">
+<form novalidate name="myForm" v-on-submit.prevent="submit" :class="[ onelineForm ? 'form-inline' : 'form-horizontal', submitted ? 'submitted' : '' ]">
 
    <fieldset v-if="v.Shib_Identity_Provider">  
     <my-bootstrap-form-group name="Shib_Identity_Provider" label="Etablissement">

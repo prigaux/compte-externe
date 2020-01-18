@@ -55,10 +55,10 @@ import * as Helpers from '../services/helpers';
 
 export default Vue.extend({
     components: { MyCroppie },
-    props: ['value', 'name', 'opts', 'submitted'],
+    props: ['value', 'name', 'opts'],
     data() {
         return {
-            validity: { [this.name]: {}, submitted: false },
+            validity: { [this.name]: {} },
             val: this.value,
             toValidate: null,
             error: null,
@@ -85,9 +85,6 @@ export default Vue.extend({
         },
         val(val) {
             this.$emit('input', val);
-        },
-        submitted(b) {
-            this.validity.submitted = b;
         },
     },
     mounted() {

@@ -20,14 +20,14 @@
   </my-bootstrap-form-group>
   <my-bootstrap-form-group name="postalCode">
    <div class="row">
-    <div class="col-xs-3" :class="{'has-error': validity.submitted && !validity.postalCode.valid}">
+    <div class="col-xs-3" :class="{'my-has-error': !validity.postalCode.valid}">
       <div>
         <input-with-validity name="postalCode" v-model="postalCode" real-type="frenchPostalCode" v-magic-aria placeholder="Code postal" :required="!opts.optional" :validity.sync="validity.postalCode"></input-with-validity>
         <CurrentLdapValue v-model="postalCode" :ldap_value="ldap_val.postalCode"></CurrentLdapValue>
         <validation-errors name="postalCode" :validity="validity"></validation-errors>
       </div>
     </div>
-    <div class="col-xs-9" :class="{'has-error': validity.submitted && !validity.town.valid}">
+    <div class="col-xs-9" :class="{'my-has-error': !validity.town.valid}">
       <div>
         <typeahead name="town" v-model="town" :options="towns" placeholder="Ville" :editable="false" :required="!opts.optional" :validity.sync="validity.town"></typeahead>
         <CurrentLdapValue v-model="town" :ldap_value="ldap_val.town"></CurrentLdapValue>
