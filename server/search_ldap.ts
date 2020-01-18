@@ -290,13 +290,13 @@ export const prefix_suffix_to_group_and_code = (prefix: string, suffix: string) 
     }
 }
 
-export const filter_user_memberOfs = async (group_cn_to_code: (cn: string) => string, user: CurrentUser) => {
+export const filter_user_memberOfs = async <T>(group_cn_to: (cn: string) => T, user: CurrentUser) => {
     const user_ = await ldap.searchOne(conf.ldap.base_people, currentUser_to_filter(user), { memberOf: [''] }, {});
-    const r: string[] = [];
+    const r: T[] = [];
     for (const memberOf of user_.memberOf || []) {
         const cn = conf.ldap.memberOf_to_group_cn(memberOf);
-        const code = cn && group_cn_to_code(cn);
-        if (code) r.push(code);
+        const o = cn && group_cn_to(cn);
+        if (o) r.push(o);
     }
     return r;
 }
