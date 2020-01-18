@@ -291,6 +291,14 @@ export const searchThisAttr = <T extends LdapAttrValue>(base: string, filter: fi
     ));
 };
 
+// search LDAP using "filter" but return only one attribute for each LDAP entries
+export const searchOneThisAttr = <T extends LdapAttrValue>(base: string, filter: filter, attr: string, attrType: T, options: Options = {}): Promise<T> => {
+    options = merge({ sizeLimit: 1 }, options); // no use getting more than one answer
+    return searchThisAttr(base, filter,attr, attrType, options).then(l => (
+        l.length ? l[0] : null
+    ));
+};
+
 /*
 export const groupMembers = (cn: string) => (
     searchOneThisAttr(conf.ldap.base_groups, "(cn=" + cn + ")", 'member').then(l => (

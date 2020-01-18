@@ -22,6 +22,10 @@ export const oneExistingPerson = (filter: string) => (
     })
 )
 
+export const oneGroupAttr = (cn: string, attr: string) => (
+    ldap.searchOneThisAttr(conf.ldap.base_groups, filters.eq('cn', cn), attr, '')
+)
+
 export const v_from_WS = (v) => (
     _.mapValues(v, (val, attr) => {
         let attrType = conf.ldap.people.types[attr];
