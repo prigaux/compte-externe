@@ -2,22 +2,23 @@ import * as _ from 'lodash';
 import * as utils from '../utils';
 import * as search_ldap from '../search_ldap';
 
-
-const _to_oneOf = async (oneOf_async, consts) => (
-    _.flatten(await Promise.all(consts.map(code => oneOf_async(code, 1)))) as StepAttrOptionChoices[]
-)
-
-export const group_for_each_attr_codes = (codeAttr: string, { group_cn_to_code }, oneOf_async) => (
-    async (req, _sv) => {
-        const consts = await search_ldap.filter_user_memberOfs(group_cn_to_code, req.user);
-        const oneOf = await _to_oneOf(oneOf_async, consts);
+export const group_for_each_attr_codes = (codeAttr: string, { group_cn_to_code }, code_to_choice) => {
+    const _to_StepAttrOptionChoices = async (code) => {
+        const choices = await code_to_choice(code, 1)
+        const choice: StepAttrOptionChoices = choices.length ? choices[0] : { const: code }
+        return choice
+    }
+    
+    return async (req, _sv) => {
+        const codes = await search_ldap.filter_user_memberOfs(group_cn_to_code, req.user);
+        const oneOf = await Promise.all(codes.map(_to_StepAttrOptionChoices));
         if (oneOf.length === 0) {
             console.error("attrs_override.group_for_each_attr_codes: no group found for logged user", req.user.id)
             throw "Forbidden";
         }
         return { [codeAttr]: { default: oneOf[0].const, oneOf } } as StepAttrsOption
     }
-)
+}
 
 export interface MoreAttrOption_if { 
     if?: Dictionary<StepAttrOptionT<StepAttrOption_no_extensions> | ((v: v) => Promise<StepAttrOptionT<StepAttrOption_no_extensions>>)>;
