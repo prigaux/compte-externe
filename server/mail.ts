@@ -80,7 +80,8 @@ export const sendWithTemplate = (template: string, params: {}, templateName = ""
             if (!m) {
                 console.error("invalid template " + (templateName || template) + ': first line must be "Subject: ..."');
             } else {
-                send({ from: params['from'] || conf.mail.from, to: params['to'], cc: params['cc'], subject: m[1], html: m[2] });
+                const html = `<!DOCTYPE html><html>${m[2]}</html>` // pour éviter des rejets de type HTML_MIME_NO_HTML_TAG
+                send({ from: params['from'] || conf.mail.from, to: params['to'], cc: params['cc'], subject: m[1], html });
             }
     });
 };
