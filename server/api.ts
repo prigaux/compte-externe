@@ -274,7 +274,7 @@ function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
 const exportStep = (step: step) => (
     {
         attrs: typeof step.attrs === 'function' ? {} : exportAttrs(step.attrs),
-        step: _.pick(step, 'labels', 'attrs_pre', 'allow_many'),
+        step: _.pick(step, 'labels', 'allow_many'),
     }
 );
 const loggedUserInitialSteps = (req: req) => (

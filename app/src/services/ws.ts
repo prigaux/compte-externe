@@ -55,7 +55,6 @@ export type StepAttrsOption = Dictionary<StepAttrOption>;
 
 export interface InitialSteps {
     attrs: StepAttrsOption;
-    attrs_pre: Dictionary<{}>;
     allow_many: boolean;
 }
 

@@ -103,7 +103,6 @@ type step = {
   search_filter?: string;
   initialStep?: boolean;
 
-  attrs_pre?: Dictionary<{}>; // passed to /api/comptes/xxx as query arguments
   allow_many?: boolean; 
   
   attrs: StepAttrsOption
