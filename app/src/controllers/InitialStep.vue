@@ -58,7 +58,7 @@ export default Vue.extend({
          return this.step.attrs.uid && !this.step.attrs.uid.uiHidden;
      },
      title_in_list() {
-         const labels = this.step.labels || {};
+         const labels = this.step.step.labels || {};
          return "title_in_list" in labels ? labels.title_in_list : labels.title;
      },
      searchUser_inputName() {

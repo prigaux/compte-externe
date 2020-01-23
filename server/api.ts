@@ -77,8 +77,8 @@ function export_sv(sv: sva) {
     sv = _.clone(sv);
     sv.v = export_v(sv_attrs(sv), sv.v) as v;
     if (sv.vs) sv.vs = sv.vs.map(v => export_v(sv_attrs(sv), v) as v);
-    sv.attrs = exportAttrs(sv.attrs);
-    return { ...exportStep(step(sv)), ...sv };
+    const attrs = exportAttrs(sv.attrs);
+    return { ...sv, stepName: sv.step, ...exportStep(step(sv)), attrs };
 }
 
 function mayNotifyModerators(req: req, sv: sv|svra, notifyKind: string) {
@@ -271,22 +271,21 @@ function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
     });
 }
 
-const exportStep = (step: step) : Partial<step> => (
+const exportStep = (step: step) => (
     {
         attrs: typeof step.attrs === 'function' ? {} : exportAttrs(step.attrs),
-        labels: step.labels,
-        attrs_pre: step.attrs_pre,
-        allow_many: step.allow_many,
+        step: _.pick(step, 'labels', 'attrs_pre', 'allow_many'),
     }
 );
 const loggedUserInitialSteps = (req: req) => (
   acl_checker.allowed_step_ldap_filters(req.user, initial_steps()).then(l => (
     l.map(({ step, filter }) => (
-        { id: step, filter, step: conf_steps.steps[step] }
+        { id: step, filter, stepName: step, step: conf_steps.steps[step] }
     )).filter(({ step }) => (
           step.initialStep
-    )).map(({ id, step, filter }) => (
+    )).map(({ id, stepName, step, filter }) => (
         { id, 
+          stepName,
           ldap_filter: filter,
           ...exportStep(step),
         }

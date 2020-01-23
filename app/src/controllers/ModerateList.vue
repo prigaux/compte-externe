@@ -6,11 +6,11 @@
 </div>
 
 <div v-for="(svs_,step) in svsGroupedByStep">      
- <h2 v-if="svs_[0].labels" v-html="svs_[0].labels.title"></h2>
+ <h2 v-if="svs_[0].step.labels" v-html="svs_[0].step.labels.title"></h2>
  <ul>
   <li v-for="sv in svs_">
   le {{sv.modifyTimestamp | date('dd/MM/yyyy à HH:mm')}} : 
-   <router-link :to="'/' + sv.step + '/' + sv.id">
+   <router-link :to="'/' + sv.stepName + '/' + sv.id">
      {{sv.v.sn || 'inconnu'}}
      {{sv.v.givenName || 'inconnu'}}
    </router-link>
@@ -48,7 +48,7 @@ export default Vue.extend({
   },
   computed: { 
       svsGroupedByStep() {
-         return this.svs ? Helpers.groupBy(this.svs, sv => sv.step) : undefined;
+         return this.svs ? Helpers.groupBy(this.svs, sv => sv.stepName) : undefined;
       },
   },
   methods: {
