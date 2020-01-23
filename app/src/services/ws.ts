@@ -218,18 +218,18 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                     vs = (sv.vs || [ sv.v ]).map(v => (
                         fromWs(v, all_attrs)
                     ));
-                    $scope.vs_orig = vs.map(Helpers.copy);
                 }
                 if (sv.v) {
-                    // pass v_orig to attrs opts.validator:
-                    handleAttrsValidators(all_attrs, $scope.vs_orig[0]);
                     let v = vs[0];
+                    // pass v_orig to attrs opts.validator:
+                    handleAttrsValidators(all_attrs, Helpers.copy(v));
                     Helpers.eachObject(all_attrs, (attr, opts) => {
                         const default_ = fromWs_one(attr, params[`default_${attr}`] || hash_params[`default_${attr}`], all_attrs);
                         const set_ = fromWs_one(attr, opts.uiType !== 'newPassword' && params[attr] || params[`set_${attr}`] || hash_params[`set_${attr}`], all_attrs);
                         v[attr] = set_ || v[attr] || default_;
                     });
                 }
+                $scope.vs_orig = vs?.map(Helpers.copy);
                 $scope.vs = vs // assign it when it is fully computed. Needed for Vue.js
                 $scope.all_attrs_flat = all_attrs;
                 $scope.step = sv.step;
