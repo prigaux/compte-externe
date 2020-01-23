@@ -127,6 +127,9 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 const opts = attrs[attr] || {};
                 const convert = _to_converter(opts.format);
                 if (convert && v[attr]) v_[attr] = convert(v[attr]);
+
+                const item_converter = _to_converter(opts.items?.format);
+                if (item_converter && Array.isArray(v[attr])) v_[attr] = v[attr].map(item_converter)
             }
             return v_;
         }
