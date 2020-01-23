@@ -104,6 +104,7 @@ type step = {
   initialStep?: boolean;
 
   allow_many?: boolean; 
+  if_no_modification?: 'disable-okButton',
   
   attrs: StepAttrsOption
   attrs_override?: ((req: req, sv: sv) => Promise<StepAttrsOption>);

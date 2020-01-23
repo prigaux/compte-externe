@@ -42,6 +42,7 @@
 
     <attrsForm
         :v="v" :v_ldap="v_ldap" :attrs="other_attrs" :step_labels="step.labels" :stepName="stepName"
+        :disableOkButton="disableOkButton"
         :onelineForm="onelineForm"
         @submit="submit" @reject="reject"></attrsForm>
 
@@ -122,6 +123,9 @@ export default Vue.extend({
         step_description() {
             const template = this.step && this.step.labels && this.step.labels.description;
             return template && Vue.extend({ props: ['v_pre', 'v'], template: "<div>" + template + "</div>" });
+        },
+        disableOkButton() {
+            return this?.step?.if_no_modification === 'disable-okButton' && isEqual(this.v, this.v_orig)
         },
         potential_homonyms() {
             return (this.all_potential_homonyms || []).filter(h => !h.ignore);
