@@ -118,10 +118,14 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
 
         function to_or_from_ws(direction: 'fromWs' | 'fromCSV' | 'toWs', v: {}, attrs: StepAttrsOption): V {
             var v_ = <any> Helpers.copy(v);
+
+            const _to_converter = (format) => {
+                const converters = format && attr_format_to_converter[format];
+                return converters && converters[direction];
+            };
             for (const attr in v) {
                 const opts = attrs[attr] || {};
-                const converters = attr_format_to_converter[opts.format];
-                const convert = converters && converters[direction];
+                const convert = _to_converter(opts.format);
                 if (convert && v[attr]) v_[attr] = convert(v[attr]);
             }
             return v_;
