@@ -207,7 +207,10 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
             console.error("no convertToLdap for attr " + attr + " with value " + val);
         } else if (modify.action === 'ignore') {
         } else if (modify.action === 'add') {
-            const val_ = modify.value;
+            let val_ = modify.value;
+            if (val_ === '' && opts.toJson) {
+                val_ = null; // in crejsonldap, null means remove the value
+            }
             if (attr_ in r) {
                 r[attr_] = _.uniq(to_array(r[attr_]).concat(to_array(val_)))
             } else {
