@@ -11,6 +11,10 @@ const maxLoginLength = 10;
 
 const remove_accents = _.deburr;
 
+export const persons = (filter: string, options: ldap.Options) => (
+    ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, options)
+);
+
 export const onePerson = (filter: string) => (
     ldap.searchOne(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, {})
 );
@@ -163,7 +167,7 @@ const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannM
     }
     //console.log("homonymes", sns, givenNames, birthDay);
     const sizeLimit = 99; // big enough to handle many results, eg for "Philippe Martin"
-    return ldap.search(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, { sizeLimit }).then(l => homonymes_scoring(l, preferStudent));
+    return persons(filter, { sizeLimit }).then(l => homonymes_scoring(l, preferStudent));
 };
 
 const _merge_at = (v: v, attrs: string[]) => _.merge(_.at(v, attrs)).filter(s => s)
