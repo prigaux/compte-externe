@@ -154,6 +154,10 @@ export const mapAttrs = <T>(attrs: StepAttrsOptionT<T>, f: (opts: StepAttrOption
     })
 )
 
+export const forceAttrs = (attrs: StepAttrsOption, attrsToForce) => (
+    mapAttrs(attrs, (opts) => ({ ...opts, ...attrsToForce }))
+)
+
 export const deep_extend = (o, overrides) => {
     if (_.isPlainObject(o) && _.isPlainObject(overrides)) {
         const r = { ...o, ...overrides };
