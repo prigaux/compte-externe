@@ -24,6 +24,10 @@ fieldset {
     border-bottom: 1px solid #e5e5e5;
 }
 
+.checkbox input[type="checkbox"] {
+    margin-top: 0.3rem; /* inspired from bootstrap 4 */
+}
+
 .glyphicon-spinning {
     animation: spin 1s infinite linear;
 }
