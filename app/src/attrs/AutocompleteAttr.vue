@@ -1,7 +1,7 @@
 <template>
   <my-bootstrap-form-group :name="name" :label="opts.title" :label_rowspan="title_rowspan" :validity="validity" :labels="opts.labels">
     <div v-if="opts.readOnly">
-      {{val ? val.title : ''}}
+      <input disabled="disabled" class="form-control" :value="val ? val.title : ''">
     </div>
     <div v-else>
       <typeahead :id="name" :name="name" v-model="val" :options="search" :minChars="3" :formatting="formatting" :formatting_html="formatting_html"
