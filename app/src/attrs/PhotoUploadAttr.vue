@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group :name="name" :label="opts.title" no_html_label="true" :validity="validity" v-if="!opts.readOnly || val">
+  <my-bootstrap-form-group :name="name" :label="opts.title" no_html_label="true" :validity="validity" v-if="!opts.readOnly || val" class="PhotoUploadAttr">
 
     <span class="photoShow" v-if="val">
         <img :src="val" class="photoBorder" alt="">
@@ -42,8 +42,8 @@
           <input-file style="display: none;" accept="image/*" @change="onPhotoUploaded"></input-file>
       </label>
 
+      <p><div v-html="opts.description"></div></p>
     </span>
-    <div v-html="opts.description"></div>
   </my-bootstrap-form-group> 
 </template>
 
@@ -164,5 +164,8 @@ export default Vue.extend({
     top: 30px; bottom: 20px;
     border: 2px solid white;
     border-radius: 50%;
+}
+.PhotoUploadAttr .on-the-right {
+    display: flex;
 }
 </style>
