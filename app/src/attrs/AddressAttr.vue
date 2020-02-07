@@ -29,7 +29,7 @@
     </div>
     <div class="col-xs-9" :class="{'my-has-error': !validity.town.valid}">
       <div>
-        <typeahead name="town" v-model="town" :options="towns" placeholder="Ville" :editable="false" :required="!opts.optional" :validity.sync="validity.town"></typeahead>
+        <typeahead name="town" v-model="town" :options="towns" placeholder="Ville" :editable="true" :required="!opts.optional" :validity.sync="validity.town"></typeahead>
         <CurrentLdapValue v-model="town" :ldap_value="ldap_val.town"></CurrentLdapValue>
         <validation-errors name="town" :validity="validity"></validation-errors>
       </div>
