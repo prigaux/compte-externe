@@ -1,14 +1,15 @@
 <template>
     <modal v-if="_active" @cancel="_cancel">
         <div slot="header">
-            <button type="button" class="close" @click="_cancel" aria-hidden="true">&times;</button>
+            <button type="button" class="close" @click="_cancel" title="Annuler">&times;</button>
             <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"> Attention</span>
         </div>
         <div slot="body">
             <p class="text-warning" v-html="_msg"></p>
         </div>
         <div slot="footer">
-            <button type="button" class="btn btn-default" @click="_ok">Fermer</button>
+            <button type="button" class="btn btn-default" @click="_cancel">{{"Annuler"}}</button>
+            <button type="button" class="btn btn-primary" @click="_ok">{{"Confirmer"}}</button>
         </div>
     </modal>
 </template>
