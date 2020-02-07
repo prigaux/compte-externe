@@ -59,6 +59,7 @@ export default Vue.extend({
             validity: { country: {}, address_lines: {}, postalCode: {}, town: {} },
             ...Address.fromString(this.value),
             ldap_val: this.ldap_value && Address.fromString(this.ldap_value) || {},
+            postalCode_modified: false,
         };
     },
     watch: {
@@ -68,8 +69,11 @@ export default Vue.extend({
         currentValue(val) {
             this.$emit('input', val);
         },
+        postalCode() {
+            this.postalCode_modified = true
+        },
         towns(l) {
-            if (l && l.length === 1) {
+            if (l && l.length === 1 && this.postalCode_modified) {
                 this.town = l[0];
             }
         },
