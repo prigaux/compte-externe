@@ -1,6 +1,6 @@
 <template>
  <div>
-     <p><b>{{homonyme.mail || homonyme.uid}}</b> <ExistingAccountWarning :v="homonyme"></ExistingAccountWarning></p>
+     <p><b>{{homonyme.mail || homonyme.uid}}</b> <ExistingAccountExplained :v="homonyme"/></p>
      <table class="table table-bordered">
        <tbody>
          <tr v-for="{ attr, cmp, skip } in comparisons" v-if="!skip">
@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 import conf from '../conf';
 import * as Helpers from '../services/helpers';
 import * as JsDiff from 'diff';
-import ExistingAccountWarning from '../controllers/ExistingAccountWarning.vue';
+import ExistingAccountExplained from '../controllers/ExistingAccountExplained.vue';
 
 function format(val) {
     if (val instanceof Date) {
@@ -60,7 +60,7 @@ function computeComparisons(v, homonyme) {
 
 export default Vue.extend({
     props: ['v', 'homonyme'],
-    components: { ExistingAccountWarning },
+    components: { ExistingAccountExplained },
     computed: {
         comparisons() {
             return computeComparisons(this.v, this.homonyme);
