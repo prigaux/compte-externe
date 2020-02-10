@@ -17,7 +17,7 @@ import Vue from "vue";
 import * as Ws from '../services/ws';
 
 export default Vue.extend({
-    props: ['value', 'name', 'opts', 'v', 'stepName'],
+    props: ['value', 'name', 'real_name', 'opts', 'v', 'stepName'],
     data() {
         return {
           validity: !this.opts.readOnly && { [this.name]: {} },
@@ -26,7 +26,7 @@ export default Vue.extend({
     },
     asyncComputed: {
         valueS() {
-            return this.value && Ws.search(this.stepName, this.name, this.value, 1).then(l => l && l[0])
+            return this.value && Ws.search(this.stepName, this.real_name || this.name, this.value, 1).then(l => l && l[0])
         },
     },
     computed: {
@@ -48,7 +48,7 @@ export default Vue.extend({
     },
     methods: {
         search(token) {
-            return Ws.search(this.stepName, this.name, token, 10);
+            return Ws.search(this.stepName, this.real_name || this.name, token, 10);
         },
         formatting(e) { 
             return this.opts.formatting ? this.opts.formatting(e) : e && e.title;

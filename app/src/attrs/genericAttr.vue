@@ -33,7 +33,7 @@
      :opts="opts">
   </PasswordAttr>
 
-  <AutocompleteAttr v-model="val" :name="name" :v="v" v-else-if="uiType === 'autocomplete'"
+  <AutocompleteAttr v-model="val" :name="name" :real_name="real_name" :v="v" v-else-if="uiType === 'autocomplete'"
      :stepName="stepName"
      :opts="opts">
   </AutocompleteAttr>
