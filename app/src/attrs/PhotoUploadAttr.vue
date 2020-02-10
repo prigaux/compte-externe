@@ -14,11 +14,11 @@
         <div class="photoBorder">
             <MyCroppie ref="croppie" :data="toValidate" :options="croppie_options" @error='onInvalidPhoto'></MyCroppie>
         </div>
-        <nav class="navbar navbar-inverse photoModifyButtons">
-            <ul class="nav navbar-nav">
+        <nav class="photoModifyButtons">
+            <ul class="nav">
                 <li><button type="button" @click="$refs.croppie.rotate(90)" title="Rotation droite">↺</button></li>
                 <li><button type="button" @click="$refs.croppie.rotate(-90)" title="Rotation gauche">↻</button></li>
-                <li><button type="button" @click="croppieValidate()" title="Valider la photo"><span class="glyphicon glyphicon-ok"></span></button></li>
+                <li><button type="button" @click="croppieValidate()" title="Valider la photo" class="submit"><span class="glyphicon glyphicon-ok"></span></button></li>
             </ul>
         </nav>            
       </span>
@@ -114,20 +114,35 @@ export default Vue.extend({
 
 <style scoped>
 .photoModifyButtons {
+    background: black;
     margin-top: 3em;
     min-height: 0px;
     border-radius: 4px;
 }
+.photoModifyButtons ul {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
 .photoModifyButtons button {
-    font-size: 17px;
+    font-size: 21px;
     font-weight: bold;
     color: white !important;
-    background: transparent;
     border: 0;
-    padding: 0 25px;
+    display: block;
+    height: 34px;
+    width: 34px;
+    background: linear-gradient(#666, #444);
+    border-radius : 50%
+}
+.photoModifyButtons button:hover {
+    filter: brightness(1.25);
+}
+.photoModifyButtons button.submit {
+    background: linear-gradient(#61E061, #298529);
 }
 .photoModifyButtons .glyphicon {
-    font-size: 13px;
+    font-size: 75%;
 }
 .photoBorder{
     border: 1px solid #eee;
@@ -155,6 +170,16 @@ export default Vue.extend({
 </style>
 
 <style>
+.photoModify .cr-slider-wrap {
+    width: 100%;
+    margin: 2px auto;
+
+    background: linear-gradient(#f5c95c, #c89108);
+    padding: 0px 9px;
+    border-radius: 14px;
+    border-bottom:#777 1px solid;
+}
+
 .photoModify .cr-viewport::after {
     content: "";
     pointer-events: none;
