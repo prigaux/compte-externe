@@ -27,13 +27,17 @@ function key2name(raw, spec: StepAttrOption) {
 
 const pmap = (o, f) => Promise.all(map(o, f))
 
+const _format_attr_name = (key: string, opts: StepAttrOption) => (
+    opts?.title || key
+)
+
 const format_v = async (v: v, attrs) => (
     `<table>
 ` +
       (await pmap(v, async (val, key) => {
           if (key === 'various') return '';
           const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
-          return '  <tr><td>' + (opts && opts.title || key) + '</td><td>' + await key2name(val, opts) + '</td></tr>'
+          return '  <tr><td>' + _format_attr_name(key, opts) + '</td><td>' + await key2name(val, opts) + '</td></tr>'
       })).join("\n") + `\n</table>`
 )
 
@@ -44,7 +48,7 @@ const format_various_diff = async (diff, attrs) => (
     (await pmap(diff, async ({ prev, current }, key) => {
         const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
         const tds = [
-            opts && opts.title || key,
+            _format_attr_name(key, opts),
             prev ? await key2name(prev, opts) : '<i>aucune</i>',
             current ? await key2name(current, opts) : '<i>supprimée</i>',
         ]
