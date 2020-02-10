@@ -75,6 +75,7 @@ export default Vue.extend({
                     type: 'base64',
                     format: 'jpeg',
                     size: { width: 283, height: 343 },
+                    quality: 0.8,
                 },
             };
        },
