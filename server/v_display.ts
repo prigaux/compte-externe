@@ -1,5 +1,16 @@
 import { map } from 'lodash';
+import * as Mustache from 'mustache';
 import client_conf from '../shared/conf';
+
+export const to_ul_li = (vals: string[]) => (
+    vals.length ? Mustache.render(`
+<ul>
+{{#vals}}
+  <li>{{.}}</li>
+{{/vals}}
+</ul>
+    `, { vals }) : ''
+)
 
 function key2name(raw, spec: StepAttrOption) {
     if (spec && spec.oneOf) {
