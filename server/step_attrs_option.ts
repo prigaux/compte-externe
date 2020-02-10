@@ -115,7 +115,7 @@ export function export_v(attrs: StepAttrsOption, v) {
 }
 
 export function flatten_attrs(attrs: StepAttrsOption, v: v) {
-    const r = {};
+    const r: StepAttrsOption = {};
     function rec(attrs: StepAttrsOption) {
         _.forEach(attrs, (opts, key) => {
             r[key] = { ...r[key] || {}, ...opts }; // merge
