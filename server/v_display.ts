@@ -31,6 +31,10 @@ const _format_attr_name = (key: string, opts: StepAttrOption) => (
     opts.title || key
 )
 
+export const format_attr_name = (key: string, attrs: StepAttrsOption) => (
+    _format_attr_name(key, { ...client_conf.default_attrs_opts[key], ...attrs[key] })
+)
+
 const format_v = async (v: v, attrs) => (
     `<table>
 ` +
