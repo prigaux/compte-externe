@@ -28,7 +28,11 @@ interface StepAttrItemsOption {
 type MinimalStepAttrOption = StepAttrItemsOption & {
     title?: string;
     description?: string;  
-    labels?: { advice?: string; warning?: string; tooltip?: string; }
+    labels?: { 
+        advice?: string; // displayed for non valid values
+        tooltip?: string;
+        warning?: string; // similar to tooltip, but with a "warning" sign
+    }
 
     format?: 'date' | 'data-url' | 'phone';
     default?: string;
