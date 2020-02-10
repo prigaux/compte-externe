@@ -28,7 +28,7 @@ function key2name(raw, spec: StepAttrOption) {
 const pmap = (o, f) => Promise.all(map(o, f))
 
 const _format_attr_name = (key: string, opts: StepAttrOption) => (
-    opts?.title || key
+    opts.title || key
 )
 
 const format_v = async (v: v, attrs) => (
