@@ -339,7 +339,7 @@ router.post('/homonymes/:id', (req: req, res) => {
 });
 
 function search_for_typeahead(req: req, step: string, attr: string) {
-    const { opts } = utils.findStepAttr(name2step(step).attrs, (_, attr_) => attr === attr_)
+    const opts = utils.findStepAttr(name2step(step).attrs, (_, attr_) => attr === attr_)?.opts
     if (!opts || !opts.oneOf_async) {
         throw "search: invalid step attr " + step + ' ' + attr;
     }
