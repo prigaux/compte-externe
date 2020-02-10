@@ -153,11 +153,11 @@ export const createCompteSafe = (l_actions: action[], afterCreateCompte: action[
     return chain([ createCompte, ...afterCreateCompte ])(req, sv);
 }
 
-export const createCompte: action = (_req, sv) => (
-    createCompte_(sv, { dupcreate: "ignore", dupmod: "warn", create: true })
+export const createCompte: action = (req, sv) => (
+    createCompte_(req, sv, { dupcreate: "ignore", dupmod: "warn", create: true })
 );
     
-const createCompte_ = async (sv: sva, opts : crejsonldap.options) => {
+const createCompte_ = async (req: req, sv: sva, opts : crejsonldap.options) => {
     let v = sv.v;
 
     if (!v.startdate) v.startdate = new Date();
@@ -170,7 +170,7 @@ const createCompte_ = async (sv: sva, opts : crejsonldap.options) => {
     
     const resp_subv = await crejsonldap.createMayRetryWithoutSupannAliasLogin(v, opts);
     const created = resp_subv.uid && !v.uid;
-    console.log("createCompteRaw ", created ? "created" : "modified", resp_subv.uid);
+    console.log(req.user?.id + ":/" + sv.step + ": createCompte", created ? "created" : "modified", resp_subv.uid);
     v.uid = resp_subv.uid;
     if (!v.supannAliasLogin) v.supannAliasLogin = resp_subv.uid;
 
