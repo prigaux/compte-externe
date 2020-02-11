@@ -24,7 +24,7 @@
       </span>
 
       <span class="withPhoto" v-else-if="val">
-        <button type="button" class="btn btn-default" @click="photoToValidate(val)" aria-label="Modifier la photo">
+        <button type="button" class="btn btn-default" @click="photoToValidate()" aria-label="Modifier la photo">
           <span class="glyphicon glyphicon-pencil"></span>
             Modifier la photo
         </button>
@@ -95,15 +95,20 @@ export default Vue.extend({
             const m = this.toValidate.match(/^data:(.*?);/);
             this.error = { mimeType: m && m[1] };
             this.toValidate = null;
+            // give up on this uploaded value
+            this.val_before_croppie = this.prev_val_before_croppie;
         },
-        photoToValidate(val) {
-            this.toValidate = val;
+        photoToValidate() {
+            if (!this.val_before_croppie) this.val_before_croppie = this.val;
+            this.toValidate = this.val_before_croppie;
             this.prevVal = this.val; // for cancel            
             this.val = null;
             this.error = false;
         },
         async onPhotoUploaded(file) {
-            this.photoToValidate(await Helpers.fileReader('readAsDataURL', file));
+            this.prev_val_before_croppie = this.val_before_croppie || this.val
+            this.val_before_croppie = await Helpers.fileReader('readAsDataURL', file)
+            this.photoToValidate();
         },
         async croppieValidate() {
             this.val = await this.$refs.croppie.get(); 
