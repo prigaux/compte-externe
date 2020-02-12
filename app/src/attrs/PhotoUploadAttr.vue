@@ -2,7 +2,7 @@
   <my-bootstrap-form-group :name="name" :label="opts.title" no_html_label="true" :validity="validity" v-if="!opts.readOnly || val" class="PhotoUploadAttr">
 
     <span class="photoShow" v-if="val">
-        <img :src="val" class="photoBorder" alt="">
+        <img :src="val" class="photoBorder" alt="" :style="non_edit_size">
     </span>
 
     <span style="display: inline-block" v-if="!opts.readOnly">
@@ -53,6 +53,9 @@ import MyCroppie from '../directives/MyCroppie';
 import * as Helpers from '../services/helpers';
 
 
+const _size = (width, ratio) => ({ width, height: width / ratio })
+const _size_px = ({ width, height }) => ({ width: `${width}px`, height: `${height}px` })
+
 export default Vue.extend({
     components: { MyCroppie },
     props: ['value', 'name', 'opts'],
@@ -66,15 +69,21 @@ export default Vue.extend({
         };
     },
     computed: {
+       ratio() {
+           return 4/5;
+       },
+       non_edit_size() {
+           return _size_px(_size(100, this.ratio))
+       },
        croppie_options() {
            return {
                 init: {
-                    viewport: { width: 200, height: 242 },
+                    viewport: _size(200, this.ratio),
                 },
                 export: {
                     type: 'base64',
                     format: 'jpeg',
-                    size: { width: 283, height: 343 },
+                    size: _size(284, this.ratio),
                     quality: 0.8,
                 },
             };
@@ -156,10 +165,6 @@ export default Vue.extend({
 .photoShow {
     display: inline-block;
     margin-right: 2rem;
-}
-.photoShow .photoBorder {
-    width: 100px;
-    height: 123px;
 }
 .photoModify {
     width: 200px;
