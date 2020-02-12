@@ -70,7 +70,7 @@ export default Vue.extend({
     },
     computed: {
        ratio() {
-           return 4/5;
+           return this.opts.ratio || 4/5;
        },
        non_edit_size() {
            return _size_px(_size(100, this.ratio))
@@ -83,8 +83,8 @@ export default Vue.extend({
                 export: {
                     type: 'base64',
                     format: 'jpeg',
-                    size: _size(284, this.ratio),
-                    quality: 0.8,
+                    size: _size(this.opts.width || 284, this.ratio),
+                    quality: this.opts.photo_quality || 0.8,
                 },
             };
        },

@@ -23,6 +23,11 @@ interface StepAttrItemsOption {
     minYear?: number;
     max?: number;
     maxYear?: number;
+
+    // for images
+    width?: number
+    ratio?: number
+    photo_quality?: number // 1 is best quality
 }
     
 type MinimalStepAttrOption = StepAttrItemsOption & {
