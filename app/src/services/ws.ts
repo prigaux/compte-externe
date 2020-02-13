@@ -158,6 +158,11 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 const type = resp.data && resp.data.authenticate && resp.data.authenticate.type || $scope.$route.query.idp || 'local';
                 document.location.href = conf.base_pathname + 'login/' + type + '?then=' + encodeURIComponent($scope.$route.fullPath);
                 return Promise.reject("logging...");
+            } else if (resp.status === 401) {
+                if (confirm("Votre session a expiré, vous allez devoir recommencer.")) {
+                    document.location.reload();
+                }
+                return Promise.reject("restarting...");
             } else {
                 const msg = resp.data && resp.data.error || err.message;
                 console.error(resp || err)
