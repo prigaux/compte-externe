@@ -66,7 +66,8 @@ const format_v = async (v: v, attrs) => (
       })).join("\n") + `\n</table>`
 )
 
-const format_various_diff = async (diff, attrs) => (
+export const format_various_diff = async (diff, attrs) => (
+    _.isEmpty(diff) ? '' : 
 `<table border="1" class="v-diff">
   <tr><th>Champ modifié</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
 ` +
