@@ -45,13 +45,21 @@ describe('v_display', () => {
             supannMailPerso: { prev: "foo@bar.com" },
             birthName: { current: "Rigaux" },
             sn: { prev: "Rigaud", current: "Rigaux" },
-        } } } as v, {});
+            birthDay: { prev: new Date('1975-10-02'), current: new Date('2010-10-02') },
+            "{SMSU}CG": { prev: false, current: true },
+            "{SMSU}foo": { prev: false, current: true },
+        } } } as v, {
+            "{SMSU}CG": { uiType: 'checkbox', title: "J'autorise", description: "l'envoi de SMS" },
+        });
         assert.equal(await v_['various'].diff, 
 `<table border="1">
   <tr><th>Champ modifié</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
   <tr><td>Email personnel</td><td>foo@bar.com</td><td><i>supprimée</i></td></tr>
   <tr><td>Nom de naissance</td><td><i>aucune</i></td><td>Rigaux</td></tr>
   <tr><td>Nom d'usage</td><td>Rigaud</td><td>Rigaux</td></tr>
+  <tr><td>Date de naissance</td><td>02/10/1975</td><td>02/10/2010</td></tr>
+  <tr><td>J'autorise</td><td></td><td>l'envoi de SMS</td></tr>
+  <tr><td>{SMSU}foo</td><td><i>aucune</i></td><td>true</td></tr>
 </table>`);
     })
 

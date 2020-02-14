@@ -18,6 +18,13 @@ const to_DD_MM_YYYY = (date: Date) => (
 )
 
 async function key2name(raw, spec: StepAttrOption, if_empty : string = '') {
+    if (raw instanceof Array) {
+        const l = await pmap(raw, raw => key2name(raw, spec))
+        return l.join(', ')
+    }
+    if (spec?.uiType === 'checkbox') {
+        return raw ? spec.description : '';
+    }
     if (spec?.format === 'date' && raw instanceof Date) {
         return to_DD_MM_YYYY(raw)
     }
