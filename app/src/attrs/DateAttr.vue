@@ -4,6 +4,7 @@
        :disabled="opts.readOnly"
        :min="min" :max="max" :required="!opts.optional" :validity.sync="validity[name]"></input-with-validity>
     <CurrentLdapValue :value="initial_val" :ldap_value="ldap_val" @input="v => val = v"></CurrentLdapValue>
+    <span v-html="opts.description"></span>
   </my-bootstrap-form-group>
 </template>
 
