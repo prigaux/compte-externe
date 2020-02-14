@@ -17,7 +17,7 @@ const to_DD_MM_YYYY = (date: Date) => (
     date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })
 )
 
-function key2name(raw, spec: StepAttrOption, if_empty : string = '') {
+async function key2name(raw, spec: StepAttrOption, if_empty : string = '') {
     if (spec?.format === 'date' && raw instanceof Date) {
         return to_DD_MM_YYYY(raw)
     }
@@ -28,7 +28,8 @@ function key2name(raw, spec: StepAttrOption, if_empty : string = '') {
         }
     }
     if (spec && spec.oneOf_async) {
-        return spec.oneOf_async(raw, 1).then(l => l && l[0].title)
+        const l = await spec.oneOf_async(raw, 1)
+        return l[0].title
     }
     if (_.isString(raw) && raw.length > 1000) {
         return "<i>valeur cachée</i>"      

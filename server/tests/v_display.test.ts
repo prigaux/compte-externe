@@ -5,7 +5,7 @@ import v_display from '../v_display';
 const test = (attrs, v, wanted_v) => {
     const v_ = v_display(v, attrs);
     const v__ = mapValues(wanted_v, (_, k) => v_[k]); // NB: can not use "pick"
-    assert.deepEqual(v__, wanted_v);
+    assert.deepEqualP(v__, wanted_v);
 }
 
 describe('v_display', () => {
