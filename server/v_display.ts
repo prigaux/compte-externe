@@ -36,7 +36,8 @@ async function key2name(raw, spec: StepAttrOption, if_empty : string = '') {
     }
     if (spec && spec.oneOf_async) {
         const l = await spec.oneOf_async(raw, 1)
-        return l[0].title
+        const title = l?.[0]?.title
+        if (title) return title
     }
     if (_.isString(raw) && raw.length > 1000) {
         return "<i>valeur cachée</i>"      
