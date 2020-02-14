@@ -67,7 +67,7 @@ const format_v = async (v: v, attrs) => (
 )
 
 const format_various_diff = async (diff, attrs) => (
-`<table border="1">
+`<table border="1" class="v-diff">
   <tr><th>Champ modifié</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
 ` +
     (await pmap(diff, async ({ prev, current }, key) => {

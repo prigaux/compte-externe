@@ -52,7 +52,7 @@ describe('v_display', () => {
             "{SMSU}CG": { uiType: 'checkbox', title: "J'autorise", description: "l'envoi de SMS" },
         });
         assert.equal(await v_['various'].diff, 
-`<table border="1">
+`<table border="1" class="v-diff">
   <tr><th>Champ modifié</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
   <tr><td>Email personnel</td><td>foo@bar.com</td><td><i>supprimée</i></td></tr>
   <tr><td>Nom de naissance</td><td><i>aucune</i></td><td>Rigaux</td></tr>
