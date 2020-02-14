@@ -32,4 +32,8 @@
  display: table;
  transition: opacity .3s ease;
 }
+.modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+}
 </style>
