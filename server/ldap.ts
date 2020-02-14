@@ -340,10 +340,11 @@ export const filters = {
         tokens = [token];
         to_filter = filters.fuzzy_one;
     }
-    tokens = _.uniq(_.flatMap(tokens, tok => [ tok, remove_accents(tok) ]))
     let l = tokens.map(tok => (
         filters.or(_.map(searchedAttrs, (prefix, attr) => (
-            to_filter(attr, tok, prefix)
+            filters.or(_.uniq([ tok, remove_accents(tok) ]).map(tok => (
+                to_filter(attr, tok, prefix)
+            )))
         )))
     ));
     return filters.and(l);

@@ -35,6 +35,10 @@ describe('ldap filters', () => {
         it("should work handle two/three char token", () => {
             assert.equal(filters.fuzzy(["a"], "ab"), "(|(a=ab*)(a=*ab))")
         })
+        it("should work handle accents", () => {
+            assert.equal(filters.fuzzy(["a"], "éternel"), "(|(a=*éternel*)(a=*eternel*))")
+            assert.equal(filters.fuzzy(["a"], "soleil éternel"), "(&(a=*soleil*)(|(a=*éternel*)(a=*eternel*)))")
+        })
     })
 
     describe('fuzzy_prefixedAttrs', () => {
