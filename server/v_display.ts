@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { map } from 'lodash';
 import * as Mustache from 'mustache';
 import client_conf from '../shared/conf';
@@ -12,7 +13,14 @@ export const to_ul_li = (vals: string[]) => (
     `, { vals }) : ''
 )
 
-function key2name(raw, spec: StepAttrOption) {
+const to_DD_MM_YYYY = (date: Date) => (
+    date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })
+)
+
+function key2name(raw, spec: StepAttrOption, if_empty : string = '') {
+    if (spec?.format === 'date' && raw instanceof Date) {
+        return to_DD_MM_YYYY(raw)
+    }
     if (spec && spec.oneOf) {
         for (const e of spec.oneOf) {
             // allow integer vs string comparison (useful for "duration")
@@ -22,7 +30,11 @@ function key2name(raw, spec: StepAttrOption) {
     if (spec && spec.oneOf_async) {
         return spec.oneOf_async(raw, 1).then(l => l && l[0].title)
     }
-    return raw;
+    if (_.isString(raw) && raw.length > 1000) {
+        return "<i>valeur cachée</i>"      
+    }
+
+    return raw || if_empty;
 }
 
 const pmap = (o, f) => Promise.all(map(o, f))
@@ -53,8 +65,8 @@ const format_various_diff = async (diff, attrs) => (
         const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
         const tds = [
             _format_attr_name(key, opts),
-            prev ? await key2name(prev, opts) : '<i>aucune</i>',
-            current ? await key2name(current, opts) : '<i>supprimée</i>',
+            await key2name(prev, opts, '<i>aucune</i>'),
+            await key2name(current, opts, '<i>supprimée</i>'),
         ]
         return '  <tr>' + tds.map(s => `<td>${s}</td>`).join('') + '</tr>'
     })).join("\n") + `

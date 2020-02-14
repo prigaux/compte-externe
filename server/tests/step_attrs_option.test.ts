@@ -233,14 +233,14 @@ describe('compute_diff', () => {
         test({ _foo: { toUserOnly: true, properties: attrs_sn } }, { sn: "Rigaud" }, { sn: "Rigaux" }, { sn: { prev: "Rigaud", current: "Rigaux" }});
     });
     it("should handle simple creation", () => {
-        test(attrs_sn, {}, { sn: "Rigaux" }, { sn: { prev: '', current: "Rigaux" }});
+        test(attrs_sn, {}, { sn: "Rigaux" }, { sn: { prev: undefined, current: "Rigaux" }});
     });
     it("should handle simple removal", () => {
         test(attrs_sn, { sn: "Rigaux" }, { sn: '' }, { sn: { prev: "Rigaux", current: '' }});
     });
     it("should handle array", () => {
         test(attrs_sn, { sn: ["Rigaux"] }, { sn: ["Rigaux"] }, {});
-        test(attrs_sn, {}, { sn: ["Rigaux"] }, { sn: { prev: '', current: 'Rigaux' } });
+        test(attrs_sn, {}, { sn: ["Rigaux"] }, { sn: { prev: undefined, current: ['Rigaux'] } });
     });
 
     it("should ignore non required attrs", () => {

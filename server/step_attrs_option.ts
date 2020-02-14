@@ -2,15 +2,12 @@ import * as _ from 'lodash';
 import * as utils from './utils';
 
 function compute_diff(prev, current, key) {
-    const toString = (val) => {
-        const val_ = val instanceof Array ? val.join(', ') : val instanceof Date ? val.toISOString() : val || ''
-        return val_.length > 1000 ? "<i>valeur cachée</i>" : val_;
+    const toString = (val) => (
+        val instanceof Array ? val.join(', ') : val instanceof Date ? val.toISOString() : val || ''
+    )
+    return toString(prev[key]) === toString(current[key]) ? {} : { 
+        [key]: { prev: prev[key], current: current[key] }
     };
-    const one_diff = {
-        prev: toString(prev[key]),
-        current: toString(current[key]),
-    };
-    return one_diff.prev === one_diff.current ? {} : { [key]: one_diff };
 }
 
 export const selectUserProfile = (v: v, profilename: string) => {
