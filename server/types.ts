@@ -83,6 +83,7 @@ interface StepLabels {
     title_in_list?: string; // an empty description means "hide this step in ModerateList"
     title?: string;
     description?: string;
+    description_in_list?: string; // description displayed in list of steps (InitialStep / ModerateList)
     okButton?: string;
     cancelButton?: string;
 

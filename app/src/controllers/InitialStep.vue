@@ -26,6 +26,8 @@
         <div v-else>
             <autocomplete-user class="form-control" placeholder="Rechercher une personne" @select="withUser"></autocomplete-user>
         </div>
+
+        <div v-html="labels.description_in_list"></div>
     </div>
     <div v-else>
         <h2>
@@ -58,8 +60,10 @@ export default Vue.extend({
          return this.step.attrs.uid && !this.step.attrs.uid.uiHidden;
      },
      title_in_list() {
-         const labels = this.step.step.labels || {};
-         return "title_in_list" in labels ? labels.title_in_list : labels.title;
+         return "title_in_list" in this.labels ? this.labels.title_in_list : this.labels.title;
+     },
+     labels() {
+         return this.step.step.labels || {}
      },
      searchUser_inputName() {
          return "step-" + this.step.id;
