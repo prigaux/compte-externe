@@ -125,6 +125,7 @@ const conf = {
                 employeeType: [''],
                 departmentNumber: '',
                 supannActivite: '',
+                labeledURI: '',
 
                 profilename: '',
                 priority: 0,
