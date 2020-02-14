@@ -39,7 +39,7 @@
   </AutocompleteAttr>
 
   <my-bootstrap-form-group :name="name" 
-    :label="opts.title" 
+    :label="!uiOptions.title_hidden && opts.title" 
     :no_html_label="uiType === 'radio' || uiType === 'checkbox'"
     :label_rowspan="uiOptions.title_rowspan" :validity="validity" :labels="opts.labels" v-else-if="opts">
 

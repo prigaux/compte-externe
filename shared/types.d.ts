@@ -12,7 +12,12 @@ type uiTypes =
 interface StepAttrItemsOption {
     uiPlaceholder?: string;
 
-    uiOptions?: { rows?: number; autocomplete?: boolean, title_rowspan?: boolean };
+    uiOptions?: { 
+        rows?: number;
+        autocomplete?: boolean
+        title_rowspan?: boolean
+        title_hidden?: boolean
+    };
 
     uiHidden?: boolean;
 
