@@ -64,7 +64,7 @@ export default Vue.extend({
             this.$emit('input', this.val);
         },
         set_item(i, v) {
-            this.val[i] = v;
+            this.$set(this.val, i, v);
             this.tellParent();
         },
         remove_item(i) {
