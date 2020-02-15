@@ -34,7 +34,7 @@ async function key2name(raw, spec: StepAttrOption, if_empty : string = '') {
             if (e.const == raw) return e.title;
         }
     }
-    if (spec && spec.oneOf_async) {
+    if (spec && spec.oneOf_async && raw) {
         const l = await spec.oneOf_async(raw, 1)
         const title = l?.[0]?.title
         if (title) return title
