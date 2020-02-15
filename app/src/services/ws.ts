@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { merge, omit } from 'lodash';
+import { merge, omit, cloneDeep } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
@@ -234,7 +234,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                         v[attr] = set_ || v[attr] || default_;
                     });
                 }
-                $scope.vs_orig = vs?.map(Helpers.copy);
+                $scope.vs_orig = cloneDeep(vs);
                 $scope.vs = vs // assign it when it is fully computed. Needed for Vue.js
                 $scope.all_attrs_flat = all_attrs;
                 $scope.step = sv.step;
