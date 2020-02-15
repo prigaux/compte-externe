@@ -66,6 +66,10 @@ function validate(key: string, opt: StepAttrOption, more_opt: MoreStepAttrOption
             else 
                 return; // no more checks if optional
         }
+        if (opt.allowUnchangedValue && _.isEqual(val, prev[key])) {
+            // bypass checks
+            return
+        }
         if (opt.max) {
             if (!((""+val).match(/\d+/) && 0 <= val && val <= opt.max))
                 throw `constraint ${key}.max <= ${opt.max} failed for ${val}`;

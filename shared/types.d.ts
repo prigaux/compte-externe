@@ -48,6 +48,7 @@ type MinimalStepAttrOption = StepAttrItemsOption & {
     default?: string;
 
     allowedChars?: string;
+    allowUnchangedValue?: boolean // if the user changes the value, the value must pass checks. If kept unchanged, it bypasses checks!
 }
 
 type MoreStepAttrOption = MinimalStepAttrOption & {

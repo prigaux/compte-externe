@@ -191,12 +191,16 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return all_attrs;
         }
 
-        function handleAttrsValidators(all_attrs: StepAttrsOption, v_orig: V) {
+        function handleAttrsValidators_and_allowUnchangedValue(all_attrs: StepAttrsOption, v_orig: V) {
             for (const attr in all_attrs) {
                 const opts = all_attrs[attr];
                 const validator = opts.validator;
                 if (validator) {
                     opts.validator = (val) => validator(val, v_orig);
+                }
+                if (opts.allowUnchangedValue) {
+                    // save the orig value here
+                    opts.allowUnchangedValue = v_orig[attr]
                 }
             }
         }
@@ -227,7 +231,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 if (sv.v) {
                     let v = vs[0];
                     // pass v_orig to attrs opts.validator:
-                    handleAttrsValidators(all_attrs, Helpers.copy(v));
+                    handleAttrsValidators_and_allowUnchangedValue(all_attrs, Helpers.copy(v));
                     Helpers.eachObject(all_attrs, (attr, opts) => {
                         const default_ = fromWs_one(attr, params[`default_${attr}`] || hash_params[`default_${attr}`], all_attrs);
                         const set_ = fromWs_one(attr, opts.uiType !== 'newPassword' && params[attr] || params[`set_${attr}`] || hash_params[`set_${attr}`], all_attrs);

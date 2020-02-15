@@ -107,7 +107,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { includes, find, keyBy, mapValues } from 'lodash';
+import { includes, find, isNil, keyBy, mapValues } from 'lodash';
 import { isDateInputSupported } from '../services/helpers';
 import * as Ws from '../services/ws';
 
@@ -119,6 +119,13 @@ import cameraSnapshotAttr from './cameraSnapshotAttr.vue';
 import PasswordAttr from './PasswordAttr.vue';
 import AutocompleteAttr from './AutocompleteAttr.vue';
 import CurrentLdapValue from './CurrentLdapValue.vue';
+
+function add_to_oneOf_if_missing(choices: Ws.StepAttrOptionChoices[], to_have) {
+    if (!isNil(to_have) && choices && !choices.some(choice => choice.const === to_have)) {
+        choices.push({ const: to_have, title: to_have })
+    }
+    return choices
+}
 
 export default Vue.extend({
     props: ['value', 'real_name', 'name', 'opts', 'v', 'ldap_value', 'stepName', 'allow_remove'],
@@ -157,6 +164,9 @@ export default Vue.extend({
         choicesMap() {
             return this.opts.oneOf && mapValues(keyBy(this.opts.oneOf, 'const'), choice => choice['title']);
         },
+        oneOf() {
+            return add_to_oneOf_if_missing(this.oneOf_, this.opts.allowUnchangedValue)
+        },
         validValue() {
             return this.uiType === 'select' ? this.oneOf && find(this.oneOf, choice => choice.const === this.value) : this.val;
         },
@@ -165,7 +175,7 @@ export default Vue.extend({
         }
     },
     asyncComputed: {
-        async oneOf() {
+        async oneOf_() {
             const opts = this.opts || {};
             if (opts.oneOf) {
                 return opts.oneOf;

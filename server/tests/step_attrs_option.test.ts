@@ -215,6 +215,12 @@ describe('merge_v', () => {
         test_more(attrs, more_attrs, prev, v_ok, v_ok, );
         test_fail_more(attrs, more_attrs, prev, { displayName: 'Foo' }, "Le nom annuaire doit comprendre le prénom et le nom");
     });
+    it ("should handle allowUnchangedValue", () => {
+        const attrs = { duration: { allowUnchangedValue: true, oneOf: [ { const: "1" } ] } };
+        test(attrs, {}, { duration: "1" }, { duration: "1" });
+        test_fail(attrs, {}, { duration: "2" }, "constraint duration.oneOf 1 failed for 2");
+        test(attrs, { duration: "2" }, { duration: "2" }, { duration: "2" });
+    });
 });
 
 describe('compute_diff', () => {
