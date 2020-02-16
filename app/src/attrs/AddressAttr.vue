@@ -79,9 +79,9 @@ export default Vue.extend({
         },
     },
     asyncComputed: {
-        towns() {
+        async towns() {
             const code = this.postalCode;
-            return code && code.length >= 5 ? Helpers.frenchPostalCodeToTowns(code) : [];
+            return code && code.length >= 5 ? await Helpers.frenchPostalCodeToTowns(code) : [];
         },
     },
     computed: {
