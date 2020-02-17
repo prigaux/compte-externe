@@ -10,4 +10,3 @@ Vue.filter('formatIdpId', function (s) {
 
 Vue.filter('date', Helpers.formatDate);
 Vue.filter('escapeRegexp', Helpers.escapeRegexp);
-Vue.filter('formatAcademicYear', Helpers.formatAcademicYear);

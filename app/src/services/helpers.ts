@@ -160,8 +160,6 @@ import { Dictionary } from '../services/ws';
         return ('' + s).replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
     }
 
-    export const formatAcademicYear = (n : number) => n ? `${n} / ${n+1}` : '';
-
     export function filter(collection, predicate) {
         if (Array.isArray(collection)) return collection.filter(predicate);
 
@@ -171,10 +169,6 @@ import { Dictionary } from '../services/ws';
         }
         return r;
     }
-
-    export const arrayContains = (superset, subset) => (
-        subset.every(value => superset.indexOf(value) >= 0)
-    );
 
     export function checkLuhn(value: string, wantedLength?: number) {
         // accept only digits, dashes or spaces

@@ -30,7 +30,7 @@
             <div class="alert alert-danger" >
                 Le compte sera fusionné avec le compte existant {{v.uid}}.
                 <p/>
-                {{v.givenName}} {{v.sn}} <ExistingAccountExplained :v="v"/> 
+                {{v.givenName}} {{v.sn}} <span v-html="v.global_main_profile.description"></span>
             </div>
     </div>
 
@@ -66,7 +66,6 @@ import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';
 import Homonyms from '../controllers/Homonyms.vue';
 import attrsForm from '../attrs/attrsForm';
-import ExistingAccountExplained from '../controllers/ExistingAccountExplained.vue';
 import MyModalP from './MyModalP.vue';
 
 
@@ -92,7 +91,7 @@ export default Vue.extend({
         'onelineForm',
     ],
     data: AttrsForm_data,
-    components: { ImportFile, ImportResult, Homonyms, ExistingAccountExplained, attrsForm, MyModalP },
+    components: { ImportFile, ImportResult, Homonyms, attrsForm, MyModalP },
 
     computed: {
         initialStep() {

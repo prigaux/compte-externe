@@ -10,6 +10,7 @@ import * as session_file_store from 'session-file-store';
 import concat = require('concat-stream');
 import * as simpleGet from 'simple-get';
 import * as conf from './conf';
+import shared_conf from '../shared/conf';
 import { EventEmitter } from 'events';
 
 export const shibboleth_express_auth = (req: req, _res: express.Response, next): void => {
@@ -139,7 +140,15 @@ export function mergeSteps(initialSteps: steps, nextSteps: steps): steps {
 }
 
 export const attrsHelpingDiagnoseHomonymes = (
-    _.fromPairs(conf.attrsHelpingDiagnoseHomonymes.map(k => [k, { toUserOnly: true, uiType: 'homonym' }]))    
+    { 
+        global_main_profile: { 
+            toUser(_, v: v) {
+                return v.uid && { description: ` est ${shared_conf.affiliation_labels[v.global_eduPersonPrimaryAffiliation] || 'un ancien compte sans affiliation'}` }
+            },
+            toUserOnly: true, 
+            uiHidden: true,
+        },
+    }
 );
 
 export const mapAttrs = <T>(attrs: StepAttrsOptionT<T>, f: (opts: StepAttrOptionT<T>, attrName: string) => StepAttrOptionT<T>) => (

@@ -220,10 +220,6 @@ const conf = {
         },
     },
 
-    attrsHelpingDiagnoseHomonymes: [
-        'mail', 'altGivenName', 'global_eduPersonAffiliation', 'global_eduPersonPrimaryAffiliation', 'global_supannEtuAnneeInscription',
-    ],
-
     session: { 
         secret: 'xx', 
         cookie: { secure: true, sameSite: 'lax' },
