@@ -128,7 +128,7 @@ export default Vue.extend({
         },
         potential_homonyms() {
             return (this.all_potential_homonyms || []).filter(h => !h.ignore);
-    },
+        },
     },
 
     methods: {
