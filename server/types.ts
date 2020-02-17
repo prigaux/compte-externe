@@ -61,7 +61,7 @@ type StepAttrOptionT<MoreOptions> = MinimalStepAttrOption & MoreOptions & {
   readOnly?: boolean;
   hidden?: boolean;
   toUserOnly?: boolean; // implies hidden
-  anonymize?: (val: string) => string;
+  toUser?: (val: string, v: v) => any;
   
   // constraints below are checked when sent by the user. Values from action_pre/action_post are not verified!
   optional?: boolean;

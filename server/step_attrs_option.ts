@@ -102,9 +102,9 @@ export function export_v(attrs: StepAttrsOption, v) {
     const r = {};
     function rec(attrs: StepAttrsOption) {
         _.forEach(attrs, (opts, key) => {
-            if (!opts.hidden && key in v) {
+            if (!opts.hidden && (key in v || opts.toUser)) {
                 let val = v[key];
-                if (opts.anonymize) val = opts.anonymize(v[key]);
+                if (opts.toUser) val = opts.toUser(v[key], v);
                 r[key] = val;
             }
             if (opts.properties) rec(opts.properties);
@@ -142,7 +142,7 @@ const find_choice = (oneOf: StepAttrOptionChoices[], val) => oneOf.find(choice =
 
 const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : StepAttrOption) => {
     opt = toUserOnly ? { optional: true, readOnly: true, ...opt} : opt;
-    delete opt.anonymize;
+    delete opt.toUser;
     if (opt.readOnly) opt.optional = true; // readOnly implies optional. Useful when readOnly is set through "attrs_override"
     if (opt.oneOf_async) opt.oneOf_async = true as any;
     if (opt.properties) opt.properties = exportAttrs(opt.properties);
