@@ -121,8 +121,8 @@ export default Vue.extend({
             return attrs;
         },
         step_description() {
-            const template = this.step && this.step.labels && this.step.labels.description;
-            return template && Vue.extend({ props: ['v_pre', 'v'], template: "<div>" + template + "</div>" });
+            const description = this.step?.labels?.description;
+            return description && Vue.extend({ props: ['v_pre', 'v'], template: "<div>" + description + "</div>" });
         },
         disableOkButton() {
             return this?.step?.if_no_modification === 'disable-okButton' && isEqual(this.v, this.v_orig)
