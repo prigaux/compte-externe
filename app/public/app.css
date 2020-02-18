@@ -1,7 +1,21 @@
 /* app css stylesheet */
 
+body {
+    line-height: 1.3;
+    font-family: Arial,"Helvetica Neue", Helvetica,verdana, sans-serif;
+}
+ 
+/* NB: ne marche pas sur tous les OS/navigateurs */
+select option {
+    font-family: arial,verdana,sans-serif;
+    color: #00326e;
+    background: #f0f3fc;
+}
+
 .content {
     max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* force the <label>'s height so that it overflows on next entries (to be used when next entries have no <label>s) */
@@ -10,7 +24,7 @@
 }
 
 h2 {
-    font-size: 18px;
+    font-size: 24px;
 }
 
 ins {
@@ -20,7 +34,7 @@ ins {
 }
 
 fieldset {
-    margin-bottom: 1em;
+    margin-bottom: 4px;
     border-bottom: 1px solid #e5e5e5;
 }
 
