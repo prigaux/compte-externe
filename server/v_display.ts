@@ -40,7 +40,7 @@ async function key2name(raw, spec: StepAttrOption, if_empty : string = '') {
         if (title) return title
     }
     if (_.isString(raw) && raw.length > 1000) {
-        return "<i>valeur cachée</i>"      
+        return "<i>-</i>"
     }
 
     return raw || if_empty;
