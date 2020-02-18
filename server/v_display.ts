@@ -69,7 +69,7 @@ const format_v = async (v: v, attrs) => (
 export const format_various_diff = async (diff, attrs) => (
     _.isEmpty(diff) ? '' : 
 `<table border="1" class="v-diff">
-  <tr><th>Champ modifié</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
+  <tr><th>Champ</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
 ` +
     (await pmap(diff, async ({ prev, current }, key) => {
         const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
