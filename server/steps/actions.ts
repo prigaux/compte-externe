@@ -248,14 +248,14 @@ export const sendMailWithFileTemplate = (templateName: string, params = {}): act
     return { v: sv.v };
 }
 
-export const ask_confirmation = (attr_to_save_confirmation: string, msg_template: string): action => async (req, sv) => {
+export const ask_confirmation = (attr_to_save_confirmation: string, msg_template: string, title: string = "Attention"): action => async (req, sv) => {
     if (sv.v[attr_to_save_confirmation]) {
         // we have the confirmation, go on
         return sv;
     } else {
         // tell frontend to popup the msg
         const msg = await mail.mustache_async_render(msg_template, prepareMailTemplateParams(req, sv))
-        throw { code: "OK", ask_confirmation: { attr_to_save_confirmation, msg } };
+        throw { code: "OK", ask_confirmation: { attr_to_save_confirmation, msg, title } };
     }
 }
 

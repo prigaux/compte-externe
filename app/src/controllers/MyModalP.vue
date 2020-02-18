@@ -2,7 +2,7 @@
     <modal v-if="_active" @cancel="_cancel">
         <h4 slot="header">
             <button type="button" class="close" @click="_cancel" title="Annuler">&times;</button>
-            <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"> Attention</span>
+            <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> {{_title}}
         </h4>
         <div slot="body">
             <p class="text-warning" v-html="_msg"></p>
@@ -26,13 +26,15 @@ export default Vue.extend({
     setup() {
         const _active: Ref<Helpers.promise_defer<null>> = ref(undefined)
         const _msg = ref("")
+        const _title = ref("")
         return {
-            open(msg: string) {
-                _msg.value = msg
+            open(labels) {
+                _msg.value = labels.msg
+                _title.value = labels.title || "Attention"
                 _active.value = Helpers.promise_defer()
                 return _active.value.promise
             },
-            _active, _msg,
+            _active, _msg, _title,
             _cancel() {
                 _active.value.reject("cancel")
                 _active.value = undefined

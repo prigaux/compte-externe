@@ -223,7 +223,7 @@ export default Vue.extend({
               if (resp.error === "no_moderators") {
                 alert(resp.error);
               } else if (resp.ask_confirmation) {
-                this.$refs.MyModalP.open(resp.ask_confirmation.msg).then(() => {
+                this.$refs.MyModalP.open(resp.ask_confirmation).then(() => {
                     this.v[resp.ask_confirmation.attr_to_save_confirmation] = true;
                     this.send();
                 })
