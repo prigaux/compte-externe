@@ -1,9 +1,9 @@
 <template>
     <modal v-if="_active" @cancel="_cancel">
-        <h4 slot="header">
+        <h3 slot="header">
             <button type="button" class="close" @click="_cancel" title="Annuler">&times;</button>
             <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> {{_title}}
-        </h4>
+        </h3>
         <div slot="body">
             <p class="text-warning" v-html="_msg"></p>
         </div>
@@ -49,6 +49,11 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+h3 {
+    font-size: 18px;
+    margin: 0;
+}
+
 .text-warning {
     line-height: 1.8em;
     color: #333;
