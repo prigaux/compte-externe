@@ -25,7 +25,7 @@
    </div>
    <div v-else>
 
-    <div v-if="attrs.global_eduPersonPrimaryAffiliation && attrs.profilename && v.uid && !v.profilename_to_modify">
+    <div v-if="allow_check_homonyms && v.global_main_profile">
         <p style="height: 2em"></p>
             <div class="alert alert-danger" >
                 Le compte sera fusionné avec le compte existant {{v.uid}}.
@@ -97,8 +97,11 @@ export default Vue.extend({
         initialStep() {
             return !this.wanted_id && this.stepName;
         },
+        allow_check_homonyms() {
+            return this.attrs_?.uid?.uiType === 'homonym';
+        },
         check_homonyms() {
-            return this.attrs_?.uid?.uiType === 'homonym' && !this.v.uid;
+            return this.allow_check_homonyms && !this.v.uid;
         },
         noInteraction() {
             return this.v.noInteraction || this.step?.labels?.okButton && Object.keys(this.attrs_).length === 0;
