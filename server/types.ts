@@ -86,6 +86,7 @@ interface StepLabels {
     description_in_list?: string; // description displayed in list of steps (InitialStep / ModerateList)
     okButton?: string;
     cancelButton?: string;
+    post_scriptum ?: string; // vue template displayed after the <form> (vars: v, v_pre)
 
     // vue templates: can use variable "resp" which is the response of "next" "action_pre" and/or "action_post"
     added?: string; // displayed reaching this step (through "next"). It will be prefered over "accepted" below.

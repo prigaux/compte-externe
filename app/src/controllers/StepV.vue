@@ -46,6 +46,11 @@
         :onelineForm="onelineForm"
         @submit="submit" @reject="reject"></attrsForm>
 
+    <div v-if="step_post_scriptum">
+        <hr style="margin-top: 4rem">
+        <component :is="step_post_scriptum" :v_pre="v_pre" :v="v"/>
+    </div>
+
    </div> <!-- !homonyms -->
   </div> <!-- imported -->
  </div> <!-- v -->
@@ -124,6 +129,10 @@ export default Vue.extend({
         },
         step_description() {
             const text = this.step?.labels?.description;
+            return text && Vue.extend({ props: ['v_pre', 'v'], template: "<div>" + text + "</div>" });
+        },
+        step_post_scriptum() {
+            const text = this.step?.labels?.post_scriptum;
             return text && Vue.extend({ props: ['v_pre', 'v'], template: "<div>" + text + "</div>" });
         },
         disableOkButton() {
