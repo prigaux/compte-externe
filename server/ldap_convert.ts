@@ -84,9 +84,9 @@ export function match(predicate): ldap_conversion {
 export function dn(attrName: string, base: string): ldap_conversion {
     return {
         fromLdapMulti: (l: string[]): string => {
+          let base_ = _.escapeRegExp(base);
+          let reg = new RegExp(`^${attrName}=(.*),${base_}$`);
           for (const s of l) {
-            let base_ = _.escapeRegExp(base);
-            let reg = new RegExp(`^${attrName}=(.*),${base_}$`);
             let m = s.match(reg);
             if (m) return m[1];
           }
