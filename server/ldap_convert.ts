@@ -24,6 +24,17 @@ export const date: ldap_conversion = {
         ),
     };
 
+export const date_epoch: ldap_conversion = {
+    fromLdap: (s: string): Date => {
+        if (!s) return null;
+        const n = parseInt(s)
+        return n && new Date(n * 24 * 60 * 60 * 1000);
+    },
+    toLdap: (d: Date): string => (
+        "" + Math.round(d.getTime() / (24 * 60 * 60 * 1000))
+    ),
+}
+
 export const postalAddress: ldap_conversion = {
         fromLdap: (s: string): string => (
             s && s.replace(/\$/g, "\n")
@@ -84,6 +95,24 @@ export function dn(attrName: string, base: string): ldap_conversion {
         toLdap: (s: string): string => (
             s ? attrName + "=" + s + "," + base : ''
         )
+    }
+}
+
+export function dns(attrName: string, base: string): ldap_conversion {
+    return {
+        fromLdapMulti: (l: string[]): string[] => {
+          let r = []
+          let base_ = _.escapeRegExp(base);
+          let reg = new RegExp(`^${attrName}=(.*),${base_}$`);
+          for (const s of l) {
+            let m = s.match(reg);
+            if (m) r.push(m[1]);
+          }
+          return r;
+        },
+        toLdap: (_s: string): string => {
+            throw "NOT IMPLEMENTED";
+        },
     }
 }
 
