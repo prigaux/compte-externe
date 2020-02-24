@@ -53,18 +53,21 @@ export const structures = (token: string, sizeLimit: number) => {
 };
 
 export const etablissements = (token: string, sizeLimit: number) => {
-    let filter;
+    let filters_;
     if (token.match(/\{.*/)) {
-        filter = filters.eq("up1TableKey", token);
+        filters_ = [filters.eq("up1TableKey", token)]
     } else if (token.match(/^[0-9\s-]{5,14}$/)) {
-        filter = filters.startsWith("up1TableKey", "" + conf.ldap.etablissements.attrs.siret.convert.toLdap(token));
+        filters_ = [filters.startsWith("up1TableKey", "" + conf.ldap.etablissements.attrs.siret.convert.toLdap(token))];
     } else if (helpers.is_valid_uai_code(token)) {
-        filter = filters.startsWith("up1TableKey", "" + conf.ldap.etablissements.attrs.uai.convert.toLdap(token));
+        filters_ = [filters.startsWith("up1TableKey", "" + conf.ldap.etablissements.attrs.uai.convert.toLdap(token))];
     } else {
-        const words_filter = filters.fuzzy(['description', 'cn', 'displayName', 'ou'], token);
-        filter = words_filter;
+        filters_ = [
+            filters.eq('ou', token),
+            filters.fuzzy(['ou'], token),
+            filters.fuzzy(['description', 'cn', 'displayName'], token),
+        ]
     }
-    return ldap.search(conf.ldap.base_etablissements, filter, conf.ldap.etablissements.types, conf.ldap.etablissements.attrs, {sizeLimit})
+    return ldap.searchMany(conf.ldap.base_etablissements, filters_, 'const', conf.ldap.etablissements.types, conf.ldap.etablissements.attrs, {sizeLimit})
 };
 
 const people_filters = (token: string) => ([ 
