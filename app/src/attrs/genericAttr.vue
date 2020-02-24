@@ -1,5 +1,5 @@
 <template>
- <div v-if="opts && (!opts.readOnly || validValue || opts.uiHidden === false)" class="genericAttr" :class="'oneAttr-' + name">
+ <div v-if="opts && (!opts.readOnly || validValue && val || opts.uiHidden === false)" class="genericAttr" :class="'oneAttr-' + name">
 
   <DateAttr v-model="val" :name="name" v-if="uiType === 'date'"
     :ldap_value="ldap_value"
@@ -168,7 +168,12 @@ export default Vue.extend({
             return add_to_oneOf_if_missing(this.oneOf_, this.opts.allowUnchangedValue)
         },
         validValue() {
-            return this.uiType === 'select' ? this.oneOf && find(this.oneOf, choice => choice.const === this.value) : this.val;
+            return this.uiType === 'select' ? (
+                this.oneOf && find(this.oneOf, choice => (
+                    // (allow equality if value is number and choice.const is string)
+                    choice.const == this.value // tslint:disable-line
+                )) 
+            ) : this.val;
         },
         input_attrs() {
             return this.type === 'password' ? { autocomplete: 'current_password' } : {}
