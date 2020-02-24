@@ -4,6 +4,8 @@ import * as fs from 'fs';
 import sendmailTransport = require('nodemailer-sendmail-transport');
 import * as ldap_convert from './ldap_convert';
 import * as _ from 'lodash';
+import * as session from 'express-session';
+import * as session_file_store from 'session-file-store';
 import { sameKeyNameChoices } from './helpers';
 import * as grouped_calls from './helper_grouped_calls';
 import * as vue_config from '../app/vue.config';
@@ -227,8 +229,11 @@ const conf = {
     session: { 
         secret: 'xx', 
         cookie: { secure: true, sameSite: 'lax' },
-    },
-    session_store: { path: "/tmp" },
+    } as session.SessionOptions,
+    
+    session_store: { 
+        path: "/tmp"
+    } as session_file_store.Options,
 
     cas: {
         host: '', //'cas.univ.fr',
