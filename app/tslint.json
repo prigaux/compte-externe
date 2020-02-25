@@ -37,7 +37,6 @@
     "no-shadowed-variable": false,
     "no-switch-case-fall-through": true,
     "no-unused-expression": true,
-    "no-use-before-declare": true,
     "no-var-keyword": false,
     "no-var-requires": true,
     "object-literal-sort-keys": false,
