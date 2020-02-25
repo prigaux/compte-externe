@@ -27,19 +27,19 @@ export const group_for_each_attr_codes = (codeAttr: string, { group_cn_to_code }
     }
 }
 
-export interface MoreAttrOption_if { 
-    if?: Dictionary<StepAttrOptionT<StepAttrOption_no_extensions> | ((v: v) => Promise<StepAttrOptionT<StepAttrOption_no_extensions>>)>;
+export interface MoreAttrOption_cond_overrides { 
+    cond_overrides?: Dictionary<StepAttrOptionT<StepAttrOption_no_extensions> | ((v: v) => Promise<StepAttrOptionT<StepAttrOption_no_extensions>>)>;
 }
 
-type StepAttrOption_with_if = Dictionary<StepAttrOptionT<MoreAttrOption_if>>
+type StepAttrOption_with_cond_overrides = Dictionary<StepAttrOptionT<MoreAttrOption_cond_overrides>>
 
-const compute_overrides = (allowed_ifs: Dictionary<boolean>, with_ifs: StepAttrOption_with_if, v: v) => {
+const compute_overrides = (allowed_conds: Dictionary<boolean>, with_conds: StepAttrOption_with_cond_overrides, v: v) => {
     const override : StepAttrsOption = {};
-    _.each(with_ifs, (opts, attrName) => {
-        if ("if" in opts) {
-            for (const cond in opts.if) {
-                if (allowed_ifs[cond]) {
-                    const val = opts.if[cond];
+    _.each(with_conds, (opts, attrName) => {
+        if ("cond_overrides" in opts) {
+            for (const cond in opts.cond_overrides) {
+                if (allowed_conds[cond]) {
+                    const val = opts.cond_overrides[cond];
                     override[attrName] = typeof val === "function" ? val(v) : val
                     break;
                 }
@@ -47,24 +47,24 @@ const compute_overrides = (allowed_ifs: Dictionary<boolean>, with_ifs: StepAttrO
         }
         if (opts.properties) {
             if (!(attrName in override)) override[attrName] = {};
-            override[attrName] = utils.deep_extend({ properties: compute_overrides(allowed_ifs, opts.properties, v) }, override[attrName])
+            override[attrName] = utils.deep_extend({ properties: compute_overrides(allowed_conds, opts.properties, v) }, override[attrName])
         }
     });
     return override
 }
 
-export const add_not_ifs = (ifs: Dictionary<(v: v) => boolean>) => {
-    _.each(ifs, (predicate, name) => {
-        ifs[`not_${name}`] = (v) => !predicate(v)
+export const add_not_conds = (conds: Dictionary<(v: v) => boolean>) => {
+    _.each(conds, (predicate, name) => {
+        conds[`not_${name}`] = (v) => !predicate(v)
     })
-    return ifs;
+    return conds;
 }
 
-export const handle_attrs_if = (ifs: Dictionary<(v: v) => boolean>) => (with_ifs: StepAttrOption_with_if) => {
-    const attrs = utils.mapAttrs(with_ifs, (opts) => _.omit(opts, ['if']));
+export const handle_attrs_cond_overrides = (conds: Dictionary<(v: v) => boolean>) => (with_conds: StepAttrOption_with_cond_overrides) => {
+    const attrs = utils.mapAttrs(with_conds, (opts) => _.omit(opts, ['cond_overrides']));
     const attrs_override = async (_req, sv : sv) => {
-        const allowed_ifs = _.mapValues(ifs, predicate => predicate(sv.v));
-        const override = compute_overrides(allowed_ifs, with_ifs, sv.v)
+        const allowed_conds = _.mapValues(conds, predicate => predicate(sv.v));
+        const override = compute_overrides(allowed_conds, with_conds, sv.v)
         return override;
     };
     return { attrs, attrs_override };
