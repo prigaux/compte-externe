@@ -2,7 +2,7 @@ import { assert } from './test_utils';
 import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile, merge_attrs_overrides } from '../step_attrs_option';
 import checkDisplayName from '../../shared/validators/displayName';
 
-const a_or_b = { oneOf: [
+const a_or_b : StepAttrOption = { oneOf: [
     { const: "a", merge_patch_parent_properties: { a: {} } },
     { const: "b", merge_patch_parent_properties: { a: { toUserOnly: true }, b: {} } },
 ] }
