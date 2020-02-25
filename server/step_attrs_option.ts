@@ -146,14 +146,14 @@ const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : Ste
     if (opt.readOnly) opt.optional = true; // readOnly implies optional. Useful when readOnly is set through "attrs_override"
     if (opt.oneOf_async) opt.oneOf_async = true as any;
     if (opt.properties) opt.properties = exportAttrs(opt.properties);
-    if (opt.oneOf) {
-        opt.oneOf = opt.oneOf.map(one => {        
-            if (one.merge_patch_parent_properties) {
-                one = { ...one, merge_patch_parent_properties: exportAttrs(one.merge_patch_parent_properties) };
-            }
-            return one;
-        });
+
+    const rec_mpp = <T extends Mpp<StepAttrOption_no_extensions>>(one : T) => {        
+        if (one.merge_patch_parent_properties) {
+            one = { ...one, merge_patch_parent_properties: exportAttrs(one.merge_patch_parent_properties) };
+        }
+        return one;
     }
+    if (opt.oneOf) opt.oneOf = opt.oneOf.map(rec_mpp)
     return opt;
 }
 
@@ -164,11 +164,10 @@ export const exportAttrs = (attrs: StepAttrsOption) => (
 export const eachAttrs = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption) => void) => {
     _.each(attrs, (opts, key) => {
         if (opts && opts.properties) eachAttrs(opts.properties, f);
-        if (opts && opts.oneOf) {
-            for (const choice of opts.oneOf) {
-                if (choice.merge_patch_parent_properties) eachAttrs(choice.merge_patch_parent_properties, f);
-            }
+        const rec_mpp = <T>(mpp : Mpp<T>) => {
+            if (mpp.merge_patch_parent_properties) eachAttrs(mpp.merge_patch_parent_properties, f);
         }
+        if (opts?.oneOf) opts.oneOf.forEach(rec_mpp)
         f(opts, key, attrs);
     })
 }

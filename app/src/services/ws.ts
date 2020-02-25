@@ -30,9 +30,11 @@ export interface MergePatchOptions {
     newRootProperties?: 'ignore'
 }
 
-export interface StepAttrOptionChoices {
+export type StepAttrOptionChoices = {
   const: string;
   title?: string;
+} & Mpp;
+export interface Mpp {
   merge_patch_parent_properties?: StepAttrsOption;
   merge_patch_options?: MergePatchOptions, 
 }
@@ -63,16 +65,15 @@ import conf from '../conf';
 const api_url = conf.base_pathname + 'api';
 
 export function eachAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | 'never', f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption) => void) {
-    function rec(attrs) {
+    function rec_mpp(mpp: Mpp) {
+        if (mpp.merge_patch_parent_properties) rec(mpp.merge_patch_parent_properties)
+    }
+    function rec(attrs : StepAttrsOption) {
         for (const attr in attrs) {
             const opts = attrs[attr];
-            if (opts && opts.properties) rec(opts.properties);
-            if (opts && opts.oneOf) {
-                if (oneOfTraversal === 'always') {
-                    for (const choice of opts.oneOf) {
-                        if (choice.merge_patch_parent_properties) rec(choice.merge_patch_parent_properties);
-                    }
-                }
+            if (opts?.properties) rec(opts.properties);
+            if (oneOfTraversal === 'always') {
+                if (opts?.oneOf) opts.oneOf.forEach(rec_mpp)
             }
         f(opts, attr, attrs);
       }

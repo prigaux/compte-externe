@@ -50,9 +50,12 @@ type profileValuesT<T> = StepAttrOptionChoicesT<T> & {
     fv: () => Partial<v>;
 }
 
-interface StepAttrOptionChoicesT<MoreAttrOption> {
+type StepAttrOptionChoicesT<MoreAttrOption> = {
   const: string;
   title?: string;
+} & Mpp<MoreAttrOption>
+
+type Mpp<MoreAttrOption> = {
   merge_patch_parent_properties?: Dictionary<StepAttrOptionT<MoreAttrOption>>;
   merge_patch_options?: MergePatchOptions, // if given, "merge_patch_parent_properties" is only used on client-side
 }

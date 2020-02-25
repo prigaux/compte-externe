@@ -155,10 +155,10 @@ export const mapAttrs = <T>(attrs: StepAttrsOptionT<T>, f: (opts: StepAttrOption
     _.mapValues(attrs, (opts, key) => {
         opts = f(opts, key);
         if (opts.properties) opts.properties = mapAttrs(opts.properties, f);
-        if (opts.oneOf)
-            opts.oneOf = opts.oneOf.map(choice => (
-                choice.merge_patch_parent_properties ? { ...choice, merge_patch_parent_properties: mapAttrs(choice.merge_patch_parent_properties, f) } : choice
-            ));
+        const rec_mpp = <M extends Mpp<T>>(mpp: M) => (
+            mpp.merge_patch_parent_properties ? { ...mpp, merge_patch_parent_properties: mapAttrs(mpp.merge_patch_parent_properties, f) } : mpp
+        )
+        if (opts.oneOf) opts.oneOf = opts.oneOf.map(rec_mpp)
         return opts;        
     })
 )
