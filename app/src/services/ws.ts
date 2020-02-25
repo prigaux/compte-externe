@@ -49,6 +49,8 @@ export type StepAttrOption = MoreStepAttrOption & {
   properties?: StepAttrsOption;
   oneOf?: StepAttrOptionChoices[];
   oneOf_async?: string;
+  if?: { optional: false };
+  then?: Mpp;
 }
 export interface Dictionary<T> {
   [index: string]: T;
@@ -73,6 +75,7 @@ export function eachAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | 'ne
             const opts = attrs[attr];
             if (opts?.properties) rec(opts.properties);
             if (oneOfTraversal === 'always') {
+                if (opts?.then) rec_mpp(opts.then)
                 if (opts?.oneOf) opts.oneOf.forEach(rec_mpp)
             }
         f(opts, attr, attrs);

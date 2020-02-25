@@ -48,7 +48,7 @@ export function merge_v(attrs : StepAttrsOption, more_attrs: MoreStepAttrsOption
             }
         }
         if (opt.properties) merge_one_level(opt.properties);
-        handle_chosen_oneOf_mppp(opt, r[key], merge_one_level);
+        handle_chosen_oneOf_or_if_then_mppp(opt, r[key], merge_one_level);
       });
     }
     merge_one_level(attrs);
@@ -108,7 +108,7 @@ export function export_v(attrs: StepAttrsOption, v) {
                 r[key] = val;
             }
             if (opts.properties) rec(opts.properties);
-            handle_chosen_oneOf_mppp(opts, v[key], rec);
+            handle_chosen_oneOf_or_if_then_mppp(opts, v[key], rec);
         });
     }
     rec(attrs);
@@ -121,11 +121,21 @@ export function flatten_attrs(attrs: StepAttrsOption, v: v) {
         _.forEach(attrs, (opts, key) => {
             r[key] = { ...r[key] || {}, ...opts }; // merge
             if (opts.properties) rec(opts.properties);
-            handle_chosen_oneOf_mppp(opts, v[key], rec);
+            handle_chosen_oneOf_or_if_then_mppp(opts, v[key], rec);
         });
     }
     rec(attrs);
     return r;
+}
+
+const handle_then_if_matching = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption) => void) => {
+    if (!val) val = opts.default;
+    const then_mppp = opts?.then?.merge_patch_parent_properties
+    if (opts.if && then_mppp) {
+        if (matches_if(opts.if, val) && !opts.then.merge_patch_options) {
+            rec(then_mppp);
+        }
+    }
 }
 
 const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption) => void) => {
@@ -137,6 +147,15 @@ const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (attrs
         }
     }
 }
+
+const handle_chosen_oneOf_or_if_then_mppp = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption) => void) => {
+    handle_then_if_matching(opts, val, rec);
+    handle_chosen_oneOf_mppp(opts, val, rec);
+}
+
+const matches_if = (if_, val: string) => (
+    if_.optional || val
+)
 
 const find_choice = (oneOf: StepAttrOptionChoices[], val) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
 
@@ -153,6 +172,7 @@ const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : Ste
         }
         return one;
     }
+    if (opt.then) opt.then = rec_mpp(opt.then)
     if (opt.oneOf) opt.oneOf = opt.oneOf.map(rec_mpp)
     return opt;
 }
@@ -167,6 +187,7 @@ export const eachAttrs = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key:
         const rec_mpp = <T>(mpp : Mpp<T>) => {
             if (mpp.merge_patch_parent_properties) eachAttrs(mpp.merge_patch_parent_properties, f);
         }
+        if (opts?.then) rec_mpp(opts.then)
         if (opts?.oneOf) opts.oneOf.forEach(rec_mpp)
         f(opts, key, attrs);
     })

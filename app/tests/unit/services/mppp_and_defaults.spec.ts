@@ -35,6 +35,19 @@ describe('sub_and_defaults', function() {
              { v: { sn: 'a' } });
     });
 
+    it('should handle if then merge_patch_parent_properties', () => {
+        const attrs = { duration: {
+                optional: true,
+                if: { optional: false },
+                then: { merge_patch_parent_properties: { sn: {} } },
+        } } as StepAttrsOption;
+            
+        test({ attrs, v: { duration: "" } as V },
+             { attrNames: 'duration' })
+        test({ attrs, v: { duration: "x" } as V },
+             { attrNames: 'duration sn' });
+    });
+
     it('should handle oneOf merge_patch_parent_properties', () => {
         const attrs = { duration: { oneOf: [ 
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 

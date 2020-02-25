@@ -72,6 +72,8 @@ type StepAttrOptionT<MoreOptions> = MinimalStepAttrOption & MoreOptions & {
   oneOf?: StepAttrOptionChoicesT<MoreOptions>[];
   oneOf_async?: (token: string, sizeLimit: number) => Promise<StepAttrOptionChoices[]>; // if sizeLimit===1, it is used as an exact search
   items?: StepAttrItemsOption,
+  if?: { optional: false };
+  then?: Mpp<MoreOptions>;
 }
 type StepAttrsOptionT<T> = Dictionary<StepAttrOptionT<T>>;
 

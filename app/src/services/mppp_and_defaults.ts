@@ -1,15 +1,32 @@
 import { V, Mpp, StepAttrsOption, StepAttrOption, StepAttrOptionChoices, MergePatchOptions } from '../services/ws';
 import { find, forIn, map, mapValues, pickBy, Dictionary } from 'lodash';
 
+const matches_if = (if_, val: string) => (
+    if_.optional || val
+)
+
 const find_choice = (oneOf: StepAttrOptionChoices[], val) => (
     find(oneOf, choice => choice.const === val)
 )
+
+const handle_then_if_matching = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption, mpo: MergePatchOptions) => void) => {
+    const then_mppp = opts?.then?.merge_patch_parent_properties
+    if (opts.if && then_mppp) {
+        console.log(opts.if, val)
+        if (matches_if(opts.if, val)) rec(then_mppp, opts.then.merge_patch_options);
+    }
+}
 
 const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption, mpo: MergePatchOptions) => void) => {
     if (val && opts.oneOf) {
         const choice = find_choice(opts.oneOf, val);
         if (choice && choice.merge_patch_parent_properties) rec(choice.merge_patch_parent_properties, choice.merge_patch_options);
     }
+}
+
+const handle_chosen_oneOf_or_if_then_mppp = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption, mpo: MergePatchOptions) => void) => {
+    handle_then_if_matching(opts, val, rec);
+    handle_chosen_oneOf_mppp(opts, val, rec);
 }
 
 export function filterAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | 'never', f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption) => boolean): StepAttrsOption {
@@ -23,6 +40,9 @@ export function filterAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | '
             r[key] = opts = { ...opts };
             if (opts.properties) opts.properties = rec(opts.properties);
             if (oneOfTraversal === 'always') {
+                if (opts.then) {
+                    opts.then = rec_mpp(opts.then)
+                }
                 if (opts.oneOf) {
                     opts.oneOf = opts.oneOf.map(rec_mpp);
                 }
@@ -93,6 +113,9 @@ const get_ordered_opts_and_dependencies = (attrs: StepAttrsOption) => {
     function rec(attrs: StepAttrsOption, always: boolean) {
         forIn(attrs, (opts, key) => {
             if (always) getitem(key, false).opts = opts;
+            if (opts.then) {
+                rec_mpp(key, opts.then)
+            }
             if (opts.oneOf) {
                 for (const one of opts.oneOf) {
                     rec_mpp(key, one);
@@ -144,7 +167,7 @@ export function compute_mppp_and_handle_default_values(attrs : StepAttrsOption, 
 
             handle_default(opts, k);
 
-            handle_chosen_oneOf_mppp(opts, v[k], (attrs, merge_patch_options) => {
+            handle_chosen_oneOf_or_if_then_mppp(opts, v[k], (attrs, merge_patch_options) => {
                 forIn(attrs, (opts, innerkey) => {
                     attrs_opts_and_deps[innerkey].deps[k] = { opts, merge_patch_options };
                 });

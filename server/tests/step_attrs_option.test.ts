@@ -7,6 +7,15 @@ const a_or_b : StepAttrOption = { oneOf: [
     { const: "b", merge_patch_parent_properties: { a: { toUserOnly: true }, b: {} } },
 ] }
 
+const a_then_bc : StepAttrsOption = { a: {
+    optional: true, 
+    if: { optional: false },
+    then: { merge_patch_parent_properties: { 
+        b: {},
+        c: { readOnly: true }
+    } }
+} }
+
 describe('exportAttrs', () => {
     it("should work", () => {
         const checkSame = (attrs) => assert.deepEqual(exportAttrs(attrs), attrs);
@@ -25,6 +34,11 @@ describe('exportAttrs', () => {
             { const: "a", merge_patch_parent_properties: { a: {} } },
             { const: "b", merge_patch_parent_properties: { a: { optional: true, readOnly: true }, b: {} } },
         ] } });
+        assert.deepEqual(exportAttrs(a_then_bc), { a: {
+            optional: true, 
+            if: { optional: false },
+            then: { merge_patch_parent_properties: { b: {}, c: { optional: true, readOnly: true } } }
+        } });
     });
 });
 
@@ -69,6 +83,11 @@ describe('export_v', () => {
         test(attrs, { a_or_b: "a", a: "aa", b: "bb" }, { a_or_b: "a", a: "aa" });
         test(attrs, { a_or_b: "b", a: "aa", b: "bb" }, { a_or_b: "b", a: "aa", b: "bb" });
     });
+    it("should handle if_then merge_patch_parent_properties", () => {
+        test(a_then_bc, { a: "", b: "bb" }, { a: "" });
+        test(a_then_bc, { a: "aa", b: "bb" }, { a: "aa", b: "bb" });
+    });
+
 });
 
 describe('flatten_attrs', () => {
@@ -89,6 +108,10 @@ describe('flatten_attrs', () => {
         ] } };
         test(attrs, { duration: "2" }, { ...attrs });
         test(attrs, { duration: "1" }, { ...attrs, sn: {} });
+    });
+    it("should handle if_then merge_patch_parent_properties", () => {
+        test(a_then_bc, { a: "" }, { ...a_then_bc });
+        test(a_then_bc, { a: "aa" }, { ...a_then_bc, b: {}, c: { readOnly: true } });
     });
 });
 
@@ -204,6 +227,16 @@ describe('merge_v', () => {
         test(attrs, { sn: 'y' }, { sn: 'x', duration: "1" }, { duration: "1", sn: 'x' });
         test(attrs, { sn: 'y' }, { sn: 'x', duration: "2" }, { duration: "2", sn: 'y' });
         test_fail(attrs, { sn: 'y' }, { duration: '1' }, "constraint !sn.optional failed for undefined");
+    });
+
+    it ("should handle if_then merge_patch_parent_properties", () => {
+        test(a_then_bc, {}, { a: '' }, { a: '' });
+        test(a_then_bc, {}, { a: 'aa', b: 'bb' }, { a: 'aa', b: 'bb' });
+        test_fail(a_then_bc, {}, { a: 'aa' }, 'constraint !b.optional failed for undefined');
+    });
+    it ("should handle if_then merge_patch_parent_properties toUserOnly", () => {
+        test(a_then_bc, { c: 'c' }, { a: '', c: 'cc' }, { a: '' });
+        test(a_then_bc, { c: 'c' }, { a: 'aa', b: 'bb', c: 'cc' }, { a: 'aa', b: 'bb', c: 'c' });
     });
 
     it("should check validator", () => {

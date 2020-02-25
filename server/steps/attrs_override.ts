@@ -45,9 +45,15 @@ const compute_overrides = (allowed_conds: Dictionary<boolean>, with_conds: StepA
                 }
             }
         }
-        if (opts.properties) {
+        const extend_override = (opts: StepAttrOption) => {
             if (!(attrName in override)) override[attrName] = {};
-            override[attrName] = utils.deep_extend({ properties: compute_overrides(allowed_conds, opts.properties, v) }, override[attrName])
+            override[attrName] = utils.deep_extend(opts, override[attrName])
+        }
+        if (opts.properties) {
+            extend_override({ properties: compute_overrides(allowed_conds, opts.properties, v) })
+        }
+        if (opts.then?.merge_patch_parent_properties) {
+            extend_override({ then: { merge_patch_parent_properties: compute_overrides(allowed_conds, opts.then.merge_patch_parent_properties, v) } })
         }
     });
     return override
