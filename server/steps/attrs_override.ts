@@ -60,6 +60,7 @@ const compute_overrides = (allowed_conds: Dictionary<boolean>, with_conds: StepA
 }
 
 export const add_not_conds = (conds: Dictionary<(v: v) => boolean>) => {
+    conds = {...conds};
     _.each(conds, (predicate, name) => {
         conds[`not_${name}`] = (v) => !predicate(v)
     })
