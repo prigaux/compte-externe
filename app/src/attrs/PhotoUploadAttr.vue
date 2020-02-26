@@ -1,7 +1,7 @@
 <template>
   <my-bootstrap-form-group :name="name" :label="opts.title" :labels="opts.labels" no_html_label="true" :validity="validity" v-if="!opts.readOnly || val" class="PhotoUploadAttr">
 
-    <span class="photoShow" v-if="val">
+    <span class="photoShow" v-if="val && !toValidate">
         <img :src="val" class="photoBorder" alt="" :style="non_edit_size">
     </span>
 
@@ -110,7 +110,6 @@ export default Vue.extend({
         photoToValidate() {
             if (!this.val_before_croppie) this.val_before_croppie = this.val;
             this.toValidate = this.val_before_croppie;
-            this.val = null;
             this.error = false;
         },
         async onPhotoUploaded(file) {
