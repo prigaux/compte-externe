@@ -110,7 +110,6 @@ export default Vue.extend({
         photoToValidate() {
             if (!this.val_before_croppie) this.val_before_croppie = this.val;
             this.toValidate = this.val_before_croppie;
-            this.prevVal = this.val; // for cancel            
             this.val = null;
             this.error = false;
         },
