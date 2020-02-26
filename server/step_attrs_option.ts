@@ -100,6 +100,10 @@ function validate(key: string, opt: StepAttrOption, more_opt: MoreStepAttrOption
 /* before sending to client, remove sensible information */
 export function export_v(attrs: StepAttrsOption, v) {
     const r = {};
+    const rec_mpp = <T extends Mpp<StepAttrOption_no_extensions>>(one : T) => {        
+        const mppp = one.merge_patch_parent_properties
+        if (mppp) rec(mppp)
+    }
     function rec(attrs: StepAttrsOption) {
         _.forEach(attrs, (opts, key) => {
             if (!opts.hidden && (key in v || opts.toUser)) {
@@ -108,7 +112,12 @@ export function export_v(attrs: StepAttrsOption, v) {
                 r[key] = val;
             }
             if (opts.properties) rec(opts.properties);
-            handle_chosen_oneOf_or_if_then_mppp(opts, v[key], rec);
+            if (opts.readOnly) {
+                handle_chosen_oneOf_or_if_then_mppp(opts, v[key], rec);
+            } else {
+                if (opts.then) rec_mpp(opts.then)
+                if (opts.oneOf) opts.oneOf.forEach(rec_mpp)
+            }
         });
     }
     rec(attrs);

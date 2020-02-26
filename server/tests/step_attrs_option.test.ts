@@ -66,6 +66,14 @@ describe('export_v', () => {
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2" },
         ] } }
+        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2", sn: "Rigaux" });
+        test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
+    });
+    it("should handle readOnly oneOf merge_patch_parent_properties", () => {
+        const attrs = { duration: { readOnly: true, oneOf: [
+            { const: "1", merge_patch_parent_properties: { sn: {} } }, 
+            { const: "2" },
+        ] } }
         test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2" });
         test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
     });
@@ -74,17 +82,17 @@ describe('export_v', () => {
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2" },
         ] } }
-        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2" });
+        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2", sn: "Rigaux" });
         test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
         test(attrs, { sn: "Rigaux" }, { sn: "Rigaux" });
     });
     it("should handle oneOf merge_patch_parent_properties different toUserOnly", () => {
         const attrs = { a_or_b }
-        test(attrs, { a_or_b: "a", a: "aa", b: "bb" }, { a_or_b: "a", a: "aa" });
+        test(attrs, { a_or_b: "a", a: "aa", b: "bb" }, { a_or_b: "a", a: "aa", b: "bb" });
         test(attrs, { a_or_b: "b", a: "aa", b: "bb" }, { a_or_b: "b", a: "aa", b: "bb" });
     });
     it("should handle if_then merge_patch_parent_properties", () => {
-        test(a_then_bc, { a: "", b: "bb" }, { a: "" });
+        test(a_then_bc, { a: "", b: "bb" }, { a: "", b: "bb" });
         test(a_then_bc, { a: "aa", b: "bb" }, { a: "aa", b: "bb" });
     });
 
