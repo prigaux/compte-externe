@@ -1,5 +1,5 @@
 import { assert } from './test_utils';
-import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile, merge_attrs_overrides } from '../step_attrs_option';
+import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile, merge_attrs_overrides, checkAttrs } from '../step_attrs_option';
 import checkDisplayName from '../../shared/validators/displayName';
 
 const a_or_b : StepAttrOption = { oneOf: [
@@ -363,4 +363,30 @@ describe('merge_attrs_overrides', () => {
         );
     })
     
+})
+
+describe('checkAttrs', () => {
+    describe('mixed mixed readOnly/hidden/normal', () => {
+        it('should handle "properties"', () => {
+            checkAttrs({ 
+                _foo: { properties: { sn: {} } },
+                _bar: { properties: { sn: {} } },
+             }, 'test1')
+             checkAttrs({ 
+                _foo: { properties: { sn: { toUserOnly: true } } },
+                _bar: { properties: { sn: { readOnly: true } } },
+             }, 'test2')
+             assert.throws(() => checkAttrs({ 
+                _foo: { properties: { sn: {} } },
+                _bar: { properties: { sn: { hidden: true } } },
+             }, 'test3'))
+        })
+        it('should handle mppp', () => {
+            const then_mppp = { then: { merge_patch_parent_properties: { givenName: {} }}}
+            checkAttrs({ sn: then_mppp }, 'test1')
+            checkAttrs({ sn: then_mppp, givenName: { uiHidden: true } }, 'test2')
+            assert.throws(() => checkAttrs({ sn: then_mppp, givenName: { hidden: true } }, 'test3'))
+            assert.throws(() => checkAttrs({ sn: then_mppp, givenName: { readOnly: true } }, 'test4'))
+        })
+    })
 })

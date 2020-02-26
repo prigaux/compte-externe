@@ -181,16 +181,19 @@ export const exportAttrs = (attrs: StepAttrsOption) => (
     _.mapValues(_.omitBy(attrs, val => val.hidden), transform_toUserOnly_into_optional_readonly)
 ) as StepAttrsOption;
 
-export const eachAttrs = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption) => void) => {
-    _.each(attrs, (opts, key) => {
-        if (opts && opts.properties) eachAttrs(opts.properties, f);
-        const rec_mpp = <T>(mpp : Mpp<T>) => {
-            if (mpp.merge_patch_parent_properties) eachAttrs(mpp.merge_patch_parent_properties, f);
-        }
-        if (opts?.then) rec_mpp(opts.then)
-        if (opts?.oneOf) opts.oneOf.forEach(rec_mpp)
-        f(opts, key, attrs);
-    })
+export const eachAttrs = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption, cond: boolean) => void) => {
+    const rec_mpp = <T>(mpp : Mpp<T>) => {
+        if (mpp.merge_patch_parent_properties) rec(mpp.merge_patch_parent_properties, true);
+    }
+    const rec = (attrs: StepAttrsOption, cond: boolean) => {
+        _.each(attrs, (opts, key) => {
+            if (opts && opts.properties) rec(opts.properties, cond);
+            if (opts?.then) rec_mpp(opts.then)
+            if (opts?.oneOf) opts.oneOf.forEach(rec_mpp)
+            f(opts, key, attrs, cond);
+        })
+    }
+    rec(attrs, false)
 }
 
 export const merge_attrs_overrides = (attrs: StepAttrsOption, attrs_override: StepAttrsOption) => {
@@ -199,4 +202,29 @@ export const merge_attrs_overrides = (attrs: StepAttrsOption, attrs_override: St
         if (!opts) delete attrs[key];
     });
     return r;
+}
+
+export const checkAttrs = (attrs: StepAttrsOption, stepName: string) => {
+    let all: Dictionary<{ cond: StepAttrOption[], no_cond: StepAttrOption[] }> = {}
+    eachAttrs(attrs, (opts, key, _attrs, cond) => {        
+        if (!all[key]) all[key] = { no_cond: [], cond: [] }
+        all[key][cond ? 'cond' : 'no_cond'].push(_.pick(opts, 'readOnly', 'hidden', 'toUserOnly'))
+    })
+    const merge = (key: string, l: StepAttrOption[], no_cond: StepAttrOption) => {
+        let r: StepAttrOption = no_cond
+        for (const opts of l) {
+            const readOnly = opts.readOnly || opts.toUserOnly
+            if (r) {
+                if (!readOnly !== !r.readOnly) throw `error in step ${stepName}: mixed readOnly|toUserOnly for attr ${key}`
+                if (!opts.hidden !== !r.hidden) throw `error in step ${stepName}: mixed hidden for attr ${key}`                
+            } else {
+                r = { readOnly, hidden: opts.hidden }
+            }
+        }
+        return r;
+    }
+    _.each(all, ({ no_cond, cond }, key) => {
+        const no_cond_ = merge(key, no_cond, undefined);
+        merge(key, cond, no_cond_)
+    })
 }

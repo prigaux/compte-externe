@@ -10,11 +10,12 @@ import * as mail from './mail';
 import shared_conf from '../shared/conf';
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
-import { export_v, merge_v, exportAttrs, merge_attrs_overrides, selectUserProfile } from './step_attrs_option';
+import { export_v, merge_v, exportAttrs, merge_attrs_overrides, selectUserProfile, checkAttrs } from './step_attrs_option';
 import { filters } from './ldap';
 import gen_gsh_script from './gen_gsh_script';
 require('./helpers');
 
+_.each(conf_steps.steps, checkAttrs)
 
 const router = express.Router();
 
