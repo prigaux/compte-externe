@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group :name="name" :label="opts.title" :labels="opts.labels" no_html_label="true" :validity="validity" v-if="!opts.readOnly || val" class="PhotoUploadAttr">
+  <my-bootstrap-form-group :name="name" :opts="opts" no_html_label="true" :validity="validity" v-if="!opts.readOnly || val" class="PhotoUploadAttr">
 
     <span class="photoShow" v-if="val && !toValidate">
         <img :src="val" class="photoBorder" alt="" :style="non_edit_size">

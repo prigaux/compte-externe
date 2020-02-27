@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group :name="name" :label="opts.title" :validity="validity" :labels="opts.labels">
+  <my-bootstrap-form-group :name="name" :opts="opts" :validity="validity">
     <input-with-validity :name="name" v-model="val" type="date"
        :disabled="opts.readOnly"
        :min="min" :max="max" :required="!opts.optional" :validity.sync="validity[name]"></input-with-validity>

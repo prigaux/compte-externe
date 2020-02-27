@@ -1,11 +1,11 @@
 <template>
 <div v-if="opts.readOnly">
-   <my-bootstrap-form-group name="address_lines" :label="opts.title">
+   <my-bootstrap-form-group name="address_lines" :opts="opts">
       <textarea :rows="(value||'').split('\n').length" :value="value" class="form-control" disabled></textarea>
    </my-bootstrap-form-group>
 </div>
 <div v-else>
-  <my-bootstrap-form-group name="country" :label="opts.title" :labels="opts.labels" :validity="validity">
+  <my-bootstrap-form-group name="country" :opts="opts" :validity="validity">
      <typeahead id="country" name="country" v-model="country" :options="conf.countries" v-magic-aria placeholder="Pays" :validity.sync="validity.country" required></typeahead>
      <CurrentLdapValue v-model="country" :ldap_value="ldap_val.country"></CurrentLdapValue>
   </my-bootstrap-form-group>

@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group name="day" :label="opts.title" :labels="opts.labels">
+  <my-bootstrap-form-group name="day" :opts="opts">
    <div class="row">
     <div class="col-xs-2" :class="{'my-has-error': !validity.day.valid }">
         <div>

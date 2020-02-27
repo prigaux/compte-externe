@@ -1,6 +1,6 @@
 <template>
 <div>
-  <my-bootstrap-form-group name="userPassword" :label="opts.title" :labels="opts.labels" :validity="validity" hideErrors=1>
+  <my-bootstrap-form-group name="userPassword" :opts="opts" :validity="validity" hideErrors=1>
     <input-with-validity name="userPassword" v-model="val" type="password" autocomplete="new-password" :pattern="passwordPattern" required :validity.sync="validity.userPassword"></input-with-validity>
     <span class="help-block" v-if="!validity.userPassword.valid">{{error_msg.userPassword}}</span>
   </my-bootstrap-form-group>

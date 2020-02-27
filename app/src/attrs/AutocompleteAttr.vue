@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group :name="name" :label="opts.title" :label_rowspan="title_rowspan" :validity="validity" :labels="opts.labels">
+  <my-bootstrap-form-group :name="name" :opts="opts" :validity="validity">
     <div v-if="opts.readOnly">
       <input disabled="disabled" class="form-control" :value="val ? val.title : ''">
     </div>
@@ -27,11 +27,6 @@ export default Vue.extend({
     asyncComputed: {
         valueS() {
             return this.value && Ws.search(this.stepName, this.real_name || this.name, this.value, 1).then(l => l && l[0])
-        },
-    },
-    computed: {
-        title_rowspan() {
-            return this.opts.uiOptions?.title_rowspan
         },
     },
     watch: {
