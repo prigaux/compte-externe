@@ -6,7 +6,7 @@
     <div v-else>
       <typeahead :id="name" :name="name" v-model="val" :options="search" :minChars="3" :formatting="formatting" :formatting_html="formatting_html"
             :required="!opts.optional"
-            :placeholder="opts.placeholder"
+            :placeholder="opts.uiPlaceholder"
             :editable="false" :validity.sync="validity[name]"></typeahead>
     </div>
   </my-bootstrap-form-group>
