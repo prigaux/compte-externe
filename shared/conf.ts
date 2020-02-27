@@ -47,7 +47,6 @@ export default {
         floorNumber: { title: "Étage" },
         roomNumber: { title: "Numéro de bureau", description: "(Exemples : 1805 ; A 406 ; 305 B ; A 406 bis ; 1506 ter)" },
         buildingName: { title: "Site" },
-        structureParrain: { title: "SERVICE QUI INVITE : (UFR, Service, Laboratoire...)" },
         userPassword: { title: "Mot de passe", uiType: 'newPassword' },
         userPassword2: { title: "Confirmer le mot de passe" },
         cardChoice: { title: "Carte" },
