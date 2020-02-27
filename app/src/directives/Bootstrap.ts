@@ -41,11 +41,11 @@ Vue.component("my-label-tooltips", {
 })
 
 Vue.component("nowrap-after-text", {
-    props: ['text'],
+    props: ['text', 'nowrap_class'],
     template: `
         <span>
           {{text_.before}}
-          <span style="white-space: nowrap; display: inline-block">
+          <span :class="nowrap_class" style="white-space: nowrap; display: inline-block">
             {{text_.last_word}}
             <slot></slot>
           </span>
@@ -64,7 +64,7 @@ Vue.component("my-bootstrap-form-group", {
     template: `
             <div class='form-group' :class="{'my-has-error': validity && !validity[name].valid }">
               <component :is="label_ && !no_html_label ? 'label' : 'span'" class="label-and-more">
-                <nowrap-after-text :text="label_" class="the-label" :class="{ label_rowspan }" v-if="label_">
+                <nowrap-after-text :text="label_" class="the-label" :class="{ label_rowspan }" :nowrap_class="{ 'required_field': required_ }" v-if="label_">
                     <my-label-tooltips :labels="labels"/>
                 </nowrap-after-text>
                 <span class="the-label" v-else/>
@@ -86,5 +86,8 @@ Vue.component("my-bootstrap-form-group", {
         label_rowspan() {
             return this.opts?.uiOptions?.title_rowspan
         },
+        required_() {
+            return this.required ?? (this.opts && !this.opts.optional)
+        }
     },
 });

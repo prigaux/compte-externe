@@ -13,6 +13,7 @@ export default {
     printCardUrl: undefined, //(login) => `http://unicampus.univ.fr/unicampus/DesktopDefault.aspx?tabindex=1&tabid=2&NomCon=Xxxx&id_vis=${login}`,
     wsgroupsURL,
     title: "Gestion de comptes",
+    may_display_fieldIsRequired_hint: true,
 
     // order of keys is used in CompareUsers
     default_attrs_opts: {

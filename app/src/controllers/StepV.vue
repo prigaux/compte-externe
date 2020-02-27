@@ -41,13 +41,19 @@
     <MyModalP ref="MyModalP"></MyModalP>
 
     <attrsForm
+        :class="{ display_fieldIsRequired_hint: display_fieldIsRequired_hint }"
         :v="v" :v_ldap="v_ldap" :attrs="other_attrs" :step_labels="step.labels" :stepName="stepName"
         :disableOkButton="disableOkButton"
         :onelineForm="onelineForm"
         @submit="submit" @reject="reject"></attrsForm>
 
-    <div v-if="step_post_scriptum">
+    <div class="display_fieldIsRequired_hint" v-if="display_fieldIsRequired_hint">
         <hr style="margin-top: 4rem">
+        <p><span class="required_field"></span> Champs obligatoires</p>
+    </div>
+
+    <div v-if="step_post_scriptum">
+        <hr style="margin-top: 2rem">
         <component :is="step_post_scriptum" :v_pre="v_pre" :v="v"/>
     </div>
 
@@ -113,6 +119,12 @@ export default Vue.extend({
         },
         attrs_() {
             return this.attrs && Helpers.filter(this.attrs, (opts) => !opts.uiHidden);
+        },
+        display_fieldIsRequired_hint() {
+            if (!this.attrs) return false;
+            const nb_optional = Object.keys(Helpers.filter(this.all_attrs_flat, (opts) => !opts.readOnly && opts.optional)).length
+            const nb_required = Object.keys(Helpers.filter(this.all_attrs_flat, (opts) => !opts.readOnly && !opts.optional)).length
+            return conf.may_display_fieldIsRequired_hint && nb_required && nb_optional
         },
 
         other_attrs(): StepAttrsOption {

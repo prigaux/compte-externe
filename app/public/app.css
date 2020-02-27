@@ -184,6 +184,11 @@ label {
   clear: both;
 }
 
+.display_fieldIsRequired_hint .required_field::after {
+    content: " *";
+    color: #a00;
+}
+
 .label-and-more > .the-label {
     font-weight: 700;
     flex: 0.3 0 100%;
