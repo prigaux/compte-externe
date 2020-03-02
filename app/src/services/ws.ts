@@ -171,7 +171,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 const msg = resp.data && resp.data.error || err.message;
                 console.error(resp || err)
                 alert(msg);
-                if (redirect) router.replace("/");
+                if (redirect) router.back();
                 return Promise.reject(msg);
             }
         }
