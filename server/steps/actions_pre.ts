@@ -54,14 +54,14 @@ export const getCasAttrsWithProfile: simpleAction = (req, _sv)  => (
     getCasAttrs(req, null).then(sv => handle_profilename_to_modify(req, sv.v))
 );
 
-export const esup_activ_bo_validateAccount = (isActivation: boolean) : simpleAction => (req, _sv) => {
+export const esup_activ_bo_validateAccount = (isActivation: boolean) : simpleAction => async (req, _sv) => {
     const userInfo = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, search_ldap.v_from_WS(req.query), { toEsupActivBo: true });
     const { wantedConvert, attrRemapRev } = ldap.convert_and_remap(conf.ldap.people.types, conf.ldap.people.attrs);
-    return esup_activ_bo.validateAccount(userInfo as any, _.without(Object.keys(attrRemapRev), 'userPassword')).then(o => {
-        if (isActivation && !o.code) throw "Compte déjà activé";
-        if (!isActivation && o.code) throw "Compte non activé";
-        return { ..._.pick(o, 'possibleChannels', 'code'), ... ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert) }
-    }).then(v => ({ v }))
+    const o = await esup_activ_bo.validateAccount(userInfo as any, _.without(Object.keys(attrRemapRev), 'userPassword'))
+    if (isActivation && !o.code) throw "Compte déjà activé";
+    if (!isActivation && o.code) throw "Compte non activé";
+    const v = { ..._.pick(o, 'possibleChannels', 'code'), ... ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert) }
+    return { v }
 }
 
 export const esup_activ_bo_validateCode : simpleAction = (req, sv) => (
