@@ -1,5 +1,8 @@
 <template>
-<div :class="'step-' + stepName">
+<div class="alert alert-danger" role="alert" v-if="fatal_error">
+    <p style="white-space: pre">{{fatal_error}}</p>
+</div>
+<div :class="'step-' + stepName" v-else>
     <StepV v-for="(v, index) in vs" :key="index"
         :wanted_id="wanted_id" :stepName="stepName"
         :id="id" :v_pre="v_pre"
@@ -29,6 +32,7 @@ function AttrsForm_data() {
       vs: <V> undefined,
       vs_orig: <V> undefined,
       v_ldap: <V> undefined,
+      fatal_error: undefined,
     };    
 }
 

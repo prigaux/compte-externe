@@ -170,8 +170,12 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             } else {
                 const msg = resp.data && resp.data.error || err.message;
                 console.error(resp || err)
-                alert(msg);
-                if (redirect) router.back();
+                if (redirect && !window.history.state) {
+                    $scope.fatal_error = msg;
+                } else {
+                    alert(msg);
+                    if (redirect) router.back();
+                }
                 return Promise.reject(msg);
             }
         }
