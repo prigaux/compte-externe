@@ -3,6 +3,7 @@
 
     <span class="photoShow" v-if="val && !toValidate">
         <img :src="val" class="photoBorder" alt="" :style="non_edit_size">
+        <a @click="removePhoto()" class="glyphicon glyphicon-remove" title="supprimer la photo" v-if="opts.optional"></a>
     </span>
 
     <span style="display: inline-block" v-if="!opts.readOnly">
@@ -121,6 +122,9 @@ export default Vue.extend({
             this.val = await this.$refs.croppie.get(); 
             this.toValidate = null;
         },
+        removePhoto() {
+            this.val = null;
+        }
     },
 });
 </script>
@@ -161,9 +165,32 @@ export default Vue.extend({
     border: 1px solid #eee;
 }
 .photoShow {
-    display: inline-block;
+    display: flex;
     margin-right: 2rem;
+    align-items: flex-end;
 }
+
+.photoShow .glyphicon-remove {
+    margin-left: -15px;
+    margin-bottom: -4px;
+    background: #ddd9;
+    padding: 3px;    
+    border-radius: 50%;
+    border: 1px solid #999;
+    color: #666;
+    cursor: pointer;
+    font-size: 11px;
+    font-style: normal;
+    text-decoration: none;   
+}
+
+.photoShow .glyphicon-remove:hover {
+    background:white;
+    border: 1px #888 solid;
+    color: #cf4a02;
+    transform: scale(1.2);
+}
+
 .photoModify {
     width: 200px;
     display: inline-block;
