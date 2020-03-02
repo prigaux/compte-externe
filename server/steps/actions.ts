@@ -59,6 +59,10 @@ export const if_v = (test_v, action: action): action => async (req, sv: sva) => 
     test_v(sv.v) ? await action(req, sv) : { v: sv.v, response: {} }
 );
 
+export const handle_exception = (action: action, handler: (err, req: req, sv: sva) => Promise<vr>) => (req, sv: sva) => (
+    action(req, sv).catch(err => handler(err, req, sv))
+);
+
 export function chain(l_actions: action[]): action {
     return (req, sv: sva) => {
         let vr: Promise<vr> = Promise.resolve(sv);
