@@ -66,7 +66,9 @@ export function respondJson(req: req, res: express.Response, p: Promise<response
 }
 
 export const index_html = (_req: req, res: express.Response, _next): void => {
-    res.sendFile(path.join(__dirname, "../app/dist/index.html"), console.error)
+    res.sendFile(path.join(__dirname, "../app/dist/index.html"), err => { 
+        if (err) console.error(err)
+    })
 };
 
 
