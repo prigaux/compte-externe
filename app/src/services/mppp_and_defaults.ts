@@ -175,7 +175,9 @@ export function compute_mppp_and_handle_default_values(attrs : StepAttrsOption, 
             // we have final opts & v[k], set conditional deps opts
             handle_chosen_oneOf_or_if_then_mppp(opts, v[k], (attrs, merge_patch_options) => {
                 forIn(attrs, (opts, innerkey) => {
-                    attrs_opts_and_deps[innerkey].deps[k] = { opts, merge_patch_options };
+                    if (attrs_opts_and_deps[innerkey]) { // missing in case of lonely "ignore", already warned about conf error
+                        attrs_opts_and_deps[innerkey].deps[k] = { opts, merge_patch_options };
+                    }
                 });
             });
 
