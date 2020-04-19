@@ -23,5 +23,20 @@ describe('deep_extend', () => {
         check({ a: ["aa"] }, { a: ["bb"] }, { a: ["bb"] });
         check({ a: { b: ["aa"] } }, { a: { b: ["bb"] } }, { a: { b: ["bb"] } });
     });        
+
+    it("should work with deep objects", () => {
+        check({ 
+            a: "foo",
+            bb: { bb1: { bb11: "1" } },
+        }, { 
+            bb: { bb2: { bb22: "2" } },
+        }, {
+            a: "foo",
+            bb: {
+                bb1: { bb11: "1" },
+                bb2: { bb22: "2" },
+            },
+        })
+    })
 });
 
