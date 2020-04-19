@@ -43,7 +43,7 @@ type acl_search = {
 }
 
 interface MergePatchOptions {
-    newRootProperties?: 'ignore'
+    newRootProperties?: 'ignore' | { ignore: string[] } // all | a list of attribute names
 }
 
 type profileValuesT<T> = StepAttrOptionChoicesT<T> & { 

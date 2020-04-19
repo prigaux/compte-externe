@@ -84,15 +84,42 @@ describe('sub_and_defaults', function() {
                   merge_patch_options: { newRootProperties: 'ignore' },
                   merge_patch_parent_properties: { 
                     sn: { default: "a" },
+                    givenName: {},
                 } }, 
-                { const: "2" }
+                { const: "2",
+                  merge_patch_parent_properties: {
+                    givenName: {},
+                } },
+            ] },
+        } as StepAttrsOption;
+            
+        test({ attrs, v: { duration: "2" } as V },
+             { attrNames: 'sn duration givenName' });
+        test({ attrs, v: { duration: "1" } as V },
+             { attrNames: 'sn duration',
+               subAttrs: { sn: { pattern: ".", default: "a" } }, 
+               v: { duration: "1", sn: "a" } })
+    });
+
+    it('should handle merge_patch_options ignore one only', () => {
+        const attrs: StepAttrsOption = { 
+            sn: { pattern: "." },
+            duration: { oneOf: [ 
+                { const: "1", 
+                  merge_patch_options: { newRootProperties: { ignore: ['sn'] } },
+                  merge_patch_parent_properties: {
+                    sn: { default: "a" },
+                    givenName: {},
+                } }, 
+                { const: "2" },
             ] },
         } as StepAttrsOption;
             
         test({ attrs, v: { duration: "2" } as V },
              { attrNames: 'sn duration' });
         test({ attrs, v: { duration: "1" } as V },
-             { subAttrs: { sn: { pattern: ".", default: "a" } }, 
+             { attrNames: 'sn duration givenName',
+               subAttrs: { sn: { pattern: ".", default: "a" } }, 
                v: { duration: "1", sn: "a" } })
     });
 

@@ -27,7 +27,7 @@ export interface SVRaw {
 }
 
 export interface MergePatchOptions {
-    newRootProperties?: 'ignore'
+    newRootProperties?: 'ignore' | { ignore: string[] } // all | a list of attribute names
 }
 
 export type StepAttrOptionChoices = {

@@ -68,8 +68,11 @@ const may_set_default_value = (k: string, opts: StepAttrOption, v, prev_defaults
     }
 };
 
-const is_late = (e: { merge_patch_options?: MergePatchOptions }) => (
-    (e.merge_patch_options || {}).newRootProperties === 'ignore'
+const is_late_ = (key: string, newRootProperties: MergePatchOptions["newRootProperties"]) => (
+    newRootProperties === 'ignore' || newRootProperties?.ignore?.includes(key)
+)
+const is_late = (key: string, e: { merge_patch_options?: MergePatchOptions }) => (
+    is_late_(key, e.merge_patch_options?.newRootProperties)
 )
 
 type opts_mpo = Dictionary<{ opts: StepAttrOption; merge_patch_options: MergePatchOptions }>
@@ -104,7 +107,7 @@ const get_ordered_opts_and_dependencies = (attrs: StepAttrsOption) => {
 
     function rec_mpp(key: string, mpp: Mpp) {
         for (const innerkey in mpp.merge_patch_parent_properties || {}) {
-            const late = is_late(mpp);
+            const late = is_late(innerkey, mpp);
             getitem(innerkey, late)[late ? 'late_deps' : 'deps'][key] = null;
         }
         rec(mpp.merge_patch_parent_properties, false);
@@ -158,7 +161,7 @@ export function compute_mppp_and_handle_default_values(attrs : StepAttrsOption, 
             //console.log("final opts_ for", k, ":", always_opts, more_opts);
             let opts;
             for (const e of [ { opts: always_opts, merge_patch_options: {} }, ...more_opts ]) {
-                if (is_late(e) && !opts) break;
+                if (is_late(k, e) && !opts) break;
                 
                 // merge
                 if (e.opts) opts = { ...opts || {}, ...e.opts };
