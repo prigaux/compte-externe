@@ -148,7 +148,7 @@ export function compute_mppp_and_handle_default_values(attrs : StepAttrsOption, 
         const one_attr = (k: string) : StepAttrOption => {
             const { opts: always_opts, deps } = attrs_opts_and_deps[k];
 
-            // resolve dependencies            
+            // force recursion on deps to get/update(?) conditional (oneOf / if_then) deps opts
             for (const k in deps) one_attr_with_cache(k);
             
             const more_opts = map(deps, (opts_and_mpopts, k) => (
@@ -163,10 +163,13 @@ export function compute_mppp_and_handle_default_values(attrs : StepAttrsOption, 
                 // merge
                 if (e.opts) opts = { ...opts || {}, ...e.opts };
             }
+            // we have finished compute opts
             if (!opts) return undefined
 
+            // see if we need to modify current_defaults / v[k]
             handle_default(opts, k);
 
+            // we have final opts & v[k], set conditional deps opts
             handle_chosen_oneOf_or_if_then_mppp(opts, v[k], (attrs, merge_patch_options) => {
                 forIn(attrs, (opts, innerkey) => {
                     attrs_opts_and_deps[innerkey].deps[k] = { opts, merge_patch_options };
