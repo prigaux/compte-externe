@@ -3,6 +3,7 @@
      <p><b>{{homonyme.mail || homonyme.uid}}</b> <span v-html="homonyme.global_main_profile.description"></span></p>
      <table class="table table-bordered">
        <tbody>
+         <tr><th></th><th>Compte demandé</th><th>Compte existant</th></tr>
          <tr v-for="{ attr, cmp, skip } in comparisons" v-if="!skip">
            <td>{{default_attrs_title[attr] || attr}}</td>
            <td v-html="cmp[0]"></td>
