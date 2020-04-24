@@ -18,7 +18,7 @@ const handle_then_if_matching = (opts: StepAttrOption, val: string, rec: (attrs:
 }
 
 const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption, mpo: MergePatchOptions) => void) => {
-    if (val && opts.oneOf) {
+    if (opts.oneOf) {
         const choice = find_choice(opts.oneOf, val);
         if (choice && choice.merge_patch_parent_properties) rec(choice.merge_patch_parent_properties, choice.merge_patch_options);
     }
