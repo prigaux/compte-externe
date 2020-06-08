@@ -133,6 +133,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
 
                 const item_converter = _to_converter(opts.items?.format);
                 if (item_converter && Array.isArray(v[attr])) v_[attr] = v[attr].map(item_converter)
+                
+                if (direction === 'fromCSV' && opts.normalize) v_[attr] = opts.normalize(v_[attr]);
             }
             return v_;
         }
