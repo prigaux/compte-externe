@@ -5,7 +5,7 @@ import * as helpers from './helpers';
 
 const accentsRange = '\u00C0-\u00FC';
 const allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
-const normalizeApostrophe = (s : string) => s.replace(/[’′´‘]/g, "'");
+const normalizeApostropheAndTrim = (s : string) => s.replace(/[’′´‘]/g, "'").replace(/^\s*/, '').replace(/\s*$/, '');
 
 const wsgroupsURL = "https://wsgroups.univ-paris1.fr";
 
@@ -18,14 +18,14 @@ export default {
     // order of keys is used in CompareUsers
     default_attrs_opts: {
         supannCivilite: { title: "Civilité" },
-        givenName: { title: "Prénom", allowedChars: allowedCharsInNames, normalize: normalizeApostrophe },
-        altGivenName: { title: 'Autres prénoms', allowedChars: allowedCharsInNames, normalize: normalizeApostrophe },
+        givenName: { title: "Prénom", allowedChars: allowedCharsInNames, normalize: normalizeApostropheAndTrim },
+        altGivenName: { title: 'Autres prénoms', allowedChars: allowedCharsInNames, normalize: normalizeApostropheAndTrim },
         sn: {
-            title: "Nom d'usage", allowedChars: allowedCharsInNames, normalize: normalizeApostrophe, 
+            title: "Nom d'usage", allowedChars: allowedCharsInNames, normalize: normalizeApostropheAndTrim, 
             labels: { tooltip: "Nom marital, nom d'épouse ou nom de naissance" },
         },
         birthName: { 
-            title: "Nom de naissance", allowedChars: allowedCharsInNames, normalize: normalizeApostrophe, 
+            title: "Nom de naissance", allowedChars: allowedCharsInNames, normalize: normalizeApostropheAndTrim, 
             labels: { tooltip: "si différent du nom d'usage" },
         },
         displayName: { 
