@@ -44,7 +44,7 @@ type MinimalStepAttrOption = StepAttrItemsOption & {
         warning?: string; // similar to tooltip, but with a "warning" sign
     }
 
-    format?: 'date' | 'data-url' | 'phone';
+    format?: 'date' | 'image/jpeg' | 'phone';
     default?: string;
 
     allowedChars?: string;

@@ -37,7 +37,7 @@ export default {
         homePhone: { title: "Téléphone personnel", uiType: "phone", format: 'phone' },
         pager: { title: "Mobile personnel", uiType: "mobilePhone", format: 'phone' },
         supannMailPerso: { title: "Email personnel", uiType: "email" },
-        jpegPhoto: { title: "Photo", format: 'data-url', uiType: 'cameraSnapshot' },
+        jpegPhoto: { title: "Photo", format: 'image/jpeg', uiType: 'cameraSnapshot' },
         telephoneNumber: { title: 'Téléphone fixe', uiType: "phone", format: "phone" },
         mobile: { title: "Mobile professionnel", uiType: "phone", format: "phone" },
         facsimileTelephoneNumber: { title: "Fax", uiType: "phone", format: "phone" },
