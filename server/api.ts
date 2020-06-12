@@ -340,8 +340,8 @@ router.post('/homonymes/:id', (req: req, res) => {
 });
 
 function search_for_typeahead(req: req, step: string, attr: string) {
-    const opts = utils.findStepAttr(name2step(step).attrs, (_, attr_) => attr === attr_)?.opts
-    if (!opts || !opts.oneOf_async) {
+    const opts = utils.findStepAttr(name2step(step).attrs, (opts, attr_) => opts.oneOf_async && attr === attr_)?.opts
+    if (!opts) {
         throw "search: invalid step attr " + step + ' ' + attr;
     }
     if (!("token" in req.query)) return Promise.reject("missing token parameter");
