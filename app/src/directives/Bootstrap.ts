@@ -60,7 +60,10 @@ Vue.component("nowrap-after-text", {
 })
 
 Vue.component("my-bootstrap-form-group", {
-    props: ['name', 'label', 'validity', 'opts', 'hideErrors', 'no_html_label'],
+    props: [
+        'name', 'label', 'validity', 'opts', 'hideErrors', 
+        'no_html_label', // useful to avoid creating another <label> tag which would conflict with internal <label> (esp. needed for checkbox, file upload)
+    ],
     template: `
             <div class='form-group' :class="{'my-has-error': validity && !validity[name].valid }">
               <component :is="label_ && !no_html_label ? 'label' : 'span'" class="label-and-more">
