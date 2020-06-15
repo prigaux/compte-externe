@@ -1,11 +1,11 @@
 <template>
-<div v-if="homonymes.length">
+<div v-if="l.length">
    <p style="height: 2em"></p>
      <div class="alert alert-danger" >
        Les informations fournies pour le nouveau compte correspondent à un compte existant.
      </div>
 
- <div v-for="homonyme in homonymes">
+ <div v-for="homonyme in l">
    <p style="height: 0.5em"></p>
    <compare-users :v="v" :homonyme="homonyme"></compare-users>
    <button class="btn btn-primary" @click="merge(homonyme)"><span class="glyphicon glyphicon-resize-small"></span> C'est la même personne</button>
@@ -20,11 +20,6 @@ import Vue from 'vue'
 
 export default Vue.extend({
   props: ['v', 'l'],
-  data() {
-      return { 
-        homonymes: this.l,
-      };
-  },
 
   components: { 'compare-users': () => import('./CompareUsers.vue') },
 
@@ -33,8 +28,7 @@ export default Vue.extend({
         this.$emit('merge', homonym);
       },
       ignore(homonym) {
-          this.homonymes = this.homonymes.filter(e => e !== homonym);
-          if (this.homonymes.length === 0) this.$emit('no_merge');
+          homonym.ignore = true
       }
   }
 });

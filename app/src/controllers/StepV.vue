@@ -20,7 +20,7 @@
        Recherche des homonymes, veuillez patienter...
    </div>
    <div v-else-if="check_homonyms && potential_homonyms.length">
-      <Homonyms :v="v" :l="potential_homonyms" @merge="merge" @no_merge="no_merge">
+      <Homonyms :v="v" :l="potential_homonyms" @merge="merge">
       </Homonyms>
    </div>
    <div v-else>
@@ -267,9 +267,6 @@ export default Vue.extend({
                 console.log(this.imported);
             });          
       },        
-      no_merge() {
-          this.potential_homonyms.forEach(h => h.ignore = true);
-      },
       merge(homonyme) {
           Helpers.eachObject(homonyme, (attr, val) => {
             if (attr.match(/^global_|^(uid|supannAliasLogin)$/)) {
