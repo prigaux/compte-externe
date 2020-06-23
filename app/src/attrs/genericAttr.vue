@@ -43,10 +43,13 @@
     :no_html_label="uiType === 'radio' || uiType === 'checkbox'"
     :validity="validity" v-else-if="opts">
 
-    <radio-with-validity :name="name" v-model="val" v-if="uiType === 'radio'"
-        :values="choicesMap"
-        :disabled="opts.readOnly" :required="!opts.optional" :validity.sync="validity[name]">
-    </radio-with-validity>
+    <div v-if="uiType === 'radio'">
+      <radio-with-validity :name="name" v-model="val"
+          :values="choicesMap"
+          :disabled="opts.readOnly" :required="!opts.optional" :validity.sync="validity[name]">
+      </radio-with-validity>
+      <span v-html="opts.description"></span>
+    </div>
 
     <div v-else-if="uiType === 'textarea' && uiOptions.autocomplete && !opts.readOnly">
       <history-textarea-with-validity :name="name" v-model="val"
