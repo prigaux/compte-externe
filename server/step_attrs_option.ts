@@ -102,7 +102,8 @@ export function export_v(attrs: StepAttrsOption, v) {
     const r = {};
     const rec_mpp = <T extends Mpp<StepAttrOption_no_extensions>>(one : T) => {        
         const mppp = one.merge_patch_parent_properties
-        if (mppp) rec(mppp)
+        // TODO better "merge_patch_options" handling
+        if (mppp && !one.merge_patch_options) rec(mppp)
     }
     function rec(attrs: StepAttrsOption) {
         _.forEach(attrs, (opts, key) => {
@@ -141,7 +142,7 @@ const handle_then_if_matching = (opts: StepAttrOption, val: string, rec: (attrs:
     if (!val) val = opts.default;
     const then_mppp = opts?.then?.merge_patch_parent_properties
     if (opts.if && then_mppp) {
-        if (matches_if(opts.if, val) && !opts.then.merge_patch_options) {
+        if (matches_if(opts.if, val) && !opts.then.merge_patch_options) { // TODO better "merge_patch_options" handling
             rec(then_mppp);
         }
     }
@@ -151,7 +152,7 @@ const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (attrs
     if (!val) val = opts.default;
     if (val && opts.oneOf) {
         const choice = find_choice(opts.oneOf, val);
-        if (choice && choice.merge_patch_parent_properties && !choice.merge_patch_options) {
+        if (choice && choice.merge_patch_parent_properties && !choice.merge_patch_options) { // TODO better "merge_patch_options" handling
             rec(choice.merge_patch_parent_properties);
         }
     }
