@@ -178,7 +178,7 @@ const createCompte_ = async (req: req, sv: sva, opts : crejsonldap.options) => {
     v.uid = resp_subv.uid;
     if (!v.supannAliasLogin) v.supannAliasLogin = resp_subv.uid;
 
-    await after_createAccount(v, sv.attrs, resp_subv.accountStatus);
+    await after_createAccount(v, sv.attrs, resp_subv.accountStatus, created);
 
     return { v, response: {login: v.supannAliasLogin, created, accountStatus: resp_subv.accountStatus } }
 };
@@ -188,14 +188,14 @@ const mailFrom = (v) => {
     return !email ? conf.mail.from : v.mailFrom_text ? `${v.mailFrom_text} <${email}>` : email;
 }
 
-const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: crejsonldap.accountStatus) => {
+const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: crejsonldap.accountStatus, created: boolean) => {
     if (v.userPassword && !accountStatus) {
         await esup_activ_bo.setNewAccountPassword(v.uid, v.supannAliasLogin, v.userPassword);
         // NB: if we have a password, it is a fast registration, so do not send a mail
     }
     if (v.supannMailPerso) {
         const v_ = v_display(v, flatten_attrs(attrs, v));
-        mail.sendWithTemplateFile('warn_user_account_created.html', { from: mailFrom(v), to: v.supannMailPerso, v, v_display: v_, isActive: !!accountStatus });
+        mail.sendWithTemplateFile('warn_user_account_created.html', { from: mailFrom(v), to: v.supannMailPerso, v, v_display: v_, created, isActive: !!accountStatus });
     }
     return null;
 }
