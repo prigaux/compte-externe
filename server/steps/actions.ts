@@ -152,7 +152,9 @@ const canAutoMerge = async (v: v) => {
     if (!v.uid) {
         homonymes = await search_ldap.homonymes(v);
         if (homonymes.length) console.log(`createCompteSafe: homonymes found for ${v.givenName} ${v.sn}: ${homonymes.map(v => v.uid + " (score:" + v.score + ")")}`)
-        if (homonymes.length === 1) {
+        if (homonymes.length === 1 ||
+            /* if 2 homonymes, it may be student account + teacher account. If student score is the highest (requires preferStudent), ignore the second account to decide canAutoMerge */
+            homonymes.length === 2 && homonymes[0].score === 1131101) {
             const existingAccount = homonymes[0]
             const diffs = compare_v(v, existingAccount);
             const force_merge = diffs.major_change && v.various && v.various.allow_homonyme_merge && v.various.allow_homonyme_merge(existingAccount, v);
