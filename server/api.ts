@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import * as express from 'express';
 import * as acl_checker from './acl_checker';
 import * as db from './db';
+import * as helpers from './helpers';
 import * as utils from './utils';
 import * as search_ldap from './search_ldap';
 import * as mail from './mail';
@@ -13,7 +14,7 @@ import * as conf_steps from './steps/conf';
 import { export_v, merge_v, exportAttrs, merge_attrs_overrides, selectUserProfile, checkAttrs } from './step_attrs_option';
 import { filters } from './ldap';
 import gen_gsh_script from './gen_gsh_script';
-require('./helpers');
+require('./helpers'); // for Promise.prototype.tap
 
 _.each(conf_steps.steps, checkAttrs)
 
@@ -74,12 +75,12 @@ async function may_export_v_ldap(sv: sva) {
     return sv;
 }
 
-function export_sv(sv: sva) {
+async function export_sv(req: req, sv: sva) {
     sv = _.clone(sv);
     sv.v = export_v(sv_attrs(sv), sv.v) as v;
     if (sv.vs) sv.vs = sv.vs.map(v => export_v(sv_attrs(sv), v) as v);
     const attrs = exportAttrs(sv.attrs);
-    return { ...sv, stepName: sv.step, ...exportStep(step(sv)), attrs };
+    return { ...sv, stepName: sv.step, ...await exportStep(req, step(sv)), attrs };
 }
 
 function mayNotifyModerators(req: req, sv: sv|svra, notifyKind: string) {
@@ -134,7 +135,7 @@ async function getRaw(req: req, id: id, wanted_step: string): Promise<sva> {
 }
 
 function get(req: req, id: id, wanted_step: string) {
-    return getRaw(req, id, wanted_step).then(may_export_v_ldap).then(export_sv);
+    return getRaw(req, id, wanted_step).then(may_export_v_ldap).then((sv) => export_sv(req, sv));
     // TODO add potential_homonyms si id !== 'new' && attrs && attrs.uid
 }
 
@@ -259,7 +260,7 @@ async function listAuthorized(req: req) {
         return valid;
     });
     const svas = await Promise.all(svs.map(sv => add_step_attrs(req, sv)))
-    return svas.map(export_sv);
+    return await helpers.pmap(svas, sva => export_sv(req, sva));
 }
 
 const body_to_v = search_ldap.v_from_WS;
@@ -275,27 +276,38 @@ function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
     });
 }
 
-const exportStep = (step: step) => (
+const exportLabels = async (req: req, labels: StepLabels) => {
+    let r = { ...labels }
+    if (typeof r.description_in_list === 'function') {
+        r.description_in_list = await r.description_in_list(req)
+    }
+    return r
+}
+
+const exportStep = async (req, step: step) => (
     {
         attrs: typeof step.attrs === 'function' ? {} : exportAttrs(step.attrs),
-        step: _.pick(step, 'labels', 'allow_many', 'if_no_modification'),
+        step: {
+            labels: await exportLabels(req, step.labels),
+            ..._.pick(step, 'allow_many', 'if_no_modification'),
+        },
     }
 );
-const loggedUserInitialSteps = (req: req) => (
-  acl_checker.allowed_step_ldap_filters(req.user, initial_steps()).then(l => (
-    l.map(({ step, filter }) => (
+const loggedUserInitialSteps = async (req: req) => {
+  const l = await acl_checker.allowed_step_ldap_filters(req.user, initial_steps())
+  const l_ = l.map(({ step, filter }) => (
         { id: step, filter, stepName: step, step: conf_steps.steps[step] }
-    )).filter(({ step }) => (
+  )).filter(({ step }) => (
           step.initialStep
-    )).map(({ id, stepName, step, filter }) => (
-        { id, 
-          stepName,
-          ldap_filter: filter,
-          ...exportStep(step),
-        }
-    ))
   ))
-);
+  return await helpers.pmap(l_, async ({ id, stepName, step, filter }) => (
+    { id, 
+      stepName,
+      ldap_filter: filter,
+      ...await exportStep(req, step),
+    }
+  ))
+}
 
 router.get('/steps/loggedUserInitialSteps', (req : req, res) => {
     respondJson(req, res, loggedUserInitialSteps(req));
