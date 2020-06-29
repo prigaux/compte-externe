@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { map } from 'lodash';
+import { pmap } from './helpers';
 import * as Mustache from 'mustache';
 import client_conf from '../shared/conf';
 
@@ -48,8 +48,6 @@ async function key2name(raw, spec: StepAttrOption, if_empty : string = '') {
 
     return raw || if_empty;
 }
-
-const pmap = (o, f) => Promise.all(map(o, f))
 
 const _format_attr_name = (key: string, opts: StepAttrOption) => (
     opts.title || key

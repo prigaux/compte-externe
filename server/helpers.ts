@@ -38,6 +38,11 @@ export const promisify_callback = f => (
     }
 );
 
+export function pmap<T,U>(o: T[], f: (T) => Promise<U>): Promise<U[]>
+export function pmap<T,U>(o: Dictionary<T>, f: (T, string) => Promise<U>): Promise<U[]>
+export function pmap (o, f) { return Promise.all(_.map(o, f)) }
+
+
 export const addYears = (date : Date, years : number) => {
     let r = new Date(date);
     r.setFullYear(r.getFullYear() + years)
