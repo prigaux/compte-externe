@@ -108,7 +108,7 @@ import { Dictionary } from '../services/ws';
         return m && m[1];
     }
 
-    export function groupBy<T>(items : T[], getter : (T) => string) : Dictionary<T[]> {
+    export function groupBy<T>(items : T[], getter : (item: T) => string) : Dictionary<T[]> {
         var result = {};
         items.forEach(function (elm) {
             var prop = getter(elm);    
