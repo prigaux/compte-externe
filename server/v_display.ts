@@ -20,7 +20,7 @@ const to_DD_MM_YYYY = (date: Date) => (
     [ date.getDate(), date.getMonth() + 1, date.getFullYear() ].map(two_digit).join('/')
 )
 
-async function key2name(raw, spec: StepAttrOption, if_empty : string = '') {
+async function key2name(raw, spec: StepAttrOption, if_empty : string = '') : Promise<string> {
     if (raw instanceof Array) {
         const l = await pmap(raw, raw => key2name(raw, spec))
         return l.join(', ')
