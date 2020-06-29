@@ -33,6 +33,7 @@
         <h2>
             <router-link :to="'/' + step.id" v-html="title_in_list"></router-link>
         </h2>
+        <div v-html="labels.description_in_list"></div>
     </div>
     <p style="margin-bottom: 2em"></p>
 </div>
