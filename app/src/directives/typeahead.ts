@@ -34,6 +34,8 @@ const typeaheadComponent = Vue.extend({
 
    <div style="position: relative">
     <ul class="dropdown-menu" :class="{ is_textarea }" style="display: block; top: 0; left: 0" v-show="items.length || noResults && !is_textarea">
+      <li v-if="moreResults" class="moreResultsMsg" v-html="moreResultsMsg"></li>
+      <li v-if="moreResults" role="separator" class="divider"></li>
       <template v-for="(item, $item) in items">
        <li role="separator" class="divider" v-if="$item > 0 && is_textarea"></li>
        <li 
@@ -70,12 +72,17 @@ const typeaheadComponent = Vue.extend({
     return {
       items: [],
       noResults: false,
+      moreResults: false,
       query: (this as any).formatting((this as any).value),
       current: 0,
       loading: false,
       cancel: () => {},
       noResultsMsg: "No results",
     }
+  },
+
+  computed: {
+    moreResultsMsg() { return "Search is limited." },
   },
 
   mounted() {
@@ -152,6 +159,7 @@ const typeaheadComponent = Vue.extend({
     setOptions(data) {
         this.current = this.is_textarea ? -1 : 0;
         this.items = this.limit ? data.slice(0, this.limit) : data
+        this.moreResults = data.length > this.limit
         this.noResults = this.items.length === 0
         this.loading = false
     },
@@ -225,6 +233,11 @@ Vue.component("typeahead", {
     data: () => ({
         noResultsMsg: "Aucun résultat",
     }),
+    computed: {
+        moreResultsMsg() {
+            return `Votre recherche est limitée à ${this.limit} résultats.<br>Pour les autres résultats veuillez affiner la recherche.`
+        },
+    },
     methods: {
         matcher(entry : string) {
             return entry.match(new RegExp(Helpers.escapeRegexp(this.query || ''), "i"));

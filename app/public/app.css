@@ -247,3 +247,10 @@ table.v-diff tr th {
     border-color: #999;    
 }
 
+.moreResultsMsg {
+    padding: 0.4rem 1rem;
+    color: #fff;
+    color: #337ab7;
+    display: block;
+    font-size: small;
+}

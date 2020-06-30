@@ -43,7 +43,7 @@ export default Vue.extend({
     },
     methods: {
         search(token) {
-            return Ws.search(this.stepName, this.real_name || this.name, token, 10);
+            return Ws.search(this.stepName, this.real_name || this.name, token, 10 + 1); // NB: searching one more item to detect "moreResults" case
         },
         formatting(e) { 
             return this.opts.formatting ? this.opts.formatting(e) : e && e.title;
