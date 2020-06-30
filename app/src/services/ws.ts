@@ -244,6 +244,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                     handleAttrsValidators_and_allowUnchangedValue(all_attrs, Helpers.copy(v));
                     Helpers.eachObject(all_attrs, (attr, opts) => {
                         let param = opts.uiType !== 'newPassword' && params[attr]
+
+                        // NB: hash params is useful for very long values (think jpegPhoto) since GET URI length has limitations
                         if (!param) {
                             param = params[`set_${attr}`] || hash_params[`set_${attr}`]
                         }
