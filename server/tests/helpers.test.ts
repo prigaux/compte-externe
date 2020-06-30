@@ -63,3 +63,11 @@ describe('split_terminator', () => {
         assert.deepEqual(helpers.split_terminator("", ","), [])
     })
 })
+
+describe('replace_same_field_value_with_idem', () => {
+    it("should work", () => {
+        let l = [ { a: "aa" }, { a: "aa" }, { a: "bb" } ]
+        helpers.replace_same_field_value_with_idem(l, 'a', "")
+        assert.deepEqual(l, [ { a: "aa" }, { a: "" }, { a: "bb" } ])
+    })
+})

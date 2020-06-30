@@ -81,8 +81,14 @@ const people_filters_ = (token: string, and_filters: string[]) => (
 
 export const people_choices = (filter: string) => async (token: string, sizeLimit: number) => {
     let filters_ = people_filters_(token, filter ? [filter] : []);
-    const l = await ldap.searchMany(conf.ldap.base_people, filters_, 'uid', { uid: '', displayName: '' }, undefined, { sizeLimit })
-    return l.map(e => ({ const: e.uid, title: `${e.displayName} (${e.uid})` }))
+    const l = await ldap.searchMany(conf.ldap.base_people, filters_, 'uid', { uid: '', displayName: '', global_eduPersonPrimaryAffiliation: '' }, undefined, { sizeLimit })
+    const affs = [ ...Object.keys(shared_conf.affiliation_labels), undefined ] // NB: we want no affiliation users displayed last
+    const l_ = _.sortBy(l, e => affs.indexOf(e.global_eduPersonPrimaryAffiliation)).map(e => ({ const: e.uid, 
+        title: `${e.displayName} (${e.uid})`,
+        header: `${shared_conf.affiliation_labels[e.global_eduPersonPrimaryAffiliation] || 'Divers'}`,
+    }))
+    helpers.replace_same_field_value_with_idem(l_, 'header', '')
+    return l_
 }
 
 function suggested_mail(sn: string, givenName: string) {
