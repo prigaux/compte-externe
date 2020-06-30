@@ -37,7 +37,8 @@ const typeaheadComponent = Vue.extend({
       <li v-if="moreResults" class="moreResultsMsg" v-html="moreResultsMsg"></li>
       <li v-if="moreResults" role="separator" class="divider"></li>
       <template v-for="(item, $item) in items">
-       <li role="separator" class="divider" v-if="$item > 0 && is_textarea"></li>
+       <li role="separator" class="divider" v-if="$item > 0 && (is_textarea || item.header)"></li>
+       <li role="separator" class="dropdown-header" v-html="item.header" v-if="item.header"></li>
        <li 
          :class="activeClass($item)"
          @click.prevent="hit"

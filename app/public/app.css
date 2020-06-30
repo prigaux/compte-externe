@@ -254,3 +254,12 @@ table.v-diff tr th {
     display: block;
     font-size: small;
 }
+
+.dropdown-header {
+    font-size: x-small;
+    font-variant: small-caps;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: #00326E !important;
+    margin-left: -10px;
+}
