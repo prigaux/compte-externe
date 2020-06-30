@@ -228,6 +228,10 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                         if (!param) {
                             param = params[`set_${attr}`] || hash_params[`set_${attr}`]
                         }
+                        if (!param) {
+                            param = params[`readOnly_${attr}`] || hash_params[`readOnly_${attr}`]
+                            if (param) all_attrs[attr].readOnly = true
+                        }
                         if (!param && !v[attr]) {
                             param = params[`default_${attr}`] || hash_params[`default_${attr}`]
                         }
