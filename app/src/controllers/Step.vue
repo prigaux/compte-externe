@@ -70,7 +70,7 @@ export default Vue.extend({
             return fromPairs(this.$route.hash.replace(/^#/, '').split('&').map((s: string) => s.split('=')));
         },
         onelineForm() {
-            return this.vs && every(this.all_attrs_flat || [], opts => opts.readOnly)
+            return this.vs && every(this.all_attrs_flat || [], opts => opts.readOnly || opts.uiOptions?.allowOnelineForm)
         },
         non_first_step() {
             const labels = this.step.labels

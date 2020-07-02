@@ -17,6 +17,7 @@ interface StepAttrItemsOption {
         autocomplete?: boolean
         title_rowspan?: boolean
         title_hidden?: boolean
+        allowOnelineForm?: boolean
     };
 
     uiHidden?: boolean;
