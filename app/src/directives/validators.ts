@@ -140,9 +140,12 @@ Vue.component('radio-with-validity', {
 Vue.component('select-with-validity', {
     template: `
     <select :name="name" :value="value" @change="onchange" class="form-control">
-        <option v-for="option in choices" :value="option.const">
+        <template v-for="option in choices">
+          <optgroup v-if="option.header" :label="option.header"></optgroup>
+          <option :value="option.const">
             {{option.title}}
-        </option>
+          </option>
+        </template>
     </select>
     `,
     props: ['value', 'name', 'choices'],

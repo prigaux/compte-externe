@@ -73,6 +73,7 @@ interface MergePatchOptions {
 type StepAttrOptionChoicesT<T> = {
   const: string;
   title?: string;
+  header?: string;
 } & MppT<T>
 
 type MppT<T> = {
