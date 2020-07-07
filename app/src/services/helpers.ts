@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { memoize } from 'lodash';
 import conf from '../conf';
-import { Dictionary } from '../services/ws';
 
     const entityMap = {
         "&": "&amp;",
