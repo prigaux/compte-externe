@@ -66,3 +66,7 @@ type MoreStepAttrOption = MinimalStepAttrOption & {
 }
 
 type MoreStepAttrsOption = Dictionary<MoreStepAttrOption>;
+
+interface MergePatchOptions {
+    newRootProperties?: 'ignore' | { ignore: string[] } // all | a list of attribute names
+}

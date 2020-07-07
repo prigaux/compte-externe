@@ -42,10 +42,6 @@ type acl_search = {
     user_to_mongo_filter(user: CurrentUser): Promise<acl_mongo_filter>
 }
 
-interface MergePatchOptions {
-    newRootProperties?: 'ignore' | { ignore: string[] } // all | a list of attribute names
-}
-
 type profileValuesT<T> = StepAttrOptionChoicesT<T> & { 
     fv: () => Partial<v>;
 }
