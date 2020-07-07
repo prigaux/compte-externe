@@ -39,7 +39,7 @@ interface StepAttrOptionChoicesWithShort {
   title: string;
   short_title?: string;
 }
-export type StepAttrOption = MoreStepAttrOption & {
+export type StepAttrOption = SharedStepAttrOption & {
   readOnly?: boolean;
   optional?: boolean;
   properties?: StepAttrsOption;

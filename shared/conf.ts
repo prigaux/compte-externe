@@ -108,7 +108,7 @@ export default {
                 return (e.title || e.displayName) + details;
             },
         },
-    } as MoreStepAttrsOption,
+    } as SharedStepAttrsOption,
 
     pattern: {
         frenchPhone: "^(\\+33|0)\\s*[1-9](\\s*[0-9]){8}$", // french

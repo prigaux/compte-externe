@@ -53,7 +53,7 @@ type MinimalStepAttrOption = StepAttrItemsOption & {
     allowUnchangedValue?: boolean // if the user changes the value, the value must pass checks. If kept unchanged, it bypasses checks!
 }
 
-type MoreStepAttrOption = MinimalStepAttrOption & {
+type SharedStepAttrOption = MinimalStepAttrOption & {
     normalize?: (s: string) => string;
     formatting?: (val) => string;
     formatting_html?: (val) => string;
@@ -64,7 +64,7 @@ type MoreStepAttrOption = MinimalStepAttrOption & {
     maxDate?: Date;
 }
 
-type MoreStepAttrsOption = Dictionary<MoreStepAttrOption>;
+type SharedStepAttrsOption = Dictionary<SharedStepAttrOption>;
 
 interface MergePatchOptions {
     newRootProperties?: 'ignore' | { ignore: string[] } // all | a list of attribute names

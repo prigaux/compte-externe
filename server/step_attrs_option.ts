@@ -30,7 +30,7 @@ export const selectUserProfile = (v: v, profilename: string) => {
     return { ...v, ...profile };
 };
 
-export function merge_v(attrs : StepAttrsOption, more_attrs: MoreStepAttrsOption, prev, v: v): v {
+export function merge_v(attrs : StepAttrsOption, more_attrs: SharedStepAttrsOption, prev, v: v): v {
     let r = {};
     let diff = {};
     function merge_one_level(attrs : StepAttrsOption) {
@@ -59,7 +59,7 @@ export function merge_v(attrs : StepAttrsOption, more_attrs: MoreStepAttrsOption
     return r as v;
 }
 
-function validate(key: string, opt: StepAttrOption, more_opt: MoreStepAttrOption, val, prev) {
+function validate(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOption, val, prev) {
         if (val === '' || val === undefined || val === null || _.isArray(val) && _.isEmpty(val)) {
             if (!opt.optional)
                 throw `constraint !${key}.optional failed for ${val}`;
