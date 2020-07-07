@@ -44,6 +44,7 @@ type MinimalStepAttrOption = StepAttrItemsOption & {
         tooltip?: string;
         warning?: string; // similar to tooltip, but with a "warning" sign
     }
+    items?: MinimalStepAttrOption,
 
     format?: 'date' | 'image/jpeg' | 'phone';
     default?: string;
@@ -58,8 +59,6 @@ type MoreStepAttrOption = MinimalStepAttrOption & {
     formatting_html?: (val) => string;
     onChange?: (v: {}, _: string, val) => void;
     validator?: (val, v_orig: {}) => string;
-
-    items?: MoreStepAttrOption,
 
     minDate?: Date;
     maxDate?: Date;
