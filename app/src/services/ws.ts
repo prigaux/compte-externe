@@ -26,32 +26,15 @@ export interface SVRaw {
     error?: string;
 }
 
-export type StepAttrOptionChoices = {
-  const: string;
-  title?: string;
-} & Mpp;
-export interface Mpp {
-  merge_patch_parent_properties?: StepAttrsOption;
-  merge_patch_options?: MergePatchOptions, 
-}
 interface StepAttrOptionChoicesWithShort {
   const: string;
   title: string;
   short_title?: string;
 }
-export type StepAttrOption = SharedStepAttrOption & {
-  readOnly?: boolean;
-  optional?: boolean;
-  properties?: StepAttrsOption;
-  oneOf?: StepAttrOptionChoices[];
-  oneOf_async?: string;
-  if?: { optional: false };
-  then?: Mpp;
-}
-export interface Dictionary<T> {
-  [index: string]: T;
-}
-export type StepAttrsOption = Dictionary<StepAttrOption>;
+export type StepAttrOption = StepAttrOptionM<ClientSideOnlyStepAttrOption & SharedStepAttrOption>
+export type StepAttrsOption = Dictionary<StepAttrOption>
+export type Mpp = MppT<StepAttrOption>
+export type StepAttrOptionChoices = StepAttrOptionChoicesT<StepAttrOption>
 
 export interface InitialSteps {
     attrs: StepAttrsOption;

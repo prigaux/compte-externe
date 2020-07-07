@@ -69,3 +69,34 @@ type SharedStepAttrsOption = Dictionary<SharedStepAttrOption>;
 interface MergePatchOptions {
     newRootProperties?: 'ignore' | { ignore: string[] } // all | a list of attribute names
 }
+
+type StepAttrOptionChoicesT<T> = {
+  const: string;
+  title?: string;
+} & MppT<T>
+
+type MppT<T> = {
+  merge_patch_parent_properties?: Dictionary<T>;
+  merge_patch_options?: MergePatchOptions, // if given, "merge_patch_parent_properties" is only used on client-side
+}
+
+interface CommonStepAttrOptionT<T> extends MinimalStepAttrOption {
+  readOnly?: boolean;
+  
+  // constraints below are checked when sent by the user. Values from action_pre/action_post are not verified!
+  optional?: boolean;
+  properties?: Dictionary<T>;
+  oneOf?: StepAttrOptionChoicesT<T>[];
+  if?: { optional: false };
+  then?: MppT<T>;
+}
+
+// create the recursive type
+type StepAttrOptionM<More> = CommonStepAttrOptionT<StepAttrOptionM<More>> & More
+
+type StepAttrsOptionM<More> = Dictionary<StepAttrOptionM<More>>;
+
+interface ClientSideOnlyStepAttrOption {
+    oneOf_async?: string;
+}
+  

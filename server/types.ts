@@ -46,32 +46,18 @@ type profileValuesT<T> = StepAttrOptionChoicesT<T> & {
     fv: () => Partial<v>;
 }
 
-type StepAttrOptionChoicesT<MoreAttrOption> = {
-  const: string;
-  title?: string;
-} & Mpp<MoreAttrOption>
+type Mpp<T> = MppT<T>
 
-type Mpp<MoreAttrOption> = {
-  merge_patch_parent_properties?: Dictionary<StepAttrOptionT<MoreAttrOption>>;
-  merge_patch_options?: MergePatchOptions, // if given, "merge_patch_parent_properties" is only used on client-side
-}
+interface ServiceSideOnlyStepAttrOptions {
+  hidden?: boolean;  
 
-type StepAttrOptionT<MoreOptions> = MinimalStepAttrOption & MoreOptions & {
-  readOnly?: boolean;
-  hidden?: boolean;
   toUserOnly?: boolean; // implies hidden
   toUser?: (val: string, v: v) => any;
-  
-  // constraints below are checked when sent by the user. Values from action_pre/action_post are not verified!
-  optional?: boolean;
-  properties?: Dictionary<StepAttrOptionT<MoreOptions>>;
-  oneOf?: StepAttrOptionChoicesT<MoreOptions>[];
+
   oneOf_async?: (token: string, sizeLimit: number) => Promise<StepAttrOptionChoices[]>; // if sizeLimit===1, it is used as an exact search
-  items?: StepAttrItemsOption,
-  if?: { optional: false };
-  then?: Mpp<MoreOptions>;
 }
-type StepAttrsOptionT<T> = Dictionary<StepAttrOptionT<T>>;
+type StepAttrOptionT<MoreOptions> = StepAttrOptionM<ServiceSideOnlyStepAttrOptions & MoreOptions>;
+type StepAttrsOptionT<M> = Dictionary<StepAttrOptionT<M>>;
 
 interface StepAttrOption_no_extensions {}
 type StepAttrOption = StepAttrOptionT<StepAttrOption_no_extensions>;
