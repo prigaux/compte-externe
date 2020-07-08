@@ -169,27 +169,32 @@ const matches_if = (if_, val: string) => (
 
 const find_choice = (oneOf: StepAttrOptionChoices[], val) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
 
-const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, ...opt} : StepAttrOption) => {
-    opt = toUserOnly ? { optional: true, readOnly: true, ...opt} : opt;
-    delete opt.toUser;
-    if (opt.readOnly) opt.optional = true; // readOnly implies optional. Useful when readOnly is set through "attrs_override"
-    if (opt.oneOf_async) opt.oneOf_async = true as any;
-    if (opt.properties) opt.properties = exportAttrs(opt.properties);
+type ClientSideStepAttrOption = StepAttrOptionM<ClientSideOnlyStepAttrOption>
+const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, oneOf_async, properties, toUser, then, oneOf, ...opt_} : StepAttrOption) => {
+    const opt : ClientSideStepAttrOption = opt_;
+    if (toUserOnly) opt.readOnly = true
+    if (oneOf_async) opt.oneOf_async = "true";
+    if (properties) opt.properties = exportAttrs(properties);
 
-    const rec_mpp = <T extends Mpp<StepAttrOption_no_extensions>>(one : T) => {        
+    function rec_mpp(one: Mpp<StepAttrOption>): Mpp<ClientSideStepAttrOption>
+    function rec_mpp(one: StepAttrOptionChoicesT<StepAttrOption>): StepAttrOptionChoicesT<ClientSideStepAttrOption>
+    function rec_mpp(one) {
         if (one.merge_patch_parent_properties) {
-            one = { ...one, merge_patch_parent_properties: exportAttrs(one.merge_patch_parent_properties) };
+            return { ...one, merge_patch_parent_properties: exportAttrs(one.merge_patch_parent_properties) };
+        } else {
+            return one;
         }
-        return one;
     }
-    if (opt.then) opt.then = rec_mpp(opt.then)
-    if (opt.oneOf) opt.oneOf = opt.oneOf.map(rec_mpp)
+    if (then) opt.then = rec_mpp(then)
+    if (oneOf) opt.oneOf = oneOf.map(rec_mpp)
+
+    if (opt.readOnly) opt.optional = true; // readOnly implies optional. Useful when readOnly is set through "attrs_override"
     return opt;
 }
 
-export const exportAttrs = (attrs: StepAttrsOption) => (
+export const exportAttrs = (attrs: StepAttrsOption): Dictionary<ClientSideStepAttrOption> => (
     _.mapValues(_.omitBy(attrs, val => val.hidden), transform_toUserOnly_into_optional_readonly)
-) as StepAttrsOption;
+)
 
 export const eachAttrs = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption, cond: boolean) => void) => {
     const rec_mpp = <T>(mpp : Mpp<T>) => {
