@@ -89,15 +89,15 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         }
 
         const attr_format_to_converter = {
-            'date': { fromWs: val => new Date(val), toWs: val => val.toJSON(), fromCSV: _fromCSVDate },
+            'date': { fromWs: (val: string) => new Date(val), toWs: (val: Date) => val.toJSON(), fromCSV: _fromCSVDate },
             'image/jpeg': { fromWs: _base64_to_jpeg_data_URL, toWs: _jpeg_data_URL_to_base64 },
             'phone': { fromWs: Helpers.maybeFormatPhone("0"), toWs: Helpers.maybeFormatPhone("+33 ") },
         }
 
-        function to_or_from_ws(direction: 'fromWs' | 'fromCSV' | 'toWs', v: {}, attrs: StepAttrsOption): V {
-            var v_ = <any> Helpers.copy(v);
+        function to_or_from_ws(direction: 'fromWs' | 'fromCSV' | 'toWs', v: {}, attrs: StepAttrsOption) {
+            var v_ = Helpers.copy(v);
 
-            const _to_converter = (format) => {
+            const _to_converter = (format: MinimalStepAttrOption["format"]) => {
                 const converters = format && attr_format_to_converter[format];
                 return converters && converters[direction];
             };
@@ -114,8 +114,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
             return v_;
         }
 
-        export const fromWs = (v: VRaw, attrs: StepAttrsOption) => to_or_from_ws('fromWs', v, attrs);
-        export const toWs = (v: V, attrs: StepAttrsOption) => to_or_from_ws('toWs', v, attrs);
+        export const fromWs = (v: VRaw, attrs: StepAttrsOption): V => to_or_from_ws('fromWs', v, attrs);
+        export const toWs = (v: V, attrs: StepAttrsOption): VRaw => to_or_from_ws('toWs', v, attrs);
 
         const fromWs_one = (attr: string, val, attrs) => fromWs({ [attr]: val }, attrs)[attr]
 
@@ -202,12 +202,12 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
         export function getInScope($scope, id: string, params, hash_params, expectedStep: string) : Promise<void> {
             var url = api_url + '/comptes/' + id + "/" + expectedStep;
             return axios.get(url, password_to_auth(params)).then((resp) => {
-                var sv = <any>resp.data;
+                var sv = <SVRaw>resp.data;
                 initAttrs(sv.attrs);
                 $scope.attrs = sv.attrs;
                 let all_attrs = get_all_attrs_flat($scope.attrs);
                 if (sv.v_ldap) $scope.v_ldap = fromWs(sv.v_ldap, all_attrs);
-                let vs
+                let vs: {}[]
                 if (sv.vs || sv.v) {
                     vs = (sv.vs || [ sv.v ]).map(v => (
                         fromWs(v, all_attrs)
