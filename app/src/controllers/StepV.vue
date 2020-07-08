@@ -71,7 +71,7 @@ import * as Ws from '../services/ws';
 import { router } from '../router';
 import { defaults, isEqual, unionBy, isEmpty } from 'lodash';
 import { StepAttrsOption } from '../services/ws';
-import { compute_mppp_and_handle_default_values, filterAttrs } from '../services/mppp_and_defaults';
+import { compute_mppp_and_handle_default_values, filterAttrs } from '../../../shared/mppp_and_defaults';
 
 import ImportFile from '../import/ImportFile.vue';
 import ImportResult from '../import/ImportResult.vue';

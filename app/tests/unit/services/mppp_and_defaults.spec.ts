@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { forIn } from 'lodash';
-import { compute_mppp_and_handle_default_values as compute } from '@/services/mppp_and_defaults';
+import { compute_mppp_and_handle_default_values as compute } from '@/../../shared/mppp_and_defaults';
 import { V, StepAttrsOption } from '@/services/ws';
 
 describe('sub_and_defaults', function() {
