@@ -35,7 +35,7 @@ export const collection = (name: string) => {
 
 const svs = () => collection('sv')
 
-export const or = (l: Dictionary<any>[]) => l.length === 1 ? l[0] : { $or: l } as Dictionary<any>;
+export const or = (l: Dictionary<unknown>[]) => l.length === 1 ? l[0] : { $or: l } as Dictionary<unknown>;
 
 export const get = (id: id) => (
     svs().findOne({ _id: _id(id) }).then(fromDB)

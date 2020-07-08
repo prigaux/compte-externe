@@ -138,7 +138,7 @@ export const split_terminator = (value: string, separator: string) => {
     return l
 }
 
-export const replace_same_field_value_with_idem = (l: Dictionary<any>[], field: string, idem: string) => {
+export const replace_same_field_value_with_idem = (l: Dictionary<unknown>[], field: string, idem: string) => {
     let prev
     for (const e of l) {
         const val = e[field]

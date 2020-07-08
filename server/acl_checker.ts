@@ -25,7 +25,7 @@ const _simplify_ldap_filters = (l : (string|boolean)[]) => {
 
 const _simplify_mongo_filters = (l : acl_mongo_filter[]): acl_mongo_filter => {
     if (l.find(e => e === true)) return true;
-    const l_ = l.filter(e => e !== false) as Dictionary<any>[];
+    const l_ = l.filter(e => e !== false) as Dictionary<unknown>[];
     if (l_.length === 0) return false;
     return db.or(l_)
 };
