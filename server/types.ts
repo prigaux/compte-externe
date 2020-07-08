@@ -65,19 +65,8 @@ type StepAttrsOption = StepAttrsOptionT<StepAttrOption_no_extensions>;
 type StepAttrOptionChoices = StepAttrOptionChoicesT<StepAttrOption>;
 type profileValues = profileValuesT<StepAttrsOption>;
 
-interface StepLabels {
-    // vue templates
-    title_in_list?: string; // an empty description means "hide this step in ModerateList"
-    title?: string;
-    description?: string;
+interface StepLabels extends Omit<ClientSideStepLabels, 'description_in_list'> {
     description_in_list?: string | ((req : req) => Promise<string>); // description displayed in list of steps (InitialStep / ModerateList)
-    okButton?: string;
-    cancelButton?: string;
-    post_scriptum ?: string; // vue template displayed after the <form> (vars: v, v_pre)
-
-    // vue templates: can use variable "resp" which is the response of "next" "action_pre" and/or "action_post"
-    added?: string; // displayed reaching this step (through "next"). It will be prefered over "accepted" below.
-    accepted?: string; // displayed when the "action_post" succeeded (but see "added" above if "next" step)
 }
 
 interface StepNotify {

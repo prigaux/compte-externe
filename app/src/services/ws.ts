@@ -20,11 +20,7 @@ export interface V extends VCommon {
     startdate?: Date;
     enddate?: Date;
 }
-export interface SVRaw {
-    v: VRaw;
-    step: string;
-    error?: string;
-}
+export type SVRaw = ClientSideSVA
 
 interface StepAttrOptionChoicesWithShort {
   const: string;

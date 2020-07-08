@@ -75,12 +75,12 @@ async function may_export_v_ldap(sv: sva) {
     return sv;
 }
 
-async function export_sv(req: req, sv: sva) {
+async function export_sv(req: req, sv: sva): Promise<ClientSideSVA> {
     sv = _.clone(sv);
     sv.v = export_v(sv_attrs(sv), sv.v) as v;
     if (sv.vs) sv.vs = sv.vs.map(v => export_v(sv_attrs(sv), v) as v);
     const attrs = exportAttrs(sv.attrs);
-    return { ...sv, stepName: sv.step, ...await exportStep(req, step(sv)), attrs };
+    return { ...sv as any, stepName: sv.step, ...await exportStep(req, step(sv)), attrs };
 }
 
 function mayNotifyModerators(req: req, sv: sv|svra, notifyKind: string) {
@@ -276,12 +276,11 @@ function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
     });
 }
 
-const exportLabels = async (req: req, labels: StepLabels) => {
-    let r = { ...labels }
-    if (typeof r.description_in_list === 'function') {
-        r.description_in_list = await r.description_in_list(req)
+const exportLabels = async (req: req, { description_in_list, ...labels }: StepLabels): Promise<ClientSideStepLabels> => {
+    if (typeof description_in_list === 'function') {
+        description_in_list = await description_in_list(req)
     }
-    return r
+    return { ...labels, description_in_list }
 }
 
 const exportStep = async (req, step: step) => (

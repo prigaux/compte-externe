@@ -101,3 +101,31 @@ interface ClientSideOnlyStepAttrOption {
 }
 
 type CommonV = Dictionary<string|string[]>
+
+interface ClientSideStepLabels {
+    // vue templates
+    title_in_list?: string; // an empty description means "hide this step in ModerateList"
+    title?: string;
+    description?: string;
+    description_in_list?: string;
+    okButton?: string;
+    cancelButton?: string;
+    post_scriptum ?: string; // vue template displayed after the <form> (vars: v, v_pre)
+
+    // vue templates: can use variable "resp" which is the response of "next" "action_pre" and/or "action_post"
+    added?: string; // displayed reaching this step (through "next"). It will be prefered over "accepted" below.
+    accepted?: string; // displayed when the "action_post" succeeded (but see "added" above if "next" step)
+}
+
+interface ClientSideSVA {
+    attrs: StepAttrsOptionM<ClientSideOnlyStepAttrOption>    
+    stepName: string
+    v: CommonV
+    v_ldap?: CommonV
+    vs?: CommonV[]
+    step: {
+        labels: ClientSideStepLabels
+        allow_many?: boolean
+        if_no_modification?: 'disable-okButton'
+    }
+}
