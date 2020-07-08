@@ -26,13 +26,13 @@ describe('sub_and_defaults', function() {
              { v: { sn: 'a' } });
     });
   
-    it('should handle properties', () => {
+    it('should handle default inside properties', () => {
         const attrs = { _foo: { properties: { 
             sn: { default: 'a' },
         } } } as StepAttrsOption;
             
         test({ attrs, v: {} as V },
-             { v: { sn: 'a' } });
+             { attrNames: '_foo', v: { sn: 'a' } });
     });
 
     it('should handle if then merge_patch_parent_properties', () => {
