@@ -99,4 +99,5 @@ type StepAttrsOptionM<More> = Dictionary<StepAttrOptionM<More>>;
 interface ClientSideOnlyStepAttrOption {
     oneOf_async?: string;
 }
-  
+
+type CommonV = Dictionary<string|string[]>
