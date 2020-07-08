@@ -13,7 +13,7 @@ import * as conf from './conf';
 import shared_conf from '../shared/conf';
 import { EventEmitter } from 'events';
 
-export const shibboleth_express_auth = (req: req, _res: express.Response, next): void => {
+export const shibboleth_express_auth : express.RequestHandler<any, unknown, unknown, unknown> = (req, _res, next): void => {
   let user_id = req.header('REMOTE_USER');
   if (user_id) req.user = { id: user_id };
   next();

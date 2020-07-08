@@ -7,8 +7,8 @@ declare global {
 interface CurrentUser {
   id: string;
 }
-type req = express.Request;
-type res = express.Response;
+type req = express.Request<Dictionary<string>, any, any, Dictionary<string>>;
+type res = express.Response<any>;
 
 type Mails = string[]
 
