@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as utils from './utils';
+import { compute_mppp_and_handle_default_values } from '../shared/mppp_and_defaults'
 
 function compute_diff(prev, current, key) {
     const toString = (val) => (
@@ -30,7 +31,7 @@ export const selectUserProfile = (v: v, profilename: string) => {
     return { ...v, ...profile };
 };
 
-export function merge_v(attrs : StepAttrsOption, more_attrs: SharedStepAttrsOption, prev, v: v): v {
+export function merge_v(attrs_ : StepAttrsOption, more_attrs: SharedStepAttrsOption, prev, v: v): v {
     let r = {};
     let diff = {};
     function merge_one_level(attrs : StepAttrsOption) {
@@ -48,9 +49,9 @@ export function merge_v(attrs : StepAttrsOption, more_attrs: SharedStepAttrsOpti
             }
         }
         if (opt.properties) merge_one_level(opt.properties);
-        handle_chosen_oneOf_or_if_then_mppp(opt, r[key], merge_one_level);
       });
     }
+    let { attrs } = compute_mppp_and_handle_default_values(attrs_, {}, v as any)
     merge_one_level(attrs);
 
     if (!r['various']) r['various'] = {};

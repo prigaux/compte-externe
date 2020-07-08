@@ -246,6 +246,18 @@ describe('merge_v', () => {
         test(attrs, { sn: 'y' }, { sn: 'x', duration: "2" }, { duration: "2", sn: 'y' });
         test_fail(attrs, { sn: 'y' }, { duration: '1' }, "constraint !sn.optional failed for undefined");
     });
+    it ("should handle merge_patch_parent_properties oneOf override", () => {
+        const attrs = {
+            duration: { oneOf: [
+                { const: "1", merge_patch_parent_properties: { profilename: { oneOf: [ { const: "p1" } ] } } }, 
+                { const: "2" },
+            ] },
+            profilename: { oneOf: [ { const: "p2" }] },
+        };
+        test(attrs, {}, { duration: "1", profilename: "p1" }, { duration: "1", profilename: "p1" });
+        test(attrs, {}, { duration: "2", profilename: "p2" }, { duration: "2", profilename: "p2" });
+        test_fail(attrs, {}, { duration: '1', profilename: "p2" }, "constraint profilename.oneOf p1 failed for p2");
+    });
 
     it ("should handle if_then merge_patch_parent_properties", () => {
         test(a_then_bc, {}, { a: '' }, { a: '' });
