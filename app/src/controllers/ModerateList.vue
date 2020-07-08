@@ -48,7 +48,7 @@ export default Vue.extend({
   },
   computed: { 
       svsGroupedByStep() {
-         return this.svs ? Helpers.groupBy(this.svs, sv => sv.stepName) : undefined;
+         return this.svs ? Helpers.groupBy(this.svs as ClientSideSVA[], sv => sv.stepName) : undefined;
       },
   },
   methods: {
