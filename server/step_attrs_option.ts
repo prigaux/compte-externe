@@ -170,7 +170,7 @@ const matches_if = (if_, val: string) => (
 const find_choice = (oneOf: StepAttrOptionChoices[], val) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
 
 type ClientSideStepAttrOption = StepAttrOptionM<ClientSideOnlyStepAttrOption>
-const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, oneOf_async, properties, toUser, then, oneOf, ...opt_} : StepAttrOption) => {
+const exportAttr = ({ toUserOnly, oneOf_async, properties, toUser, then, oneOf, ...opt_} : StepAttrOption) => {
     const opt : ClientSideStepAttrOption = opt_;
     if (toUserOnly) opt.readOnly = true
     if (oneOf_async) opt.oneOf_async = "true";
@@ -193,7 +193,7 @@ const transform_toUserOnly_into_optional_readonly = ({ toUserOnly, oneOf_async, 
 }
 
 export const exportAttrs = (attrs: StepAttrsOption): Dictionary<ClientSideStepAttrOption> => (
-    _.mapValues(_.omitBy(attrs, val => val.hidden), transform_toUserOnly_into_optional_readonly)
+    _.mapValues(_.omitBy(attrs, val => val.hidden), exportAttr)
 )
 
 export const eachAttrs = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption, cond: boolean) => void) => {
