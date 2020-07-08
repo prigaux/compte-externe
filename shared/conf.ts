@@ -2,6 +2,7 @@
 
 import checkDisplayName from './validators/displayName';
 import * as helpers from './helpers';
+import { is } from './helpers'
 
 const accentsRange = '\u00C0-\u00FC';
 const allowedCharsInNames = "[A-Za-z" + accentsRange + "'. -]";
@@ -16,7 +17,7 @@ export default {
     may_display_fieldIsRequired_hint: true,
 
     // order of keys is used in CompareUsers
-    default_attrs_opts: {
+    default_attrs_opts: is<SharedStepAttrsOption>({
         supannCivilite: { title: "Civilité" },
         givenName: { title: "Prénom", allowedChars: allowedCharsInNames, normalize: normalizeApostropheAndTrim },
         altGivenName: { title: 'Autres prénoms', allowedChars: allowedCharsInNames, normalize: normalizeApostropheAndTrim },
@@ -108,7 +109,7 @@ export default {
                 return (e.title || e.displayName) + details;
             },
         },
-    } as SharedStepAttrsOption,
+    }),
 
     pattern: {
         frenchPhone: "^(\\+33|0)\\s*[1-9](\\s*[0-9]){8}$", // french
