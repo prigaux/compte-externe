@@ -184,11 +184,11 @@ const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannM
     return persons(filter, { sizeLimit }).then(l => homonymes_scoring(l, preferStudent));
 };
 
-const _merge_at = (v: v, attrs: string[]) => _.merge(_.at(v, attrs)).filter(s => s)
+const _flatten_at = (v: v, attrs: string[]) => _.flatten(_.at(v, attrs)).filter(s => s)
 
 export const homonymes = (v: v) : Promise<Homonyme[]> => {
-    let sns: string[] = _.compact(_merge_at(v, shared_conf.sns));
-    let givenNames = _merge_at(v, shared_conf.givenNames);
+    let sns: string[] = _.compact(_flatten_at(v, shared_conf.sns));
+    let givenNames = _flatten_at(v, shared_conf.givenNames);    
     if (sns[0] === undefined || !v.birthDay) return Promise.resolve([]);
     console.log("sns", sns);
     const preferStudent = conf.ldap.people.homonymes_preferStudent(v.profilename);
