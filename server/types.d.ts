@@ -21,17 +21,6 @@ declare module 'nodemailer-sendmail-transport' {
   }
 }
 
-declare module 'simple-get' {
-    import { ClientRequest, IncomingMessage } from 'http';
-
-    interface Options {
-        headers? : {};
-        timeout? : number;
-    }
-
-    export function post(opts: Options, callback: (err: any, result: IncomingMessage) => void): ClientRequest
-}
-
 declare module 'ldapjs' {
     export interface SearchOptions {
       attributes?: string[];

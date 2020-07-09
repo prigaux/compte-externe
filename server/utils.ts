@@ -9,6 +9,7 @@ import * as session from 'express-session';
 import * as session_file_store from 'session-file-store';
 import concat = require('concat-stream');
 import * as simpleGet from 'simple-get';
+import * as http from 'http';
 import * as conf from './conf';
 import shared_conf from '../shared/conf';
 import { EventEmitter } from 'events';
@@ -28,10 +29,15 @@ export function session_store() {
     });
 }
 
-export const post = (url: string, body: string, options: simpleGet.Options) : Promise<string> => {
+interface http_client_Options {
+    headers? : {};
+    timeout?: number;
+}
+
+export const post = (url: string, body: string, options: http_client_Options) : Promise<string> => {
     options = _.assign({ url, body, ca: conf.http_client_CAs }, options);
     return new Promise((resolve: (string) => void, reject: (any) => void) => {
-        simpleGet.post(options, (err, res) => {
+        simpleGet.post(options, (err, res: http.IncomingMessage) => {
             if (err) return reject(err);
             if (res.statusCode !== 200) return reject(res);
             res.setTimeout(options.timeout || 10000, null);
