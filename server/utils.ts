@@ -33,6 +33,7 @@ export const post = (url: string, body: string, options: simpleGet.Options) : Pr
     return new Promise((resolve: (string) => void, reject: (any) => void) => {
         simpleGet.post(options, (err, res) => {
             if (err) return reject(err);
+            if (res.statusCode !== 200) return reject(res);
             res.setTimeout(options.timeout || 10000, null);
 
             //console.log(res.headers)
