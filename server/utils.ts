@@ -32,12 +32,13 @@ export function session_store() {
 interface http_client_Options {
     headers? : {};
     timeout?: number;
+    method?: 'GET' | 'POST'
 }
 
-export const post = (url: string, body: string, options: http_client_Options) : Promise<string> => {
-    options = _.assign({ url, body, ca: conf.http_client_CAs }, options);
+export const http_request = (url: string, options: http_client_Options & { body?: string }) : Promise<string> => {
+    options = _.assign({ url, ca: conf.http_client_CAs }, options);
     return new Promise((resolve: (string) => void, reject: (any) => void) => {
-        simpleGet.post(options, (err, res: http.IncomingMessage) => {
+        simpleGet(options, (err, res: http.IncomingMessage) => {
             if (err) return reject(err);
             if (res.statusCode !== 200) return reject(res);
             res.setTimeout(options.timeout || 10000, null);
@@ -50,6 +51,10 @@ export const post = (url: string, body: string, options: http_client_Options) : 
             }));
         });
     });
+};
+
+export const post = (url: string, body: string, options: Omit<http_client_Options, 'method'>) : Promise<string> => {
+    return http_request(url, { method: 'POST', body, ...options })
 };
 
 const http_statuses = {
