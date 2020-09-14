@@ -184,7 +184,11 @@ const homonymes_ = (sns: string[], givenNames: string[], birthDay: Date, supannM
     return persons(filter, { sizeLimit }).then(l => homonymes_scoring(l, preferStudent));
 };
 
-const _flatten_at = (v: v, attrs: string[]) => _.flatten(_.at(v, attrs)).filter(s => s)
+const _flatten_at = (v: v, attrs: string[]) => (
+    _.flatten(
+        _.at(v, attrs) as (string|string[])[]
+    ).filter(s => s)
+)
 
 export const homonymes = (v: v) : Promise<Homonyme[]> => {
     let sns: string[] = _.compact(_flatten_at(v, shared_conf.sns));
