@@ -64,7 +64,13 @@ export const checkAcl = async (user: CurrentUser, v: v, acls: acl_search[]) => {
         return { error: "not logged" };
     } else {
         const filter = await v_to_ldap_filter(v, acls);
-        return search_ldap.existPeople(ldap_filters.and([ filter, search_ldap.currentUser_to_filter(user) ])).then(ok => (ok || { error: filter }))
+        const user_ = await search_ldap.onePerson(ldap_filters.and([ filter, search_ldap.currentUser_to_filter(user) ]))
+        if (user_) {
+            user.mail = user_.mail
+            return true
+        } else {
+            return { error: filter }
+        }
     }
 }
 

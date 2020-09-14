@@ -6,6 +6,7 @@ declare global {
     
 interface CurrentUser {
   id: string;
+  mail?: string; // available after step "acls" are checked
 }
 type req = express.Request<Dictionary<string>, any, any, Dictionary<string>>;
 type res = express.Response<any>;

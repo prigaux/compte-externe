@@ -19,6 +19,11 @@ export const onePerson = (filter: string) => (
     ldap.searchOne(conf.ldap.base_people, filter, conf.ldap.people.types, conf.ldap.people.attrs, {})
 );
 
+export const onePersonAttr = (filter: string, attr: string) => (
+    ldap.searchThisAttr(conf.ldap.base_people, filter, attr, '', {})
+);
+
+
 export const oneExistingPerson = (filter: string) => (
     onePerson(filter).then(v => {
         if (!v) throw "no match for " + filter;
