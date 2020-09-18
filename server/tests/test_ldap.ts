@@ -5,6 +5,7 @@ import { parseDN } from 'ldapjs';
 
 import * as conf from '../conf';
 import * as ldap from '../ldap';
+import * as ldap_convert from '../ldap_convert';
 
 
 function test_params() {
@@ -15,6 +16,13 @@ function test_params() {
         base_rolesGeneriques: "ou=supannRoleGenerique,ou=tables,dc=univ,dc=fr",
         dn: 'cn=admin,dc=univ,dc=fr', password: 'xxx',    
         group_cn_to_memberOf: cn => "cn=" + cn + "," + "ou=groups,dc=univ,dc=fr",
+        people: {
+            ...conf.ldap.people,
+            attrs: {
+                ...conf.ldap.people.attrs,
+                structureParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("supannCodeEntite", "ou=structures,dc=univ,dc=fr") },
+            }
+        },
         DNs: DNs,
     };
 
