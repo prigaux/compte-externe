@@ -65,7 +65,7 @@ function create_server(params) {
 
 export const create = (params = undefined): Promise<{void}> => (
     create_server(params).then(ldap_conf => {
-        _.assign(conf.ldap, ldap_conf);
+        (conf as any).ldap = { ...conf.ldap, ...ldap_conf };
         ldap.force_new_clientP();
     })
 );
