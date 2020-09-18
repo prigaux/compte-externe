@@ -1,20 +1,10 @@
 'use strict';
 
-import { require_fresh, assert } from '../test_utils';
+import { assert } from '../test_utils';
 import * as test_ldap from '../test_ldap';
+import * as acl from '../../steps/acl';
 
-// get module types:
-import * as __acl__ from '../../steps/acl';
-type acl = typeof __acl__;
-
-let acl: acl;
-
-before(() => (
-    test_ldap.create().then(() => {
-        require_fresh('../search_ldap');
-        acl = require_fresh('../steps/acl');
-    })
-));
+before(() => test_ldap.create())
 
 describe('user_id', () => {
     let acl_uid : acl_search;

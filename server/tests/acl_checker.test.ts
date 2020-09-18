@@ -1,22 +1,12 @@
 'use strict';
 
-import { require_fresh, assert } from './test_utils';
+import { assert } from './test_utils';
 import * as test_ldap from './test_ldap';
 
-// get module types:
-import * as __acl__ from '../steps/acl';
-import * as __acl_checker__ from '../acl_checker';
-type acl = typeof __acl__;
+import * as acl from '../steps/acl';
+import * as acl_checker from '../acl_checker';
 
-let acl: acl;
-let acl_checker : typeof __acl_checker__;
-
-before(() => (
-    test_ldap.create().then(() => {
-        acl = require_fresh('../steps/acl');
-        acl_checker = require_fresh('../acl_checker');
-    })
-));
+before(() => test_ldap.create())
 
 describe('moderators', () => {
     it('should work', () => (

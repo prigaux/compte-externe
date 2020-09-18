@@ -4,9 +4,9 @@ import * as _ from 'lodash';
 import { require_fresh, assert } from './test_utils';
 import * as test_ldap from './test_ldap';
 
-// get module types:
-import * as __search_ldap__ from '../search_ldap';
-type search_ldap = typeof __search_ldap__;
+import * as conf from '../conf'
+import * as search_ldap from '../search_ldap';
+type search_ldap = typeof search_ldap;
 
 
 describe('genLogin', () => {
@@ -96,12 +96,7 @@ describe('genLogin', () => {
 
 
     describe('use test ldap', () => {
-        let search_ldap: search_ldap;
-        before(() => (
-            test_ldap.create().then(() => {
-                search_ldap = require_fresh('../search_ldap');
-            })
-        ));
+        before(() => test_ldap.create())
         
         function check(sn: string, givenName: string, wantedLogin: string) {
             return () => (
@@ -123,11 +118,9 @@ describe('genLogin', () => {
 describe('homonymes', () => {
 
     describe('use test ldap', () => {
-        let search_ldap: search_ldap;
         before(() => (
-            test_ldap.create().then(({ conf }) => {
+            test_ldap.create().then(() => {
                 conf.ldap.people.homonymes_restriction = '(eduPersonAffiliation=*)';
-                search_ldap = require_fresh('../search_ldap');
             })
         ));
 

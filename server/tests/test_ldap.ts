@@ -1,14 +1,10 @@
 'use strict';
 
 import * as _ from 'lodash';
-import * as test_utils from './test_utils';
 import { parseDN } from 'ldapjs';
 
-// get module types:
-import * as __conf__ from '../conf';
-import * as __ldap__ from '../ldap';
-export type conf = typeof __conf__;
-export type ldap = typeof __ldap__;
+import * as conf from '../conf';
+import * as ldap from '../ldap';
 
 
 function test_params() {
@@ -67,11 +63,9 @@ function create_server(params) {
     });
 }
 
-export const create = (params = undefined): Promise<{conf: conf, ldap: ldap}> => (
+export const create = (params = undefined): Promise<{void}> => (
     create_server(params).then(ldap_conf => {
-        let conf: conf = test_utils.require_fresh('../conf');
         _.assign(conf.ldap, ldap_conf);
-        let ldap: ldap = test_utils.require_fresh('../ldap');
-        return {conf, ldap};
+        ldap.force_new_clientP();
     })
 );

@@ -5,17 +5,13 @@ import * as ldap_convert from '../ldap_convert';
 import * as test_ldap from './test_ldap';
 require('../helpers');
 
+import * as conf from '../conf'
+import * as ldap from '../ldap'
+
 describe('ldap', () => {
-    let conf: test_ldap.conf;
-    let ldap: test_ldap.ldap;
 
-    before(() => (
-        test_ldap.create().then((m) => {
-            conf = m.conf;
-            ldap = m.ldap;
-        })
-    ));
-
+    before(() => test_ldap.create())
+    
     describe('simple search', () => {
 
         it("should handle read", () => (

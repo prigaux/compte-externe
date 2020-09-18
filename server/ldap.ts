@@ -17,6 +17,10 @@ function clientP() {
     return _clientP;
 }
 
+export function force_new_clientP() {
+    new_clientP()
+}
+
 function new_clientP() : void {
     console.info("connecting to " + conf.ldap.uri);
     const c = ldapjs.createClient({ url: conf.ldap.uri, reconnect: true, idleTimeout: conf.ldap.disconnectWhenIdle_duration });
