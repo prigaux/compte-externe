@@ -1,23 +1,29 @@
 'use strict';
 
 import * as _ from 'lodash';
-import { require_fresh, assert } from './test_utils';
+import { assert } from './test_utils';
 import * as test_ldap from './test_ldap';
 
 import * as conf from '../conf'
 import * as search_ldap from '../search_ldap';
-type search_ldap = typeof search_ldap;
 
+const genLogin_with_existLogin = (existLogin_) => async (sn: string, givenName: string) => {
+    const { existLogin } = search_ldap;
+    (search_ldap as any).existLogin = existLogin_
+    const login = await search_ldap.genLogin(sn, givenName);
+    (search_ldap as any).existLogin = existLogin;
+    return login
+};
+    
 
 describe('genLogin', () => {
     
     describe('simple', () => {
-        let search_ldap: search_ldap = require_fresh('../search_ldap');
-        search_ldap.existLogin = () => Promise.resolve(false);
-        
+        const genLogin = genLogin_with_existLogin(() => Promise.resolve(false));
+
         function check(sn: string, givenName: string, wantedLogin: string) {
             return () => (
-                search_ldap.genLogin(sn, givenName).then(login => {
+                genLogin(sn, givenName).then(login => {
                     assert.equal(login, wantedLogin);
                 })
             );
@@ -51,15 +57,15 @@ describe('genLogin', () => {
     });
 
     describe('handle existing', () => {
-        let search_ldap: search_ldap = require_fresh('../search_ldap');
         let added = {};
-        search_ldap.existLogin = s => (
+        const genLogin = genLogin_with_existLogin(s => (
             Promise.resolve(added[s])
-        );
+        ));
+        
         
         function iterate(sn: string, givenName: string, max: number): Promise<string[]> {
             let iter = r => (
-                search_ldap.genLogin(sn, givenName).then(login => {
+                genLogin(sn, givenName).then(login => {
                     if (login && r.length < max) {
                         added[login] = true;
                         return iter(r.concat(login));
