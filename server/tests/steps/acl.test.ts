@@ -4,9 +4,10 @@ import { assert } from '../test_utils';
 import * as test_ldap from '../test_ldap';
 import * as acl from '../../steps/acl';
 
-before(() => test_ldap.create())
-
-describe('user_id', () => {
+describe('global', () => {
+ before(() => test_ldap.create())
+    
+ describe('user_id', () => {
     let acl_uid : acl_search;
     before(() => acl_uid = acl.user_id('arigaux'));
 
@@ -34,9 +35,9 @@ describe('user_id', () => {
         ))
     ));
 
-});
+ });
 
-describe('ldapGroup', () => {
+ describe('ldapGroup', () => {
     let aclG : acl_search;
     before(() => aclG = acl.ldapGroup("g1"));
 
@@ -51,9 +52,9 @@ describe('ldapGroup', () => {
             assert.deepEqual(filter, true)
         ))
     ));
-});
+ });
 
-describe('structureRoles', () => {
+ describe('structureRoles', () => {
     describe('_rolesGeneriques', () => {    
         it('should work', () => (
             acl._rolesGeneriques("(up1TableKey=*)").then(l => (
@@ -83,4 +84,5 @@ describe('structureRoles', () => {
             assert.deepEqual(filter, '(|(supannParrainDN=supannCodeEntite=DGH,ou=structures,dc=univ-paris1,dc=fr)(supannParrainDN=supannCodeEntite=DGHA,ou=structures,dc=univ-paris1,dc=fr))')
         ))
     ));
+ });
 });

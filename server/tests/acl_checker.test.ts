@@ -6,9 +6,10 @@ import * as test_ldap from './test_ldap';
 import * as acl from '../steps/acl';
 import * as acl_checker from '../acl_checker';
 
-before(() => test_ldap.create())
+describe('global', () => {
+ before(() => test_ldap.create())
 
-describe('moderators', () => {
+ describe('moderators', () => {
     it('should work', () => (
         acl_checker.moderators([ acl.user_id("arigaux") ], undefined).then(l => assert.deepEqual(l, [ 'ayme.rigaux@univ-paris1.fr' ]))
     ))
@@ -18,9 +19,9 @@ describe('moderators', () => {
     it('should work on multiple users', () => (
         acl_checker.moderators([ acl.user_id("arigaux"), acl.user_id("prigaux"), acl.user_id("arigaux") ], undefined).then(l => assert.deepEqual(l, [ undefined, 'ayme.rigaux@univ-paris1.fr' ]))
     ))
-});
+ });
 
-describe('allowed_step_ldap_filters', () => {
+ describe('allowed_step_ldap_filters', () => {
     let steps, steps2;
     before(() => { 
       steps = { 
@@ -46,7 +47,7 @@ describe('allowed_step_ldap_filters', () => {
             { step: 'yyy', filter: undefined },
         ]))
     ))
-});
+ });
 
 /*
 describe('mongo_query', () => {
@@ -67,3 +68,4 @@ describe('mongo_query', () => {
     });
 });*/
 
+});
