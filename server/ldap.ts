@@ -12,6 +12,7 @@ const remove_accents = _.deburr;
 const escape = (s: string) => s.replace(/[*()\\]/g, '\\$&')
 
 let _clientP : Promise<ldapjs.Client>;
+let _c;
 function clientP() {
     if (!_clientP) new_clientP();
     return _clientP;
@@ -20,10 +21,15 @@ function clientP() {
 export function force_new_clientP() {
     new_clientP()
 }
+export function close_client() {
+    if (_c) _c.destroy()
+    _clientP = undefined
+}
 
 function new_clientP() : void {
     console.info("connecting to " + conf.ldap.uri);
     const c = ldapjs.createClient({ url: conf.ldap.uri, reconnect: true, idleTimeout: conf.ldap.disconnectWhenIdle_duration });
+    _c = c
     c.on('connectError', console.error);
     c.on('error', console.error);
     c.on('idle', () => {

@@ -103,6 +103,7 @@ describe('genLogin', () => {
 
     describe('use test ldap', () => {
         before(() => test_ldap.create())
+        after(() => test_ldap.stop())   
         
         function check(sn: string, givenName: string, wantedLogin: string) {
             return () => (
@@ -129,6 +130,7 @@ describe('homonymes', () => {
                 conf.ldap.people.homonymes_restriction = '(eduPersonAffiliation=*)';
             })
         ));
+        after(() => test_ldap.stop())   
 
         it('should detect simple homonyme', () => (
             search_ldap.homonymes(

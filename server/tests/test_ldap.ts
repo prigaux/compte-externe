@@ -54,11 +54,14 @@ function test_params() {
     return params;
 }
 
+let _server
+
 function create_server(params) {
     if (!params) params = test_params();
     return require('./ldap_server')(params).then(server => {
         let conf = _.omit(params, 'DNs');
         conf['uri'] = server.url;
+        _server = server
         return conf;
     });
 }
@@ -69,3 +72,9 @@ export const create = (params = undefined): Promise<{void}> => (
         ldap.force_new_clientP();
     })
 );
+
+export const stop = () => {
+    //console.info("closing ldap client & ldap server xxxxxxxxxxxxxxxxxxxxxxxxxx")
+    ldap.close_client();
+    _server.close()
+}

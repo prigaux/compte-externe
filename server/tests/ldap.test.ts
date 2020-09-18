@@ -11,6 +11,7 @@ import * as ldap from '../ldap'
 describe('ldap', () => {
 
     before(() => test_ldap.create())
+    after(() => test_ldap.stop())   
     
     describe('simple search', () => {
 

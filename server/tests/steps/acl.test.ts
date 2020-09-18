@@ -6,6 +6,7 @@ import * as acl from '../../steps/acl';
 
 describe('global', () => {
  before(() => test_ldap.create())
+ after(() => test_ldap.stop())   
     
  describe('user_id', () => {
     let acl_uid : acl_search;

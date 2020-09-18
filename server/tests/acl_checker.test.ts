@@ -8,6 +8,7 @@ import * as acl_checker from '../acl_checker';
 
 describe('global', () => {
  before(() => test_ldap.create())
+ after(() => test_ldap.stop())
 
  describe('moderators', () => {
     it('should work', () => (
