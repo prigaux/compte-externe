@@ -13,11 +13,11 @@ const escape = (s: string) => s.replace(/[*()\\]/g, '\\$&')
 
 let _clientP : Promise<ldapjs.Client>;
 function clientP() {
-    if (!_clientP) _clientP = new_clientP();
+    if (!_clientP) new_clientP();
     return _clientP;
 }
 
-function new_clientP() : Promise<ldapjs.Client> {
+function new_clientP() : void {
     console.info("connecting to " + conf.ldap.uri);
     const c = ldapjs.createClient({ url: conf.ldap.uri, reconnect: true, idleTimeout: conf.ldap.disconnectWhenIdle_duration });
     c.on('connectError', console.error);
@@ -28,7 +28,7 @@ function new_clientP() : Promise<ldapjs.Client> {
         _clientP = undefined;
     });
 
-    return new Promise((resolve, reject) => {
+    _clientP = new Promise((resolve, reject) => {
         c.on('connect', () => {
             console.log("connected to ldap server");
             c.bind(conf.ldap.dn, conf.ldap.password, err => {
