@@ -124,7 +124,7 @@ export const base64: ldap_conversion = {
             return s;
         },
         toEsupActivBo: (s: string): string => (
-            "encodeBase64" + s
+            s ? "encodeBase64" + s : ''
         ),
         toLdap: (_s: string): string => {
             console.trace("base64.toLdap not handled correctly by ldapjs");
