@@ -42,6 +42,8 @@ const compute_overrides = (allowed_conds: Dictionary<boolean>, with_conds: StepA
                     const val = opts.cond_overrides[cond];
                     override[attrName] = typeof val === "function" ? val(v) : val
                     break;
+                } else {
+                    if (!(cond in allowed_conds)) throw "unknown cond_overrides " + cond;
                 }
             }
         }
