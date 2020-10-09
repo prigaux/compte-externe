@@ -127,7 +127,7 @@ You can also ensure the browser does not modify the value:
 
 You can customize the way it is displayed:
 * ```uiHidden```: used with `readOnly` or `toUserOnly` to hide the `<input>`. Useful when you want to display the value in step `description`
-* ```title```: (*text*) the `<label>`. Use (Unicode non-breaking space)[https://en.wikipedia.org/wiki/Non-breaking_space] to force layout
+* ```title```: (*text*) the `<label>`. Use [Unicode non-breaking space](https://en.wikipedia.org/wiki/Non-breaking_space) to force layout
 * ```description```: *(html)* displayed below the `<input>`
 * ```uiPlaceholder```: the `<input>` placeholder
 * ```uiOptions.rows```: number of lines (uiType textarea)
