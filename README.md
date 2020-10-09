@@ -84,7 +84,7 @@ Most labels are Vue.js templates with variables:
 The labels:
 * title: title displayed on step page
 * description: displayed below title, before attrs
-* post_scriptum: displayed after the <form>
+* post_scriptum: displayed after the `<form>`
 * title_in_list: override `title` in list of steps.
 * description_in_list: override `description` in list of steps. Can be computed
 * okButton: for the button which submits the step page. If empty, no button is displayed (useful for information pages, with no `attrs`)
@@ -126,10 +126,10 @@ You can also ensure the browser does not modify the value:
 
 
 You can customize the way it is displayed:
-* ```uiHidden```: used with `readOnly` or `toUserOnly` to hide the <input>. Useful when you want to display the value in step `description`
-* ```title```: the <label>
-* ```description```: displayed below the <input>
-* ```uiPlaceholder```: the <input> placeholder
+* ```uiHidden```: used with `readOnly` or `toUserOnly` to hide the `<input>`. Useful when you want to display the value in step `description`
+* ```title```: (*text*) the `<label>`. Use (Unicode non-breaking space)[https://en.wikipedia.org/wiki/Non-breaking_space] to force layout
+* ```description```: *(html)* displayed below the `<input>`
+* ```uiPlaceholder```: the `<input>` placeholder
 * ```uiOptions.rows```: number of lines (uiType textarea)
 * ```uiOptions.autocomplete```: enable localStorage history for uiType textarea
 * ```uiOptions.title_rowspan```: allow title to span next titles
@@ -137,12 +137,12 @@ You can customize the way it is displayed:
 * ```uiOptions.allowOnelineForm```: WIP
 
 * ```labels.advice```: displayed when the value is not valid
-* ```labels.tooltip```: a "?" is displayed next to the <label>, click or hover it to display the tooltip message
+* ```labels.tooltip```: a "?" is displayed next to the `<label>`, click or hover it to display the tooltip message
 * ```labels.warning```: similar to tooltip, but with a "warning" sign
 
 Some special functionalities are only available through `shared/conf.ts`:
 * ```normalize```: function called on the value. Example: use it to remove whitespace from the value
-* ```formatting```: for `autocomplete`, used to format the value for the <input>
+* ```formatting```: for `autocomplete`, used to format the value for the `<input>`
 * ```formatting_html```: for `autocomplete`, used to format the value for the dropdown choices
 * ```onChange```: when the value is modified by the user, can modify `v`
 * ```validator```: custom validator. Use it when `pattern` is not enough, or to display an adapted error message
