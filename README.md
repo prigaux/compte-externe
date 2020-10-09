@@ -82,17 +82,17 @@ Most labels are Vue.js templates with variables:
 * `v`: initially the value returned by `action_pre`, then the current value as modified by the user. Useful combined with `toUserOnly` attrs.
 
 The labels:
-* title: title displayed on step page
-* description: displayed below title, before attrs
-* post_scriptum: displayed after the `<form>`
-* title_in_list: override `title` in list of steps.
-* description_in_list: override `description` in list of steps. Can be computed
-* okButton: for the button which submits the step page. If empty, no button is displayed (useful for information pages, with no `attrs`)
-* cancelButton: for the button which rejects a "next" step.
+* title: *(html)* title displayed on step page
+* description: *(html)* displayed below title, before attrs
+* post_scriptum: *(vue template)* displayed after the `<form>`
+* title_in_list: *(html)* override `title` in list of steps.
+* description_in_list: *(html)* override `description` in list of steps. Can be computed
+* okButton: *(html)* for the button which submits the step page. If empty, no button is displayed (useful for information pages, with no `attrs`)
+* cancelButton: *(html)* for the button which rejects a "next" step.
 
 Labels which can use variable `resp` which is the response of "next" `action_pre` and/or step `action_post`:
-* accepted: displayed when the `action_post` succeeded (but see `added` below if there is a "next" step)
-* added: displayed when reaching this step (through `next`). It will be prefered over `accepted` above.
+* accepted: *(vue template)* displayed when the `action_post` succeeded (but see `added` below if there is a "next" step)
+* added: *(vue template)* displayed when reaching this step (through `next`). It will be prefered over `accepted` above.
 
 
 ## ```attrs```
