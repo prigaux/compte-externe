@@ -189,6 +189,10 @@ label {
     color: #a00;
 }
 
+.form-group.label-hidden {
+    margin-top: -15px; /* sticky to previous form-group which has margin-bottom 15px */
+}
+
 .label-and-more > .the-label {
     font-weight: 700;
     flex: 0.3 0 100%;
