@@ -14,7 +14,7 @@
     "start": "concurrently npm:server-build npm:client-build npm:server-start",
     "start:w": "concurrently npm:server-build:w npm:client-build:w npm:server-start:dev",
     "test": "concurrently npm:server-build-and-test npm:client-test",
-    "client-build": "cd app && npm run build",
+    "client-build": "cd app && npm run build:atomic",
     "client-build:w": "cd app && npm run build -- --watch",
     "client-serve": "cd app && npm run serve",
     "client-test": "cd app && npm run test:unit",
