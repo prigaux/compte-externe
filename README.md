@@ -83,7 +83,7 @@ Most labels are Vue.js templates with variables:
 
 The labels:
 * title: *(html)* title displayed on step page
-* description: *(html)* displayed below title, before attrs
+* description: *(vue template)* displayed below title, before attrs
 * post_scriptum: *(vue template)* displayed after the `<form>`
 * title_in_list: *(html)* override `title` in list of steps.
 * description_in_list: *(html)* override `description` in list of steps. Can be computed
