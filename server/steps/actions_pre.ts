@@ -60,7 +60,7 @@ export const esup_activ_bo_validateAccount = (isActivation: boolean) : simpleAct
     const o = await esup_activ_bo.validateAccount(userInfo as any, _.without(Object.keys(attrRemapRev), 'userPassword'))
     if (isActivation && !o.code) throw "Compte déjà activé";
     if (!isActivation && o.code) throw "Compte non activé";
-    const v = { ..._.pick(o, 'possibleChannels', 'code'), ... ldap.handleAttrsRemapAndType(o as any, attrRemapRev, conf.ldap.people.types, wantedConvert) }
+    const v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { possibleChannels: [], code: '', ...conf.ldap.people.types }, wantedConvert)
     return { v }
 }
 
