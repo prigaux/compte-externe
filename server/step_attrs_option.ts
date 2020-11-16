@@ -32,7 +32,7 @@ export const selectUserProfile = (v: v, profilename: string) => {
 };
 
 export function merge_v(attrs_ : StepAttrsOption, more_attrs: SharedStepAttrsOption, prev, v: v): v {
-    let r = {};
+    let r = { various: prev.various || [] };
     let diff = {};
     function merge_one_level(attrs : StepAttrsOption) {
       _.each(attrs, (opt, key) => {
@@ -54,7 +54,6 @@ export function merge_v(attrs_ : StepAttrsOption, more_attrs: SharedStepAttrsOpt
     let { attrs } = compute_mppp_and_handle_default_values(attrs_, {}, v as any)
     merge_one_level(attrs);
 
-    if (!r['various']) r['various'] = {};
     r['various'].diff = diff;
 
     return r as v;
