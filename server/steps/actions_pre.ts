@@ -56,6 +56,7 @@ export const getCasAttrsWithProfile: simpleAction = (req, _sv)  => (
 
 function handleAttrsRemapAndType(o : Dictionary<string>, attrRemapRev, wantedConvert: ldap.AttrsConvert) {
     const v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { possibleChannels: [], code: '', ...conf.ldap.people.types }, wantedConvert)
+    v['various'] = { esup_activ_bo_orig: o }
     return v
 }
 
