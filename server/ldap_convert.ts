@@ -53,9 +53,9 @@ export function withEtiquette(etiquette: string): ldap_conversion {
             }
             return null;
         },
-        toLdap: (s: string): string => (
-            s ? etiquette + s : ''
-        ),
+        toLdap: (s: string) => ({ action: (vals: string[]) => (
+            vals.filter(s => !_.startsWith(s, etiquette)).concat(s ? [etiquette + s] : [])
+        ) }),
     };
 }
 

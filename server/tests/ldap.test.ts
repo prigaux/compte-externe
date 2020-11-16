@@ -86,13 +86,19 @@ describe('ldap', () => {
             let attrTypes = {idpId: ''}
             let e = { idpId: "https://univ-test.fr" }
             let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e, {});
-            assert.deepEqual(rawLdapValue['supannEtablissement'], "{SAML}https://univ-test.fr");
+            assert.deepEqual(rawLdapValue['supannEtablissement'], ["{SAML}https://univ-test.fr"]);
         });
         it("should convert toLdap (complex)", () => {
             let attrTypes = {idpId: '', mifare: '', supannEtablissement: []}
             let e = { idpId: "https://univ-test.fr", mifare: 'mifare_id', supannEtablissement: ["{UAI}0751717J"] };
             let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e, {});
             assert.deepEqual(rawLdapValue['supannEtablissement'], ["{SAML}https://univ-test.fr", "{MIFARE}mifare_id", "{UAI}0751717J" ]);
+        });
+        it("should convert toLdap (complex2)", () => {
+            let attrTypes = {idpId: '', mifare: '', supannEtablissement: []}
+            let e = { supannEtablissement: ["{UAI}0751717J", "{MIFARE}xxx"], idpId: "https://univ-test.fr", mifare: 'mifare_id' };
+            let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e, {});
+            assert.deepEqual(rawLdapValue['supannEtablissement'], ["{UAI}0751717J", "{SAML}https://univ-test.fr", "{MIFARE}mifare_id" ]);
         });
         it("should work with ldap.read (simple)", () => {
             let attrTypes = {idpId: ''}            
@@ -101,7 +107,7 @@ describe('ldap', () => {
                 assert.equal("mifare" in e, false);
 
                 let rawLdapValue = ldap.convertToLdap(attrTypes, attrsConvert, e, {});
-                assert.deepEqual(rawLdapValue['supannEtablissement'], "{SAML}https://univ-test.fr");
+                assert.deepEqual(rawLdapValue['supannEtablissement'], ["{SAML}https://univ-test.fr"]);
             });
         });
         it("should work with in ldap.read", () => {

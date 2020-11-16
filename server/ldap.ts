@@ -232,10 +232,14 @@ export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsCon
             } else {
                 r[attr_] = val_;
             }
-        } else {
+        } else if (modify.action === 'delete') {
             if (attr_ in r) {
                 r[attr_] = _.difference(r[attr_], to_array(modify.value));
             }
+        } else if (_.isFunction(modify.action)) {
+            r[attr_] = modify.action(to_array(r[attr_] || []))
+        } else {
+            console.error("unknown ldap modify action", modify.action)
         }
     });
     return r;

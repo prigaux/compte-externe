@@ -97,7 +97,7 @@ type step = {
 type steps = Dictionary<step>
 
 type ldap_RawValue = string | string[]
-type ldap_modify = { action: 'add'|'delete', value: ldap_RawValue } | { action: 'ignore' }
+type ldap_modify = { action: 'add'|'delete', value: ldap_RawValue } | { action: 'ignore' } | { action: (vals : string[]) => string[] }
 
 type ldap_conversion = {
     fromLdap?(s: string): any;
