@@ -54,13 +54,18 @@ export const getCasAttrsWithProfile: simpleAction = (req, _sv)  => (
     getCasAttrs(req, null).then(sv => handle_profilename_to_modify(req, sv.v))
 );
 
+function handleAttrsRemapAndType(o : Dictionary<string>, attrRemapRev, wantedConvert: ldap.AttrsConvert) {
+    const v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { possibleChannels: [], code: '', ...conf.ldap.people.types }, wantedConvert)
+    return v
+}
+
 export const esup_activ_bo_validateAccount = (isActivation: boolean) : simpleAction => async (req, _sv) => {
     const userInfo = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, search_ldap.v_from_WS(req.query), { toEsupActivBo: true });
     const { wantedConvert, attrRemapRev } = ldap.convert_and_remap(conf.ldap.people.types, conf.ldap.people.attrs);
     const o = await esup_activ_bo.validateAccount(userInfo as any, _.without(Object.keys(attrRemapRev), 'userPassword'))
     if (isActivation && !o.code) throw "Compte déjà activé";
     if (!isActivation && o.code) throw "Compte non activé";
-    const v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { possibleChannels: [], code: '', ...conf.ldap.people.types }, wantedConvert)
+    const v = handleAttrsRemapAndType(o, attrRemapRev, wantedConvert)
     return { v }
 }
 
@@ -80,7 +85,7 @@ export const esup_activ_bo_authentificateUser = (userAuth: 'useSessionUserId' | 
         if (!auth.name) throw "Bad Request";
     }
     const o = await esup_activ_bo.authentificateUser(auth.name, auth.pass, _.without(Object.keys(attrRemapRev), 'userPassword'));
-    const v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { code: '', ...conf.ldap.people.types }, wantedConvert)
+    const v = handleAttrsRemapAndType(o, attrRemapRev, wantedConvert)
     return { v }
 }
 
@@ -91,6 +96,6 @@ export const esup_activ_bo_authentificateUserWithCas : simpleAction = async (req
     if (!proxyticket) throw "failed getting CAS proxy ticket";
     const o = await esup_activ_bo.authentificateUserWithCas(req.user.id, proxyticket, targetUrl, Object.keys(attrRemapRev));
     if (!o.code) throw "weird account: CAS is authorized by esup-activ-bo thinks user is not activated"
-    const v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { code: '', ...conf.ldap.people.types }, wantedConvert);
+    const v = handleAttrsRemapAndType(o, attrRemapRev, wantedConvert)
     return { v };
 }
