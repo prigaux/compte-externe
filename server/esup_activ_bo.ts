@@ -95,7 +95,7 @@ export function validateAccount(userInfoToValidate: Dictionary<string>, attrPers
 }
 
 // throws: "UserPermissionException"
-export const updatePersonalInformations = (supannAliasLogin: string, code: string, userInfo: Dictionary<string>) => {
+export const updatePersonalInformations = (supannAliasLogin: string, code: string, userInfo: Dictionary<string | string[]>) => {
     const hashBeanPersoInfo = _.map(userInfo, (value, key) => {
         if (_.isArray(value)) value = value.join(conf.esup_activ_bo.multiValue_separator)
         return { value, key }
