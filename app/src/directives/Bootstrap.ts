@@ -33,11 +33,12 @@ Vue.component("mytooltip", {
 
 Vue.component("my-label-tooltips", {
     props: [ "labels" ],
+    // NB: forcing <label for=""> to ensure clicking on tooltip on mobile does not focus associated <input>
     template: `
-        <span v-if="labels">
+        <label for="" v-if="labels">
             <mytooltip :text="labels && labels.tooltip" glyphicon="glyphicon-question-sign"></mytooltip>
             <mytooltip :text="labels && labels.warning" glyphicon="glyphicon-warning-sign"></mytooltip>
-        </span>
+        </label>
     `,
 })
 
