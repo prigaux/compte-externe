@@ -18,10 +18,11 @@ Vue.component("validation-errors", {
 
 Vue.component("mytooltip", {
     props: [ "text", "glyphicon" ],
+    data: () => ({ popup: undefined }),
     template: `
         <div class="mytooltip" v-if="text">
-            <span class="glyphicon" :class="glyphicon"></span>
-            <div class="mytooltip-popup"><span>
+            <span class="glyphicon" :class="glyphicon" @click="popup = 'force'"></span>
+            <div class="mytooltip-popup" @click="popup = popup === 'force' ? 'hide' : popup" v-if="popup !== 'hide'"><span>
                 <span class="mytooltip-text">
                     {{text}}
                 </span>
