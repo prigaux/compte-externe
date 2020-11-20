@@ -38,6 +38,10 @@ fieldset {
     border-bottom: 1px solid #e5e5e5;
 }
 
+.tab-description {
+    margin-bottom: 2rem;
+}
+
 .checkbox input[type="checkbox"] {
     margin-top: 0.3rem; /* inspired from bootstrap 4 */
 }
