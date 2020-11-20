@@ -113,9 +113,9 @@ Vue.component('input-with-validity', {
 Vue.component('radio-with-validity', {
   template: `
   <span>
-    <label class="my-radio-inline" v-for="(descr, val) in values">
+    <label :class="long_lines ? 'my-radio' : 'my-radio-inline'" v-for="(descr, val) in values">
        <input type="radio" :name="name" :value="val" :checked="val == value" @change="onchange" :required="required" :disabled="disabled">
-       {{descr}}
+       <span>{{descr}}</span>
     </label>
   </span>`,
   props: ['value', 'name', 'values', 'required', 'disabled'],
@@ -125,6 +125,11 @@ Vue.component('radio-with-validity', {
   },
   watch: {
       value: 'on_value_set',
+  },
+  computed: {
+      long_lines() {
+        return Object.values(this.values).some((text: any) => text.length > 40)
+      },
   },
   methods: {
     on_value_set(v) {

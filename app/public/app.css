@@ -178,6 +178,16 @@ fieldset {
     margin-left: 10px;
 }
 
+.my-radio {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 7px;
+}
+
+.my-radio > input {
+    margin-right: 1rem;
+}
+
 label {
     font-weight: initial; /* until we remove bootstrap */
 }
