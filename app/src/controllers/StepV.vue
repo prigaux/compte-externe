@@ -1,7 +1,7 @@
 <template>
 <div class="normalContent">
  <div v-if="resp && resp.component">
-    <component :is="resp.component" :resp="resp" :v="v"></component>
+    <component :is="resp.component" :resp="resp" :v_pre="v_pre" :v="v"></component>
  </div>
  <div v-else-if="v">
   <h2 style="margin-top: 2em" v-html="step.labels.title" v-if="step.labels.title"></h2>
@@ -230,7 +230,7 @@ export default Vue.extend({
       templated_response(resp, template: string) {
         this.resp = {
             ...resp,
-            component: Vue.extend({ props: ['resp', 'v'], template }),
+            component: Vue.extend({ props: ['resp', 'v_pre', 'v'], template }),
         };
       },
       go_back() {
