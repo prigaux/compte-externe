@@ -69,7 +69,7 @@ Vue.component("my-bootstrap-form-group", {
         'no_html_label', // useful to avoid creating another <label> tag which would conflict with internal <label> (esp. needed for checkbox, file upload)
     ],
     template: `
-            <div class='form-group' :class="{'my-has-error': validity && !validity[name].valid, 'label-hidden': title_hidden }">
+            <div class='form-group' :class="{'my-has-error': validity && !validity[name].valid, 'label-hidden': uiOptions.title_hidden }">
               <component :is="label_ && !no_html_label ? 'label' : 'span'" class="label-and-more">
                 <nowrap-after-text :text="label_" class="the-label" :class="{ label_rowspan }" :nowrap_class="{ 'required_field': required_ }" v-if="label_">
                     <my-label-tooltips :labels="labels" :texts_are_html="uiOptions.texts_are_html"/>
@@ -85,8 +85,8 @@ Vue.component("my-bootstrap-form-group", {
             </div>
     `,
     computed: {
-        title_hidden() {
-            return this.opts?.uiOptions?.title_hidden;
+        uiOptions() {
+            return this.opts?.uiOptions || {}
         },
         label_() {
             return this.label ?? (this.opts?.uiOptions?.title_hidden ? '' : this.opts?.title)
