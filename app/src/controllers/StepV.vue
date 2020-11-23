@@ -175,7 +175,7 @@ export default Vue.extend({
             if (this.check_homonyms && this.potential_homonyms.length) {
                 // we cannot submit, we must display the new potential homonyms
             } else {
-                await this.to_import ? this.send_new_many() : this.send();
+                await (this.to_import ? this.send_new_many() : this.send());
             }
         },
       submit(v, { resolve }) {
