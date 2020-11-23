@@ -173,7 +173,19 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
 
         function get_all_attrs_flat(root_attrs: StepAttrsOption) {
             let all_attrs: StepAttrsOption = {};
-            eachAttrs(root_attrs, 'always', (opts, attr) => { all_attrs[attr] = opts })
+            eachAttrs(root_attrs, 'always', (opts, attr) => {
+                if (all_attrs[attr]) {
+                    // argh, weird stuff can happen (eg: handleAttrsValidators_and_allowUnchangedValue will handle on one attr)
+                    // try to warn...
+                    const opts_ = all_attrs[attr]
+                    if (opts.validator || opts.allowUnchangedValue || opts_.validator || opts_.allowUnchangedValue) {
+                        const a1 = JSON.stringify(omit(opts_, 'default'))
+                        const a2 = JSON.stringify(omit(opts, 'default'))
+                        console.error("duplicated attribute badly handled", a1, a2)
+                    }
+                }
+                all_attrs[attr] = opts
+            })
             return all_attrs;
         }
 
