@@ -136,7 +136,7 @@ You can customize the way it is displayed:
 * ```uiOptions.title_hidden```: do not display the title
 * ```uiOptions.allowOnelineForm```: WIP
 
-* ```labels.advice```: displayed when the value is not valid
+* ```labels.custom_error_message```: displayed when the value is not valid
 * ```labels.advice_after_submit```: displayed after first submit
 * ```labels.tooltip```: a "?" is displayed next to the `<label>`, click or hover it to display the tooltip message
 * ```labels.warning```: similar to tooltip, but with a "warning" sign

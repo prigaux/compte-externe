@@ -40,7 +40,7 @@ type MinimalStepAttrOption = StepAttrItemsOption & {
     title?: string;
     description?: string;  
     labels?: { 
-        advice?: string; // displayed for non valid values
+        custom_error_message?: string; // displayed for non valid values
         advice_after_submit?: string; // HTML displayed after first submit
         tooltip?: string;
         warning?: string; // similar to tooltip, but with a "warning" sign

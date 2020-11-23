@@ -75,7 +75,7 @@ Vue.component("my-bootstrap-form-group", {
 
                 <div class="on-the-right">
                     <slot/>
-                    <validation-errors v-if="!hideErrors && validity" :name="name" :validity="validity" :custom_message="labels && labels.advice"/>
+                    <validation-errors v-if="!hideErrors && validity" :name="name" :validity="validity" :custom_message="labels && labels.custom_error_message"/>
                     <span class="advice-after-submit" v-html="labels.advice_after_submit" v-if="labels && labels.advice_after_submit"></span>
                 </div>
               </component>
