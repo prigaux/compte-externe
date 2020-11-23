@@ -224,10 +224,14 @@ label {
         padding-top: 7px;
     }
 }
+form:not(.submitted) .advice-after-submit,
 form:not(.submitted) .my-has-error .help-block {
     display: none;
 }
 
+.advice-after-submit {
+    color: #9f6c07;
+}
 form.submitted .my-has-error .the-label,
 form.submitted .my-has-error .help-block,
 form.submitted .my-has-error .control-label,
