@@ -56,6 +56,7 @@ interface ServiceSideOnlyStepAttrOptions {
   toUser?: (val: string, v: v) => any;
 
   oneOf_async?: (token: string, sizeLimit: number) => Promise<StepAttrOptionChoices[]>; // if sizeLimit===1, it is used as an exact search
+  serverValidator?: (val: string, prev, v: v) => string;
 }
 type StepAttrOptionT<MoreOptions> = StepAttrOptionM<ServiceSideOnlyStepAttrOptions & MoreOptions>;
 type StepAttrsOptionT<M> = Dictionary<StepAttrOptionT<M>>;

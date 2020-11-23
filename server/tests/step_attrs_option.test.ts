@@ -145,7 +145,7 @@ describe('merge_v', () => {
             merge_v(attrs, more_attrs, prev, v);
             assert.fail("should raise error");
         } catch (err) {
-            assert.equal(err, wanted_err);
+            assert.deepEqual(err, wanted_err);
         }
     }
     function test(attrs, prev, v, wanted_v) {
@@ -277,6 +277,17 @@ describe('merge_v', () => {
 
         test_more(attrs, more_attrs, prev, v_ok, v_ok, );
         test_fail_more(attrs, more_attrs, prev, { displayName: 'Foo' }, "Le nom annuaire doit comprendre le prénom et le nom");
+    });
+    it("should check serverValidator", () => {
+        const serverValidator = (val, _prev, v) => !val && !v.givenName && "either sn or givenName needed"
+        const attrs = {
+            givenName: { optional: true },
+            sn: { optional: true, serverValidator },
+        }
+
+        test(attrs, {}, { sn: "Foo" }, { sn: "Foo" })
+        test(attrs, {}, { givenName: "Foo" }, { givenName: "Foo" })
+        test_fail(attrs, {}, {}, { attrName: "sn", code: 400, error: "either sn or givenName needed" })
     });
     it ("should handle allowUnchangedValue", () => {
         const attrs = { duration: { allowUnchangedValue: true, oneOf: [ { const: "1" } ] } };

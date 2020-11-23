@@ -56,7 +56,19 @@ export default Vue.extend({
           
           return new Promise((resolve, reject) => {
             this.$emit('submit', this.v, { resolve, reject });
-          });
+          }).catch(error => {
+              if (error.attrName) {
+                  this.ensureAttrIsVisible(error.attrName)
+              }
+          })
+      },
+      ensureAttrIsVisible(attrName) {
+          if (isEmpty(this.tabs)) return
+          const tabName = uniq([ this.selectedTab_, ...Object.keys(this.tabs) ]).find(name => this.tabs[name].properties[attrName])
+          if (tabName && tabName !== this.selectedTab_) {
+              this.selectedTab = tabName
+              console.log("forcing tab", this.selectedTab)
+          }
       },
       ensureElementErrorIsVisible() {
           if (isEmpty(this.tabs)) {

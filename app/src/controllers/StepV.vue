@@ -178,10 +178,10 @@ export default Vue.extend({
                 await (this.to_import ? this.send_new_many() : this.send());
             }
         },
-      submit(v, { resolve }) {
+      submit(v, { resolve, reject }) {
           this.v = v;
           let p = this.submit_();
-          Helpers.finallyP(p, resolve);
+          p.then(resolve).catch(reject)
       },
       nextStep(resp) {
         console.log("nextStep", resp);

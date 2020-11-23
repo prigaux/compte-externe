@@ -42,7 +42,7 @@ export function merge_v(attrs_ : StepAttrsOption, more_attrs: SharedStepAttrsOpt
             /* security: client must NOT modify hidden/readOnly information */
             if (key in prev) r[key] = prev[key];
         } else {
-            validate(key, opt, more_attrs[key], v[key], prev);
+            validate(key, opt, more_attrs[key], v[key], prev, v);
             if (key in v) {
                 Object.assign(diff, compute_diff(prev, v, key));
                 r[key] = v[key];
@@ -59,7 +59,11 @@ export function merge_v(attrs_ : StepAttrsOption, more_attrs: SharedStepAttrsOpt
     return r as v;
 }
 
-function validate(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOption, val, prev) {
+function validate(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOption, val, prev, v: v) {
+        if (opt.serverValidator) {
+            const error = opt.serverValidator(val, prev, v);
+            if (error) throw { code: 400, error, attrName: key };
+        }
         if (val === '' || val === undefined || val === null || _.isArray(val) && _.isEmpty(val)) {
             if (!opt.optional)
                 throw `constraint !${key}.optional failed for ${val}`;
@@ -88,7 +92,7 @@ function validate(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOpti
         if (opt.items || opt.uiType === 'array') {
             if (val !== undefined) {
                 if (!_.isArray(val)) throw `constraint ${key} is array failed for ${val}`;
-                val.forEach((val_, i) => validate(`${key}-${i}`, { optional: opt.optional, ...opt.items }, more_opt && more_opt.items, val_, prev));
+                val.forEach((val_, i) => validate(`${key}-${i}`, { optional: opt.optional, ...opt.items }, more_opt && more_opt.items, val_, prev, v));
             }
         }
         if (more_opt && more_opt.validator) {

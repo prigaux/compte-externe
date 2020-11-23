@@ -145,7 +145,8 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                 }
                 return Promise.reject("restarting...");
             } else {
-                const msg = resp.data && resp.data.error || err.message;
+                const json_error = resp.data && resp.data.error ? resp.data : { error: err.message }
+                const msg = json_error.error
                 console.error(resp || err)
                 if (redirect && !window.history.state) {
                     $scope.fatal_error = msg;
@@ -153,7 +154,7 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                     alert(msg);
                     if (redirect) router.back();
                 }
-                return Promise.reject(msg);
+                return Promise.reject(json_error);
             }
         }
 
