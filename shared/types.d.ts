@@ -18,6 +18,7 @@ interface StepAttrItemsOption {
         title_rowspan?: boolean
         title_hidden?: boolean
         allowOnelineForm?: boolean
+        texts_are_html?: boolean
     };
 
     uiHidden?: boolean;

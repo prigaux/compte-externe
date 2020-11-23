@@ -135,6 +135,7 @@ You can customize the way it is displayed:
 * ```uiOptions.autocomplete```: enable localStorage history for uiType textarea
 * ```uiOptions.title_rowspan```: allow title to span next titles
 * ```uiOptions.title_hidden```: do not display the title
+* ```uiOptions.texts_are_html```: treat `labels` / `oneOf`[].`const` as HTML
 * ```uiOptions.allowOnelineForm```: WIP
 
 * ```labels.custom_error_message```: displayed when the value is not valid

@@ -17,13 +17,15 @@ Vue.component("validation-errors", {
 });
 
 Vue.component("mytooltip", {
-    props: [ "text", "glyphicon" ],
+    props: [ "text", "is_html", "glyphicon" ],
     data: () => ({ popup: undefined }),
     template: `
         <div class="mytooltip" v-if="text">
             <span class="glyphicon" :class="glyphicon" @click="popup = 'force'"></span>
             <div class="mytooltip-popup" @click="popup = popup === 'force' ? 'hide' : popup" v-if="popup !== 'hide'"><span>
-                <span class="mytooltip-text">
+                <span class="mytooltip-text" v-html="text" v-if="is_html">
+                </span>
+                <span class="mytooltip-text" v-else>
                     {{text}}
                 </span>
                 <span class="mytooltip-arrow"></span>
@@ -32,12 +34,12 @@ Vue.component("mytooltip", {
 })
 
 Vue.component("my-label-tooltips", {
-    props: [ "labels" ],
+    props: [ "labels", "texts_are_html" ],
     // NB: forcing <label for=""> to ensure clicking on tooltip on mobile does not focus associated <input>
     template: `
         <label for="" v-if="labels">
-            <mytooltip :text="labels && labels.tooltip" glyphicon="glyphicon-question-sign"></mytooltip>
-            <mytooltip :text="labels && labels.warning" glyphicon="glyphicon-warning-sign"></mytooltip>
+            <mytooltip :text="labels && labels.tooltip" :is_html="texts_are_html" glyphicon="glyphicon-question-sign"></mytooltip>
+            <mytooltip :text="labels && labels.warning" :is_html="texts_are_html" glyphicon="glyphicon-warning-sign"></mytooltip>
         </label>
     `,
 })
@@ -70,7 +72,7 @@ Vue.component("my-bootstrap-form-group", {
             <div class='form-group' :class="{'my-has-error': validity && !validity[name].valid, 'label-hidden': title_hidden }">
               <component :is="label_ && !no_html_label ? 'label' : 'span'" class="label-and-more">
                 <nowrap-after-text :text="label_" class="the-label" :class="{ label_rowspan }" :nowrap_class="{ 'required_field': required_ }" v-if="label_">
-                    <my-label-tooltips :labels="labels"/>
+                    <my-label-tooltips :labels="labels" :texts_are_html="uiOptions.texts_are_html"/>
                 </nowrap-after-text>
                 <span class="the-label" v-else/>
 

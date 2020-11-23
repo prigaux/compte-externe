@@ -46,6 +46,7 @@
     <div v-if="uiType === 'radio'">
       <radio-with-validity :name="name" v-model="val"
           :values="choicesMap"
+          :texts_are_html="uiOptions.texts_are_html"
           :disabled="opts.readOnly" :required="!opts.optional" :validity.sync="validity[name]">
       </radio-with-validity>
       <span v-html="opts.description"></span>
