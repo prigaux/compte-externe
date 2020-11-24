@@ -4,6 +4,14 @@ import * as conf from './conf';
 import * as utils from './utils';
 import { get_delete } from './helpers';
 
+declare module 'express-session' {
+    interface SessionData {
+        cas?: { user: string };
+        st?: string;
+        pgt?: string;
+        pt?: string;
+    }
+}
 
 const chain = (mdw1: express.RequestHandler, mdw2: express.RequestHandler) : express.RequestHandler => (
     (req, res, next) => {
