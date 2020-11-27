@@ -40,14 +40,16 @@ export const http_request = (url: string, options: http_client_Options & { body?
     return new Promise((resolve: (string) => void, reject: (any) => void) => {
         simpleGet(options, (err, res: http.IncomingMessage) => {
             if (err) return reject(err);
-            if (res.statusCode !== 200) return reject(res);
             res.setTimeout(options.timeout || 10000, null);
 
             //console.log(res.headers)
 
             res.pipe(concat(data => {
                 //console.log('got the response: ' + data)
-                resolve(data.toString());
+                if (res.statusCode !== 200) 
+                    reject({ error: data.toString(), statusCode: res.statusCode });
+                else
+                    resolve(data.toString());
             }));
         });
     });
