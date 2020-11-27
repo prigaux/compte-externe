@@ -3,7 +3,7 @@ import * as basic_auth from 'basic-auth';
 import * as ldap from '../ldap';
 import { oneExistingPerson } from '../search_ldap';
 import * as search_ldap from '../search_ldap';
-import { selectUserProfile } from '../step_attrs_option';
+import { selectUserProfile, merge_v } from '../step_attrs_option';
 import * as esup_activ_bo from '../esup_activ_bo';
 import * as cas from '../cas';
 import * as conf from '../conf';
@@ -99,4 +99,11 @@ export const esup_activ_bo_authentificateUserWithCas : simpleAction = async (req
     if (!o.code) throw "weird account: CAS is authorized by esup-activ-bo thinks user is not activated"
     const v = handleAttrsRemapAndType(o, attrRemapRev, wantedConvert)
     return { v };
+}
+
+// useful with nextBrowserStep, otherwise the query params obtained from previous step are NOT validated.
+export const validateAndFilterQueryParams = (attrs) : simpleAction => async (req, sv) => {
+    let v = merge_v(attrs, {}, {}, req.query as any, { no_diff: true }) as any
+    req.query = v;
+    return sv
 }
