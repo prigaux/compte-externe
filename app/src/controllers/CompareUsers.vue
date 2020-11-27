@@ -21,13 +21,7 @@ import conf from '../conf';
 import * as Helpers from '../services/helpers';
 import * as JsDiff from 'diff';
 
-function format(val) {
-    if (val instanceof Date) {
-        return Helpers.formatDate(val, 'dd/MM/yyyy');
-    } else {
-        return "" + (val || '');
-    }
-}
+const format = Helpers.formatValue;
 
 function computeComparisons(v, homonyme) {   
         let sameAttrs = {};

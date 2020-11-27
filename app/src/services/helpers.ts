@@ -148,6 +148,14 @@ import conf from '../conf';
         }).join('');   
     }
 
+    export function formatValue(val) {
+        if (val instanceof Date) {
+            return formatDate(val, 'dd/MM/yyyy');
+        } else {
+            return "" + (val || '');
+        }
+    }
+
     export const maybeFormatPhone = (resultFrenchPrefix: string) => (maybePhone : string) : string => {
         if (maybePhone.match(conf.pattern.frenchPhone)) {
             return maybePhone.replace(/^(\+33|0)/, '').replace(/\s/g, '').replace(/(.)(..)(..)(..)(..)/, resultFrenchPrefix + "$1 $2 $3 $4 $5");
