@@ -48,4 +48,28 @@ describe('service helpers', function() {
         
     });
 
+    describe('to_csv', function() {
+
+        it('should handle simple values', () => {
+            assert.equal(Helpers.to_csv([{ foo: "Foo1" }], { foo: "Foo" }), "Foo\r\nFoo1");
+            assert.equal(Helpers.to_csv([{ foo: "Foo 1" }], { foo: "Foo" }), "Foo\r\nFoo 1");
+            assert.equal(Helpers.to_csv([{ foo: "Foo1" }, { foo: "Foo2" }], { foo: "Foo" }), "Foo\r\nFoo1\r\nFoo2");
+            assert.equal(Helpers.to_csv([{ foo: "Foo1", bar: "Bar1" }], { foo: "Foo", bar: "Bar" }), "Foo,Bar\r\nFoo1,Bar1");
+        })
+        it('should handle missing values', () => {
+            assert.equal(Helpers.to_csv([{ foo: "Foo1" }], { foo: "Foo", bar: "Bar" }), "Foo,Bar\r\nFoo1,");
+        })
+        it('should handle complex strings', () => {
+            assert.equal(Helpers.to_csv([{ foo: `Foo"\n,Bar` }], { foo: "Foo" }), `Foo\r\n"Foo""\n,Bar"`);
+        })
+        it('should handle numbers', () => {
+            assert.equal(Helpers.to_csv([{ foo: 12345 }], { foo: "Foo" }), "Foo\r\n12345");
+        })
+        it('should handle dates', () => {
+            assert.equal(Helpers.to_csv([{ foo: new Date("2020-01-31") }], { foo: "Foo" }), "Foo\r\n2020-01-31");
+        })
+        it('should handle special cases', () => {
+            assert.equal(Helpers.to_csv([], { foo: "Foo" }), "Foo");
+        })
+    })
 });

@@ -3,6 +3,14 @@
     <p style="white-space: pre">{{fatal_error}}</p>
 </div>
 <div :class="'step-' + stepName" v-else>
+
+    <div v-show="vs && vs.length > 1">
+        <a class="btn btn-default export" @click="export_csv" href="#" download="comptes.html">
+            <span class="glyphicon glyphicon-export"></span>
+            Exporter
+        </a>
+    </div>
+
     <StepV v-for="(v, index) in vs" :key="index"
         :wanted_id="wanted_id" :stepName="stepName"
         :id="id" :v_pre="v_pre"
@@ -17,7 +25,7 @@ import Vue from "vue";
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { isEmpty, fromPairs, every } from 'lodash';
+import { isEmpty, fromPairs, every, mapValues } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
 
 import { v_from_prevStep } from './StepV.vue';
@@ -81,6 +89,10 @@ export default Vue.extend({
     methods: {
         init() {
             Ws.getInScope(this, this.id, this.v_pre, this.hash_params, this.stepName);    
+        },
+        export_csv(event) {
+            const csv = Helpers.to_csv(this.vs, mapValues(this.all_attrs_flat, 'title'))
+            event.target.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv)
         },
     },
 });
