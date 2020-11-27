@@ -85,7 +85,11 @@
         <span v-html="opts.description"></span>
       </label>
     </div>
-    
+
+    <div v-else-if="uiType === 'span'">
+        <span class="instead_of_disabled_input">{{formattedValue}}</span>
+    </div>
+
    <div :class="{ 'input-group': allow_remove }" v-else>
     <input-with-validity :name="name" v-model="val" 
         v-bind="input_attrs"
@@ -112,7 +116,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { includes, find, isNil, keyBy, mapValues } from 'lodash';
-import { isDateInputSupported } from '../services/helpers';
+import { isDateInputSupported, formatValue } from '../services/helpers';
 import * as Ws from '../services/ws';
 
 import DateAttr from './DateAttr.vue';
@@ -146,6 +150,9 @@ export default Vue.extend({
     },
     computed: {
         uiType() {
+            if (this.uiOptions.readOnly__avoid_disabled_input && this.opts.readOnly) {
+                return 'span';
+            }
             if (this.opts.uiType === 'date' && !isDateInputSupported()) {
                 return 'dateThreeInputs';
             }
@@ -178,6 +185,9 @@ export default Vue.extend({
                     choice.const == this.value // tslint:disable-line
                 )) 
             ) : this.val;
+        },
+        formattedValue() {
+            return formatValue(this.val)
         },
         input_attrs() {
             return this.type === 'password' ? { autocomplete: 'current_password' } : {}
