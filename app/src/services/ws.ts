@@ -246,6 +246,9 @@ export const people_search = (step: string, token: string, maxRows? : number) : 
                         }
                         if (param) {
                             v[attr] = fromWs_one(attr, param, all_attrs)
+                        } else if (!v[attr]) {
+                            // NB: important to set v[attr] for Vue.js 2 reactivity
+                            v[attr] = undefined;
                         }
                     });
                 }
