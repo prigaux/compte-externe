@@ -1,11 +1,12 @@
 import Vue from "vue";
 
 Vue.component("validation-errors", {
-    props: ['name', 'validity', 'custom_message'],
+    props: ['name', 'validity', 'custom_message', 'custom_msg_is_html'],
     template: `
    <transition name="fade">
     <span v-if="!validity_.valid">    
-       <span class="help-block">{{custom_message || validity_.message}}</span>
+       <span class="help-block" v-if="custom_message && custom_msg_is_html" v-html="custom_message"></span>
+       <span class="help-block" v-else>{{custom_message || validity_.message}}</span>
     </span>
    </transition>
     `,
@@ -78,7 +79,7 @@ Vue.component("my-bootstrap-form-group", {
 
                 <div class="on-the-right">
                     <slot/>
-                    <validation-errors v-if="!hideErrors && validity" :name="name" :validity="validity" :custom_message="labels && labels.custom_error_message"/>
+                    <validation-errors v-if="!hideErrors && validity" :name="name" :validity="validity" :custom_message="labels && labels.custom_error_message" :custom_msg_is_html="uiOptions.texts_are_html"/>
                     <span class="advice-after-submit" v-html="labels.advice_after_submit" v-if="labels && labels.advice_after_submit"></span>
                 </div>
               </component>
