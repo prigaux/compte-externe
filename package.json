@@ -47,7 +47,7 @@
     "@types/morgan": "^1.7.32",
     "@types/mustache": "^0.8.29",
     "@types/node": "^10.14.20",
-    "@types/nodemailer": "^3.1.0",
+    "@types/nodemailer": "4.6.x",
     "@types/session-file-store": "^1.2.0",
     "@types/xml2js": "^0.4.0",
     "basic-auth": "^2.0.1",
