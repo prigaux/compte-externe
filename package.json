@@ -85,7 +85,6 @@
     "live-reload": "^1.1.0",
     "mocha": "^6.0.2",
     "nodemon": "^1.11.0",
-    "phantomjs": "^1.9.17",
     "source-map-support": "^0.3.3"
   }
 }

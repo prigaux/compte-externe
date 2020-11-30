@@ -12,12 +12,6 @@ Quand une demande n√©cessite de passer entre plusieurs personnes, un workflow d√
 # Installation
 
 ```sh
-# for initscript
-npm install -g forever
-
-# for tests with phantomjs
-apt-get install git-core bzip2 make
-
 npm install
 ```
 
