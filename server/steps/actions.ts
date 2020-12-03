@@ -66,6 +66,12 @@ export const esup_activ_bo_setPassword : simpleAction = async (_req, { v }) => {
     return { v }
 }
 
+export const esup_activ_bo_minimal_validateAccount : simpleAction = async (_req, sv) => {
+    const userInfo = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, search_ldap.v_from_WS(sv.v), { toEsupActivBo: true });
+    await esup_activ_bo.validateAccount(userInfo as any, [])
+    return sv
+}
+
 export const add_full_v: simpleAction = (_req, sv)  => (
     onePerson(filters.eq("uid", sv.v.uid)).then(full_v => {
         let v = sv.v;
