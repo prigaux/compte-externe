@@ -107,3 +107,8 @@ export const validateAndFilterQueryParams = (attrs) : simpleAction => async (req
     req.query = v;
     return sv
 }
+
+export const mutateQuery = (f: (v:v) => void) : simpleAction => async (req, sv) => {
+    f(req.query as any)
+    return sv
+}

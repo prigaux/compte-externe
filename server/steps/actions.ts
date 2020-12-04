@@ -16,10 +16,11 @@ const filters = ldap.filters;
 
 const remove_accents = _.deburr;
 
-export const check_v = (f: (v:v) => void) : simpleAction => async (_req, sv) => {
+export const mutate_v = (f: (v:v) => void) : simpleAction => async (_req, sv) => {
     f(sv.v)
     return sv
 }
+export const check_v = mutate_v
 
 export const addAttrs = (v: Partial<v>) => (_req, sv) => {
     _.assign(sv.v, v);
