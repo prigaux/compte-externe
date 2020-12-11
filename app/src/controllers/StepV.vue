@@ -1,6 +1,6 @@
 <template>
 <div class="normalContent">
- <div v-if="resp && resp.component">
+ <div v-if="resp && resp.component" class="response">
     <component :is="resp.component" :resp="resp" :v_pre="v_pre" :v="v"></component>
  </div>
  <div v-else-if="v">
