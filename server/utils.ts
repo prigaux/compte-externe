@@ -29,6 +29,11 @@ export function session_store() {
     });
 }
 
+export const query_string = (qs: Dictionary<string>) => {
+    const params = "" + new URLSearchParams(qs)
+    return params ? "?" + params : ""
+}
+
 interface http_client_Options {
     headers? : {};
     timeout?: number;
