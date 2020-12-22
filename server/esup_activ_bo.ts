@@ -25,17 +25,19 @@ function deepGetKey(o, k) {
     }
 }
 
-function raw_soap(url, body) {
+function raw_soap(url, body, req_for_context: req) {
     let headers = {
         SOAPAction: "",
         "content-type": "text/xml",
+	    "Client-IP": req_for_context.ip,
+	    "Client-User-Agent": req_for_context.get('User-Agent'),
     };
     return utils.post(url, body, { headers }).then(result => (
         parseString(result, { explicitArray: false, ignoreAttrs: true })
     ));
 }
 
-function soap(templateName, params, opts : { responseTag: string, fault_to_string?: (any) => string }) {
+function soap(templateName, params, opts : { req_for_context: req, responseTag: string, fault_to_string?: (any) => string }) {
     if (!conf.esup_activ_bo.url) throw "configuration issue: conf.esup_activ_bo.url is missing";
     let templateFile = __dirname + "/templates/esup-activ-bo/" + templateName;
     return readFile(templateFile).then(data => (
@@ -43,7 +45,7 @@ function soap(templateName, params, opts : { responseTag: string, fault_to_strin
     )).then(body => {
         //console.log(body);
         const operation = conf.esup_activ_bo.url.replace(/\/AccountManagement$/, '') + '/' + (templateName.match(/Cas/) ? 'CasAccountManagement' : 'AccountManagement');
-        return raw_soap(operation, body);
+        return raw_soap(operation, body, opts.req_for_context);
     }).then(xml => {
         //console.dir(xml, { depth: null });
         let response = deepGetKey(xml, opts.responseTag);
@@ -81,39 +83,39 @@ function _get_entries(response) {
 // returns "attrPersoInfo" + code, mail, supannAliasLogin
 // throws: "Authentification invalide pour l'utilisateur xxx"
 // throws: "Login invalide"
-export const authentificateUser = (supannAliasLogin: string, password: string, attrPersoInfo: string[]) => (
+export const authentificateUser = (supannAliasLogin: string, password: string, attrPersoInfo: string[], req_for_context: req) => (
     soap("authentificateUser.xml", { id: supannAliasLogin, password, attrPersoInfo }, 
-         { responseTag: 'ns1:authentificateUserResponse' }).then(_get_entries)
+         { responseTag: 'ns1:authentificateUserResponse', req_for_context }).then(_get_entries)
 )
 
-export const authentificateUserWithCas = (supannAliasLogin: string, proxyticket: string, targetUrl: string, attrPersoInfo: string[]) => (
+export const authentificateUserWithCas = (supannAliasLogin: string, proxyticket: string, targetUrl: string, attrPersoInfo: string[], req_for_context: req) => (
     soap("authentificateUserWithCas.xml", { id: supannAliasLogin, proxyticket, targetUrl, attrPersoInfo }, 
-         { responseTag: 'ns1:authentificateUserWithCasResponse' }).then(_get_entries)
+         { responseTag: 'ns1:authentificateUserWithCasResponse', req_for_context }).then(_get_entries)
 )
 
 // returns "attrPersoInfo" + possibleChannels, mail, supannAliasLogin + code if account is not activated
 // ("code" is useful for setPassword or validateCode)
 // throws: "AuthentificationException"
-export function validateAccount(userInfoToValidate: Dictionary<string>, attrPersoInfo: string[]): Promise<Dictionary<string>> {
+export function validateAccount(userInfoToValidate: Dictionary<string>, attrPersoInfo: string[], req_for_context: req): Promise<Dictionary<string>> {
     console.log("esup_activ_bo._validateAccount " + JSON.stringify(userInfoToValidate));
     const hashInfToValidate = _.map(userInfoToValidate, (value, key) => ({ value, key }));
     let params = { hashInfToValidate, attrPersoInfo };
     return soap("validateAccount.xml", params, 
-                { responseTag: 'ns1:validateAccountResponse', fault_to_string: fault_detail_key }).then(_get_entries);
+                { responseTag: 'ns1:validateAccountResponse', fault_to_string: fault_detail_key, req_for_context }).then(_get_entries);
 }
 
 // throws: "UserPermissionException"
-export const updatePersonalInformations = (supannAliasLogin: string, code: string, userInfo: Dictionary<string | string[]>) => {
+export const updatePersonalInformations = (supannAliasLogin: string, code: string, userInfo: Dictionary<string | string[]>, req_for_context: req) => {
     const hashBeanPersoInfo = _.map(userInfo, (value, key) => {
         if (_.isArray(value)) value = value.join(conf.esup_activ_bo.multiValue_separator)
         return { value, key }
     });
     return soap("updatePersonalInformations.xml", { id: supannAliasLogin, code, hashBeanPersoInfo },
-                { responseTag: 'ns1:updatePersonalInformationsResponse', fault_to_string: fault_detail_key })
+                { responseTag: 'ns1:updatePersonalInformationsResponse', fault_to_string: fault_detail_key, req_for_context })
 }
     
-async function _getCode(hashInfToValidate: Dictionary<string>): Promise<string> {
-    const vals = await validateAccount(hashInfToValidate, []);
+async function _getCode(hashInfToValidate: Dictionary<string>, req_for_context: req): Promise<string> {
+    const vals = await validateAccount(hashInfToValidate, [], req_for_context);
     if (!vals.code) throw "esup_activ_bo.validateAccount did not return code for " + JSON.stringify(hashInfToValidate) + ". Account already activated?";
     return vals.code;
 }
@@ -121,27 +123,27 @@ async function _getCode(hashInfToValidate: Dictionary<string>): Promise<string> 
 // NB: no error in case of unknown channel
 // throws: "Utilisateur xxx inconnu"
 // throws: "Utilisateur sdianat n'a pas de mail perso"
-export const sendCode = (supannAliasLogin: string, channel: string) => (
+export const sendCode = (supannAliasLogin: string, channel: string, req_for_context: req) => (
     // Response in case of success:
     // <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soap:Body><ns1:sendCodeResponse xmlns:ns1="http://remote.services.activbo.esupportail.org" /></soap:Body></soap:Envelope>    
     soap("sendCode.xml", { id: supannAliasLogin, channel },
-         { responseTag: 'ns1:sendCodeResponse' }).then(response => {
+         { responseTag: 'ns1:sendCodeResponse', req_for_context }).then(response => {
         if (response === '') return; // OK!
         else throw "unexpected sendCode error: " + JSON.stringify(response);
     })
 );
 
-export const validateCode = (supannAliasLogin: string, code: string) => (
+export const validateCode = (supannAliasLogin: string, code: string, req_for_context: req) => (
     // Response in case of success:
     // <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soap:Body><ns1:validateCodeResponse xmlns:ns1="http://remote.services.activbo.esupportail.org"><ns1:out>true</ns1:out></ns1:validateCodeResponse></soap:Body></soap:Envelope>
-    soap("validateCode.xml", { id: supannAliasLogin, code }, { responseTag: 'ns1:validateCodeResponse' }).then(response => {
+    soap("validateCode.xml", { id: supannAliasLogin, code }, { responseTag: 'ns1:validateCodeResponse', req_for_context }).then(response => {
         return response['ns1:out'] === 'true';
     })
 );
 
-export function validatePassword(supannAliasLogin: string, password: string) {
+export function validatePassword(supannAliasLogin: string, password: string, req_for_context: req) {
     let params = { supannAliasLogin, password };
-    return soap("validatePassword.xml", params, { responseTag: 'ns1:out' }).then(response => {
+    return soap("validatePassword.xml", params, { responseTag: 'ns1:out', req_for_context }).then(response => {
         if (response === '') return; // OK!
         let err = response
         err = err.replace(/^kadmin: kadm5_check_password_quality: /, '');
@@ -161,10 +163,10 @@ export function validatePassword(supannAliasLogin: string, password: string) {
     });
 }
 
-export function setPassword(supannAliasLogin: string, code: string, password: string) {
+export function setPassword(supannAliasLogin: string, code: string, password: string, req_for_context: req) {
     console.log("esup_activ_bo._setPassword " + supannAliasLogin + " using code " + code);
     let params = { id: supannAliasLogin, code, password };
-    return soap("setPassword.xml", params, { responseTag: 'ns1:setPasswordResponse' }).then(response => {
+    return soap("setPassword.xml", params, { responseTag: 'ns1:setPasswordResponse', req_for_context }).then(response => {
         if (response === '') return; // OK!
         else throw "unexpected setPassword error: " + JSON.stringify(response);
     });
@@ -174,8 +176,8 @@ export function setPassword(supannAliasLogin: string, code: string, password: st
 //export const changeLogin = (supannAliasLogin: string, code: string, newLogin: string, currentPassword: string) => ...
 //export const changeLogin = (supannAliasLogin: string, code: string, newLogin: string) => ...
 
-export const setNewAccountPassword = (uid: string, supannAliasLogin: string, password: string) => (
-    _getCode({ uid }).then(code => (
-        code && setPassword(supannAliasLogin, code, password)
+export const setNewAccountPassword = (uid: string, supannAliasLogin: string, password: string, req_for_context: req) => (
+    _getCode({ uid }, req_for_context).then(code => (
+        code && setPassword(supannAliasLogin, code, password, req_for_context)
     ))
 );

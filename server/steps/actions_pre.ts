@@ -63,7 +63,7 @@ function handleAttrsRemapAndType(o : Dictionary<string>, attrRemapRev, wantedCon
 export const esup_activ_bo_validateAccount = (isActivation: boolean) : simpleAction => async (req, _sv) => {
     const userInfo = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, search_ldap.v_from_WS(req.query), { toEsupActivBo: true });
     const { wantedConvert, attrRemapRev } = ldap.convert_and_remap(conf.ldap.people.types, conf.ldap.people.attrs);
-    const o = await esup_activ_bo.validateAccount(userInfo as any, _.without(Object.keys(attrRemapRev), 'userPassword'))
+    const o = await esup_activ_bo.validateAccount(userInfo as any, _.without(Object.keys(attrRemapRev), 'userPassword'), req)
     if (isActivation && !o.code) throw "Compte déjà activé";
     if (!isActivation && o.code) throw "Compte non activé";
     const v = handleAttrsRemapAndType(o, attrRemapRev, wantedConvert)
@@ -71,7 +71,7 @@ export const esup_activ_bo_validateAccount = (isActivation: boolean) : simpleAct
 }
 
 export const esup_activ_bo_validateCode : simpleAction = (req, sv) => (
-    esup_activ_bo.validateCode(req.query.supannAliasLogin, req.query.code).then(ok => {
+    esup_activ_bo.validateCode(req.query.supannAliasLogin, req.query.code, req).then(ok => {
         if (!ok) throw "Code invalide";
         return sv;
     })
@@ -85,7 +85,7 @@ export const esup_activ_bo_authentificateUser = (userAuth: 'useSessionUserId' | 
         auth.name = req.user.id
         if (!auth.name) throw "Bad Request";
     }
-    const o = await esup_activ_bo.authentificateUser(auth.name, auth.pass, _.without(Object.keys(attrRemapRev), 'userPassword'));
+    const o = await esup_activ_bo.authentificateUser(auth.name, auth.pass, _.without(Object.keys(attrRemapRev), 'userPassword'), req);
     const v = handleAttrsRemapAndType(o, attrRemapRev, wantedConvert)
     return { v }
 }
@@ -95,7 +95,7 @@ export const esup_activ_bo_authentificateUserWithCas : simpleAction = async (req
     const targetUrl = conf.mainUrl; // anything would do... weird esup_activ_bo... 
     const proxyticket = await cas.get_proxy_ticket(req, targetUrl);
     if (!proxyticket) throw "failed getting CAS proxy ticket";
-    const o = await esup_activ_bo.authentificateUserWithCas(req.user.id, proxyticket, targetUrl, Object.keys(attrRemapRev));
+    const o = await esup_activ_bo.authentificateUserWithCas(req.user.id, proxyticket, targetUrl, Object.keys(attrRemapRev), req);
     if (!o.code) throw "weird account: CAS is authorized by esup-activ-bo thinks user is not activated"
     const v = handleAttrsRemapAndType(o, attrRemapRev, wantedConvert)
     return { v };

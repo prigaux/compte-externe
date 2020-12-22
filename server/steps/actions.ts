@@ -34,8 +34,8 @@ export const addProfileAttrs = (profiles: profileValues[]) => (_req, sv) => {
     return Promise.resolve(sv);
 }
 
-export const esup_activ_bo_sendCode : simpleAction = (_req, { v }) => (
-    esup_activ_bo.sendCode(v.supannAliasLogin, v['channel']).then(_ => ({ v }))
+export const esup_activ_bo_sendCode : simpleAction = (req, { v }) => (
+    esup_activ_bo.sendCode(v.supannAliasLogin, v['channel'], req).then(_ => ({ v }))
 )
 
 const equalIgnoringSingleValueArray = (a: string|string[], b: string|string[]) => (
@@ -48,7 +48,7 @@ const remove_unmodified_fields = (userInfo: Dictionary<string | string[]>, userI
     _.pickBy(userInfo, (_, key) => !equalIgnoringSingleValueArray(userInfo_for_compare[key], orig && orig[key] || ''))
 )
 
-export const esup_activ_bo_updatePersonalInformations : simpleAction = (_req, { v }) => {
+export const esup_activ_bo_updatePersonalInformations : simpleAction = (req, { v }) => {
     let userInfo: Dictionary<string | string[]> = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, v, { toEsupActivBo: true });
     delete userInfo.userPassword // password is handled specially ("setPassword" action)
     if (!v.supannAliasLogin) return Promise.reject("missing supannAliasLogin");
@@ -58,17 +58,17 @@ export const esup_activ_bo_updatePersonalInformations : simpleAction = (_req, { 
     let userInfo_compare: Dictionary<string | string[]> = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, v, { toEsupActivBoResponse: true });
 
     userInfo = remove_unmodified_fields(userInfo, userInfo_compare, v.various.esup_activ_bo_orig)
-    return esup_activ_bo.updatePersonalInformations(v.supannAliasLogin, v['code'], userInfo).then(_ => ({ v }))
+    return esup_activ_bo.updatePersonalInformations(v.supannAliasLogin, v['code'], userInfo, req).then(_ => ({ v }))
 }
 
-export const esup_activ_bo_setPassword : simpleAction = async (_req, { v }) => {
-    await esup_activ_bo.setPassword(v.supannAliasLogin, v['code'], v.userPassword)
+export const esup_activ_bo_setPassword : simpleAction = async (req, { v }) => {
+    await esup_activ_bo.setPassword(v.supannAliasLogin, v['code'], v.userPassword, req)
     return { v }
 }
 
-export const esup_activ_bo_minimal_validateAccount : simpleAction = async (_req, sv) => {
+export const esup_activ_bo_minimal_validateAccount : simpleAction = async (req, sv) => {
     const userInfo = ldap.convertToLdap(conf.ldap.people.types, conf.ldap.people.attrs, search_ldap.v_from_WS(sv.v), { toEsupActivBo: true });
-    await esup_activ_bo.validateAccount(userInfo as any, [])
+    await esup_activ_bo.validateAccount(userInfo as any, [], req)
     return sv
 }
 
@@ -204,7 +204,7 @@ const createCompte_ = async (req: req, sv: sva, opts : crejsonldap.options) => {
     v.uid = resp_subv.uid;
     if (!v.supannAliasLogin) v.supannAliasLogin = resp_subv.uid;
 
-    await after_createAccount(v, sv.attrs, resp_subv.accountStatus, created);
+    await after_createAccount(v, sv.attrs, resp_subv.accountStatus, created, req);
 
     return { v, response: {login: v.supannAliasLogin, created, accountStatus: resp_subv.accountStatus } }
 };
@@ -214,9 +214,9 @@ const mailFrom = (v) => {
     return !email ? conf.mail.from : v.mailFrom_text ? `${v.mailFrom_text} <${email}>` : email;
 }
 
-const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: crejsonldap.accountStatus, created: boolean) => {
+const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: crejsonldap.accountStatus, created: boolean, req_for_context: req) => {
     if (v.userPassword && !accountStatus) {
-        await esup_activ_bo.setNewAccountPassword(v.uid, v.supannAliasLogin, v.userPassword);
+        await esup_activ_bo.setNewAccountPassword(v.uid, v.supannAliasLogin, v.userPassword, req_for_context);
         // NB: if we have a password, it is a fast registration, so do not send a mail
     }
     if (v.supannMailPerso) {
@@ -237,10 +237,10 @@ export const modifyAccount : simpleAction = (_req, sv) => {
     return crejsonldap_simple(sv.v, { create: false });
 };
 
-export const validatePassword : simpleAction = async (_req, sv) => {
+export const validatePassword : simpleAction = async (req, sv) => {
     if (!sv.v.supannAliasLogin) throw "validatePassword needs supannAliasLogin";
     if (!sv.v.userPassword) throw "validatePassword needs userPassword";
-    await esup_activ_bo.validatePassword(sv.v.supannAliasLogin, sv.v.userPassword)
+    await esup_activ_bo.validatePassword(sv.v.supannAliasLogin, sv.v.userPassword, req)
     return sv
 }
 
