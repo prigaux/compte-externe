@@ -51,11 +51,12 @@ function soap(templateName, params, opts : { responseTag: string, fault_to_strin
         return response;
     }).catch(async err => {
         if (err?.error) {
-            const xml = await parseString(err.error, { explicitArray: false, ignoreAttrs: true })
-            throw get_fault(xml, opts.fault_to_string) || JSON.stringify(xml);
-        } else {
-            throw err
+            try {	
+	       const xml = await parseString(err.error, { explicitArray: false, ignoreAttrs: true })
+               err = get_fault(xml, opts.fault_to_string) || JSON.stringify(xml);
+	    } catch (e) {}
         }
+        throw err
     })
 }
 
