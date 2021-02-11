@@ -6,8 +6,9 @@
 </div>
 <div v-else>
   <my-bootstrap-form-group name="country" :opts="opts" :validity="validity">
-     <typeahead id="country" name="country" v-model="country" :options="conf.countries" v-magic-aria placeholder="Pays" :validity.sync="validity.country" :required="!opts.optional"></typeahead>
+     <typeahead id="country" name="country" v-model="country" :options="conf.countries" v-magic-aria placeholder="Pays" :pattern="conf.pattern.country" :validity.sync="validity.country" :required="!opts.optional"></typeahead>
      <CurrentLdapValue v-model="country" :ldap_value="ldap_val.country"></CurrentLdapValue>
+     <validation-errors name="country" :validity="validity" :custom_message="conf.error_msg.country"></validation-errors>
   </my-bootstrap-form-group>
     
  <div v-if="country === 'FRANCE'">

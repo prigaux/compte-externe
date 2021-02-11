@@ -119,6 +119,7 @@ export default {
             "\\+(1|2[07]|3[0-469]|4[013-9]|5[1-8]|6[0-6]|7|8[1246]|9[0-58]|[0-9]{3})(\\s*[0-9]){4,14}", // international country code, less than 15 digits
         ].join('|'),
         frenchPostalCode: "\\s*[0-9]{5}\\s*",
+        country: "^(?!\\d)", // do not start with a digit (to warn someone mistakenly entering a postalcode or road number)
     },
     error_msg: {
         radio_required: 'Veuillez sélectionner une de ces options.',
@@ -126,6 +127,7 @@ export default {
         phone: 'Le champ doit être un numéro de téléphone. Exemples : 01 02 03 04 05  ou  +41 66 555 44 33  ou  +886 1 1234 5678',
         mobilePhone: 'Le champ doit être un numéro de téléphone mobile. Exemples : 06 02 03 04 05',
         frenchPostalCode: 'Le champ doit être un code postal. Exemple: 75013',
+        country: 'Veuillez saisir un nom de pays',
         siret: 'Numéro SIRET invalide',
         forbiddenChars: (forbiddenChars) => (
             forbiddenChars.length === 1 ?
