@@ -62,6 +62,7 @@ const typeaheadComponent = Vue.extend({
       formatting_html: { type: Function },
       editable: { type: Boolean, default: true },
       required: { type: Boolean, default: false },
+      pattern: { validator: (p) => p instanceof RegExp || typeof p === 'string' },
       is_textarea: { type: Boolean, default: false },
       name: { type: String },
       id: { type: String },
@@ -137,6 +138,7 @@ const typeaheadComponent = Vue.extend({
         // "v" is an accepted value
         const valueMissing = v === '' || v === undefined || v === null;        
         const validity = this.required && valueMissing ? { valueMissing } : 
+                         !valueMissing && this.pattern && !new RegExp(this.pattern).test(v) ? { badInput: true } :
                          from === 'input' && !this.editable && !valueMissing ? { badInput: true } : { valid: true };
         this.emitValidity(validity);
     },
