@@ -6,7 +6,7 @@
 </div>
 <div v-else>
   <my-bootstrap-form-group name="country" :opts="opts" :validity="validity">
-     <typeahead id="country" name="country" v-model="country" :options="conf.countries" v-magic-aria placeholder="Pays" :validity.sync="validity.country" required></typeahead>
+     <typeahead id="country" name="country" v-model="country" :options="conf.countries" v-magic-aria placeholder="Pays" :validity.sync="validity.country" :required="!opts.optional"></typeahead>
      <CurrentLdapValue v-model="country" :ldap_value="ldap_val.country"></CurrentLdapValue>
   </my-bootstrap-form-group>
     
@@ -39,7 +39,7 @@
  </div>
  <div v-else>
    <my-bootstrap-form-group name="address_lines" :validity="validity">
-     <textarea-with-validity rows="5" v-model="lines" class="form-control" required :validity.sync="validity.address_lines"></textarea-with-validity>
+     <textarea-with-validity rows="5" v-model="lines" class="form-control" :required="!opts.optional" :validity.sync="validity.address_lines"></textarea-with-validity>
    </my-bootstrap-form-group>
  </div>
 </div>
