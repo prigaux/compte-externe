@@ -7,10 +7,7 @@ import * as conf from './conf';
 
 const remove_accents = _.deburr;
 
-// we should use
-//import { escape } from 'ldapjs/lib/filters/escape';
-// but ldapjs 1.x still uses ldap-filter 0.2.2 which does not handle standard LDAP filter escaping, cf https://github.com/ldapjs/node-ldapjs/issues/489
-const escape = (s: string) => s.replace(/[*()\\]/g, '\\$&')
+import { escape } from 'ldapjs/lib/filters/escape';
 
 ldapP.init(conf.ldap);
 

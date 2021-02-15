@@ -4,15 +4,14 @@ import { filters } from '../ldap';
 describe('ldap filters', () => {
     describe('eq', () => {
         it("should escape", () => {
-            // ldapjs 1.x still uses ldap-filter 0.2.2 which does not handle standard LDAP filter escaping, so we use our special non-standard LDAP filter escaping
-            assert.equal(filters.eq("a", "* b"), "(a=\\* b)");
-            assert.equal(filters.eq("a", "(b=c)"), "(a=\\(b=c\\))");
+            assert.equal(filters.eq("a", "* b"), "(a=\\2a b)");
+            assert.equal(filters.eq("a", "(b=c)"), "(a=\\28b=c\\29)");
 
             // https://www.owasp.org/index.php/Testing_for_LDAP_Injection_(OTG-INPVAL-006)
             const user = '*)(uid=*))(|(uid=*';
             const base64 = 'xxx';
             assert.equal(filters.and([ filters.eq("uid", user), filters.eq('userPassword', "{MD5}" + base64) ]),
-                         "(&(uid=\\*\\)\\(uid=\\*\\)\\)\\(|\\(uid=\\*)(userPassword={MD5}xxx))");
+                         "(&(uid=\\2a\\29\\28uid=\\2a\\29\\29\\28|\\28uid=\\2a)(userPassword={MD5}xxx))");
         });
 
     });
