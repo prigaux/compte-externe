@@ -2,6 +2,7 @@
 
 import * as _ from 'lodash';
 import * as ldapjs from 'ldapjs';
+import * as ldapP from 'ldapjs-promise-disconnectwhenidle';
 import * as conf from './conf';
 
 const remove_accents = _.deburr;
@@ -11,42 +12,14 @@ const remove_accents = _.deburr;
 // but ldapjs 1.x still uses ldap-filter 0.2.2 which does not handle standard LDAP filter escaping, cf https://github.com/ldapjs/node-ldapjs/issues/489
 const escape = (s: string) => s.replace(/[*()\\]/g, '\\$&')
 
-let _clientP : Promise<ldapjs.Client>;
-let _c;
-function clientP() {
-    if (!_clientP) new_clientP();
-    return _clientP;
-}
+ldapP.init(conf.ldap);
 
 export function force_new_clientP() {
-    new_clientP()
+    ldapP.init(conf.ldap);
+    return ldapP.force_new_clientP();
 }
 export function close_client() {
-    if (_c) _c.destroy()
-    _clientP = undefined
-}
-
-function new_clientP() : void {
-    console.info("connecting to " + conf.ldap.uri);
-    const c = ldapjs.createClient({ url: conf.ldap.uri, reconnect: true, idleTimeout: conf.ldap.disconnectWhenIdle_duration });
-    _c = c
-    c.on('connectError', console.error);
-    c.on('error', console.error);
-    c.on('idle', () => {
-        //console.log("destroying ldap connection");
-        c.destroy();
-        _clientP = undefined;
-    });
-
-    _clientP = new Promise((resolve, reject) => {
-        c.on('connect', () => {
-            console.log("connected to ldap server");
-            c.bind(conf.ldap.dn, conf.ldap.password, err => {
-                if (err) console.error(err);
-                err ? reject(err) : resolve(c);
-            });
-        });
-    });
+    return ldapP.destroy();
 }
 
 export type filter = string
@@ -64,39 +37,7 @@ export function searchRaw(base: string, filter: filter, attributes: string[], op
     if (!filter) {
         console.error("internal error: missing ldap filter");
     }
-    if (attributes.length === 0) {
-        // workaround asking nothing and getting everything. Bug in ldapjs???
-        attributes = ['objectClass'];
-    }
-    let params = merge({ filter, attributes, scope: "sub" }, options);
-    let p = new Promise((resolve, reject) => {
-        let l: LdapEntry[] = [];
-        clientP().then(c => c.search(base, params, (err, res) => {
-            if (err) return reject(err);
-
-            res.on('searchEntry', entry => {
-                l.push(entry.raw);
-            });
-            res.on('searchReference', referral => {
-                console.log('referral: ' + referral.uris.join());
-            });
-            res.on('error', err => {
-                if ((err || {}).name === 'SizeLimitExceededError') {
-                    // that's ok, return what we got:
-                    resolve(l);
-                } else {
-                    console.log("ldap error:" + err);
-                    reject(err);
-                }
-            });
-            res.on('end', result => {
-                if (result.status === 0)
-                    resolve(l);
-                else
-                    reject("unknown error");
-            });
-        }));
-    });
+    let p = ldapP.searchRaw(base, filter, attributes, options).then(l => l.map(e => e.raw))
     return <Promise<Dictionary<RawValueB>[]>> p;
 }
 

@@ -65,7 +65,7 @@
     "html5-boilerplate": "0.0.1",
     "iconv-lite": "^0.4.19",
     "ldap-filter": "^0.3.3",
-    "ldapjs": "^1.0.0",
+    "ldapjs-promise-disconnectwhenidle": "github:UnivParis1/node-ldapjs-promise-disconnectWhenIdle",
     "lodash": "^4.14.x",
     "mongodb": "^2.0.33",
     "morgan": "^1.5.3",
