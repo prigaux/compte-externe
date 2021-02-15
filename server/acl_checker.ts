@@ -66,6 +66,7 @@ export const checkAcl = async (user: CurrentUser, v: v, acls: acl_search[]) => {
         const filter = await v_to_ldap_filter(v, acls);
         const user_ = await search_ldap.onePerson(ldap_filters.and([ filter, search_ldap.currentUser_to_filter(user) ]))
         if (user_) {
+            // ensure moderator.mail is available again for actions.sendMail template
             user.mail = user_.mail
             return true
         } else {
@@ -74,6 +75,7 @@ export const checkAcl = async (user: CurrentUser, v: v, acls: acl_search[]) => {
     }
 }
 
+// compute who will be allowed to act on this "v"
 export const moderators = async (acls: acl_search[], v: v): Promise<string[]> => {
     if (!acls) return undefined;
 
@@ -95,6 +97,7 @@ const one_allowed_step_mongo_filter = (user: CurrentUser) => (step: step, stepNa
     ))
 );
 
+// for each step, the logged user can be allowed or not ; if allowed, the logged user can be allowed to access only a subset of ldap users
 export const allowed_step_ldap_filters = (user: CurrentUser, steps: steps): Promise<{ step: string, filter: string }[]> => (
     Promise.all(_.map(steps, one_allowed_step_ldap_filter(user))).then(l => (
         l.filter(one => one.filter !== false).map(({ filter, step }) => (
@@ -103,6 +106,7 @@ export const allowed_step_ldap_filters = (user: CurrentUser, steps: steps): Prom
     ))
 );
 
+// for each step, the logged user can be allowed or not ; if allowed, the logged user can be allowed to access only a subset of database "svs"
 export const mongo_query = (user: CurrentUser, steps: steps) => (
     Promise.all(_.map(steps, one_allowed_step_mongo_filter(user))).then(l => (
         db.or(l.filter(one => one.filter !== false).map(({ filter, step }) => (

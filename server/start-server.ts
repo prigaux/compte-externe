@@ -36,13 +36,14 @@ const express_if_then_else = (cond, if_true, if_false) => (
     }
 );
 
+// NB: we could rely on Content-Type, but it is easy enough to rely on request path (since we mostly do JSON, except some very special cases)
 const myBodyParser = express_if_then_else(
     (req) => req.path === '/csv2json', 
     bodyParser.raw({type: '*/*', limit: csv_limit }),
-    bodyParser.json({type: '*/*', limit: json_limit }), // do not bother checking, everything we will get is JSON :)
+    bodyParser.json({type: '*/*', limit: json_limit }),
 );
 
-// needed for MSIE
+// needed for XHRs on MSIE
 const force_noCache = (_req: req, res: res, next) => {
     res.header('Cache-Control', 'private, no-cache, no-store');
     next();
@@ -50,7 +51,9 @@ const force_noCache = (_req: req, res: res, next) => {
 
 app.use('/api', myBodyParser, force_noCache, api);
 
-// redo what app/src/router.ts is doing
+// handle main Vue html page.
+// list valid urls (as already done in app/src/router.ts) 
+// (NB: we could use a catchall, but it is better to get 404 errors)
 app.use([ "login", "steps", ...Object.keys(conf_steps.steps) ].map(path => "/" + path), utils.index_html);
 
 db.init(() => {
