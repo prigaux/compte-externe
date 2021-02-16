@@ -220,6 +220,7 @@ export const fileReader = (readAs: 'readAsDataURL' | 'readAsText', file: File) =
     })
 );
 
+// reify a promise: create a promise and return an object with promise + resolve/reject functions
 export type promise_defer<T> = { promise : Promise<T>; resolve(v : T) : void, reject(err): void };
 export function promise_defer<T>() {
     let deferred = {} as promise_defer<T>;
