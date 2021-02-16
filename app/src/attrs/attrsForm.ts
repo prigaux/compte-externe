@@ -54,9 +54,9 @@ export default Vue.extend({
               return Promise.resolve();
           }
           
-          return new Promise((resolve, reject) => {
-            this.$emit('submit', this.v, { resolve, reject });
-          }).catch(error => {
+          let deferred =  Helpers.promise_defer()
+          this.$emit('submit', this.v, deferred);
+          return deferred.promise.catch(error => {
               if (error.attrName) {
                   this.ensureAttrIsVisible(error.attrName)
               }
