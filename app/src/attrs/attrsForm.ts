@@ -47,6 +47,7 @@ export default Vue.extend({
     },
     methods: {
       submit(event) {
+          // NB: returns a promise which blocks submitting until promise is finished
           console.log("submit");
           this.submitted = true;
           if (!event.target.checkValidity()) {
