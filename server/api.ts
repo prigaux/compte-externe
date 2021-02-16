@@ -293,6 +293,7 @@ const exportStep = async (req, step: step) => (
         },
     }
 );
+
 const loggedUserInitialSteps = async (req: req) => {
   const l = await acl_checker.allowed_step_ldap_filters(req.user, initial_steps())
   const l_ = l.map(({ step, filter }) => (
