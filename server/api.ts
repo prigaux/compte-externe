@@ -267,6 +267,7 @@ const body_to_v = search_ldap.v_from_WS;
 
 function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
     return getRaw(req, id, undefined).then(sv => {
+        // we merge sv from database with information corrected by moderator. Useful to recheck homonymes after a correction
         if (!_.isEmpty(v)) sv.v = merge_v(sv_attrs(sv), shared_conf.default_attrs_opts, sv.v, v);        
         return search_ldap.homonymes(sv.v).then(l => {
                 console.log(`homonymes found for ${sv.v.givenName} ${sv.v.sn}: ${l.map(v => v.uid + " (score:" + v.score + ")")}`);

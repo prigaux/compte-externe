@@ -16,6 +16,7 @@ if (Promise.prototype.tap === undefined) {
     };
 }
 
+// reify a promise: create a promise and return an object with promise + resolve/reject functions
 export type promise_defer<T> = { resolve(v : T) : void, reject(err): void, promise : Promise<T> };
 export function promise_defer<T>() {
     let deferred = {} as promise_defer<T>;
