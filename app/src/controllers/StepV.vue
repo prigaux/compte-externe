@@ -178,10 +178,11 @@ export default Vue.extend({
                 await (this.to_import ? this.send_new_many() : this.send());
             }
         },
-      submit(v, { resolve, reject }) {
+      submit(v, deferred) {
+          // NB: must resolves "deferred" which blocks submitting until promise is finished
           this.v = v;
           let p = this.submit_();
-          p.then(resolve).catch(reject)
+          Helpers.promise_defer_pipe(p, deferred)
       },
       nextStep(resp) {
         console.log("nextStep", resp);

@@ -226,6 +226,12 @@ export function promise_defer<T>() {
     deferred.promise = new Promise((resolve, reject) => { deferred.resolve = resolve; deferred.reject = reject });
     return deferred;
 }
+// chain promise result to a deferred
+export function promise_defer_pipe<T>(p : Promise<T>, deferred : promise_defer<T>) {
+    p.then(deferred.resolve, deferred.reject);
+}
+
+
 
 export function isElementInViewport (el : HTMLElement) {
     const rect = el.getBoundingClientRect();
