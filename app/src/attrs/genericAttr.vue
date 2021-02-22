@@ -170,7 +170,7 @@ export default Vue.extend({
                this.opts.uiType;
         },
         realType() { 
-            return includes(['phone', 'mobilePhone', 'frenchPostalCode', 'siret'], this.opts.uiType) ? this.opts.uiType : undefined;
+            return includes(['phone', 'frenchMobilePhone', 'frenchPostalCode', 'siret'], this.opts.uiType) ? this.opts.uiType : undefined;
         },
         choicesMap() {
             return this.opts.oneOf && mapValues(keyBy(this.opts.oneOf, 'const'), choice => choice['title']);

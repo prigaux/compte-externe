@@ -4,7 +4,7 @@ interface Dictionary<T> {
 
 type uiTypes =
     'radio'|'select'|'checkbox'|'email'|'password'|'text'|'url' |
-    'textarea'|'phone'|'mobilePhone'|'frenchPostalCode'|'date' |
+    'textarea'|'phone'|'frenchMobilePhone'|'frenchPostalCode'|'date' |
     'dateThreeInputs'|'postalAddress'|'cameraSnapshot'|'photoUpload' |
     'autocomplete'|'newPassword'|'siret' | 'array' | 'homonym' |
     'tab';
