@@ -125,8 +125,8 @@ export default {
         radio_required: 'Veuillez sélectionner une de ces options.',
         userPassword: 'Veuillez choisir un mot de passe comportant au moins 8 caractères. Ce mot de passe doit contenir des lettres minuscules, des lettres majuscules et des chiffres.',
         phone: 'Le champ doit être un numéro de téléphone. Exemples : 01 02 03 04 05  ou  +41 66 555 44 33  ou  +886 1 1234 5678',
-        frenchMobilePhone: 'Le champ doit être un numéro de téléphone mobile français. Exemples : 06 02 03 04 05',
-        frenchPostalCode: 'Le champ doit être un code postal. Exemple: 75013',
+        frenchMobilePhone: 'Le champ doit être un numéro de téléphone mobile français. Exemple : 06 02 03 04 05',
+        frenchPostalCode: 'Le champ doit être un code postal. Exemple : 75013',
         country: 'Veuillez saisir un nom de pays',
         siret: 'Numéro SIRET invalide',
         forbiddenChars: (forbiddenChars) => (
