@@ -105,6 +105,12 @@ describe('export_v', () => {
         test(a_then_bc, { a: "", b: "bb" }, { a: "", b: "bb" });
         test(a_then_bc, { a: "aa", b: "bb" }, { a: "aa", b: "bb" });
     });
+    it("should handle ignoreInvalidExistingValue", () => {
+        const attrs = (ignoreInvalidExistingValue) => ({ a: { pattern: 'x', optional: true, ignoreInvalidExistingValue } })
+        test(attrs(false), { a: "a" }, { a: "a" })
+        test(attrs(true), { a: "a" }, {})
+        test(attrs(true), { a: "x" }, { a: "x" })
+    });
 
 });
 

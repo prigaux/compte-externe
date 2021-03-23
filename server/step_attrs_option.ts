@@ -101,6 +101,15 @@ function validate(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOpti
         }
 }
 
+function validate_nothrow(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOption, val, prev, v: v) {
+    try {
+        validate(key, opt, more_opt, val, prev, v);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
 /* before sending to client, remove sensible information */
 export function export_v(attrs: StepAttrsOption, v) {
     const r = {};
@@ -109,9 +118,12 @@ export function export_v(attrs: StepAttrsOption, v) {
         // TODO better "merge_patch_options" handling
         if (mppp && !one.merge_patch_options) rec(mppp)
     }
+    const ignore = (key, opts) => (
+        opts.ignoreInvalidExistingValue && !validate_nothrow(key, opts, {}, v[key], v, v)
+    )
     function rec(attrs: StepAttrsOption) {
         _.forEach(attrs, (opts, key) => {
-            if (!opts.hidden && (key in v || opts.toUser)) {
+            if (!opts.hidden && (key in v || opts.toUser) && !ignore(key, opts)) {
                 let val = v[key];
                 if (opts.toUser) val = opts.toUser(v[key], v);
                 r[key] = val;

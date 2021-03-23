@@ -103,6 +103,7 @@ By default, the value is sent to the browser, and can be modified with potential
 * ```maxYear```: max year number the value sent by the browser must match (for dates)
 * ```optional```: by default empty value is not allowed
 * ```allowUnchangedValue```: if set, if the user changes the value, the value must pass checks. If kept unchanged, it bypasses checks!
+* ```ignoreInvalidExistingValue```: if set, the existing value must pass validation otherwise it is ignored (ie nullified)
 
 * ```format```
 * ```default```: default value
