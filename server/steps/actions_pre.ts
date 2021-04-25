@@ -77,13 +77,16 @@ export const esup_activ_bo_validateCode : simpleAction = (req, sv) => (
     })
 )
 
-export const esup_activ_bo_authentificateUser = (userAuth: 'useSessionUserId' | 'useBasicAuthUser') : simpleAction => async (req, _sv) => {
+export const esup_activ_bo_authentificateUser = (userAuth: 'useSessionUser' | 'useBasicAuthUser') : simpleAction => async (req, _sv) => {
     const { wantedConvert, attrRemapRev } = ldap.convert_and_remap(conf.ldap.people.types, conf.ldap.people.attrs);
     const auth = basic_auth(req);
     if (!auth) throw "Bad Request";
-    if (userAuth === 'useSessionUserId') {
-        auth.name = req.user.id
-        if (!auth.name) throw "Bad Request";
+    if (userAuth === 'useSessionUser') {
+        auth.name = req.session.supannAliasLogin
+        if (!auth.name) {
+            console.error("esup_activ_bo_authentificateUserWithCas should have set req.session.supannAliasLogin in a previous step. Did you use it?")
+            throw "Bad Request";
+        }
     }
     const o = await esup_activ_bo.authentificateUser(auth.name, auth.pass, _.without(Object.keys(attrRemapRev), 'userPassword'), req);
     const v = handleAttrsRemapAndType(o, attrRemapRev, wantedConvert)
@@ -98,6 +101,9 @@ export const esup_activ_bo_authentificateUserWithCas : simpleAction = async (req
     const o = await esup_activ_bo.authentificateUserWithCas(req.user.id, proxyticket, targetUrl, Object.keys(attrRemapRev), req);
     if (!o.code) throw "weird account: CAS is authorized by esup-activ-bo thinks user is not activated"
     const v = handleAttrsRemapAndType(o, attrRemapRev, wantedConvert)
+
+    req.session.supannAliasLogin = v.supannAliasLogin // needed for actions_pre.esup_activ_bo_authentificateUser('useSessionUser')
+    
     return { v };
 }
 

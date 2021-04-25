@@ -10,6 +10,8 @@ declare module 'express-session' {
         st?: string;
         pgt?: string;
         pt?: string;
+
+        supannAliasLogin?: string;
     }
 }
 
