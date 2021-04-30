@@ -5,7 +5,7 @@ type uiTypes =
     'textarea'|'phone'|'frenchMobilePhone'|'frenchPostalCode'|'date' |
     'dateThreeInputs'|'postalAddress'|'cameraSnapshot'|'photoUpload' |
     'autocomplete'|'newPassword'|'siret' | 'array' | 'homonym' |
-    'tab';
+    'tab' | 'iframe';
 
 interface StepAttrItemsOption {
     uiPlaceholder?: string;

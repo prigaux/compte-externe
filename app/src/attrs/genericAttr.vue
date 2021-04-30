@@ -39,6 +39,9 @@
      :opts="opts">
   </AutocompleteAttr>
 
+  <iframe :src="val" v-else-if="uiType === 'iframe'" v-iframe-auto-height>
+  </iframe>
+
   <my-bootstrap-form-group :name="name" 
     :opts="opts"
     :no_html_label="uiType === 'radio' || uiType === 'checkbox'"
