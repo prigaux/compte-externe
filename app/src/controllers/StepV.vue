@@ -148,7 +148,7 @@ export default Vue.extend({
             return text && Vue.extend({ props: ['v_pre', 'v'], template: "<div>" + text + "</div>" });
         },
         disableOkButton() {
-            return this?.step?.if_no_modification === 'disable-okButton' && isEqual(this.v, this.v_orig)
+            return this?.step?.if_no_modification === 'disable-okButton' && (isEqual(this.v, this.v_orig) && !this.v?.various?.extern_ask_confirmation)
         },
         potential_homonyms() {
             return (this.all_potential_homonyms || []).filter(h => !h.ignore);
@@ -244,11 +244,23 @@ export default Vue.extend({
       },
       async send() {
           const resp = await Ws.set(this.id, this.stepName, this.v, this.v_pre, this.all_attrs_flat)
+          let extern_ask_confirmation = this.v.various?.extern_ask_confirmation
           if (resp.ask_confirmation) {
+              if (extern_ask_confirmation) {
+                  for (const p of Object.values(extern_ask_confirmation)) {
+                      resp.ask_confirmation.msg += " " + p['msg']
+                  }
+              }
               await this.$refs.MyModalP.open(resp.ask_confirmation)
               this.v[resp.ask_confirmation.attr_to_save_confirmation] = true;
               await this.send();
           } else {
+              if (extern_ask_confirmation) {
+                  for (const p of Object.values(extern_ask_confirmation)) {
+                    await p['submit']()
+                  }
+                  delete this.v.various.extern_ask_confirmation
+              }
               this.nextStep(resp);
           }
       },

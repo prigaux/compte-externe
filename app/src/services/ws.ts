@@ -248,6 +248,7 @@ export function getInScope($scope, id: string, params, hash_params, expectedStep
                     v[attr] = undefined;
                 }
             });
+            (v['various'] ??= {}).extern_ask_confirmation = undefined
         Helpers.eachObject(all_attrs, (attr, opts) => {
             if (opts.readOnly && !('uiHidden' in opts) && some(vs, v => v[attr])) {
                 // force displaying all attr fields if at least one has a value (useful for form-inline table)
