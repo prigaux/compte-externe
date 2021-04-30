@@ -67,3 +67,11 @@ Vue.directive('magic-aria', function (el: HTMLElement) {
     const placeholder = el.getAttribute('placeholder')
     if (placeholder) el.setAttribute('aria-label', placeholder)
 })
+
+Vue.directive('on-visible', function (el : HTMLElement, binding) {
+    const callback = binding.value
+    if (!callback) return // disabled
+    new IntersectionObserver((events) => {
+        if (events.some(e => e.isIntersecting)) callback(el)
+    }).observe(el)
+})

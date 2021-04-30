@@ -60,6 +60,7 @@ type SharedStepAttrOption = MinimalStepAttrOption & {
     formatting?: (val: any) => string;
     formatting_html?: (val: any) => string;
     onChange?: (v: {}, _: string, val: any) => void;
+    onVisible?: (v: {}, elt: HTMLElement) => void;
     validator?: (val: any, v_orig: {}) => string;
 
     minDate?: Date;
