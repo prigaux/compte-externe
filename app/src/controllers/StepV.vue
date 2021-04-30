@@ -242,17 +242,15 @@ export default Vue.extend({
             router.push('/steps');            
         }          
       },
-      send() {
-          return Ws.set(this.id, this.stepName, this.v, this.v_pre, this.all_attrs_flat).then(resp => {
-              if (resp.ask_confirmation) {
-                this.$refs.MyModalP.open(resp.ask_confirmation).then(() => {
-                    this.v[resp.ask_confirmation.attr_to_save_confirmation] = true;
-                    this.send();
-                })
-              } else {
-                return this.nextStep(resp);
-              }
-          });
+      async send() {
+          const resp = await Ws.set(this.id, this.stepName, this.v, this.v_pre, this.all_attrs_flat)
+          if (resp.ask_confirmation) {
+              await this.$refs.MyModalP.open(resp.ask_confirmation)
+              this.v[resp.ask_confirmation.attr_to_save_confirmation] = true;
+              await this.send();
+          } else {
+              this.nextStep(resp);
+          }
       },
       send_new_many() {
             this.to_import.lines.forEach(v => defaults(v, this.v));
