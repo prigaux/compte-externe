@@ -91,6 +91,11 @@ fieldset {
     display: none;
 }
 
+.offscreen {
+    position: absolute;
+    left: -999em;
+}
+
 .mytooltip {
     display: inline-block;
     position: relative;

@@ -13,7 +13,7 @@
            </li>
       </ul>
       <fieldset v-for="(opts, id) in tabs" :key="id"
-            :id="'panel_' + id" role="tabpanel" :aria-labelledby="'tab_' + id" :hidden="id !== selectedTab_">
+            :id="'panel_' + id" role="tabpanel" :aria-labelledby="'tab_' + id" :class="{ offscreen: id !== selectedTab_ }">
             <div class="tab-description" v-html="opts.description" v-if="opts.description"></div>
             <div v-for="(opts, name) in opts.properties" :key="name" v-if="opts">
                 <genericAttr :name="name" :opts="opts" v-model="v[name]" :v="v" :ldap_value="v_ldap && v_ldap[name]" :stepName="stepName"
