@@ -143,7 +143,7 @@ Some special functionalities are only available through `shared/conf.ts`:
 * ```normalize```: function called on the value. Example: use it to remove whitespace from the value
 * ```formatting```: for `autocomplete`, used to format the value for the `<input>`
 * ```formatting_html```: for `autocomplete`, used to format the value for the dropdown choices
-* ```onChange```: when the value is modified by the user, can modify `v`
+* ```onChange```: when the value is modified by the user, can modify `v` (limitation: only works for AutocompleteAttr)
 * ```validator```: custom validator. Use it when `pattern` is not enough, or to display an adapted error message
 * ```minDate```: the value must be >= this date
 * ```maxDate```: the value must be <= this date
