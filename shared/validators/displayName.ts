@@ -26,7 +26,7 @@ const get_and_remove = <T>(o: Dictionary<T>, key: string): T => {
     return val;
 }
 
-const remove_allowed_words = (words: string[], allowed: Dictionary<number>, prev_allowed: Dictionary<number>) => {
+const remove_allowed_words = (words: string[], allowed: Dictionary<number>, prev_allowed: Dictionary<number>, must_remove: boolean) => {
     const minRemaining = prev_allowed ? 0 : 1;
     let removed = false;
     //console.log(removed, minRemaining, words, allowed);
@@ -42,7 +42,7 @@ const remove_allowed_words = (words: string[], allowed: Dictionary<number>, prev
         removed = true;
     }
     //console.log(removed, minRemaining, words);
-    if (!removed || !minRemaining && words.length) {
+    if (!removed && must_remove || !minRemaining && words.length) {
         if (!removed && prev_allowed && prev_allowed[words[0]]) {
             return "Le nom annuaire doit comprendre de(s) prénom(s) suivi de(s) nom(s)";
         }
@@ -58,15 +58,18 @@ const _merge_at = (v: {}, attrs: string[]): string[] => _.compact(_.merge(_.at(v
 
 export default (displayName: string, v_orig: {}) => {
     const prepare_for_compare = (val: string) => remove_special_chars(remove_accents(val)).toLowerCase()    
-    const get = (fields: string[]): string[] => _merge_at(v_orig, fields).map(prepare_for_compare);
+
+    const sns = _merge_at(v_orig, shared_conf.sns)
+    const givenNames = _merge_at(v_orig, shared_conf.givenNames)
 
     let toCheck = prepare_for_compare(displayName).split(' ');
-    let allowed_sns = compute_allowed(get(shared_conf.sns));
-    let allowed_givenNames = compute_allowed(get(shared_conf.givenNames));
+    let allowed_sns = compute_allowed(sns.map(prepare_for_compare));
+    let allowed_givenNames = compute_allowed(givenNames.map(prepare_for_compare));
 
-    const err =
-      toCheck.length <= 1 && "Le nom annuaire doit comprendre le prénom et le nom" ||
-      remove_allowed_words(toCheck, allowed_givenNames, undefined) ||
-      remove_allowed_words(toCheck, allowed_sns, allowed_givenNames);
+    const allow_no_givenName = _.isEmpty(givenNames) || givenNames[0] === '.' // "." is sometimes used to mean "unknown" (GLPI UP1#113794)
+
+    const err = toCheck.length <= 1 && !allow_no_givenName && "Le nom annuaire doit comprendre le prénom et le nom" ||
+        remove_allowed_words(toCheck, allowed_givenNames, undefined, !allow_no_givenName) ||
+        remove_allowed_words(toCheck, allowed_sns, allowed_givenNames, true);
     return err;
 }

@@ -16,6 +16,14 @@ describe('validators/displayName', () => {
         assert.equal(checkDisplayName("Rigaux", { sn: 'Rigaux', givenName: 'Pascal' }), "Le nom annuaire doit comprendre le prénom et le nom");
     });        
 
+    it("should handle no givenName or buggy givenName", () => {
+        assert.equal(checkDisplayName("Rigaux", { sn: 'Rigaux', givenName: '' }), undefined);
+        assert.equal(checkDisplayName("Rigaux", { sn: 'Rigaux', givenName: '.' }), undefined);
+        assert.equal(checkDisplayName(". Rigaux", { sn: 'Rigaux', givenName: '.' }), undefined); // NB: a leading "." is always accepted
+        assert.equal(checkDisplayName("Rigaux", { sn: 'Rigaux', givenName: '', altGivenName: 'Foo' }), 'Le nom annuaire doit comprendre le prénom et le nom');
+        assert.equal(checkDisplayName("Rigaux", { sn: 'Rigaux', givenName: '.', altGivenName: 'Foo' }), undefined);
+    });
+
     it("should ignore accents", () => {
         assert.equal(checkDisplayName("Rémi Rigaux", { sn: 'Rigaux', givenName: 'Remi' }), undefined);
         assert.equal(checkDisplayName("Remi Rigaux", { sn: 'Rigaux', givenName: 'Rémi' }), undefined);
