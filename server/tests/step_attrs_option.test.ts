@@ -66,24 +66,24 @@ describe('export_v', () => {
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2" },
         ] } }
-        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2", sn: "Rigaux" });
-        test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
+        test(attrs, { duration: 2, sn: "Rigaux" }, { duration: 2, sn: "Rigaux" });
+        test(attrs, { duration: 1, sn: "Rigaux" }, { duration: 1, sn: "Rigaux" });
     });
     it("should handle readOnly oneOf merge_patch_parent_properties", () => {
         const attrs = { duration: { readOnly: true, oneOf: [
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2" },
         ] } }
-        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2" });
-        test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
+        test(attrs, { duration: 2, sn: "Rigaux" }, { duration: 2 });
+        test(attrs, { duration: 1, sn: "Rigaux" }, { duration: 1, sn: "Rigaux" });
     });
     it("should handle oneOf merge_patch_parent_properties with default", () => {
         const attrs = { duration: { default: "1", oneOf: [
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2" },
         ] } }
-        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2", sn: "Rigaux" });
-        test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1", sn: "Rigaux" });
+        test(attrs, { duration: 2, sn: "Rigaux" }, { duration: 2, sn: "Rigaux" });
+        test(attrs, { duration: 1, sn: "Rigaux" }, { duration: 1, sn: "Rigaux" });
         test(attrs, { sn: "Rigaux" }, { sn: "Rigaux" });
     });
     it("should handle oneOf merge_patch_parent_properties different toUserOnly", () => {
@@ -100,8 +100,8 @@ describe('export_v', () => {
                 { const: "2" },
             ] },
         }
-        test(attrs, { duration: "2", sn: "Rigaux" }, { duration: "2" });
-        test(attrs, { duration: "1", sn: "Rigaux" }, { duration: "1" });
+        test(attrs, { duration: 2, sn: "Rigaux" }, { duration: 2 });
+        test(attrs, { duration: 1, sn: "Rigaux" }, { duration: 1 });
     });
     it("should handle if_then merge_patch_parent_properties", () => {
         test(a_then_bc, { a: "", b: "bb" }, { a: "", b: "bb" });
@@ -132,8 +132,8 @@ describe('flatten_attrs', () => {
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2" },
         ] } };
-        test(attrs, { duration: "2" }, { ...attrs });
-        test(attrs, { duration: "1" }, { ...attrs, sn: {} });
+        test(attrs, { duration: 2 }, { ...attrs });
+        test(attrs, { duration: 1 }, { ...attrs, sn: {} });
     });
     it("should handle if_then merge_patch_parent_properties", () => {
         test(a_then_bc, { a: "" }, { ...a_then_bc });
@@ -188,7 +188,7 @@ describe('merge_v', () => {
         test_fail({ sn: {} }, prev, {}, "constraint !sn.optional failed for undefined");
         test_fail({ sn: {} }, {}, { sn: null }, "constraint !sn.optional failed for null");
         test({ sn: {} }, prev, v, v);
-        test({ sn: {} }, {}, { sn: new Date('2017-01-31') }, { sn: new Date('2017-01-31') });
+        test({ startdate: {} }, {}, { startdate: new Date('2017-01-31') }, { startdate: new Date('2017-01-31') });
     });
     it ("should check pattern", () => {
         test({ sn: { pattern: "x" } }, {}, { sn: 'x' }, { sn: 'x' });
@@ -211,8 +211,8 @@ describe('merge_v', () => {
     });
     it ("should check oneOf", () => {
         const attrs = { duration: { oneOf: [ { const: "1" } ] } };
-        test(attrs, {}, { duration: "1" }, { duration: "1" });
-        test_fail(attrs, {}, { duration: "2" }, "constraint duration.oneOf 1 failed for 2");
+        test(attrs, {}, { duration: 1 }, { duration: 1 });
+        test_fail(attrs, {}, { duration: 2 }, "constraint duration.oneOf 1 failed for 2");
     });
     it ("should check simple properties", () => {
         const attrs = { _foo: { toUserOnly: true, properties: { sn: {} } } };
@@ -234,27 +234,27 @@ describe('merge_v', () => {
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2" },
         ] } };
-        test(attrs, {}, { sn: 'x', duration: "1" }, { duration: "1", sn: 'x' });
-        test(attrs, {}, { sn: 'x', duration: "2" }, { duration: "2" }); // sn not allowed, it is removed
-        test_fail(attrs, {}, { duration: '1' }, "constraint !sn.optional failed for undefined");
+        test(attrs, {}, { sn: 'x', duration: 1 }, { duration: 1, sn: 'x' });
+        test(attrs, {}, { sn: 'x', duration: 2 }, { duration: 2 }); // sn not allowed, it is removed
+        test_fail(attrs, {}, { duration: 1 }, "constraint !sn.optional failed for undefined");
     });
     it ("should handle oneOf merge_patch_parent_properties toUserOnly", () => {
         const attrs = { duration: { oneOf: [
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2", merge_patch_parent_properties: { sn: { toUserOnly: true } } },
         ] } };
-        test(attrs, { sn: 'y' }, { sn: 'x', duration: "1" }, { duration: "1", sn: 'x' });
-        test(attrs, { sn: 'y' }, { sn: 'x', duration: "2" }, { duration: "2" }); // sn not allowed, it is removed
-        test_fail(attrs, { sn: 'y' }, { duration: '1' }, "constraint !sn.optional failed for undefined");
+        test(attrs, { sn: 'y' }, { sn: 'x', duration: 1 }, { duration: 1, sn: 'x' });
+        test(attrs, { sn: 'y' }, { sn: 'x', duration: 2 }, { duration: 2 }); // sn not allowed, it is removed
+        test_fail(attrs, { sn: 'y' }, { duration: 1 }, "constraint !sn.optional failed for undefined");
     });
     it ("should handle oneOf merge_patch_parent_properties readOnly", () => {
         const attrs = { duration: { oneOf: [
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2", merge_patch_parent_properties: { sn: { readOnly: true } } },
         ] } };
-        test(attrs, { sn: 'y' }, { sn: 'x', duration: "1" }, { duration: "1", sn: 'x' });
-        test(attrs, { sn: 'y' }, { sn: 'x', duration: "2" }, { duration: "2", sn: 'y' });
-        test_fail(attrs, { sn: 'y' }, { duration: '1' }, "constraint !sn.optional failed for undefined");
+        test(attrs, { sn: 'y' }, { sn: 'x', duration: 1 }, { duration: 1, sn: 'x' });
+        test(attrs, { sn: 'y' }, { sn: 'x', duration: 2 }, { duration: 2, sn: 'y' });
+        test_fail(attrs, { sn: 'y' }, { duration: 1 }, "constraint !sn.optional failed for undefined");
     });
     it ("should handle merge_patch_parent_properties oneOf override", () => {
         const attrs = {
@@ -264,9 +264,9 @@ describe('merge_v', () => {
             ] },
             profilename: { oneOf: [ { const: "p2" }] },
         };
-        test(attrs, {}, { duration: "1", profilename: "p1" }, { duration: "1", profilename: "p1" });
-        test(attrs, {}, { duration: "2", profilename: "p2" }, { duration: "2", profilename: "p2" });
-        test_fail(attrs, {}, { duration: '1', profilename: "p2" }, "constraint profilename.oneOf p1 failed for p2");
+        test(attrs, {}, { duration: 1, profilename: "p1" }, { duration: 1, profilename: "p1" });
+        test(attrs, {}, { duration: 2, profilename: "p2" }, { duration: 2, profilename: "p2" });
+        test_fail(attrs, {}, { duration: 1, profilename: "p2" }, "constraint profilename.oneOf p1 failed for p2");
     });
 
     it ("should handle if_then merge_patch_parent_properties", () => {
@@ -301,9 +301,9 @@ describe('merge_v', () => {
     });
     it ("should handle allowUnchangedValue", () => {
         const attrs = { duration: { allowUnchangedValue: true, oneOf: [ { const: "1" } ] } };
-        test(attrs, {}, { duration: "1" }, { duration: "1" });
-        test_fail(attrs, {}, { duration: "2" }, "constraint duration.oneOf 1 failed for 2");
-        test(attrs, { duration: "2" }, { duration: "2" }, { duration: "2" });
+        test(attrs, {}, { duration: 1 }, { duration: 1 });
+        test_fail(attrs, {}, { duration: 2 }, "constraint duration.oneOf 1 failed for 2");
+        test(attrs, { duration: 2 }, { duration: 2 }, { duration: 2 });
     });
 });
 
@@ -314,6 +314,7 @@ describe('compute_diff', () => {
     }
 
     const attrs_sn = { sn: { optional: true }};
+    const attrs_altGivenName = { altGivenName: { optional: true }};
 
     it("should handle no change", () => {
         test(attrs_sn, { sn: "Rigaux" }, { sn: "Rigaux" }, {});
@@ -329,8 +330,8 @@ describe('compute_diff', () => {
         test(attrs_sn, { sn: "Rigaux" }, { sn: '' }, { sn: { prev: "Rigaux", current: '' }});
     });
     it("should handle array", () => {
-        test(attrs_sn, { sn: ["Rigaux"] }, { sn: ["Rigaux"] }, {});
-        test(attrs_sn, {}, { sn: ["Rigaux"] }, { sn: { prev: undefined, current: ['Rigaux'] } });
+        test(attrs_altGivenName, { altGivenName: ["Rigaux"] }, { altGivenName: ["Rigaux"] }, {});
+        test(attrs_altGivenName, {}, { altGivenName: ["Rigaux"] }, { altGivenName: { prev: undefined, current: ['Rigaux'] } });
     });
 
     it("should ignore non required attrs", () => {

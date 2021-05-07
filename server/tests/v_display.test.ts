@@ -31,13 +31,13 @@ describe('v_display', () => {
         const attrs = {
             duration: {
                 oneOf: [
-                    { const: 1, title: "Aaa" },
-                    { const: 2, title: "B bbb" },
+                    { const: '1', title: "Aaa" },
+                    { const: '2', title: "B bbb" },
                 ],
             },
         };
-        test(attrs, { duration: "1" }, { duration: "Aaa" });
-        test(attrs, { duration: "2" }, { duration: "B bbb" });
+        test(attrs, { duration: 1 }, { duration: "Aaa" });
+        test(attrs, { duration: 2 }, { duration: "B bbb" });
     })
 
     it('should handle various.diff', async () => {
