@@ -8,7 +8,7 @@ interface CurrentUser {
   id: string;
   mail?: string; // available after step "acls" are checked
 }
-type req = express.Request<Dictionary<string>, any, any, Dictionary<string>>;
+type req = express.Request<Dictionary<string>, any, any, Dictionary<string>> & { user?: CurrentUser };
 type res = express.Response<any>;
 
 type Mails = string[]
