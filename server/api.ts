@@ -55,7 +55,7 @@ function action_post(req: req, sv: sva): Promise<svra> {
         mayNotifyModerators(req, sv, 'accepted');
     });
 }
-function action<SV extends sv>(req: req, sv: SV, action_name: string): Promise<SV & { response?: response }> {
+function action<SV extends sv>(req: req, sv: SV, action_name: 'action_post' | 'action_pre'): Promise<SV & { response?: response }> {
     let f = step(sv)[action_name];
     if (!f) return Promise.resolve(sv); // nothing to do
     //console.log("calling " + action_name + " for step " + sv.step);
@@ -83,7 +83,7 @@ async function export_sv(req: req, sv: sva): Promise<ClientSideSVA> {
     return { ...sv as any, stepName: sv.step, ...await exportStep(req, step(sv)), attrs };
 }
 
-function mayNotifyModerators(req: req, sv: sv|svra, notifyKind: string) {
+function mayNotifyModerators(req: req, sv: sv|svra, notifyKind: 'accepted'|'added'|'rejected') {
     let notify = step(sv).notify;
     if (notify) notifyModerators(req, sv, notify[notifyKind]);
 }
