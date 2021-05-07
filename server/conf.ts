@@ -13,7 +13,7 @@ import * as vue_config from '../app/vue.config';
 
 const ldap_base = "dc=univ,dc=fr";
 const ldap_main = {
-        uri: 'ldap://ldap-test.univ.fr',
+        uri: ['ldap://ldap-test.univ.fr'],
 
         // empty for anonymous bind:
         dn: 'cn=comptex,ou=admin,' + ldap_base,

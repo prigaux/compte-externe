@@ -46,7 +46,7 @@ declare module 'ldapjs' {
 
 declare module 'ldapjs-promise-disconnectwhenidle' {
     import * as ldapjs from 'ldapjs'
-    function init(conf: { uri: string; dn?: string; password?: string; disconnectWhenIdle_duration?: number; verbose?: boolean }): void
+    function init(conf: { uri: string[]; dn?: string; password?: string; disconnectWhenIdle_duration?: number; verbose?: boolean }): void
     function destroy(): void
     function force_new_clientP(): Promise<unknown>
     interface SearchEntryObjectRaw {
