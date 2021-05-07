@@ -4,8 +4,9 @@ const matches_if = (if_, val: string) => (
     if_.optional || val
 )
 
-const find_choice = (oneOf: StepAttrOptionChoicesT<StepAttrOptionM<unknown>>[], val) => (
-    find(oneOf, choice => choice.const === val)
+const find_choice = (oneOf: StepAttrOptionChoicesT<StepAttrOptionM<unknown>>[], val: any) => (
+    // tslint:disable-next-line:triple-equals
+    find(oneOf, choice => choice.const == val) // allow equality if val is number and choice.const is string
 )
 
 const handle_then_if_matching = (opts: StepAttrOptionM<unknown>, val: string, rec: (attrs: StepAttrsOptionM<unknown>, mpo: MergePatchOptions) => void) => {
