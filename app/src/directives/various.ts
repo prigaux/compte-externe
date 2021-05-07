@@ -47,8 +47,8 @@ Vue.component('input-file', {
 Vue.directive('on-submit', function (el : HTMLElement, binding) {
     const [ eventName, submitButton ] = 
         el.tagName === 'FORM' ? 
-            [ 'submit', el.querySelector('[type=submit]') ] :
-            [ 'click', el ];
+            [ 'submit', el.querySelector('[type=submit]') as HTMLInputElement ] :
+            [ 'click', el as HTMLInputElement ];
 
     el['on' + eventName] = function (event) {
         // prevent fast double-click
