@@ -229,7 +229,6 @@ const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: 
         const v_ = v_display(v, flatten_attrs(attrs, v));
         mail.sendWithTemplateFile('warn_user_account_created.html', { from: mailFrom(v), to: v.supannMailPerso, v, v_display: v_, created, isActive: !!accountStatus });
     }
-    return null;
 }
 
 const crejsonldap_simple = (v: v, opts : crejsonldap.options) => (
