@@ -14,7 +14,7 @@ type res = express.Response<any>;
 type Mails = string[]
 
 type id = string
-type v = typeof conf.ldap.people.types & { noInteraction?: boolean, profilename_to_modify?: string, various?: any }
+type v = Partial<typeof conf.ldap.people.types> & { noInteraction?: boolean, profilename_to_modify?: string, various?: any } & Dictionary<any>
 type response = { [index: string]: any };
 type sv = {
   _id?: mongodb.ObjectID;
