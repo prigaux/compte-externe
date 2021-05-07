@@ -12,7 +12,7 @@ export const group_for_each_attr_codes = (
         const choices = await code_to_choice(cn_and_const.code, 1)
         let choice: StepAttrOptionChoices = choices.length ? choices[0] : { const: cn_and_const.code }
         if (group_cn_to_choice) {
-            choice = group_cn_to_choice(cn_and_const.cn, choice)
+            choice = await group_cn_to_choice(cn_and_const.cn, choice)
         }
         return choice
     }
