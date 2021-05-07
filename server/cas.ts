@@ -9,7 +9,7 @@ declare module 'express-session' {
         cas?: { user: string };
         st?: string;
         pgt?: string;
-        pt?: string;
+        pt?: Dictionary<string>;
 
         supannAliasLogin?: string;
     }
