@@ -157,6 +157,11 @@ Complex functionalities:
 
 `then` and `oneOf` choices can have additional attrs options.
 
+By default, these options can force an attr UI to be displayed, even if not allowed for the user.
+So if you only want to *modify* attr options, use:
+`merge_patch_options: { newRootProperties: { ignore: [...attr names...] } }`
+
+It is also useful if you do not want to change the ordering of attrs input.
 
 ## ```attrs_override```
 
