@@ -35,6 +35,15 @@ describe('ldap', () => {
             })
         ));
 
+        it("should handle special dn attribute", async () => {
+            await ldap.searchSimple(conf.ldap.base_people, "(uid=prigaux)", {}).then(l => {
+                assert.deepEqual(l, [{}]);
+            })
+            await ldap.searchSimple(conf.ldap.base_people, "(uid=prigaux)", { dn: '' }).then(l => {
+                assert.deepEqual(l, [{ dn: "uid=prigaux,ou=people,dc=univ,dc=fr" }]);
+            })
+        });
+
         it("should handle attr remap & conversion", () => {
             let attrTypes = {sn: '', birthDay: new Date()}
             let attrsConvert = { birthDay: { ldapAttr: 'up1BirthDay', convert: ldap_convert.datetime } }
