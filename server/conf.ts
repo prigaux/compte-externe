@@ -197,7 +197,7 @@ const conf = {
             "cn=" + cn + "," + ldap_main.base_groups
         ),
         memberOf_to_group_cn: (memberOf: string) => (
-            (memberOf.match(/^cn=([^,]*)/, memberOf) || [])[1]
+            memberOf.match(/^cn=([^,]*)/)?.[1]
         ),
 
         group_member_to_eppn: (user_dn: string) => {
