@@ -8,7 +8,7 @@ import * as csvtojson from 'csvtojson';
 import * as session from 'express-session';
 import * as session_file_store from 'session-file-store';
 import concat = require('concat-stream');
-import * as simpleGet from 'simple-get';
+import simpleGet = require('simple-get');
 import * as http from 'http';
 import * as conf from './conf';
 import shared_conf from '../shared/conf';
