@@ -28,7 +28,7 @@
     "server-test:w": "npm run server-test -- --watch"
   },
   "engines": {
-    "node": "^10.15"
+    "node": ">= 10.15"
   },
   "dependencies": {
     "@types/body-parser": "^1.16.4",
