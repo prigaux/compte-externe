@@ -93,7 +93,7 @@ export function logout(req) {
     if (!req.session) {
     } else if (req.session.destroy) {
         // Forget our own login session
-        req.session.destroy();
+        req.session.destroy(_ => {});
     } else {
         // Cookie-based sessions have no destroy()
         req.session = null;
