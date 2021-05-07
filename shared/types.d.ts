@@ -1,6 +1,4 @@
-interface Dictionary<T> {
-    [index: string]: T;
-}
+type Dictionary<T> = Record<string, T>
 
 type uiTypes =
     'radio'|'select'|'checkbox'|'email'|'password'|'text'|'url' |
