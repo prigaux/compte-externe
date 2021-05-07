@@ -19,7 +19,7 @@ const genLogin_with_existLogin = (existLogin_: (login: string) => Promise<boolea
 describe('genLogin', () => {
     
     describe('simple', () => {
-        const genLogin = genLogin_with_existLogin(() => Promise.resolve(false));
+        const genLogin = genLogin_with_existLogin(_ => Promise.resolve(false));
 
         function check(sn: string, givenName: string, wantedLogin: string) {
             return () => (
