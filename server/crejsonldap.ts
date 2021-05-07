@@ -11,6 +11,13 @@ export type options = { action: "validate" } | { create: false } | {
     dupmod: "ignore"|"warn"|"err";
 }
 
+export type resp = {
+    action?: 'ADD'|'MOD'|'NONE'
+    dn?: string
+    attrs?: { uid: string[]; accountStatus?: 'active'[] }
+    err?: { code: string; desc: string; val?: string; attr?: string; dn?: string[] }[]
+}
+
 const prepare_v = (v: v) => {
     if (!v) throw "internal error: createCompte with no v";
 
@@ -55,13 +62,13 @@ export const call_many = (vs: v[], opts : options) => {
     });
 }
 
-const grouped_call_many_by_opts : Dictionary<(param: v) => any> = {};
+const grouped_call_many_by_opts : Dictionary<(param: v) => Promise<resp>> = {};
 
 export const call = (v: v, opts: options) => {
     const opts_s = JSON.stringify(opts);
     let grouped_call = grouped_call_many_by_opts[opts_s];
     if (!grouped_call) {
-        grouped_call = grouped_call_many_by_opts[opts_s] = grouped_calls<v, any>(vs => call_many(vs, opts), conf.crejsonldap.grouped_calls);
+        grouped_call = grouped_call_many_by_opts[opts_s] = grouped_calls<v, resp>(vs => call_many(vs, opts), conf.crejsonldap.grouped_calls);
     }
     return grouped_call(v)
 }
@@ -69,7 +76,7 @@ export const call = (v: v, opts: options) => {
 // exported for tests purpose
 export const callRaw = { fn: (param) => utils.popen(param, 'createCompte', []) };
 
-export const throw_if_err = (resp) => {
+export const throw_if_err = (resp: resp) => {
     const err = resp.err && resp.err[0];
     if (err && err.code === "badval") {
         throw ({ code: "Bad Request", error: "Valeur " + err.val  + " non valide" });
@@ -82,16 +89,16 @@ export const throw_if_err = (resp) => {
 
 export type accountStatus = undefined | "active" | "disabled" | "deleted"
 
-export const extract_attrs = (resp): { uid: string, accountStatus: accountStatus} => {
+export const extract_attrs = (resp: resp) => {
     if (resp.attrs && resp.attrs.uid) {
-        return _.mapValues(resp.attrs, l => l[0]) as any;
+        return _.mapValues(resp.attrs, l => l[0]) as { uid: string, accountStatus: accountStatus};
     } else {
         console.error("createCompte should return attrs.uid");
         throw resp.err ? JSON.stringify(resp.err[0]) : "createCompte should return attrs.uid";
     }
 };
 
-export const mayRetryWithoutSupannAliasLogin = (v: v, opts: options) => (resp) => {
+export const mayRetryWithoutSupannAliasLogin = (v: v, opts: options) => (resp: resp) => {
         if (resp.err) console.error("createCompte returned", resp);
         if (resp.err && resp.err[0].attr === "supannAliasLogin") {
             // gasp, the generated supannAliasLogin is already in use,
