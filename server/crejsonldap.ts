@@ -98,13 +98,13 @@ export const extract_attrs = (resp: resp) => {
     }
 };
 
-export const mayRetryWithoutSupannAliasLogin = (v: v, opts: options) => (resp: resp) => {
+export const mayRetryWithoutSupannAliasLogin = (v: v, opts: options) => async (resp: resp) => {
         if (resp.err) console.error("createCompte returned", resp);
         if (resp.err && resp.err[0].attr === "supannAliasLogin") {
             // gasp, the generated supannAliasLogin is already in use,
             // retry without supannAliasLogin
             delete v.supannAliasLogin;
-            return call(v, opts);
+            return await call(v, opts);
         } else {
             return resp;
         }
