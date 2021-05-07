@@ -9,8 +9,10 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,     
-    "alwaysStrict": true,
-    "strictFunctionTypes": true,
+    "strict": true,
+    //"noImplicitAny": false,
+    "strictNullChecks": false, //"strictPropertyInitialization": true,
+    
     "types" : [
         "body-parser", "express", "lodash", "mocha", "mongodb", "morgan", "mustache", "node", "nodemailer", "xml2js"
     ],
