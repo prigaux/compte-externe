@@ -1,26 +1,28 @@
 import * as ldap from 'ldapjs';
+// @ts-expect-error
 import * as helpers from '../../node_modules/ldap-filter/lib/helpers';
 
 /* workaround "Filters match on attribute values only case-sensitively" (ldapjs github issue #156) */
-function escapeRegExp(str) {
+function escapeRegExp(str: string) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 }
 
-ldap['SubstringFilter'].prototype.matches = function (target, strictAttrCase) {
+// @ts-expect-error
+ldap['SubstringFilter'].prototype.matches = function (target, strictAttrCase?: boolean) {
   var tv = helpers.getAttrValue(target, this.attribute, strictAttrCase);
   if (tv !== undefined && tv !== null) {
     var re = '';
 
     if (this.initial)
       re += '^' + escapeRegExp(this.initial) + '.*';
-    this.any.forEach(function (s) {
+    this.any.forEach(function (s: string) {
       re += escapeRegExp(s) + '.*';
     });
     if (this.final)
       re += escapeRegExp(this.final) + '$';
 
     var matcher = new RegExp(re, 'i');
-    return helpers.testValues(function (v) {
+    return helpers.testValues(function (v: any) {
       return matcher.test(v);
     }, tv);
   }
@@ -29,7 +31,7 @@ ldap['SubstringFilter'].prototype.matches = function (target, strictAttrCase) {
 };
 
 
-const doIt = params => {
+const doIt = (params: Dictionary<string>) => {
 const host = 'localhost';
 const db = params.DNs;
 
@@ -37,6 +39,7 @@ const server = ldap.createServer();
 
 let valid_bind = false;
 
+// @ts-expect-error
 function authorize(req, res, next) {
   valid_bind = req.dn.equals(params.dn) && req.credentials === params.password;
   if (!valid_bind) {
@@ -47,7 +50,7 @@ function authorize(req, res, next) {
   return next();
 }
 
-function search(dn, filter, scope: string) {
+function search(dn: any, filter: any, scope: string) {
     let dns;
     if (scope === 'base') {
         dns = [dn.toString()];
@@ -62,6 +65,7 @@ function search(dn, filter, scope: string) {
     ));
 }
 
+// @ts-expect-error
 server.search(params.base, (req, res, next) => {
   if (!valid_bind) return next(new ldap.InvalidCredentialsError());
   
@@ -84,7 +88,7 @@ server.search(params.base, (req, res, next) => {
 server.bind(params.base, authorize);
 
 return new Promise((resolve, reject) => {    
-    server.on('error', err => {
+    server.on('error', (err: any) => {
         reject(err);
     }); 
     server.listen(params.port || 0, host, () => {

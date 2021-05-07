@@ -2,7 +2,7 @@ import { assert } from './test_utils';
 import * as crejsonldap from '../crejsonldap';
 import * as actions from '../steps/actions';
 
-const fake_callRaw = (param_resp_s) => {
+const fake_callRaw = (param_resp_s: Dictionary<string>) => {
     crejsonldap.callRaw.fn = (param) => {
         if (!(param in param_resp_s)) {
             assert.fail(param, Object.keys(param_resp_s), undefined, 'member');
@@ -13,7 +13,7 @@ const fake_callRaw = (param_resp_s) => {
 
 describe('crejsonldap return value', () => {
     it ("should work", () => {
-        const resp = {"action":"ADD","dn":"uid=pascalrigau4,ou=people,dc=univ-paris1,dc=fr","attrs":{"accountStatus":["active"],"uid":["pascalrigau4"]}};
+        const resp: crejsonldap.resp = {"action":"ADD","dn":"uid=pascalrigau4,ou=people,dc=univ-paris1,dc=fr","attrs":{"accountStatus":["active"],"uid":["pascalrigau4"]}};
         assert.deepEqual(crejsonldap.extract_attrs(resp), { uid: "pascalrigau4", accountStatus: "active" });
     });
 });

@@ -7,7 +7,7 @@ import * as test_ldap from './test_ldap';
 import * as conf from '../conf'
 import * as search_ldap from '../search_ldap';
 
-const genLogin_with_existLogin = (existLogin_) => async (sn: string, givenName: string) => {
+const genLogin_with_existLogin = (existLogin_: (login: string) => Promise<boolean>) => async (sn: string, givenName: string) => {
     const { existLogin } = search_ldap;
     (search_ldap as any).existLogin = existLogin_
     const login = await search_ldap.genLogin(sn, givenName);
@@ -57,14 +57,14 @@ describe('genLogin', () => {
     });
 
     describe('handle existing', () => {
-        let added = {};
+        let added: Dictionary<boolean> = {};
         const genLogin = genLogin_with_existLogin(s => (
             Promise.resolve(added[s])
         ));
         
         
-        function iterate(sn: string, givenName: string, max: number): Promise<string[]> {
-            let iter = r => (
+        function iterate(sn: string, givenName: string, max: number) {
+            let iter = (r: string[]): Promise<string[]> => (
                 genLogin(sn, givenName).then(login => {
                     if (login && r.length < max) {
                         added[login] = true;

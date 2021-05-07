@@ -4,7 +4,7 @@ import { assert } from '../test_utils';
 import * as actions from '../../steps/actions';
 
 describe('homePhone_to_pager_if_mobile', () => {
-    async function testIt(v, wanted_v) {
+    async function testIt(v: v, wanted_v: v) {
         const sv = await actions.homePhone_to_pager_if_mobile(null, { v });
         assert.deepEqual(sv.v, wanted_v);        
     }

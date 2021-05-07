@@ -57,10 +57,10 @@ type MinimalStepAttrOption = StepAttrItemsOption & {
 
 type SharedStepAttrOption = MinimalStepAttrOption & {
     normalize?: (s: string) => string;
-    formatting?: (val) => string;
-    formatting_html?: (val) => string;
-    onChange?: (v: {}, _: string, val) => void;
-    validator?: (val, v_orig: {}) => string;
+    formatting?: (val: any) => string;
+    formatting_html?: (val: any) => string;
+    onChange?: (v: {}, _: string, val: any) => void;
+    validator?: (val: any, v_orig: {}) => string;
 
     minDate?: Date;
     maxDate?: Date;

@@ -31,13 +31,13 @@ const fake_host = (mdw: express.RequestHandler): express.RequestHandler => (
     }
 );
 
-const cas_express_auth = (req: req, _res, next) => {
+const cas_express_auth = (req: req, _res : res, next: next) => {
     const id = req.session && req.session.cas && req.session.cas.user;
     if (id) req.user = { id };
     next();
 }
 
-const pre_check_PGT = (req: req, _res, next) => {
+const pre_check_PGT = (req: req, _res: res, next: next) => {
     if (req.session && req.session.st && !req.session.pgt) {
         console.warn("we have a CAS ST but no PGT, ignore existing ST");
         delete req.session.st;
@@ -45,14 +45,14 @@ const pre_check_PGT = (req: req, _res, next) => {
     next();
 }
 
-const post_check_PGT = (req: req, _res, next) => {
+const post_check_PGT = (req: req, _res: res, next: next) => {
     if (!req.session || !req.session.pgt) {
         throw "Internal error: no PGT received" + JSON.stringify(req.session);
     }
     next();
 }
 
-export const init = (app) => {
+export const init = (app: express.Express) => {
     // an express session store is needed to store logged user
     app.use(utils.session_store());
     
@@ -89,7 +89,7 @@ export const get_proxy_ticket = (req: req, targetService: string): Promise<strin
     })
 )
 
-export function logout(req) {
+export function logout(req: req) {
     if (!req.session) {
     } else if (req.session.destroy) {
         // Forget our own login session

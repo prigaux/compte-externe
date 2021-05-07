@@ -23,14 +23,14 @@ describe('global', () => {
  });
 
  describe('allowed_step_ldap_filters', () => {
-    let steps, steps2;
+    let steps: steps, steps2: steps;
     before(() => { 
       steps = { 
-        "xxx": { acls: [ acl.user_id("arigaux") ], labels: undefined },
+        "xxx": { acls: [ acl.user_id("arigaux") ], labels: undefined, attrs: {} },
       };
       steps2 = {
         ...steps,
-        "yyy": { acls: [ acl.user_id("arigaux"), acl.ldapGroup('g1') ], labels: undefined },          
+        "yyy": { acls: [ acl.user_id("arigaux"), acl.ldapGroup('g1') ], labels: undefined, attrs: {} },          
       }
     });
 

@@ -7,15 +7,17 @@ import * as conf from '../conf';
 import * as ldap from '../ldap';
 import * as ldap_convert from '../ldap_convert';
 
+type entry = Dictionary<any>
+type params = Dictionary<any>
 
 function test_params() {
-    let DNs = {};
+    let DNs: Dictionary<entry> = {};
     let params = {
         base: 'dc=univ,dc=fr',
         base_people: "ou=people,dc=univ,dc=fr",
         base_rolesGeneriques: "ou=supannRoleGenerique,ou=tables,dc=univ,dc=fr",
         dn: 'cn=admin,dc=univ,dc=fr', password: 'xxx',    
-        group_cn_to_memberOf: cn => "cn=" + cn + "," + "ou=groups,dc=univ,dc=fr",
+        group_cn_to_memberOf: (cn: string) => "cn=" + cn + "," + "ou=groups,dc=univ,dc=fr",
         people: {
             ...conf.ldap.people,
             attrs: {
@@ -26,9 +28,9 @@ function test_params() {
         DNs: DNs,
     };
 
-    let people = [
+    let people: entry[] = [
 /* tslint:disable:max-line-length whitespace */      
-        { uid: "prigaux", sn: "rigaux", givenName: "pascal", cn: "rigaux pascal", displayName: "pascal rigaux", up1BirthName: 'Nomdavant', up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [], supannEtablissement: [ "{UAI}0751717J", "{SAML}https://univ-test.fr", "{MIFARE}mifare_id" ], supannEtuAnneeInscription: [ "2016", "2017" ],
+        { uid: "prigaux", sn: "rigaux", givenName: "pascal", cn: "rigaux pascal", displayName: "pascal rigaux", up1BirthName: 'Nomdavant', up1BirthDay: '19751002000000Z', eduPersonAffiliation: ['member','employee','staff'], objectClass: [] as string[], supannEtablissement: [ "{UAI}0751717J", "{SAML}https://univ-test.fr", "{MIFARE}mifare_id" ], supannEtuAnneeInscription: [ "2016", "2017" ],
           accountStatus: 'active',
           up1Profile: [
               "[up1Source={HARPEGE}carriere][up1Priority=800][up1StartDate=20110915][up1EndDate=20190430][eduPersonOrgUnitDN=ou=DGHA,ou=structures,o=Paris1,dc=univ-paris1,dc=fr][employeeType=Ingénieur de recherche rf][supannParrainDN=ou=DGEP,ou=structures,o=Paris1,dc=univ-paris1,dc=fr][eduPersonAffiliation=member;employee;staff][supannEntiteAffectation=DGHA][buildingName=Centre Pierre Mendès France][supannRefId={MIFARE}803853C2593A04][supannEtablissement={UAI}0751717J][supannEntiteAffectationPrincipale=DGHA][employeeNumber=9100035249][eduPersonPrimaryOrgUnitDN=ou=DGHA,ou=structures,o=Paris1,dc=univ-paris1,dc=fr][postalAddress=90 RUE DE TOLBIAC$75634 PARIS CEDEX 13$FRANCE][supannOrganisme={EES}0751717J][supannEmpCorps={NCORPS}836][up1TagMifare=8A38A3CA59AA0A][supannActivite={REFERENS}E1B22][eduPersonPrimaryAffiliation=staff]",
@@ -47,10 +49,10 @@ function test_params() {
         { up1TableKey: "{SUPANN}D00", cn: "Ministre", description: "Ministre", displayName: "Ministre", initials: "MINISTRE", objectClass: "up1TableEntry" },
 /* tslint:enable */
     ];
-    function add(dn: string, e) {
+    function add(dn: string, e: entry) {
       DNs[parseDN(dn).toString()] = e;
     }
-    function addAll(base, attr, list) {
+    function addAll(base: string, attr: string, list: entry[]) {
         add(base, {});
         list.forEach(e => {
             if (!e[attr]) throw `missing ${attr} in ${e}`;
@@ -62,11 +64,12 @@ function test_params() {
     return params;
 }
 
-let _server
+type server = any
+let _server: server
 
-function create_server(params) {
+function create_server(params: params): Promise<params> {
     if (!params) params = test_params();
-    return require('./ldap_server')(params).then(server => {
+    return require('./ldap_server')(params).then((server: server) => {
         let conf = _.omit(params, 'DNs');
         conf['uri'] = server.url;
         _server = server
@@ -74,7 +77,7 @@ function create_server(params) {
     });
 }
 
-export const create = (params = undefined): Promise<{void}> => (
+export const create = (params: Dictionary<any> = undefined): Promise<void> => (
     create_server(params).then(ldap_conf => {
         (conf as any).ldap = { ...conf.ldap, ...ldap_conf };
         ldap.force_new_clientP();

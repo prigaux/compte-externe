@@ -3,12 +3,12 @@ import shared_conf from '../conf';
 
 const remove_accents = _.deburr;
 
-const remove_special_chars = (s) => (
+const remove_special_chars = (s: string) => (
     s.replace(/[',.-]/g, '')
 )
 
-const compute_allowed = (allowed_elts: string[]) => {
-    let allowed: {} = {};
+const compute_allowed = (allowed_elts: string[]): Dictionary<number> => {
+    let allowed: Dictionary<number> = {};
     let prev;
     for (const s of allowed_elts) {
         for (const word of s.split(' ')) {
@@ -20,13 +20,13 @@ const compute_allowed = (allowed_elts: string[]) => {
     return allowed
 }
 
-const get_and_remove = (o: {}, key: string) => {
+const get_and_remove = <T>(o: Dictionary<T>, key: string): T => {
     const val = o[key];
     delete o[key];
     return val;
 }
 
-const remove_allowed_words = (words: string[], allowed: {}, prev_allowed: {}) => {
+const remove_allowed_words = (words: string[], allowed: Dictionary<number>, prev_allowed: Dictionary<number>) => {
     const minRemaining = prev_allowed ? 0 : 1;
     let removed = false;
     //console.log(removed, minRemaining, words, allowed);
@@ -53,12 +53,12 @@ const remove_allowed_words = (words: string[], allowed: {}, prev_allowed: {}) =>
     }
 }
 
-const _merge_at = (v: {}, attrs: string[]) => _.compact(_.merge(_.at(v, attrs)))
+const _merge_at = (v: {}, attrs: string[]): string[] => _.compact(_.merge(_.at(v, attrs)))
 
 
 export default (displayName: string, v_orig: {}) => {
-    const prepare_for_compare = val => remove_special_chars(remove_accents(val)).toLowerCase()    
-    const get = (fields): string[] => _merge_at(v_orig, fields).map(prepare_for_compare);
+    const prepare_for_compare = (val: string) => remove_special_chars(remove_accents(val)).toLowerCase()    
+    const get = (fields: string[]): string[] => _merge_at(v_orig, fields).map(prepare_for_compare);
 
     let toCheck = prepare_for_compare(displayName).split(' ');
     let allowed_sns = compute_allowed(get(shared_conf.sns));

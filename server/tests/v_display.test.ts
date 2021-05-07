@@ -2,7 +2,7 @@ import { mapValues } from 'lodash';
 import { assert } from './test_utils';
 import v_display from '../v_display';
 
-const test = (attrs, v, wanted_v) => {
+const test = (attrs: StepAttrsOption, v: v, wanted_v: Dictionary<any>) => {
     const v_ = v_display(v, attrs);
     const v__ = mapValues(wanted_v, (_, k) => v_[k]); // NB: can not use "pick"
     assert.deepEqualP(v__, wanted_v);

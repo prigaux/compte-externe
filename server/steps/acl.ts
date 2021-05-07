@@ -73,7 +73,7 @@ export const structureRoles = (code_attr: string, rolesFilter: string): acl_sear
 //      'structureParrain', 
 //       search_ldap.prefix_suffix_to_group_and_code('applications.comptex.invite.', '-managers')
 //   )
-export const group_for_each_attr_codes = (codeAttr: string, { code_to_group_cn, group_cn_to_code }): acl_search => _convert_simple_acl_search({
+export const group_for_each_attr_codes = (codeAttr: string, { code_to_group_cn, group_cn_to_code }: search_ldap.group_and_code_fns): acl_search => _convert_simple_acl_search({
     v_to_ldap_filter: async (v) => (
         filters.memberOf(code_to_group_cn(v[codeAttr]))
     ),
@@ -88,7 +88,7 @@ export const group_for_each_attr_codes = (codeAttr: string, { code_to_group_cn, 
 //   acl.ldapGroupsMatching(
 //       search_ldap.prefix_suffix_to_group_and_code('applications.comptex.invite.', '-managers')
 //   )
-export const ldapGroupsMatching = ({ code_to_group_cn, group_cn_to_code }): acl_search => _convert_simple_acl_search({
+export const ldapGroupsMatching = ({ code_to_group_cn, group_cn_to_code } : search_ldap.group_and_code_fns): acl_search => _convert_simple_acl_search({
     // search users that are memberOf of groups matching "ldap_group_filter"
     v_to_ldap_filter: async (_v) => {
         // find all groups matching "ldap_group_filter"

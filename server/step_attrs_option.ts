@@ -2,8 +2,10 @@ import * as _ from 'lodash';
 import * as utils from './utils';
 import { compute_mppp_and_handle_default_values } from '../shared/mppp_and_defaults'
 
-function compute_diff(prev, current, key) {
-    const toString = (val) => (
+export type one_diff = { prev: any, current: any }
+
+function compute_diff(prev: Dictionary<any>, current: Dictionary<any>, key: string): Dictionary<one_diff> {
+    const toString = (val: any) => (
         val instanceof Array ? val.join(', ') : val instanceof Date ? val.toISOString() : val || ''
     )
     return toString(prev[key]) === toString(current[key]) ? {} : { 
@@ -18,7 +20,7 @@ export const selectUserProfile = (v: v, profilename: string) => {
         return undefined;
     }
     v = _.clone(v);
-    v.up1Profile.forEach(profile => {
+    v.up1Profile.forEach((profile: Dictionary<any>) => {
         _.forEach(profile, (pval, attr) => {
             const val = v[attr];
             if (_.isArray(val)) {
@@ -31,8 +33,8 @@ export const selectUserProfile = (v: v, profilename: string) => {
     return { ...v, ...profile };
 };
 
-export function merge_v(attrs_ : StepAttrsOption, more_attrs: SharedStepAttrsOption, prev, v: v, opts?: { no_diff?: true }): v {
-    let r = { various: prev.various || [] };
+export function merge_v(attrs_ : StepAttrsOption, more_attrs: SharedStepAttrsOption, prev: v, v: v, opts?: { no_diff?: true }): v {
+    let r: v = { various: prev.various || [] };
     let diff = {};
     function merge_one_level(attrs : StepAttrsOption) {
       _.each(attrs, (opt, key) => {
@@ -59,7 +61,7 @@ export function merge_v(attrs_ : StepAttrsOption, more_attrs: SharedStepAttrsOpt
     return r as v;
 }
 
-function validate(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOption, val, prev, v: v) {
+function validate(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOption, val: any, prev: v, v: v) {
         if (opt.serverValidator) {
             const error = opt.serverValidator(val, prev, v);
             if (error) throw { code: 400, error, attrName: key };
@@ -101,7 +103,7 @@ function validate(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOpti
         }
 }
 
-function validate_nothrow(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOption, val, prev, v: v) {
+function validate_nothrow(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOption, val: any, prev: v, v: v) {
     try {
         validate(key, opt, more_opt, val, prev, v);
         return true;
@@ -111,14 +113,14 @@ function validate_nothrow(key: string, opt: StepAttrOption, more_opt: SharedStep
 }
 
 /* before sending to client, remove sensible information */
-export function export_v(attrs: StepAttrsOption, v) {
-    const r = {};
+export function export_v(attrs: StepAttrsOption, v: v) {
+    const r: v = {};
     const rec_mpp = <T extends Mpp<StepAttrOption_no_extensions>>(one : T) => {        
         const mppp = one.merge_patch_parent_properties
         // TODO better "merge_patch_options" handling
         if (mppp && !one.merge_patch_options) rec(mppp)
     }
-    const ignore = (key, opts) => (
+    const ignore = (key: string, opts: StepAttrOption) => (
         opts.ignoreInvalidExistingValue && !validate_nothrow(key, opts, {}, v[key], v, v)
     )
     function rec(attrs: StepAttrsOption) {
@@ -179,11 +181,11 @@ const handle_chosen_oneOf_or_if_then_mppp = (opts: StepAttrOption, val: string, 
     handle_chosen_oneOf_mppp(opts, val, rec);
 }
 
-const matches_if = (if_, val: string) => (
+const matches_if = (if_: { optional: false }, val: string) => (
     if_.optional || val
 )
 
-const find_choice = (oneOf: StepAttrOptionChoices[], val) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
+const find_choice = (oneOf: StepAttrOptionChoices[], val: any) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
 
 type ClientSideStepAttrOption = StepAttrOptionM<ClientSideOnlyStepAttrOption>
 const exportAttr = ({ toUserOnly, oneOf_async, properties, toUser, then, oneOf, ...opt_} : StepAttrOption) => {
@@ -194,7 +196,7 @@ const exportAttr = ({ toUserOnly, oneOf_async, properties, toUser, then, oneOf, 
 
     function rec_mpp(one: Mpp<StepAttrOption>): Mpp<ClientSideStepAttrOption>
     function rec_mpp(one: StepAttrOptionChoicesT<StepAttrOption>): StepAttrOptionChoicesT<ClientSideStepAttrOption>
-    function rec_mpp(one) {
+    function rec_mpp(one: any) {
         if (one.merge_patch_parent_properties) {
             return { ...one, merge_patch_parent_properties: exportAttrs(one.merge_patch_parent_properties) };
         } else {

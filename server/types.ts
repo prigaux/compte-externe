@@ -10,6 +10,7 @@ interface CurrentUser {
 }
 type req = express.Request<Dictionary<string>, any, any, Dictionary<string>> & { user?: CurrentUser };
 type res = express.Response<any>;
+type next = express.NextFunction;
 
 type Mails = string[]
 
@@ -56,7 +57,7 @@ interface ServiceSideOnlyStepAttrOptions {
   toUser?: (val: string, v: v) => any;
 
   oneOf_async?: (token: string, sizeLimit: number) => Promise<StepAttrOptionChoices[]>; // if sizeLimit===1, it is used as an exact search
-  serverValidator?: (val: string, prev, v: v) => string;
+  serverValidator?: (val: string, prev: v, v: v) => string;
 }
 type StepAttrOptionT<MoreOptions> = StepAttrOptionM<ServiceSideOnlyStepAttrOptions & MoreOptions>;
 type StepAttrsOptionT<M> = Dictionary<StepAttrOptionT<M>>;
@@ -89,7 +90,7 @@ type step = {
   attrs: StepAttrsOption
   attrs_override?: ((req: req, sv: sv) => Promise<StepAttrsOption>);
   next?: string | ((v: v) => Promise<string>);
-  nextBrowserStep?: string | ((v) => Promise<string>); // either /<step> or a full url
+  nextBrowserStep?: string | ((v: v) => Promise<string>); // either /<step> or a full url
   notify?: StepNotify;
   action_pre?: action;
   action_post?: action;

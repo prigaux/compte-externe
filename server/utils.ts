@@ -42,8 +42,8 @@ interface http_client_Options {
 
 export const http_request = (url: string, options: http_client_Options & { body?: string }) : Promise<string> => {
     options = _.assign({ url, ca: conf.http_client_CAs }, options);
-    return new Promise((resolve: (string) => void, reject: (any) => void) => {
-        simpleGet(options, (err, res: http.IncomingMessage) => {
+    return new Promise((resolve: (_: string) => void, reject: (_: any) => void) => {
+        simpleGet(options, (err: any, res: http.IncomingMessage) => {
             if (err) return reject(err);
             res.setTimeout(options.timeout || 10000, null);
 
@@ -64,7 +64,7 @@ export const post = (url: string, body: string, options: Omit<http_client_Option
     return http_request(url, { method: 'POST', body, ...options })
 };
 
-const http_statuses = {
+const http_statuses: Dictionary<number> = {
     "Bad Request": 400,
     "Unauthorized": 401,
     "Forbidden": 403,
@@ -84,7 +84,7 @@ export function respondJson(req: req, res: express.Response, p: Promise<response
     });
 }
 
-export const index_html = (_req: req, res: express.Response, _next): void => {
+export const index_html = (_req: req, res: express.Response, _next: next): void => {
     res.sendFile(path.join(__dirname, "../app/dist/index.html"), err => { 
         if (err) console.error(err)
     })
@@ -103,17 +103,17 @@ const parse_csv = (csv: string): Promise<{ fields: string[], lines: {}[] }> => (
             delimiter: "auto", // relies on the delimiter most present in headers. Since field names should not contain any known delimiters (,|\t;:), it is ok!
             checkColumn: true,
         });      
-        let fields;
+        let fields: string[];
         convert.fromString(csv)
-          .on('header', header => fields = header)
-          .on('end_parsed', lines => resolve({ fields, lines }))
-          .on('error', err => {
+          .on('header', (header: string[]) => fields = header)
+          .on('end_parsed', (lines: {}[]) => resolve({ fields, lines }))
+          .on('error', (err: any) => {
             console.log("parse_csv failed on\n", csv);
             reject(err);
         });
     })
 );
-export const csv2json = (req: req, res): void => (
+export const csv2json = (req: req, res: res): void => (
     respondJson(req, res, parse_csv(toString(req.body)))
 );
 
@@ -142,7 +142,7 @@ export function popen(inText: string, cmd: string, params: string[]): Promise<st
 
     return <Promise<string>> new Promise((resolve, reject) => {
         let output = '';
-        let get_ouput = data => { output += data; };
+        let get_ouput = (data: any) => { output += data; };
         
         p.stdout.on('data', get_ouput);
         p.stderr.on('data', get_ouput);
@@ -163,7 +163,7 @@ export function mergeSteps(initialSteps: steps, nextSteps: steps): steps {
 export const attrsHelpingDiagnoseHomonymes = (
     { 
         global_main_profile: { 
-            toUser(_, v: v) {
+            toUser(_: any, v: v) {
                 return v.uid && { description: ` est ${shared_conf.affiliation_labels[v.global_eduPersonPrimaryAffiliation] || 'un ancien compte sans affiliation'}` }
             },
             toUserOnly: true, 
@@ -185,14 +185,15 @@ export const mapAttrs = <T>(attrs: StepAttrsOptionT<T>, f: (opts: StepAttrOption
     })
 )
 
-export const forceAttrs = (attrs: StepAttrsOption, attrsToForce) => (
+export const forceAttrs = (attrs: StepAttrsOption, attrsToForce: Dictionary<any>) => (
     mapAttrs(attrs, (opts) => ({ ...opts, ...attrsToForce }))
 )
 
-export const deep_extend = (o, overrides) => {
+export const deep_extend = <T extends Dictionary<any>, U extends Dictionary<any>>(o: T, overrides: U) => {
     if (_.isPlainObject(o) && _.isPlainObject(overrides)) {
-        const r = { ...o, ...overrides };
+        const r: T & U = { ...o, ...overrides };
         for (const attr of _.intersection(Object.keys(o), Object.keys(overrides))) {
+            // @ts-expect-error
             r[attr] = deep_extend(o[attr], overrides[attr]);
         }
         return r;

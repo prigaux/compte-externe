@@ -29,9 +29,9 @@ export const send = (params: nodemailer.SendMailOptions) => {
 };
 
 export const resolve_mustache_async_params = async (template: string, params: {}) => {
-    function tmpl2paths(template) {
+    function tmpl2paths(template: string) {
         let todo = [...Mustache.parse(template)];
-        let r = {};
+        let r: Dictionary<boolean> = {};
         while (todo.length) {
             const [kind, path, , , merge_patch_parent_properties] = todo.shift();
             if (kind !== 'text') r[path] = true;
@@ -68,7 +68,8 @@ export const sendWithTemplateFile = (templateName: string, params: {}) => {
         }
     });
 }
-export const sendWithTemplate = (template: string, params: {}, templateName = "") => {
+type params = Dictionary<any> & Pick<nodemailer.SendMailOptions, "to"|"from"|"cc">
+export const sendWithTemplate = (template: string, params: params, templateName = "") => {
     mustache_async_render(template, params).then(rawMsg => {
             if (!rawMsg) return;
             console.log("===========================");

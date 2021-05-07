@@ -30,8 +30,8 @@ if (conf.cas.host) {
     app.use(utils.shibboleth_express_auth);
 }
 
-const express_if_then_else = (cond, if_true, if_false) => (
-    (req: req, res: res, next) => {
+const express_if_then_else = (cond: (req: express.Request) => boolean, if_true: express.RequestHandler, if_false: express.RequestHandler) : express.RequestHandler => (
+    (req, res, next) => {
         (cond(req) ? if_true : if_false)(req, res, next);
     }
 );
@@ -44,7 +44,7 @@ const myBodyParser = express_if_then_else(
 );
 
 // needed for XHRs on MSIE
-const force_noCache = (_req: req, res: res, next) => {
+const force_noCache: express.RequestHandler = (_req, res, next) => {
     res.header('Cache-Control', 'private, no-cache, no-store');
     next();
 }

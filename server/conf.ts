@@ -8,6 +8,7 @@ import * as session from 'express-session';
 import * as session_file_store from 'session-file-store';
 import { sameKeyNameChoices } from './helpers';
 import * as grouped_calls from './helper_grouped_calls';
+// @ts-expect-error
 import * as vue_config from '../app/vue.config';
 
 const ldap_base = "dc=univ,dc=fr";
@@ -91,8 +92,8 @@ const conf = {
                 supannCivilite: '',
                 supannAliasLogin: '', supannMailPerso: '', userPassword: '', 
                 mail: '', mailDeliveryOption: [''], mailForwardingAddress: '',
-                birthDay: new Date(), birthName: '', altGivenName: [],
-                homePhone: '', telephoneNumber: '', facsimileTelephoneNumber: '', supannAutreTelephone: [], pager: '', mobile: '',
+                birthDay: new Date(), birthName: '', altGivenName: [] as string[],
+                homePhone: '', telephoneNumber: '', facsimileTelephoneNumber: '', supannAutreTelephone: [] as string[], pager: '', mobile: '',
                 homePostalAddress: '',
                 postalAddress: '',
                 floorNumber: '', roomAccess: '', roomNumber: '', buildingName: '',
@@ -108,7 +109,7 @@ const conf = {
                 mifare: '',
 
                 // useful to know the kind of profiles the user has.
-                global_eduPersonAffiliation: [],
+                global_eduPersonAffiliation: [] as string[],
                 global_eduPersonPrimaryAffiliation: '',
                 global_supannEtuAnneeInscription: [0],
                 global_structureParrain: '',
@@ -118,9 +119,9 @@ const conf = {
                 global_shadowExpire: new Date(),
 
                 eduPersonPrimaryAffiliation: '',
-                eduPersonEntitlement: [],
-                supannRoleEntite: [],
-                supannRoleGenerique: [],
+                eduPersonEntitlement: [] as string[],
+                supannRoleEntite: [] as string[],
+                supannRoleGenerique: [] as string[],
                 supannEntiteAffectationPrincipale: '',
                 supannEntiteAffectation: [''],
                 supannEtuEtape: [''],
@@ -147,7 +148,7 @@ const conf = {
                 termsOfUse: [''],
                 supannListeRouge: '',
 
-                up1Profile: [],
+                up1Profile: [] as any[],
                 '{SMSU}CG': '', '{PHOTO}PUBLIC': '', '{PHOTO}INTRANET': '', '{PHOTO}STUDENT': '',
             },
 
@@ -165,8 +166,8 @@ const conf = {
                 priority: { ldapAttr: 'up1Priority', ldapAttrJson: 'priority' },
                 startdate: { ldapAttr: 'up1StartDate', ldapAttrJson: 'startdate', convert: ldap_convert.date },
                 enddate: { ldapAttr: 'up1EndDate', ldapAttrJson: 'enddate', convert: ldap_convert.date },
-                etablissementExterne: { ldapAttr: 'supannEtablissement', convert: ldap_convert.match(s => !internal_organizations.includes(s)) },
-                etablissementInterne: { ldapAttr: 'supannEtablissement', convert: ldap_convert.match(s => internal_organizations.includes(s)) },
+                etablissementExterne: { ldapAttr: 'supannEtablissement', convert: ldap_convert.match((s: string) => !internal_organizations.includes(s)) },
+                etablissementInterne: { ldapAttr: 'supannEtablissement', convert: ldap_convert.match((s: string) => internal_organizations.includes(s)) },
                 Shib_Identity_Provider: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette('{SAML}') },
                 eduPersonPrincipalName: { ldapAttr: 'supannRefId', convert: ldap_convert.withEtiquette("{EPPN}") },                
                 personParrain: { ldapAttr: 'supannParrainDN', convert: ldap_convert.dn("uid", ldap_main.base_people) },
@@ -188,18 +189,18 @@ const conf = {
             mail_domains: [
             ],
     
-            homonymes_preferStudent: profilename => (profilename || '').match(/^\{COMPTEX\}learner\./),
+            homonymes_preferStudent: (profilename: string) => !!(profilename || '').match(/^\{COMPTEX\}learner\./),
             homonymes_restriction: '(objectClass=inetOrgPerson)',
         },
 
-        group_cn_to_memberOf: cn => (
+        group_cn_to_memberOf: (cn: string) => (
             "cn=" + cn + "," + ldap_main.base_groups
         ),
-        memberOf_to_group_cn: memberOf => (
+        memberOf_to_group_cn: (memberOf: string) => (
             (memberOf.match(/^cn=([^,]*)/, memberOf) || [])[1]
         ),
 
-        group_member_to_eppn: user_dn => {
+        group_member_to_eppn: (user_dn: string) => {
             let r = user_dn.match(/^uid=([^,]*)/);
             if (!r) console.log("invalid group member " + user_dn);
             return r[1] + conf.ldap.uid_to_eppn;

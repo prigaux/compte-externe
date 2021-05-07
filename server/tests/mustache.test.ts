@@ -15,6 +15,7 @@ describe('Mustache', () => {
         const v = { foo: "bar" };
         
         const v_ = new Proxy(v, {
+            // @ts-expect-error
             get(that, expr) { return that[expr].toUpperCase(); }
         });      
         const r = mustache.render("Foo {{v_.foo}}", { v_ });
@@ -24,7 +25,7 @@ describe('Mustache', () => {
 });
 
 describe('resolve_mustache_async_params + mustache', () => {
-    const render = async (template, params) => (
+    const render = async (template: string, params: Dictionary<any>) => (
          mustache.render(template, await resolve_mustache_async_params(template, params))
     );
 

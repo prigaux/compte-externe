@@ -93,7 +93,7 @@ export default {
         mail: { title: "Courriel" },
         etablissementExterne: { 
             uiPlaceholder: "Entrez une raison sociale, un SIRET ou un UAI",
-            onChange(v, _, etablissementS) {
+            onChange(v: Dictionary<string>, _, etablissementS: Dictionary<string>) {
                 // set every "etablissement" fields in v, with prefix "etablissement_"
                 Object.keys(v).forEach(k => { if (k.match(/^etablissement_/)) v[k] = '' });
                 Object.keys(etablissementS).forEach(k => v[`etablissement_${k}`] = etablissementS[k]);
@@ -129,7 +129,7 @@ export default {
         frenchPostalCode: 'Le champ doit être un code postal. Exemple : 75013',
         country: 'Veuillez saisir un nom de pays',
         siret: 'Numéro SIRET invalide',
-        forbiddenChars: (forbiddenChars) => (
+        forbiddenChars: (forbiddenChars: string) => (
             forbiddenChars.length === 1 ?
              `Le caractère « ${forbiddenChars} » n'est pas autorisé.` :
              `Les caractères « ${forbiddenChars} » ne sont pas autorisés.`
@@ -148,7 +148,7 @@ export default {
         employee: "employé",
         'registered-reader': 'lecteur externe',
         'library-walk-in': "visiteur bibliothèque",
-    },
+    } as Dictionary<string>,
 
     countries: [
         // sorted first 30 countries found in UP1 LDAP

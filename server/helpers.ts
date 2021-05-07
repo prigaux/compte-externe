@@ -7,7 +7,7 @@ if (Promise.prototype.tap === undefined) {
     // https://github.com/kriskowal/q/wiki/API-Reference#promisetaponfulfilled
     // NB: "f" can modify the result in case it throws an exception or return a rejected promise
     // (cf https://github.com/petkaantonov/bluebird/blob/master/test/mocha/tap.js#L39-L46 )
-    Promise.prototype.tap = function (f) {
+    Promise.prototype.tap = function (f: (_:any) => void | Promise<void>) {
         return this.then(v => {
             let p = f(v);
             if (!p || !p.then) p = Promise.resolve(p);
@@ -17,20 +17,23 @@ if (Promise.prototype.tap === undefined) {
 }
 
 // reify a promise: create a promise and return an object with promise + resolve/reject functions
-export type promise_defer<T> = { resolve(v : T) : void, reject(err): void, promise : Promise<T> };
+export type promise_defer<T> = { resolve(v : T) : void, reject(err: string): void, promise : Promise<T> };
 export function promise_defer<T>() {
     let deferred = {} as promise_defer<T>;
     deferred.promise = new Promise((resolve, reject) => { deferred.resolve = resolve; deferred.reject = reject });
     return deferred;
 }
 
-export const setTimeoutPromise = (time) => (
+export const setTimeoutPromise = (time: number) => (
     new Promise((resolve, _) => setTimeout(resolve, time))
 );
 
+// @ts-expect-error
 export const promisify_callback = f => (
+    // @ts-expect-error
     (...args) => {
         return new Promise((resolve, reject) => {
+            // @ts-expect-error
             function callback(err, result) {
                 if (err) reject(err); else resolve(result);
             }
@@ -39,8 +42,9 @@ export const promisify_callback = f => (
     }
 );
 
-export function pmap<T,U>(o: T[], f: (T) => Promise<U>): Promise<U[]>
-export function pmap<T,U>(o: Dictionary<T>, f: (T, string) => Promise<U>): Promise<U[]>
+export function pmap<T,U>(o: T[], f: (e: T) => Promise<U>): Promise<U[]>
+export function pmap<T,U>(o: Dictionary<T>, f: (e: T, key: string) => Promise<U>): Promise<U[]>
+// @ts-expect-error
 export function pmap (o, f) { return Promise.all(_.map(o, f)) }
 
 
@@ -77,6 +81,7 @@ export const sameKeyNameChoices = (l: string[]) => (
 
 export function inclusive_range(start: string, end: string): string[];
 export function inclusive_range(start: number, end: number): number[];
+// @ts-expect-error
 export function inclusive_range(start, end): any {
     return typeof start === 'number' ?
         _.range(start, end+1) :
@@ -97,13 +102,13 @@ export function is_valid_uai_code(uai: string) {
     return given_checksum === computed_checksum;
 }
 
-export function get_delete(o: {}, key: string) {
+export function get_delete<T>(o: Dictionary<T>, key: string): T {
     const val = o[key];
     delete o[key];
     return val;
 }
 
-const xmlEncodeMap = {
+const xmlEncodeMap: Dictionary<string> = {
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
@@ -115,9 +120,9 @@ export const escapeXml = (value: string): string => (
     String(value).replace(/[&<>"']/g, c => xmlEncodeMap[c])
 )
 
-export function mapLeaves(v, fn) {
+export function mapLeaves(v: any, fn: (v: any) => any): any {
     if (_.isPlainObject(v)) {
-        const r = {};
+        const r: Dictionary<any> = {};
         _.each(v, (v_, k) => r[fn(k)] = mapLeaves(v_, fn));
         return r;
     } else if (_.isArray(v)) {

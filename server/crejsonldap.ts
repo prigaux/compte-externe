@@ -74,7 +74,7 @@ export const call = (v: v, opts: options) => {
 }
 
 // exported for tests purpose
-export const callRaw = { fn: (param) => utils.popen(param, 'createCompte', []) };
+export const callRaw = { fn: (param: string) => utils.popen(param, 'createCompte', []) };
 
 export const throw_if_err = (resp: resp) => {
     const err = resp.err && resp.err[0];

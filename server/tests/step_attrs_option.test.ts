@@ -1,5 +1,5 @@
 import { assert } from './test_utils';
-import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile, merge_attrs_overrides, checkAttrs } from '../step_attrs_option';
+import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile, merge_attrs_overrides, checkAttrs, one_diff } from '../step_attrs_option';
 import checkDisplayName from '../../shared/validators/displayName';
 
 const a_or_b : StepAttrOption = { oneOf: [
@@ -18,7 +18,7 @@ const a_then_bc : StepAttrsOption = { a: {
 
 describe('exportAttrs', () => {
     it("should work", () => {
-        const checkSame = (attrs) => assert.deepEqual(exportAttrs(attrs), attrs);
+        const checkSame = (attrs: Dictionary<any>) => assert.deepEqual(exportAttrs(attrs), attrs);
         checkSame({ sn: {} });
         checkSame({ _foo: { properties: { sn: {} } } });
         assert.deepEqual(exportAttrs({ sn: { readOnly: true, maxYear: 11 } }), { sn: { readOnly: true, optional: true, maxYear: 11 } });
@@ -43,7 +43,7 @@ describe('exportAttrs', () => {
 });
 
 describe('export_v', () => {
-    function test(attrs, v, wanted_v) {
+    function test(attrs: StepAttrsOption, v: v, wanted_v: v) {
         assert.deepEqual(export_v(attrs, v), wanted_v);
     }
     const v = { sn: "new" } as any;
@@ -106,7 +106,7 @@ describe('export_v', () => {
         test(a_then_bc, { a: "aa", b: "bb" }, { a: "aa", b: "bb" });
     });
     it("should handle ignoreInvalidExistingValue", () => {
-        const attrs = (ignoreInvalidExistingValue) => ({ a: { pattern: 'x', optional: true, ignoreInvalidExistingValue } })
+        const attrs = (ignoreInvalidExistingValue: boolean) => ({ a: { pattern: 'x', optional: true, ignoreInvalidExistingValue } })
         test(attrs(false), { a: "a" }, { a: "a" })
         test(attrs(true), { a: "a" }, {})
         test(attrs(true), { a: "x" }, { a: "x" })
@@ -115,7 +115,7 @@ describe('export_v', () => {
 });
 
 describe('flatten_attrs', () => {
-    function test(attrs, v, wanted_attrs) {
+    function test(attrs: StepAttrsOption, v: v, wanted_attrs: StepAttrsOption) {
         assert.deepEqual(flatten_attrs(attrs, v), wanted_attrs);
     }
     it("should work", () => {
@@ -140,13 +140,13 @@ describe('flatten_attrs', () => {
 });
 
 describe('merge_v', () => {
-    function test_more(attrs, more_attrs, prev, v, wanted_v) {
+    function test_more(attrs: StepAttrsOption, more_attrs: StepAttrsOption, prev: v, v: v, wanted_v: v) {
         let v_ = merge_v(attrs, more_attrs, prev, v);
         delete v_.various;
         assert.deepEqual(v_, wanted_v);
     }
     
-    function test_fail_more(attrs, more_attrs, prev, v, wanted_err) {
+    function test_fail_more(attrs: StepAttrsOption, more_attrs: StepAttrsOption, prev: v, v: v, wanted_err: any) {
         try {
             merge_v(attrs, more_attrs, prev, v);
             assert.fail("should raise error");
@@ -154,10 +154,10 @@ describe('merge_v', () => {
             assert.deepEqual(err, wanted_err);
         }
     }
-    function test(attrs, prev, v, wanted_v) {
+    function test(attrs: StepAttrsOption, prev: v, v: v, wanted_v: v) {
         test_more(attrs, {}, prev, v, wanted_v);
     }
-    function test_fail(attrs, prev, v, wanted_err) {
+    function test_fail(attrs: StepAttrsOption, prev: v, v: v, wanted_err: any) {
         test_fail_more(attrs, {}, prev, v, wanted_err);
     }
     const prev = { sn: "old" } as any;
@@ -198,7 +198,9 @@ describe('merge_v', () => {
     });
     it ("should check array", () => {
         test_fail({ altGivenName: { items: {} } }, {}, {}, 'constraint !altGivenName.optional failed for undefined');
+        // @ts-expect-error
         test_fail({ altGivenName: { items: {} } }, {}, { altGivenName: 'x' }, 'constraint altGivenName is array failed for x');
+        // @ts-expect-error
         test_fail({ altGivenName: { items: {}, optional: true } }, {}, { altGivenName: 'x' }, 'constraint altGivenName is array failed for x');
         test_fail({ altGivenName: { items: {} } }, {}, { altGivenName: [] }, 'constraint !altGivenName.optional failed for ');
         test({ altGivenName: { items: {}, optional: true } }, {}, {}, {});
@@ -285,8 +287,8 @@ describe('merge_v', () => {
         test_fail_more(attrs, more_attrs, prev, { displayName: 'Foo' }, "Le nom annuaire doit comprendre le prénom et le nom");
     });
     it("should check serverValidator", () => {
-        const serverValidator = (val, _prev, v) => !val && !v.givenName && "either sn or givenName needed"
-        const attrs = {
+        const serverValidator: StepAttrOption["serverValidator"] = (val, _prev, v) => !val && !v.givenName && "either sn or givenName needed"
+        const attrs: StepAttrsOption = {
             givenName: { optional: true },
             sn: { optional: true, serverValidator },
         }
@@ -304,8 +306,8 @@ describe('merge_v', () => {
 });
 
 describe('compute_diff', () => {
-    function test(attrs, prev, current, wanted_diff) {
-        let v_ = merge_v(attrs, {}, prev, current);
+    function test(attrs: StepAttrsOption, prev: v, current: v, wanted_diff: Dictionary<one_diff>) {
+        let v_: v = merge_v(attrs, {}, prev, current);
         assert.deepEqual(v_.various.diff, wanted_diff);
     }
 

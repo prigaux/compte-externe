@@ -6,7 +6,7 @@ import * as mongodb from 'mongodb';
 import * as conf from './conf';
 import { get_delete } from './helpers';
 
-export function renameKey(o, oldK, newK) {
+export function renameKey<T>(o: Dictionary<T>, oldK: string, newK: string): Dictionary<T> {
     if (o && (oldK in o)) {
         o = _.clone(o);
         o[newK] = get_delete(o, oldK);
@@ -17,13 +17,13 @@ export function renameKey(o, oldK, newK) {
 function _id(id: string = undefined) {
     return new mongodb.ObjectID(id);
 }
-function fromDB(sv_): sv {
-    return renameKey(sv_, '_id', 'id');
+function fromDB(sv_: any) {
+    return renameKey(sv_, '_id', 'id') as sv;
 }
 function toDB(sv: sv) {
     let sv_ = _.omit(sv, 'id');
     sv_['_id'] = _id(sv.id);
-    return sv_;
+    return sv_ as sv;
 }
 
 let client: mongodb.Db = null;
@@ -46,7 +46,7 @@ export const setLock = (id: id, lock: boolean) => (
 );
 
     // lists svs, sorted by steps + recent one at the beginning
-export const listByModerator = (query) : Promise<sv[]> => {
+export const listByModerator = (query: Object) : Promise<sv[]> => {
         if (_.isEqual(query, { "$or": [] })) return Promise.resolve(null);
         return (
             svs().find(query).sort({ step: 1, modifyTimestamp: -1 }).toArray()
@@ -66,7 +66,7 @@ export const save = (sv: sv) => {
             return svs().replaceOne({ _id: sv_['_id'] }, sv_, {upsert: true}).then(_ => sv);
 };
 
-export function init(callback) {
+export function init(callback: () => void) {
   mongodb.MongoClient.connect(conf.mongodb.url, (error, client_) => {
       if (error) {
           console.log(error);

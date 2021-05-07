@@ -59,6 +59,7 @@ function action<SV extends sv>(req: req, sv: SV, action_name: 'action_post' | 'a
     let f = step(sv)[action_name];
     if (!f) return Promise.resolve(sv); // nothing to do
     //console.log("calling " + action_name + " for step " + sv.step);
+    // @ts-expect-error
     return f(req, sv).then(vr => {
         //console.log("action returned", vr);
         return _.defaults(vr, sv);
@@ -67,7 +68,7 @@ function action<SV extends sv>(req: req, sv: SV, action_name: 'action_post' | 'a
 
 async function may_export_v_ldap(sv: sva) {
     if (sv.v && sv.v.uid) {
-        let v_ldap = await search_ldap.onePerson(filters.eq("uid", sv.v.uid));
+        let v_ldap: v = await search_ldap.onePerson(filters.eq("uid", sv.v.uid));
         if (sv.v.profilename_to_modify) v_ldap = selectUserProfile(v_ldap, sv.v.profilename_to_modify)
         v_ldap = export_v(sv_attrs(sv), v_ldap) as v;
         return { ...sv, v_ldap };
@@ -191,7 +192,7 @@ function advance_sv(req: req, sv: sva) : Promise<svr> {
     });
 }
 
-const checkSetLock = (sv) : Promise<any> => (
+const checkSetLock = (sv: sv) : Promise<any> => (
     sv.lock ? Promise.reject("locked") : sv.id ? db.setLock(sv.id, true) : Promise.resolve()
 );
 
@@ -240,7 +241,7 @@ const initial_steps = () => (
     _.pickBy(conf_steps.steps, (step) => step.initialStep)
 );
 
-const title_in_list = labels => (
+const title_in_list = (labels: StepLabels) => (
     "title_in_list" in labels ? labels.title_in_list : labels.title
 )
 
@@ -284,7 +285,7 @@ const exportLabels = async (req: req, { description_in_list, ...labels }: StepLa
     return { ...labels, description_in_list }
 }
 
-const exportStep = async (req, step: step) => (
+const exportStep = async (req: req, step: step) => (
     {
         attrs: typeof step.attrs === 'function' ? {} : exportAttrs(step.attrs),
         step: {

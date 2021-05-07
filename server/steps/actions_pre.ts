@@ -10,7 +10,7 @@ import * as conf from '../conf';
 const filters = ldap.filters;
 
 
-const isCasUser = (req) => {
+const isCasUser = (req: req) => {
     let idp = req.header('Shib-Identity-Provider');
     return idp && idp === conf.cas_idp;
 }
@@ -40,7 +40,7 @@ export const getExistingUser: simpleAction = (req, _sv)  => (
     oneExistingPerson(filters.eq("uid", req.query.uid)).then(v => ({ v }))
 );
 
-const handle_profilename_to_modify = (req, v: v) => {
+const handle_profilename_to_modify = (req: req, v: v) => {
     const profilename = req.query.profilename_to_modify;
     if (profilename) v = { ...selectUserProfile(v, profilename), profilename_to_modify: profilename };
     return { v };
@@ -54,8 +54,8 @@ export const getCasAttrsWithProfile: simpleAction = (req, _sv)  => (
     getCasAttrs(req, null).then(sv => handle_profilename_to_modify(req, sv.v))
 );
 
-function handleAttrsRemapAndType(o : Dictionary<string>, attrRemapRev, wantedConvert: ldap.AttrsConvert) {
-    const v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { possibleChannels: [], code: '', ...conf.ldap.people.types }, wantedConvert)
+function handleAttrsRemapAndType(o : Dictionary<string>, attrRemapRev: Dictionary<string[]>, wantedConvert: ldap.AttrsConvert) {
+    const v: v = ldap.handleAttrsRemapAndType(o as any, attrRemapRev, { possibleChannels: [], code: '', ...conf.ldap.people.types }, wantedConvert)
     v['various'] = { esup_activ_bo_orig: o }
     return v
 }
@@ -108,7 +108,7 @@ export const esup_activ_bo_authentificateUserWithCas : simpleAction = async (req
 }
 
 // useful with nextBrowserStep, otherwise the query params obtained from previous step are NOT validated.
-export const validateAndFilterQueryParams = (attrs) : simpleAction => async (req, sv) => {
+export const validateAndFilterQueryParams = (attrs: StepAttrsOption) : simpleAction => async (req, sv) => {
     let v = merge_v(attrs, {}, {}, req.query as any, { no_diff: true }) as any
     req.query = v;
     return sv

@@ -8,7 +8,7 @@ export const require_fresh = (name: string) => {
     return require(name);
 };
 
-const resolvePromisesDeep = async (v) => {
+const resolvePromisesDeep = async (v: any): Promise<any> => {
     if (v instanceof Array) {
         return Promise.all(v.map(resolvePromisesDeep))
     } else if (typeof v === "object") {
@@ -21,7 +21,7 @@ const resolvePromisesDeep = async (v) => {
     }
 }
 
-const deepEqualP = async (actual, expected, message?: string): Promise<void> => (
+const deepEqualP = async <T>(actual: T, expected: T, message?: string): Promise<void> => (
     raw_assert.deepEqual(await resolvePromisesDeep(actual), expected, message)
 )
 
@@ -30,6 +30,8 @@ export const assert = {
   equal: <T>(actual: T, expected: T, message?: string): void => raw_assert.equal(actual, expected, message),
   deepEqual: <T>(actual: T, expected: T, message?: string): void => raw_assert.deepEqual(actual, expected, message),
   deepEqualP,
+  // @ts-expect-error
   fail: (raw_assert.fail as (...any) => void),
+  // @ts-expect-error
   throws: (raw_assert.throws as (...any) => void),
 };

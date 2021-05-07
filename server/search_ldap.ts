@@ -35,9 +35,9 @@ export const oneGroupAttr = (cn: string, attr: string) => (
     ldap.searchOneThisAttr(conf.ldap.base_groups, filters.eq('cn', cn), attr, '')
 )
 
-export const v_from_WS = (v) => (
+export const v_from_WS = (v: Dictionary<any>) => (
     _.mapValues(v, (val, attr) => {
-        let attrType = conf.ldap.people.types[attr];
+        let attrType = (conf.ldap.people.types as Dictionary<any>)[attr];
         return _.isDate(attrType) ? new Date(val) : 
           _.isNumber(attrType) && val ? parseFloat(val) :
           val;
@@ -120,7 +120,7 @@ function homonymes_filter(sns: string[], givenNames: string[], birthDay: Date, s
     function sn_givenName_filter() {
         let l = [];
         l.push(filters.or(shared_conf.sns.map(attr =>
-            filters.alike_many(ldap.toLdapAttr(conf.ldap.people.attrs[attr], attr), sns)
+            filters.alike_many(ldap.toLdapAttr((conf.ldap.people.attrs as Dictionary<any>)[attr], attr), sns)
         )));
 
         if (givenNames && givenNames.length) {
@@ -147,7 +147,7 @@ function homonymes_filter(sns: string[], givenNames: string[], birthDay: Date, s
 
 export type Homonyme = typeof conf.ldap.people.types & { score: number }
 
-const _homonymes_accountStatus_score = {
+const _homonymes_accountStatus_score: Dictionary<number> = {
     "active": 3,
     "": 2,
     "disabled": 1,
@@ -245,7 +245,7 @@ function accronyms(l: string[], length: number) {
     )).join('');
 }
 
-function accronyms_and_sn(sn, givenNames, coll): string {
+function accronyms_and_sn(sn: string, givenNames: string[], coll: number): string {
     return truncateLogin(accronyms(givenNames, coll) + sn);
 }
 
@@ -304,7 +304,12 @@ export const genLogin = (sn: string, givenName: string): Promise<string> => {
 
 };
 
-export const prefix_suffix_to_group_and_code = (prefix: string, suffix: string) => {
+export type group_and_code_fns = {
+    code_to_group_cn(code: string): string
+    group_cn_to_code(cn: string): string
+}
+
+export const prefix_suffix_to_group_and_code = (prefix: string, suffix: string): group_and_code_fns => {
     const regexp_cn_to_code = new RegExp("^" + _.escapeRegExp(prefix) + "(.*)" + _.escapeRegExp(suffix) + "$");
     return {
         code_to_group_cn: (code: string) => prefix + code + suffix,

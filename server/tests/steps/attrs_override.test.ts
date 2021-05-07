@@ -6,6 +6,7 @@ export type StepAttrsOption_ = Dictionary<StepAttrOption_>
 
 describe('handle_attrs_cond_overrides', () => {
 
+    // @ts-expect-error
     const test = async ({ conds, with_conds, expected_without_conds, v, expected_overrides }) => {
         const { attrs, attrs_override } = await handle_attrs_cond_overrides(conds)(with_conds)
         assert.deepEqual(attrs, expected_without_conds);
@@ -22,14 +23,14 @@ describe('handle_attrs_cond_overrides', () => {
             with_conds: { 
                 sn: { 
                     title: "SN",
-                    cond_overrides: { foo: null },
+                    cond_overrides: { foo: (null as any) },
                 },
             }, 
             expected_without_conds: { 
                 sn: { title: "SN" }
             },
             v: { givenName: "Pascal" } as v, 
-            expected_overrides: { sn: null },
+            expected_overrides: { sn: (null as any) },
         }
         await test(test1)
         await test({ 
@@ -50,7 +51,7 @@ describe('handle_attrs_cond_overrides', () => {
                         merge_patch_parent_properties: {
                             sn: { 
                                 title: "SN",                                      
-                                cond_overrides: { foo: null },
+                                cond_overrides: { foo: (null as any) },
                             }
                         },
                     },
@@ -65,7 +66,7 @@ describe('handle_attrs_cond_overrides', () => {
             },
             v: { givenName: "Pascal" } as v, 
             expected_overrides: { 
-                pager: { then: { merge_patch_parent_properties: { sn: null } } },
+                pager: { then: { merge_patch_parent_properties: { sn: (null as any) } } },
             },
         }
         await test(test1)

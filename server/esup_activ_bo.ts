@@ -12,7 +12,7 @@ const parseString: (xml: string, options: xml2js.Options) => Promise<any> = help
 const readFile = helpers.promisify_callback(fs.readFile);
 
 // alike xpath //k
-function deepGetKey(o, k) {
+function deepGetKey(o: any, k: string): any {
     if (!o) {
         return undefined;
     } else if (k in o) {
@@ -25,7 +25,7 @@ function deepGetKey(o, k) {
     }
 }
 
-function raw_soap(url, body, req_for_context: req) {
+function raw_soap(url: string, body: string, req_for_context: req) {
     let headers = {
         SOAPAction: "",
         "content-type": "text/xml",
@@ -37,7 +37,7 @@ function raw_soap(url, body, req_for_context: req) {
     ));
 }
 
-function soap(templateName, params, opts : { req_for_context: req, responseTag: string, fault_to_string?: (any) => string }) {
+function soap(templateName: string, params: Dictionary<any>, opts : { req_for_context: req, responseTag: string, fault_to_string?: (_: any) => string }) {
     if (!conf.esup_activ_bo.url) throw "configuration issue: conf.esup_activ_bo.url is missing";
     let templateFile = __dirname + "/templates/esup-activ-bo/" + templateName;
     return readFile(templateFile).then(data => (
@@ -62,16 +62,16 @@ function soap(templateName, params, opts : { req_for_context: req, responseTag: 
     })
 }
 
-const fault_detail_key = (fault) => fault.detail && Object.keys(fault.detail)[0]
+const fault_detail_key = (fault: any) => fault.detail && Object.keys(fault.detail)[0]
 
 // Example of response:
 // <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><soap:Body><soap:Fault><faultcode>soap:Server</faultcode><faultstring>Identification ...chou..e : (&amp;(supannEmpId=14464)(up1BirthDay=19741002000000Z))</faultstring><detail><AuthentificationException xmlns="http://remote.services.activbo.esupportail.org" /></detail></soap:Fault></soap:Body></soap:Envelope>
-function get_fault(xml, to_string = undefined) {
+function get_fault(xml: any, to_string: any = undefined) {
     let fault = deepGetKey(xml, 'soap:Fault');
     return fault && (to_string && to_string(fault) || fault.faultstring);
 }
 
-function _get_entries(response) {
+function _get_entries(response: any) {
     let entries = deepGetKey(response, 'entry');
     if (!_.isArray(entries)) return undefined;
     let r = _.zipObject(_.map(entries, 'key'), _.map(entries, 'value'));
@@ -155,7 +155,7 @@ export function validatePassword(supannAliasLogin: string, password: string, req
         // below non translated messages should be caught by app/src/attrs/PasswordAttr.vue "passwordPattern":
         // "Password contains non-ASCII or control characters"
         // "Password is only letters and spaces"
-        const translate = {
+        const translate: Dictionary<string> = {
             "Password does not contain enough unique characters": "Le mot de passe doit contenir plus de caractères différents",
             "it is based on a dictionary word": "Ce mot de passe est trop proche d'un mot du dictionnaire ou d'un mot de passe connu",
         }

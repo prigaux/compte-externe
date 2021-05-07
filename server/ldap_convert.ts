@@ -70,7 +70,7 @@ export function has_value(value: string): ldap_conversion {
     };
 }
 
-export function match(predicate): ldap_conversion {
+export function match(predicate: (s: string) => boolean): ldap_conversion {
     return {
         fromLdapMulti: (l: string[]): string => (
             l.find(predicate)
@@ -156,12 +156,12 @@ export function up1Profile_field(field: string): ldap_conversion {
     };
 }
 
-const unescape_sharpFF = (attr_value) => (
+const unescape_sharpFF = (attr_value: string) => (
     attr_value.replace(/#([0-9A-F]{2})/ig, (_, xx) => String.fromCharCode(parseInt(xx, 16)))
 );
 
 const parse_up1Profile_one = (str: string) => {
-    let r = {};
+    let r: Dictionary<string> = {};
     str.replace(/\[([^\[\]=]+)=((?:[^\[\]]|\[[^\[\]]*\])*)\]/g, (_m, key, val) => {
         r[unescape_sharpFF(key)] = val.split(';').map(unescape_sharpFF);
         return '';
@@ -170,7 +170,7 @@ const parse_up1Profile_one = (str: string) => {
 };
 
 export const parse_composite = (str: string) => {
-    let r = {};
+    let r: Dictionary<string> = {};
     str.replace(/\[(.*?)\]/g, (_m, e) => {
       const m = e.match(/(.*?)=(.*)/)
       r[m[1]] = m[2];

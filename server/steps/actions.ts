@@ -22,12 +22,12 @@ export const mutate_v = (f: (v:v) => void) : simpleAction => async (_req, sv) =>
 }
 export const check_v = mutate_v
 
-export const addAttrs = (v: Partial<v>) => (_req, sv) => {
+export const addAttrs = (v: Partial<v>): simpleAction => (_req, sv) => {
     _.assign(sv.v, v);
     return Promise.resolve(sv);
 }
 
-export const addProfileAttrs = (profiles: profileValues[]) => (_req, sv) => {
+export const addProfileAttrs = (profiles: profileValues[]): simpleAction => (_req, sv) => {
     _.defaults(sv.v, { profilename: profiles[0].const });
     let profile = _.find(profiles, p => p.const === sv.v.profilename);
     if (!profile) throw "invalid profile " + sv.v.profilename;
@@ -82,11 +82,11 @@ export const add_full_v: simpleAction = (_req, sv)  => (
     })
 );
 
-export const if_v = (test_v, action: action): action => async (req, sv: sva) => (
+export const if_v = (test_v: (v:v) => boolean, action: action): action => async (req, sv: sva) => (
     test_v(sv.v) ? await action(req, sv) : { v: sv.v, response: {} }
 );
 
-export const handle_exception = (action: action, handler: (err, req: req, sv: sva) => Promise<vr>) => (req, sv: sva) => (
+export const handle_exception = (action: action, handler: (err: any, req: req, sv: sva) => Promise<vr>) => (req: req, sv: sva) => (
     action(req, sv).catch(err => handler(err, req, sv))
 );
 
@@ -105,10 +105,15 @@ export function chain(l_actions: action[]): action {
     };
 }
 
-const ignore_accents_and_case = val => remove_accents(val).toLowerCase()
+const ignore_accents_and_case = (val: string) => remove_accents(val).toLowerCase()
 
 const compare_v = (v: v, current_v: v) => {
-    const attrs_options = [
+    type attr_option = {
+        kind: 'major_change'|'to_ignore'|'minor_change'
+        attrs: string[]
+        simplify?: (s: string) => string
+    }
+    const attrs_options: attr_option[] = [
       { kind: 'major_change', 
         attrs: [ 'supannMailPerso', 'pager', 'birthDay' ] },
       { kind: 'major_change', simplify: ignore_accents_and_case,
@@ -120,7 +125,7 @@ const compare_v = (v: v, current_v: v) => {
         'homePhone', // we would need conversion to have a correct comparison
       ] },
     ]
-    let attr2opts = {};
+    let attr2opts: Dictionary<attr_option> = {};
     _.each(attrs_options, opts => opts.attrs.forEach(attr => attr2opts[attr] = opts));
 
     let diffs : { major_change?: any; minor_change?: any } = {};
@@ -142,7 +147,7 @@ const compare_v = (v: v, current_v: v) => {
     return diffs;
 }
 
-const canAutoMerge = async (v) => {
+const canAutoMerge = async (v: v) => {
     let homonymes;
     if (!v.uid) {
         homonymes = await search_ldap.homonymes(v);
@@ -210,12 +215,12 @@ const createCompte_ = async (req: req, sv: sva, opts : crejsonldap.options) => {
     return { v, response: {login: v.supannAliasLogin, created, accountStatus: resp_subv.accountStatus } }
 };
 
-const mailFrom = (v) => {
+const mailFrom = (v: v) => {
     const email = v.mailFrom_email;
     return !email ? conf.mail.from : v.mailFrom_text ? `${v.mailFrom_text} <${email}>` : email;
 }
 
-const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: crejsonldap.accountStatus, created: boolean, req_for_context: req) => {
+const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: crejsonldap.accountStatus, created: boolean, req_for_context: req): Promise<void> => {
     if (v.userPassword && !accountStatus) {
         await esup_activ_bo.setNewAccountPassword(v.uid, v.supannAliasLogin, v.userPassword, req_for_context);
         // NB: if we have a password, it is a fast registration, so do not send a mail
@@ -230,7 +235,7 @@ const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: 
 const crejsonldap_simple = (v: v, opts : crejsonldap.options) => (
     crejsonldap.call(v, opts)
     .then(crejsonldap.throw_if_err)
-    .then(_ =>({ v })) 
+    .then(_ => ({ v })) 
 )
 
 export const modifyAccount : simpleAction = (_req, sv) => {
@@ -259,7 +264,7 @@ export const expireAccount : simpleAction = (_req, sv) => {
     return crejsonldap_simple(v, { create: false }); // should we return sv.v?
 };
 
-const prepareMailTemplateParams = (req, sv, params = {}) => {
+const prepareMailTemplateParams = (req: req, sv: sva, params: Dictionary<any> = {}) => {
     const v = sv.v;
     const v_ = v_display(v, flatten_attrs(sv.attrs, v));
     const sv_url = conf.mainUrl + "/" + sv.step + "/" + sv.id;
@@ -291,7 +296,7 @@ export const ask_confirmation = (attr_to_save_confirmation: string, msg_template
 }
 
 export const genLogin: simpleAction = (_req, sv) => {
-    let createResp = login => {
+    let createResp = (login: string) => {
         let v = <v> _.assign({ supannAliasLogin: login }, sv.v);
         return { v, response: {login} };
     };
@@ -336,7 +341,7 @@ export const sendMailNewEtablissement = (to: string): simpleAction => (_req, sv)
     if (!v['etablissement_description']) {
         return Promise.resolve({ v });
     }
-    const isEtabAttr = (_, attr) => attr.match(/etablissement_.*/);
+    const isEtabAttr = ({}, attr: string) => attr.match(/etablissement_.*/);
     const text = JSON.stringify(_.pickBy(v, isEtabAttr), undefined, '  ')
     console.log("sending mail", text);
     mail.send({ to, text,
@@ -347,7 +352,7 @@ export const sendMailNewEtablissement = (to: string): simpleAction => (_req, sv)
 };
 
 // if supannMailPerso is an internal mail address, it must exist and not create a loop
-export const validateMailNoLoop = (idAttr): simpleAction => async (_req, { v }) => {
+export const validateMailNoLoop = (idAttr: string): simpleAction => async (_req, { v }) => {
     const email = v.supannMailPerso
     const r = await search_ldap.searchInternalMail(email)
     if (r.external) {

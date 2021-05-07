@@ -4,7 +4,7 @@ import { assert } from './test_utils';
 import * as utils from '../utils';
 
 describe('deep_extend', () => {
-    let check = (in_, in_overrides, wanted) => assert.deepEqual(utils.deep_extend(in_, in_overrides), wanted);
+    let check = (in_: Dictionary<any>, in_overrides: Dictionary<any>, wanted: Dictionary<any>) => assert.deepEqual(utils.deep_extend(in_, in_overrides), wanted);
 
     it ("should work with simple objects", () => {
         check({}, {}, {});

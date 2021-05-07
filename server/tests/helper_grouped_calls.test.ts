@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as _ from 'lodash';
 import { assert } from './test_utils';
 import grouped_calls from '../helper_grouped_calls';

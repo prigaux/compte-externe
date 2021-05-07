@@ -20,7 +20,7 @@ const to_DD_MM_YYYY = (date: Date) => (
     [ date.getDate(), date.getMonth() + 1, date.getFullYear() ].map(two_digit).join('/')
 )
 
-async function key2name(raw, spec: StepAttrOption, if_empty : string = '') : Promise<string> {
+async function key2name(raw: any, spec: StepAttrOption, if_empty : string = '') : Promise<string> {
     if (raw instanceof Array) {
         const l = await pmap(raw, raw => key2name(raw, spec))
         return l.join(', ')
@@ -57,7 +57,7 @@ export const format_attr_name = (key: string, attrs: StepAttrsOption) => (
     _format_attr_name(key, { ...client_conf.default_attrs_opts[key], ...attrs[key] })
 )
 
-const format_v = async (v: v, attrs) => (
+const format_v = async (v: v, attrs: StepAttrsOption) => (
     `<table>
 ` +
       (await pmap(v, async (val, key) => {
@@ -67,12 +67,14 @@ const format_v = async (v: v, attrs) => (
       })).join("\n") + `\n</table>`
 )
 
-export const format_various_diff = async (diff, attrs) => (
+type one_diff = { prev: any, current: any }
+
+export const format_various_diff = async (diff: Dictionary<one_diff>, attrs: StepAttrsOption): Promise<string> => (
     _.isEmpty(diff) ? '' : 
 `<table border="1" class="v-diff">
   <tr><th>Champ</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
 ` +
-    (await pmap(diff, async ({ prev, current }, key) => {
+    (await pmap(diff, async ({ prev, current }: one_diff, key: string) => {
         const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
         const tds = [
             _format_attr_name(key, opts),
@@ -85,7 +87,7 @@ export const format_various_diff = async (diff, attrs) => (
 );
 
 const various_proxy = {
-    get({ various, attrs }, attr) {        
+    get({ various, attrs }: { various: any, attrs: StepAttrsOption }, attr: string) {        
         return attr === 'diff' ?
             format_various_diff(various[attr], attrs) :
             various[attr];
@@ -93,7 +95,7 @@ const various_proxy = {
 }
 
 const v_proxy = {
-    get({ v, attrs }, attr) {        
+    get({ v, attrs }: { v: v, attrs: StepAttrsOption }, attr: string) {        
         // "toString" is called for most implicit conversions to string (which is what Mustache is doing)
         if (attr === 'toString') return () => format_v(v, attrs);
 
@@ -103,4 +105,4 @@ const v_proxy = {
     }
 }
 
-export default (v: v, attrs: StepAttrsOption = {}) => new Proxy({ v, attrs }, v_proxy);
+export default (v: v, attrs: StepAttrsOption = {}) => new Proxy({ v, attrs }, v_proxy) as Dictionary<any>;

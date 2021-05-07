@@ -7,6 +7,7 @@ import * as conf from './conf';
 
 const remove_accents = _.deburr;
 
+// @ts-expect-error
 import { escape } from 'ldapjs/lib/filters/escape';
 
 ldapP.init(conf.ldap);
@@ -30,12 +31,12 @@ export type AttrsConvert = Dictionary<AttrConvert>
 type RawValue = ldap_RawValue;
 type RawValueB = Buffer | Buffer[]
 
-export function searchRaw(base: string, filter: filter, attributes: string[], options: Options): Promise<Dictionary<RawValueB>[]> {
+export function searchRaw(base: string, filter: filter, attributes: string[], options: Options) {
     if (!filter) {
         console.error("internal error: missing ldap filter");
     }
     let p = ldapP.searchRaw(base, filter, attributes, options).then(l => l.map(e => e.raw))
-    return <Promise<Dictionary<RawValueB>[]>> p;
+    return p;
 }
 
 function singleValue(attr: string, v: RawValueB) {
@@ -51,8 +52,8 @@ const arrayB_to_stringB = (v: RawValueB) => (
     (_.isArray(v) ? v : [v]).map(e => e && e.toString())
 );
 
-export function handleAttrsRemapAndType<T extends {}>(o : Dictionary<RawValueB>, attrRemapRev: Dictionary<string[]>, attrTypes : T, wantedConvert: AttrsConvert) {
-    let r = {};
+export function handleAttrsRemapAndType<T extends Dictionary<any>>(o : Dictionary<RawValueB>, attrRemapRev: Dictionary<string[]>, attrTypes : T, wantedConvert: AttrsConvert) {
+    let r: Dictionary<any> = {};
     _.forEach(o, (val, attr) => {
         if (!attrRemapRev[attr] && !(attr in attrTypes)) {
             //console.log(`skipping non wanted attr ${attr}. It can be a non wanted secondary attr`)
@@ -69,7 +70,7 @@ export function handleAttrsRemapAndType<T extends {}>(o : Dictionary<RawValueB>,
                 val_ = handleAttrType(attr_, attrTypes[attr_], convert2, val);
             }
             if (convert && convert.applyAttrsRemapAndType) {
-                val_ = (val_ as any).map(v => handleAttrsRemapAndType(v, attrRemapRev, attrTypes, wantedConvert));
+                val_ = (val_ as any[]).map(v => handleAttrsRemapAndType(v, attrRemapRev, attrTypes, wantedConvert));
             }
             r[attr_] = val_;
         }
@@ -116,7 +117,7 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: 
         }
 }
 
-function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v, opts: { toJson?: boolean, toEsupActivBo?: boolean, toEsupActivBoResponse?: boolean }): ldap_modify {
+function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v: any, opts: { toJson?: boolean, toEsupActivBo?: boolean, toEsupActivBoResponse?: boolean }): ldap_modify {
         if (conversion) {
             const v_ = opts.toJson && conversion.toLdapJson ? conversion.toLdapJson(v) : 
                    opts.toEsupActivBoResponse && conversion.toEsupActivBoResponse ? conversion.toEsupActivBoResponse(v) : 
@@ -150,10 +151,10 @@ const to_ldap_modify = (val : RawValue | ldap_modify): ldap_modify => (
 
 const to_array = (val: RawValue) => val instanceof Array ? val : [val];
 
-export function convertToLdap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert, v: T, opts : { toJson?: boolean, toEsupActivBo?: boolean, toEsupActivBoResponse?: boolean }): Dictionary<RawValue> {
-    let r = {};
+export function convertToLdap<T extends Dictionary<any>>(attrTypes: T, attrsConvert: AttrsConvert, v: Partial<T>, opts : { toJson?: boolean, toEsupActivBo?: boolean, toEsupActivBoResponse?: boolean }) {
+    let r: Dictionary<RawValue> = {};
     _.forEach(v, (val, attr) => {
-        let conv = attrsConvert[attr] || {};
+        let conv = attrsConvert[attr as string] || {};
         let attr_ = opts.toJson && conv.ldapAttrJson || toLdapAttr(conv, attr);
         let modify = convertAttrToLdap(attr, attrTypes[attr], conv.convert, val, opts);
         if (!modify) {
@@ -201,9 +202,9 @@ export function searchSimple<T extends {}>(base: string, filter: filter, attrTyp
   return search(base, filter, attrTypes, null, {});
 }
 
-const defaultLdapAttr = attr => attr.replace(/^global_/, '');
+const defaultLdapAttr = (attr: string) => attr.replace(/^global_/, '');
 
-export const toLdapAttr = (conv, attr) => (conv || {}).ldapAttr || defaultLdapAttr(attr);
+export const toLdapAttr = (conv: { ldapAttr?: string }, attr: string) => (conv || {}).ldapAttr || defaultLdapAttr(attr);
 
 export function convert_and_remap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert) {
     let wantedConvert = _.mapValues(attrTypes, (_type, attr) => attrsConvert && attrsConvert[attr] || {});
