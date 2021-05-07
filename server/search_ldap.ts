@@ -54,7 +54,7 @@ export const structures = (token: string, sizeLimit: number) => {
     let words_filter = filters.fuzzy(['description', 'ou'], token);
     let many = [filters.eq("supannCodeEntite", token), 
                 filters.and([ words_filter, "(supannCodeEntite=*)"])];
-    return ldap.searchMany(conf.ldap.base_structures, many, 'const', conf.ldap.structures.types, conf.ldap.structures.attrs, {sizeLimit}).then(ldap.remove_dns);
+    return ldap.searchMany(conf.ldap.base_structures, many, 'const', conf.ldap.structures.types, conf.ldap.structures.attrs, {sizeLimit});
 };
 
 export const etablissements = (token: string, sizeLimit: number) => {

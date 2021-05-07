@@ -188,15 +188,6 @@ function merge(a: Options, b: Options): Options {
   return <Options> _.assign(a, b);
 }
 
-export function remove_dn<T extends {}>(v: T): T {
-    delete v['dn'];
-    return v;
-}
-export function remove_dns<T extends {}>(l: T[]): T[] {
-  l.forEach(remove_dn);
-  return l;
-}
-
 // NB: it should be <T extends LdapEntry> but it is not well handled by typescript
 export function searchSimple<T extends {}>(base: string, filter: filter, attrTypes: T): Promise<T[]> {
   return search(base, filter, attrTypes, null, {});
