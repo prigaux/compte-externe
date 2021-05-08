@@ -10,9 +10,9 @@ import * as conf from '../conf';
 const filters = ldap.filters;
 
 
-const isCasUser = (req: req) => {
+const isShibUserInLdap = (req: req) => {
     let idp = req.header('Shib-Identity-Provider');
-    return idp && idp === conf.cas_idp;
+    return idp && idp === conf.ldap.shibIdentityProvider;
 }
 
 export const getShibAttrs: simpleAction = async (req, _sv) => {
@@ -24,8 +24,8 @@ export const getShibAttrs: simpleAction = async (req, _sv) => {
     return { v };
 };
 
-export const getCasAttrs: simpleAction = async (req, _sv) => {
-    if (!isCasUser(req)) throw `Unauthorized`;
+export const getShibUserLdapAttrs: simpleAction = async (req, _sv) => {
+    if (!isShibUserInLdap(req)) throw `Unauthorized`;
     let filter = search_ldap.currentUser_to_filter(req.user);
     let v: v = await oneExistingPerson(filter);
     v.noInteraction = true;
@@ -33,7 +33,7 @@ export const getCasAttrs: simpleAction = async (req, _sv) => {
 }
 
 export const getShibOrCasAttrs: simpleAction = (req, _sv) => (
-    (isCasUser(req) ? getCasAttrs : getShibAttrs)(req, _sv)
+    (isShibUserInLdap(req) ? getShibUserLdapAttrs : getShibAttrs)(req, _sv)
 )
 
 export const getExistingUser: simpleAction = (req, _sv)  => (
@@ -51,8 +51,8 @@ export const getExistingUserWithProfile: simpleAction = (req, _sv)  => (
     oneExistingPerson(filters.eq("uid", req.query.uid)).then(v => handle_profilename_to_modify(req, v))
 );
 
-export const getCasAttrsWithProfile: simpleAction = (req, _sv)  => (
-    getCasAttrs(req, null).then(sv => handle_profilename_to_modify(req, sv.v))
+export const getShibUserLdapAttrsWithProfile: simpleAction = (req, _sv)  => (
+    getShibUserLdapAttrs(req, null).then(sv => handle_profilename_to_modify(req, sv.v))
 );
 
 function handleAttrsRemapAndType(o : Dictionary<string>, attrRemapRev: Dictionary<string[]>, wantedConvert: ldap.AttrsConvert) {

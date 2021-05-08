@@ -46,8 +46,6 @@ const conf = {
         transport: sendmailTransport({}),
     },
 
-    cas_idp: 'https://idp.univ.fr',
-
     mongodb: { 
         url: "mongodb://localhost:27017/compte-externe",
     },
@@ -58,6 +56,8 @@ const conf = {
     },
     
     ldap: {
+        shibIdentityProvider: 'https://idp.univ.fr',
+
         ...ldap_main,
 
         structures: {
