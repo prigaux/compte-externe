@@ -42,7 +42,8 @@ export const getExistingUser: simpleAction = (req, _sv)  => (
 
 const handle_profilename_to_modify = (req: req, v: v) => {
     const profilename = req.query.profilename_to_modify;
-    if (profilename) v = { ...selectUserProfile(v, profilename), profilename_to_modify: profilename };
+    const v_ = profilename && selectUserProfile(v, profilename);
+    if (v_) v = { ...v_, profilename_to_modify: profilename };
     return { v };
 }
 

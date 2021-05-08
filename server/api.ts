@@ -69,7 +69,10 @@ function action<SV extends sv>(req: req, sv: SV, action_name: 'action_post' | 'a
 async function may_export_v_ldap(sv: sva) {
     if (sv.v && sv.v.uid) {
         let v_ldap: v = await search_ldap.onePerson(filters.eq("uid", sv.v.uid));
-        if (sv.v.profilename_to_modify) v_ldap = selectUserProfile(v_ldap, sv.v.profilename_to_modify)
+        if (sv.v.profilename_to_modify) {
+            const v_ldap_ = selectUserProfile(v_ldap, sv.v.profilename_to_modify)
+            if (v_ldap_) v_ldap = v_ldap_;
+        }
         v_ldap = export_v(sv_attrs(sv), v_ldap) as v;
         return { ...sv, v_ldap };
     }
