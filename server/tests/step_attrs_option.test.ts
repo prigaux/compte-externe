@@ -94,7 +94,9 @@ describe('export_v', () => {
     it("should handle oneOf merge_patch_parent_properties with newRootProperties ignore", () => {
         const attrs: StepAttrsOption = { 
             duration: { oneOf: [
-                { const: "1", merge_patch_parent_properties: { sn: {} }, merge_patch_options: { newRootProperties: "ignore" } }, 
+                { const: "1", 
+                    // below won't do anything since "sn" does not already exist
+                    merge_patch_parent_properties: { sn: {} }, merge_patch_options: { newRootProperties: "ignore" } }, 
                 { const: "2" },
             ] },
         }
