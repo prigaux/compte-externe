@@ -12,7 +12,7 @@ function compute_diff(prev, current, key) {
 }
 
 export const selectUserProfile = (v: v, profilename: string) => {
-    const profile = v.up1Profile.find(p => p.profilename === profilename) as v;
+    const profile = v.up1Profile?.find(p => p.profilename === profilename) as v;
     if (!profile) {
         console.error("no profile " + profilename);
         return undefined;
