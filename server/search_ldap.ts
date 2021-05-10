@@ -85,6 +85,7 @@ const people_filters_ = (token: string, and_filters: string[]) => (
 )
 
 export const people_choices = (filter: string) => async (token: string, sizeLimit: number) => {
+    sizeLimit = Math.min(sizeLimit, 10);
     let filters_ = people_filters_(token, filter ? [filter] : []);
     const l = await ldap.searchMany(conf.ldap.base_people, filters_, 'uid', { uid: '', displayName: '', global_eduPersonPrimaryAffiliation: '' }, undefined, { sizeLimit })
     const affs = [ ...Object.keys(shared_conf.affiliation_labels), undefined ] // NB: we want no affiliation users displayed last
