@@ -122,7 +122,7 @@ You can also ensure the browser does not modify the value:
 
 
 You can customize the way it is displayed:
-* ```uiHidden```: used with `readOnly` or `toUserOnly` to hide the `<input>`. Useful when you want to display the value in step `description`
+* ```uiHidden```: use `true with `readOnly` or `toUserOnly` to hide the `<input>` (useful when you want to display the value in step `description`) ; use `false` with `readOnly` to force display of an empty input (useful for `vs` using `form-inline`).
 * ```title```: (*text*) the `<label>`. Use [Unicode non-breaking space](https://en.wikipedia.org/wiki/Non-breaking_space) to force layout
 * ```description```: *(html)* displayed below the `<input>`
 * ```uiPlaceholder```: the `<input>` placeholder
