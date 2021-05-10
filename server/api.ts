@@ -370,6 +370,7 @@ function search_for_typeahead(req: req, step: string, attr: string) {
     return opts.oneOf_async(token, sizeLimit)
 }
 router.get('/search/:step/:attr', (req : req, res) => {
+    res.header('Cache-Control', 'private, max-age=60') // minimal caching. Especially useful to handle multiple requests in case of list of "v" (ie "vs")
     respondJson(req, res, search_for_typeahead(req, req.params.step, req.params.attr))
 });
 
