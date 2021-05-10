@@ -12,7 +12,8 @@ select option {
     background: #f0f3fc;
 }
 
-.content {
+/* default style for the root element of all routes (which is usually a <div>, but can be <ul> or ...) */
+.content > * {
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
