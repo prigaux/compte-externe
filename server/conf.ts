@@ -79,7 +79,7 @@ const conf = {
             },
             attrs: {
                 const: { ldapAttr: 'up1TableKey' },
-                title: { ldapAttr: 'description' },
+                title: { ldapAttr: 'description', fallbackLdapAttrs: ['displayName'] },
                 siret: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette("{SIRET}") },
                 uai: { ldapAttr: 'supannEtablissement', convert: ldap_convert.withEtiquette("{UAI}") },
                 postalAddress: { convert: ldap_convert.postalAddress },
