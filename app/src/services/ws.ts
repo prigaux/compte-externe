@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { merge, omit, cloneDeep } from 'lodash';
+import { merge, omit, cloneDeep, some } from 'lodash';
 import { router } from '../router';
 import * as Helpers from './helpers';
 
@@ -247,6 +247,12 @@ export function getInScope($scope, id: string, params, hash_params, expectedStep
                     v[attr] = undefined;
                 }
             });
+        Helpers.eachObject(all_attrs, (attr, opts) => {
+            if (opts.readOnly && !('uiHidden' in opts) && some(vs, v => v[attr])) {
+                // force displaying all attr fields if at least one has a value (useful for form-inline table)
+                opts.uiHidden = false
+            }
+        });
         $scope.vs_orig = cloneDeep(vs);
         $scope.vs = vs // assign it when it is fully computed. Needed for Vue.js
         $scope.all_attrs_flat = all_attrs;
