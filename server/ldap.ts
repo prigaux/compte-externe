@@ -1,6 +1,7 @@
 'use strict';
 
 import * as _ from 'lodash';
+import * as helpers from './helpers'
 import * as ldapjs from 'ldapjs';
 import * as ldapP from 'ldapjs-promise-disconnectwhenidle';
 import * as conf from './conf';
@@ -25,7 +26,7 @@ export type Options = ldapjs.SearchOptions
 export type LdapAttrValue = string | number | Date | string[] | number[] | LdapEntry[];
 export type LdapEntry = { [index: string]: LdapAttrValue };
 
-type AttrConvert = { convert?: ldap_conversion, convert2?: ldap_conversion, ldapAttr?: string, ldapAttrJson?: string }
+type AttrConvert = { convert?: ldap_conversion, convert2?: ldap_conversion, ldapAttr?: string, ldapAttrJson?: string; fallbackLdapAttrs?: string[] }
 export type AttrsConvert = Dictionary<AttrConvert>
 
 type RawValue = ldap_RawValue;
@@ -54,11 +55,12 @@ const arrayB_to_stringB = (v: RawValueB) => (
 
 export function handleAttrsRemapAndType<T extends Dictionary<any>>(o : Dictionary<RawValueB>, attrRemapRev: Dictionary<string[]>, attrTypes : T, wantedConvert: AttrsConvert) {
     let r: Dictionary<any> = {};
-    _.forEach(o, (val, attr) => {
-        if (!attrRemapRev[attr] && !(attr in attrTypes)) {
-            //console.log(`skipping non wanted attr ${attr}. It can be a non wanted secondary attr`)
+    // NB : we must use attrRemapRev order to properly handle fallbackLdapAttrs
+    _.forEach({ ...attrRemapRev, ...attrTypes }, (_: any, attr) => {
+        if (!(attr in o)) {
             return;
         }
+        const val = o[attr]
         let attrs = attrRemapRev[attr] || [attr];
         for (let attr_ of attrs) {
             // then transform string|string[] into the types wanted
@@ -72,7 +74,7 @@ export function handleAttrsRemapAndType<T extends Dictionary<any>>(o : Dictionar
             if (convert && convert.applyAttrsRemapAndType) {
                 val_ = (val_ as any[]).map(v => handleAttrsRemapAndType(v, attrRemapRev, attrTypes, wantedConvert));
             }
-            r[attr_] = val_;
+            if (!r[attr_]) r[attr_] = val_;
         }
     });              
     return r as T;
@@ -196,11 +198,14 @@ export function searchSimple<T extends {}>(base: string, filter: filter, attrTyp
 const defaultLdapAttr = (attr: string) => attr.replace(/^global_/, '');
 
 export const toLdapAttr = (conv: { ldapAttr?: string }, attr: string) => (conv || {}).ldapAttr || defaultLdapAttr(attr);
+const toLdapAttrs = (conv: AttrConvert, attr: string) => (
+    [ toLdapAttr(conv, attr), ...conv.fallbackLdapAttrs || [] ]
+)
 
 export function convert_and_remap<T extends {}>(attrTypes: T, attrsConvert: AttrsConvert) {
     let wantedConvert = _.mapValues(attrTypes, (_type, attr) => attrsConvert && attrsConvert[attr] || {});
-    let attrRemap = _.mapValues(wantedConvert, toLdapAttr);
-    let attrRemapRev = _.invertBy(attrRemap);
+    let attrRemap = _.mapValues(wantedConvert, toLdapAttrs);
+    let attrRemapRev = helpers.invertByManyValues(attrRemap);
     return { wantedConvert, attrRemapRev };
 }
 

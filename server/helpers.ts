@@ -152,3 +152,13 @@ export const replace_same_field_value_with_idem = (l: Dictionary<unknown>[], fie
         prev = val
     }
 }
+
+export const invertByManyValues = (o: Dictionary<string[]>) => {
+    let r: Dictionary<string[]> = {}
+    _.each(o, (values, key) => {
+        for (const value of values) {
+            (r[value] ??= []).push(key)
+        }
+    })
+    return r
+}

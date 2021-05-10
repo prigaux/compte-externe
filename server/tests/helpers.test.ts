@@ -71,3 +71,13 @@ describe('replace_same_field_value_with_idem', () => {
         assert.deepEqual(l, [ { a: "aa" }, { a: "" }, { a: "bb" } ])
     })
 })
+
+describe('invertByManyValues', () => {
+    it("should work", () => {
+        assert.deepEqual(
+            helpers.invertByManyValues(
+                { a: ["1"], c: ["3.1", "3.2"], c_: ["3.2"], d: [] }), 
+                { '1': [ 'a' ], '3.1': [ 'c' ], '3.2': [ 'c', 'c_' ] },
+        )
+    })
+})

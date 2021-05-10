@@ -58,6 +58,15 @@ describe('ldap', () => {
         });
     });
 
+    describe('search', () => {
+        it("should handle attr fallbackLdapAttrs", async () => {
+            await ldap.search(conf.ldap.base_people, "(sn=rigaux)", { birthName: '' }, { birthName: { ldapAttr: 'up1BirthName', fallbackLdapAttrs: ['sn'] } }, {}).then(l => {
+                let birthNames = l.map(e => e.birthName);
+                assert.deepEqual(birthNames, ["Nomdavant", "rigaux", "rigaux", "rigaux"]);
+            })
+        })
+    })
+
     describe('has_value conversion', () => {
         it("should convert toLdap", () => {
             let attrsConvert = { 
