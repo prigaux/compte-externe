@@ -220,13 +220,9 @@ export function getInScope($scope, id: string, params, hash_params, expectedStep
         $scope.attrs = sv.attrs;
         let all_attrs = get_all_attrs_flat($scope.attrs);
         if (sv.v_ldap) $scope.v_ldap = fromWs(sv.v_ldap, all_attrs);
-        let vs: {}[]
-        if (sv.vs || sv.v) {
-            vs = (sv.vs || [ sv.v ]).map(v => (
+        let vs: {}[] = (sv.vs || [ sv.v ]).map(v => (
                 fromWs(v, all_attrs)
             ));
-        }
-        if (sv.v) {
             let v = vs[0];
             // pass v_orig to attrs opts.validator:
             handleAttrsValidators_and_allowUnchangedValue(all_attrs, Helpers.copy(v));
@@ -251,7 +247,6 @@ export function getInScope($scope, id: string, params, hash_params, expectedStep
                     v[attr] = undefined;
                 }
             });
-        }
         $scope.vs_orig = cloneDeep(vs);
         $scope.vs = vs // assign it when it is fully computed. Needed for Vue.js
         $scope.all_attrs_flat = all_attrs;
