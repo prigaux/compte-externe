@@ -114,12 +114,14 @@ function validate_nothrow(key: string, opt: StepAttrOption, more_opt: SharedStep
 
 /* before sending to client, remove sensible information */
 export function export_v(attrs: StepAttrsOption, v: v) {
+    // resolve mppp, with default taken into account. but do not export "default" values
+    let v_ = _.cloneDeep(v)
+    const attrs_ = compute_mppp_and_handle_default_values(attrs, {}, v_).attrs
+    return export_v_(attrs_, v)
+}
+
+function export_v_(attrs: StepAttrsOption, v: v) {
     const r: v = {};
-    const rec_mpp = <T extends Mpp<StepAttrOption_no_extensions>>(one : T) => {        
-        const mppp = one.merge_patch_parent_properties
-        // TODO better "merge_patch_options" handling
-        if (mppp && !one.merge_patch_options) rec(mppp)
-    }
     const ignore = (key: string, opts: StepAttrOption) => (
         opts.ignoreInvalidExistingValue && !validate_nothrow(key, opts, {}, v[key], v, v)
     )
@@ -131,12 +133,6 @@ export function export_v(attrs: StepAttrsOption, v: v) {
                 r[key] = val;
             }
             if (opts.properties) rec(opts.properties);
-            if (opts.readOnly) {
-                handle_chosen_oneOf_or_if_then_mppp(opts, v[key], rec);
-            } else {
-                if (opts.then) rec_mpp(opts.then)
-                if (opts.oneOf) opts.oneOf.forEach(rec_mpp)
-            }
         });
     }
     rec(attrs);
@@ -144,46 +140,19 @@ export function export_v(attrs: StepAttrsOption, v: v) {
 }
 
 export function flatten_attrs(attrs: StepAttrsOption, v: v) {
+    let v_ = _.cloneDeep(v)
+    const attrs_ = compute_mppp_and_handle_default_values(attrs, {}, v_).attrs
+
     const r: StepAttrsOption = {};
     function rec(attrs: StepAttrsOption) {
         _.forEach(attrs, (opts, key) => {
             r[key] = { ...r[key] || {}, ...opts }; // merge
             if (opts.properties) rec(opts.properties);
-            handle_chosen_oneOf_or_if_then_mppp(opts, v[key], rec);
         });
     }
-    rec(attrs);
+    rec(attrs_);
     return r;
 }
-
-const handle_then_if_matching = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption) => void) => {
-    if (!val) val = opts.default;
-    const then_mppp = opts?.then?.merge_patch_parent_properties
-    if (opts.if && then_mppp) {
-        if (matches_if(opts.if, val) && !opts.then.merge_patch_options) { // TODO better "merge_patch_options" handling
-            rec(then_mppp);
-        }
-    }
-}
-
-const handle_chosen_oneOf_mppp = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption) => void) => {
-    if (!val) val = opts.default;
-    if (val && opts.oneOf) {
-        const choice = find_choice(opts.oneOf, val);
-        if (choice && choice.merge_patch_parent_properties && !choice.merge_patch_options) { // TODO better "merge_patch_options" handling
-            rec(choice.merge_patch_parent_properties);
-        }
-    }
-}
-
-const handle_chosen_oneOf_or_if_then_mppp = (opts: StepAttrOption, val: string, rec: (attrs: StepAttrsOption) => void) => {
-    handle_then_if_matching(opts, val, rec);
-    handle_chosen_oneOf_mppp(opts, val, rec);
-}
-
-const matches_if = (if_: { optional: false }, val: string) => (
-    if_.optional || val
-)
 
 const find_choice = (oneOf: StepAttrOptionChoices[], val: any) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
 
