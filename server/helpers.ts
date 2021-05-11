@@ -162,3 +162,10 @@ export const invertByManyValues = (o: Dictionary<string[]>) => {
     })
     return r
 }
+
+const two_digit = (n: number | string) => ("" + n).padStart(2, "0")
+export const to_DD_MM_YYYY = (date: Date) => (
+    //date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })
+    // do it by hand until we force nodejs >= 13 which has full-icu by default 
+    [ date.getDate(), date.getMonth() + 1, date.getFullYear() ].map(two_digit).join('/')
+)

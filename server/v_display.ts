@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { pmap } from './helpers';
+import { pmap, to_DD_MM_YYYY } from './helpers';
 import * as Mustache from 'mustache';
 import client_conf from '../shared/conf';
 
@@ -11,13 +11,6 @@ export const to_ul_li = (vals: string[]) => (
 {{/vals}}
 </ul>
     `, { vals }) : ''
-)
-
-const two_digit = (n: number | string) => ("" + n).padStart(2, "0")
-const to_DD_MM_YYYY = (date: Date) => (
-    //date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })
-    // do it by hand until we force nodejs >= 13 which has full-icu by default 
-    [ date.getDate(), date.getMonth() + 1, date.getFullYear() ].map(two_digit).join('/')
 )
 
 async function key2name(raw: any, spec: StepAttrOption, if_empty : string = '') : Promise<string> {

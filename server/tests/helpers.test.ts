@@ -81,3 +81,9 @@ describe('invertByManyValues', () => {
         )
     })
 })
+
+describe('to_DD_MM_YYYY', () => {
+    it("should work", () => {
+        assert.equal(helpers.to_DD_MM_YYYY(new Date("1975-10-02")), "02/10/1975")
+    })
+})
