@@ -10,7 +10,7 @@ describe('handle_attrs_cond_overrides', () => {
     const test = async ({ conds, with_conds, expected_without_conds, v, expected_overrides }) => {
         const { attrs, attrs_override } = await handle_attrs_cond_overrides(conds)(with_conds)
         assert.deepEqual(attrs, expected_without_conds);
-        assert.deepEqual(await attrs_override(undefined, { step: undefined, v }), expected_overrides)
+        assert.deepEqual(await attrs_override(undefined, { step: undefined, v, history: [] }), expected_overrides)
     }
 
     const conds = { 

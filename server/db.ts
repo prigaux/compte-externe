@@ -53,14 +53,10 @@ export const listByModerator = (query: Object) : Promise<sv[]> => {
         ));
     };
 
-export const remove = (id: id) => (
-    svs().remove({ _id: _id(id) })
-);
-
-export const save = <T extends { id?: string }>(sv: T) => {
+export const save = <T extends { id?: string }>(sv: T, options = { upsert: true }) => {
             console.log("saving in DB:", util.inspect(sv).replace(/userPassword: '(.*)'/, "userPassword: 'xxx'"));
             let sv_ = { ...toDB(sv), modifyTimestamp: new Date() };
-            return svs().replaceOne({ _id: sv_['_id'] }, sv_, {upsert: true}).then(_ => sv);
+            return svs().replaceOne({ _id: sv_['_id'] }, sv_, options).then(_ => sv);
 };
 
 export function init(callback: () => void) {

@@ -17,9 +17,16 @@ type Mails = string[]
 type id = string
 type v = Partial<typeof conf.ldap.people.types> & { noInteraction?: boolean, profilename_to_modify?: string, various?: any } & Dictionary<any>
 type response = { [index: string]: any };
+interface history_event {
+    when: Date
+    who: CurrentUser
+    step: { id: string; title: string }
+    rejected?: true
+}
 type sv = {
   _id?: mongodb.ObjectID;
   modifyTimestamp?: Date;
+  history: history_event[]
 
   id?: id,
   step: string,

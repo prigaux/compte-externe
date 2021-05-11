@@ -115,7 +115,7 @@ function checkAcls(req: req, sv: sv) {
 }
 
 function first_sv(req: req, wanted_step: string): Promise<sv> {
-    let empty_sv = { step: wanted_step, v: <v> {} };
+    let empty_sv: sv = { step: wanted_step, v: {}, history: [] };
     if (!step(empty_sv).initialStep) throw `${wanted_step} is not a valid initial step`;
     return action_pre(req, empty_sv);
 }
@@ -128,10 +128,10 @@ async function getRaw(req: req, id: id, wanted_step: string): Promise<sva> {
     } else {
         sv = await db.get(id);
         if (!sv) throw "invalid id " + id;
-        if (!sv.step) throw "internal error: missing step for id " + id;
+        if (!sv.step) throw format_history_event(sv)
         if (wanted_step && sv.step !== wanted_step) {
             console.error("user asked for step " + wanted_step + ", but sv is in state " + sv.step);
-            throw "Bad Request";
+            throw format_history_event(sv)
         }
     }
     await checkAcls(req, sv);
@@ -177,6 +177,25 @@ async function set(req: req, id: id, wanted_step: string, v: v) {
     return r;
 }
 
+function format_history_event(sv: sv) {
+    const date = helpers.to_DD_MM_YYYY(sv.modifyTimestamp)
+    if (sv.step) {
+        return "La demande est en attente à l'étape « " + step(sv).labels.title + " » depuis le " + date
+    } else {
+        return _.last(sv.history)?.rejected ? "La demande a été rejetée le " + date :
+                "La demande est terminée depuis le " + date
+    }
+}
+
+function add_history_event(req: req, sv: sv, action?: 'rejected') {
+    (sv.history ??= []).push({
+        when: new Date(),
+        who: req.user,
+        step: { id: sv.step, title: step(sv).labels.title },
+        ...action === 'rejected' ? { rejected: true } : {},
+    })
+}
+
 function advance_sv(req: req, sv: sva) : Promise<svr> {
     if (!sv.id) {
         // do not rely on id auto-created by mongodb on insertion in DB since we need the ID in action_pre for sendValidationEmail
@@ -206,6 +225,7 @@ const checkSetLock = (sv: sv) : Promise<any> => (
 // 5. save to DB or remove from DB if one action returned null
 function setRaw(req: req, sv: sva, v: v) : Promise<svr> {
     sv.v = merge_v(sv_attrs(sv), shared_conf.default_attrs_opts, sv.v, v);
+    add_history_event(req, sv)
     return checkSetLock(sv).then(_ => (
         advance_sv(req, sv)
     )).tap(svr => {
@@ -214,7 +234,7 @@ function setRaw(req: req, sv: sva, v: v) : Promise<svr> {
         if (sv.step) {
             return saveRaw(req, sv);
         } else {
-            return removeRaw(sv.id);
+            return removeRaw(sv);
         }
     }).finally(() => db.setLock(sv.id, false))
 }
@@ -226,8 +246,8 @@ function saveRaw(req: req, sv: sv) {
     });
 }
 
-function removeRaw(id: id) {
-    return db.remove(id).then(() => {
+function removeRaw(sv: sv) {
+    return db.save(_.pick(sv, 'id', 'history'), { upsert: false }).then(() => {
         bus.emit('changed');
     });
 }
@@ -236,7 +256,8 @@ function remove(req: req, id: id, wanted_step: string) {
     return getRaw(req, id, wanted_step).then(sv => {
         // acls are checked => removing is allowed
         mayNotifyModerators(req, sv, 'rejected');
-        return removeRaw(sv.id);
+        add_history_event(req, sv, 'rejected')
+        return removeRaw(sv);
     }).then(_ => ({ success: true }));
 }
 
