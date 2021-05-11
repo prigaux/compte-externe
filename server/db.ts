@@ -20,10 +20,8 @@ function _id(id: string = undefined) {
 function fromDB(sv_: any) {
     return renameKey(sv_, '_id', 'id') as sv;
 }
-function toDB(sv: sv) {
-    let sv_ = _.omit(sv, 'id');
-    sv_['_id'] = _id(sv.id);
-    return sv_ as sv;
+function toDB<T extends { id?: string }>(sv: T) {
+    return { ..._.omit(sv, 'id'), _id: _id(sv.id) };
 }
 
 let client: mongodb.Db = null;
@@ -59,10 +57,9 @@ export const remove = (id: id) => (
     svs().remove({ _id: _id(id) })
 );
 
-export const save = (sv: sv) => {
+export const save = <T extends { id?: string }>(sv: T) => {
             console.log("saving in DB:", util.inspect(sv).replace(/userPassword: '(.*)'/, "userPassword: 'xxx'"));
-            let sv_ = toDB(sv);
-            sv_['modifyTimestamp'] = new Date();
+            let sv_ = { ...toDB(sv), modifyTimestamp: new Date() };
             return svs().replaceOne({ _id: sv_['_id'] }, sv_, {upsert: true}).then(_ => sv);
 };
 
