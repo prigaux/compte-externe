@@ -1,14 +1,15 @@
 type PostalAddress = { 
       country: string, 
       lines: string,
-      line2?: string, postalCode?: string, town?: string,
+      line2: string, postalCode: string, town: string,
 };
 
 export function fromString(addr: string): PostalAddress {
-    if (!addr) return { lines: '', line2: '', postalCode: '', town: '', country: "FRANCE" };
+    const empty = { lines: '', line2: '', postalCode: '', town: '', country: '' }
+    if (!addr) return { ...empty, country: "FRANCE" };
 
     let lines = addr.split(/\n/);
-    if (lines.length < 2) return { lines: addr, country: '' };
+    if (lines.length < 2) return { ...empty, lines: addr };
     let country = lines.pop();
     if (country.match(/^france$/i)) {
         let pt = lines.pop();
@@ -21,7 +22,7 @@ export function fromString(addr: string): PostalAddress {
         let line2 = lines.join(" - "); // we want only 2 lines, group the remaining lines                
         return { lines: l1, line2, postalCode: pt_[1], town: pt_[2], country: "FRANCE" };
     } else {
-        return { lines: lines.join("\n"), country };
+        return { ...empty, lines: lines.join("\n"), country };
     }
 }
 

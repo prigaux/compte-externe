@@ -28,7 +28,7 @@ describe('service ws', function() {
                   { lines: '3 rue Ursulines', line2: 'Villa Pasteur - Appt. 207', postalCode: '75005', town: 'PARIS 05EME', country: 'FRANCE' },
                   "3 rue Ursulines\nVilla Pasteur - Appt. 207\n75005 PARIS 05EME\nFRANCE");
             check("25 CROCKERTON ROAD\nSW177HE LONDRES\nGRANDE BRETAGNE", 
-                  { lines: "25 CROCKERTON ROAD\nSW177HE LONDRES", country: "GRANDE BRETAGNE" });
+                  { lines: "25 CROCKERTON ROAD\nSW177HE LONDRES", line2: '', country: "GRANDE BRETAGNE", postalCode: '', town: '' });
         });
         
     });
