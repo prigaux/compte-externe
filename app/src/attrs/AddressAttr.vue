@@ -23,9 +23,9 @@
    <div class="row">
     <div class="col-xs-3" :class="{'my-has-error': !validity.postalCode.valid}">
       <div>
-        <input-with-validity name="postalCode" v-model="postalCode" real-type="frenchPostalCode" v-magic-aria placeholder="Code postal" :required="!opts.optional" :validity.sync="validity.postalCode"></input-with-validity>
+        <input-with-validity name="postalCode" v-model="postalCode" pattern="[0-9]{5}" v-magic-aria placeholder="Code postal" :required="!opts.optional" :validity.sync="validity.postalCode"></input-with-validity>
         <CurrentLdapValue v-model="postalCode" :ldap_value="ldap_val.postalCode"></CurrentLdapValue>
-        <validation-errors name="postalCode" :validity="validity"></validation-errors>
+        <validation-errors name="postalCode" :validity="validity" :custom_message="conf.error_msg.frenchPostalCode"></validation-errors>
       </div>
     </div>
     <div class="col-xs-9" :class="{'my-has-error': !validity.town.valid}">
@@ -82,7 +82,7 @@ export default Vue.extend({
     asyncComputed: {
         async towns() {
             const code = this.postalCode;
-            return code && code.length >= 5 ? await Helpers.frenchPostalCodeToTowns(code) : [];
+            return code?.match('^[0-9]{5}$') ? await Helpers.frenchPostalCodeToTowns(code) : [];
         },
     },
     computed: {
