@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { merge, omit, cloneDeep, some } from 'lodash';
+import { setTimeoutPromise } from '../../../shared/helpers'
 import { router } from '../router';
 import * as Helpers from './helpers';
 
@@ -260,7 +261,11 @@ export function getInScope($scope, id: string, params, hash_params, expectedStep
     }, err => _handleErr(err, $scope, true));
 }
 
-export async function listInScope($scope, params, cancelToken) : Promise<"ok" | "cancel"> {
+export const listInScope = ($scope, params, cancelToken) => (
+    listInScope_maybe_retry($scope, params, cancelToken, params.poll ? { retries: 10, time_before_retry: 1000 } : {})
+)
+
+async function listInScope_maybe_retry($scope, params, cancelToken, opts) : Promise<"ok" | "cancel"> {
     try {
         const resp = await axios.get(api_url + '/comptes', { params, cancelToken });           
         var svs = resp.data;
@@ -269,6 +274,12 @@ export async function listInScope($scope, params, cancelToken) : Promise<"ok" | 
     } catch (err) {
         if (axios.isCancel(err)) {
             return "cancel";
+        }
+        if (opts.retries) {
+            opts.retries--
+            await setTimeoutPromise(opts.time_before_retry)
+            opts.time_before_retry *= 2
+            return listInScope_maybe_retry($scope, params, cancelToken, opts)
         }
         return _handleErr(err, $scope);
     }
