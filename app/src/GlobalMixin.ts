@@ -14,6 +14,9 @@ export default Vue.extend({
             a.href = this.$router.resolve(location).href;
             return a.href;
         },
+        v_to_readOnly_query(v) {
+            return _.mapKeys(_.pickBy(v, val => val !== ''), (_v, k) => 'readOnly_' + k)
+        },
         copyToClipboard(elt) {
             elt.select();
             document.execCommand('copy');
