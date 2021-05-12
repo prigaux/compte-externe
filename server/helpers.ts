@@ -24,9 +24,7 @@ export function promise_defer<T>() {
     return deferred;
 }
 
-export const setTimeoutPromise = (time: number) => (
-    new Promise((resolve, _) => setTimeout(resolve, time))
-);
+export const setTimeoutPromise = shared_helpers.setTimeoutPromise
 
 // @ts-expect-error
 export const promisify_callback = f => (

@@ -8,3 +8,7 @@ export const addDays = (date : Date, days : number) => {
     r.setTime(r.getTime() + days * 60 * 60 * 24 * 1000);
     return r;
 }
+
+export const setTimeoutPromise = (time: number) => (
+    new Promise((resolve, _) => setTimeout(resolve, time))
+);
