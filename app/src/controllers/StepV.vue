@@ -16,10 +16,10 @@
 
   <div v-else>
 
-   <div v-if="check_homonyms && !all_potential_homonyms">
+   <div v-if="allow_check_homonyms && !all_potential_homonyms">
        Recherche des homonymes, veuillez patienter...
    </div>
-   <div v-else-if="check_homonyms && potential_homonyms.length">
+   <div v-else-if="potential_homonyms.length">
       <Homonyms :v="v" :l="potential_homonyms" @merge="merge">
       </Homonyms>
    </div>
@@ -110,9 +110,6 @@ export default Vue.extend({
         allow_check_homonyms() {
             return this.attrs_?.uid?.uiType === 'homonym';
         },
-        check_homonyms() {
-            return this.allow_check_homonyms && !this.v.uid;
-        },
         noInteraction() {
             return this.v.noInteraction || this.step?.labels?.okButton && Object.keys(this.attrs_).length === 0;
         },
@@ -160,7 +157,7 @@ export default Vue.extend({
             this.may_update_potential_homonyms({});
         },
         async may_update_potential_homonyms(v, v_orig = null) {
-            if (this.check_homonyms && !isEqual(v, v_orig)) {
+            if (this.allow_check_homonyms && !this.v.uid && !isEqual(v, v_orig)) {
                 await this.update_potential_homonyms(v);
             }
         },
@@ -171,7 +168,7 @@ export default Vue.extend({
         },
         async submit_() {
             await this.may_update_potential_homonyms(this.v, this.v_orig);
-            if (this.check_homonyms && this.potential_homonyms.length) {
+            if (this.potential_homonyms.length) {
                 // we cannot submit, we must display the new potential homonyms
             } else {
                 await (this.to_import ? this.send_new_many() : this.send());
@@ -283,6 +280,7 @@ export default Vue.extend({
                 this.v_orig[attr] = val;
             }
           });
+          this.all_potential_homonyms = [];
           this.v_ldap = homonyme;
           this.v_orig = Helpers.copy(this.v_orig); // make it clear for Vuejs that v_orig has been updated
         },
