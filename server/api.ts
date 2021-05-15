@@ -138,8 +138,10 @@ async function getRaw(req: req, id: id, wanted_step: string): Promise<sva> {
     return await add_step_attrs(req, sv);
 }
 
-function get(req: req, id: id, wanted_step: string) {
-    return getRaw(req, id, wanted_step).then(may_export_v_ldap).then((sv) => export_sv(req, sv));
+async function get(req: req, id: id, wanted_step: string) {
+    let sv = await getRaw(req, id, wanted_step)
+    if (id !== 'new') sv = await may_export_v_ldap(sv)
+    return await export_sv(req, sv)
     // TODO add potential_homonyms si id !== 'new' && attrs && attrs.uid
 }
 

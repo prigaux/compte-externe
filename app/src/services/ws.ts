@@ -220,11 +220,11 @@ export function getInScope($scope, id: string, params, hash_params, expectedStep
         initAttrs(sv.attrs);
         $scope.attrs = sv.attrs;
         let all_attrs = get_all_attrs_flat($scope.attrs);
-        if (sv.v_ldap) $scope.v_ldap = fromWs(sv.v_ldap, all_attrs);
         let vs: {}[] = (sv.vs || [ sv.v ]).map(v => (
                 fromWs(v, all_attrs)
             ));
             let v = vs[0];
+            $scope.v_ldap = sv.v_ldap && fromWs(sv.v_ldap, all_attrs) || id === 'new' && vs.length === 1 && cloneDeep(v);
             // pass v_orig to attrs opts.validator:
             handleAttrsValidators_and_allowUnchangedValue(all_attrs, Helpers.copy(v));
             Helpers.eachObject(all_attrs, (attr, opts) => {
