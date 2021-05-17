@@ -112,7 +112,7 @@ Vue.component('input-with-validity', {
 
 Vue.component('radio-with-validity', {
   template: `
-  <span>
+  <span :class="disabled && 'disabled-radio'">
     <label :class="long_lines ? 'my-radio' : 'my-radio-inline'" v-for="(descr, val) in values">
        <input type="radio" :name="name" :value="val" :checked="!val && !value ||val == value" @change="onchange" :required="required" :disabled="disabled">
        <span v-html="descr" v-if="texts_are_html"></span>

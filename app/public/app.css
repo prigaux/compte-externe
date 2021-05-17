@@ -160,6 +160,23 @@ fieldset {
     box-shadow: 2px 0px 2px 0px #777;;
 }
 
+/* display <input disabled> as if text without <input> */
+.form-control[disabled] {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    padding-left: 0;
+    padding-right: 0;
+    height: auto;
+    appearance: none; /* to hide <select> drop-down arrow */
+}
+
+.disabled-radio input[type=radio]:not(:checked),
+.disabled-radio input[type=radio]:not(:checked) ~ span {
+    opacity: 0.3;
+    text-decoration: line-through;
+}
+
 /* hack to display compact form-inline:
    - everything on one line
 */
@@ -189,13 +206,8 @@ fieldset {
 .form-inline .mytooltip {
     display: none;
 }
-/* display <input disabled> as if text without <input> */
 .form-inline .form-control[disabled] {
-    border: none;
-    box-shadow: none;
-    background-color: transparent;
     padding: 0;
-    height: auto;
 }
 
 .my-radio-inline {
