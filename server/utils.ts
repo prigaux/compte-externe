@@ -64,6 +64,25 @@ export const post = (url: string, body: string, options: Omit<http_client_Option
     return http_request(url, { method: 'POST', body, ...options })
 };
 
+export const http_request_json = async (url: string, { params, ...options }: http_client_Options & { params?: Dictionary<any> }) : Promise<object> => {
+    let options_ = { 
+        method: params ? 'POST' : 'GET', // default method
+        ...(params ? { body: JSON.stringify(params) } : {}),
+        ...options, 
+    } as const
+    const data = await http_request(url, options_)
+    try {
+        return JSON.parse(data)
+    } catch (e) {
+        console.error("expected JSON, got", data)
+        throw e
+    }
+}
+
+export const to_basic_auth = ({ user, password } : { user: string, password: string }) => ({
+    'Authorization': 'Basic ' + Buffer.from(user + ':' + password).toString('base64')
+})
+
 const http_statuses: Dictionary<number> = {
     "Bad Request": 400,
     "Unauthorized": 401,
