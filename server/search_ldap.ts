@@ -61,7 +61,7 @@ export const structures = (token: string, sizeLimit: number) => {
     return ldap.searchMany(conf.ldap.base_structures, many, 'const', conf.ldap.structures.types, conf.ldap.structures.attrs, {sizeLimit});
 };
 
-export const etablissements = (token: string, sizeLimit: number) => {
+export const filtered_etablissements = (global_filter: string) => (token: string, sizeLimit: number) => {
     let filters_;
     if (token.match(/\{.*/)) {
         filters_ = [filters.eq("up1TableKey", token)]
@@ -76,8 +76,13 @@ export const etablissements = (token: string, sizeLimit: number) => {
             filters.fuzzy(['description', 'cn', 'displayName'], token),
         ]
     }
+    if (global_filter) {
+        filters_ = filters_.map(filter => filters.and([ filter, global_filter ]))
+    }
     return ldap.searchMany(conf.ldap.base_etablissements, filters_, 'const', conf.ldap.etablissements.types, conf.ldap.etablissements.attrs, {sizeLimit})
 };
+
+export const etablissements = filtered_etablissements(null)
 
 const people_filters = (token: string) => ([ 
     filters.eq('uid', token),
