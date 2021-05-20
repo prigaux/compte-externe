@@ -106,6 +106,14 @@ export function get_delete<T>(o: Dictionary<T>, key: string): T {
     return val;
 }
 
+export function renameKey<T>(o: Dictionary<T>, oldK: string, newK: string): Dictionary<T> {
+    if (o && (oldK in o)) {
+        o = _.clone(o);
+        o[newK] = get_delete(o, oldK);
+    }
+    return o;
+}
+
 const xmlEncodeMap: Dictionary<string> = {
     '&': '&amp;',
     '<': '&lt;',

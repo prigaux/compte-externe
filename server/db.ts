@@ -4,15 +4,7 @@ import * as _ from 'lodash';
 import * as util from 'util';
 import * as mongodb from 'mongodb';
 import * as conf from './conf';
-import { get_delete } from './helpers';
-
-export function renameKey<T>(o: Dictionary<T>, oldK: string, newK: string): Dictionary<T> {
-    if (o && (oldK in o)) {
-        o = _.clone(o);
-        o[newK] = get_delete(o, oldK);
-    }
-    return o;
-}
+import { renameKey } from './helpers';
 
 function _id(id: string = undefined) {
     return new mongodb.ObjectID(id);
