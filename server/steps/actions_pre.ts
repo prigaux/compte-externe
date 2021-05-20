@@ -36,9 +36,11 @@ export const getShibOrCasAttrs: simpleAction = (req, _sv) => (
     (isShibUserInLdap(req) ? getShibUserLdapAttrs : getShibAttrs)(req, _sv)
 )
 
-export const getExistingUser: simpleAction = (req, _sv)  => (
-    oneExistingPerson(filters.eq("uid", req.query.uid)).then(v => ({ v }))
-);
+export const getExistingUser: simpleAction = async (req, _sv)  => {
+    if (!req.query.uid) throw "getExistingUser: no req.query.uid"
+    const v = await oneExistingPerson(filters.eq("uid", req.query.uid))
+    return { v }
+}
 
 const handle_profilename_to_modify = (req: req, v: v) => {
     const profilename = req.query.profilename_to_modify;
