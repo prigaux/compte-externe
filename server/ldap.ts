@@ -119,6 +119,21 @@ function convertAttrFromLdap(attr: string, attrType: LdapAttrValue, conversion: 
         }
 }
 
+export const convert_toLdap_string = (attrConvert: AttrConvert, val: unknown) => {
+    const modify = to_ldap_modify(attrConvert.convert.toLdap(val))
+    const val_ = modify.action === 'add' ? modify.value : _.isFunction(modify.action) ? modify.action([]) : undefined
+    if (_.isArray(val_)) {
+        if (val_.length > 1) throw "ldap_modify_to_string expected a simple value"
+        return val_[0]
+    } else {
+        return val_
+    }
+}
+
+export const convertAttrToLdapFilter = (attr: string, attrConvert: AttrConvert, val: unknown) => (
+    filters.eq(toLdapAttr(attrConvert, attr), convert_toLdap_string(attrConvert, val))
+)
+
 function convertAttrToLdap(attr: string, attrType: LdapAttrValue, conversion: ldap_conversion, v: any, opts: { toJson?: boolean, toEsupActivBo?: boolean, toEsupActivBoResponse?: boolean }): ldap_modify {
         if (conversion) {
             const v_ = opts.toJson && conversion.toLdapJson ? conversion.toLdapJson(v) : 

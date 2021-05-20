@@ -190,3 +190,10 @@ describe('ldap', () => {
     });
 
 });
+
+describe('convertAttrToLdapFilter', () => {
+    it('should work', () => {
+        assert.equal(ldap.convertAttrToLdapFilter('attr1', { convert: ldap_convert.dn("ou", "dc=fr") }, 'foo'), '(attr1=ou=foo,dc=fr)')
+        assert.equal(ldap.convertAttrToLdapFilter('ignored', { ldapAttr: 'attr1', convert: ldap_convert.withEtiquette('{FOO}') }, 'foo'), '(attr1={FOO}foo)')
+    })
+})
