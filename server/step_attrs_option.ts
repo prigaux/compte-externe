@@ -202,6 +202,12 @@ export const eachAttrs = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key:
     rec(attrs, false)
 }
 
+export const flatMapAttrs = <T>(attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string) => T[]): T[] => {
+    let r: T[] = []
+    eachAttrs(attrs, (opts, key) => r.push(...f(opts, key)))
+    return r
+}
+
 export const merge_attrs_overrides = (attrs: StepAttrsOption, attrs_override: StepAttrsOption) => {
     const r = utils.deep_extend(attrs, attrs_override);
     eachAttrs(r, (opts, key, attrs) => {

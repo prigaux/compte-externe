@@ -16,7 +16,7 @@
 
   <div v-else>
 
-   <div v-if="allow_check_homonyms && !all_potential_homonyms">
+   <div v-if="check_homonyms && !all_potential_homonyms">
        Recherche des homonymes, veuillez patienter...
    </div>
    <div v-else-if="potential_homonyms.length">
@@ -25,12 +25,12 @@
    </div>
    <div v-else>
 
-    <div v-if="allow_check_homonyms && v.global_main_profile">
+    <div v-if="merged_homonyms.length">
         <p style="height: 2em"></p>
-            <div class="alert alert-danger" >
-                Le compte sera fusionné avec le compte existant {{v.uid}}.
+            <div class="alert alert-danger" v-for="h in merged_homonyms">
+                Le compte sera fusionné avec le compte existant {{h.merged_ids_values}}.
                 <p/>
-                {{v.givenName}} {{v.sn}} <span v-html="v.global_main_profile.description"></span>
+                {{h.givenName}} {{h.sn}} <span v-html="h.global_main_profile.description"></span>
             </div>
     </div>
 
@@ -68,7 +68,8 @@ import conf from '../conf';
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { defaults, isEqual, unionBy, isEmpty } from 'lodash';
+import * as _ from 'lodash'
+import { defaults, isEqual, isEmpty } from 'lodash';
 import { StepAttrsOption } from '../services/ws';
 import { compute_mppp_and_handle_default_values } from '../../../shared/mppp_and_defaults';
 
@@ -107,14 +108,17 @@ export default Vue.extend({
         initialStep() {
             return !this.wanted_id && this.stepName;
         },
-        allow_check_homonyms() {
-            return this.attrs_?.uid?.uiType === 'homonym';
+        check_homonyms() {
+            return !_.every(this.homonym_attrs, attr => this.v[attr])
         },
         noInteraction() {
             return this.v.noInteraction || this.step?.labels?.okButton && Object.keys(this.attrs_).length === 0;
         },
         attrs_() {
             return this.attrs && Helpers.filter(this.attrs, (opts) => !opts.uiHidden);
+        },
+        homonym_attrs() {
+            return Object.keys(_.pickBy(this.attrs_ || {}, (opts) => opts.uiType === 'homonym'))
         },
         display_fieldIsRequired_hint() {
             if (!this.attrs) return false;
@@ -149,6 +153,9 @@ export default Vue.extend({
         potential_homonyms() {
             return (this.all_potential_homonyms || []).filter(h => !h.ignore);
         },
+        merged_homonyms() {
+            return (this.all_potential_homonyms || []).filter(h => h.merged_ids_values);
+        },
     },
 
     methods: {
@@ -157,14 +164,15 @@ export default Vue.extend({
             this.may_update_potential_homonyms({});
         },
         async may_update_potential_homonyms(v, v_orig = null) {
-            if (this.allow_check_homonyms && !this.v.uid && !isEqual(v, v_orig)) {
+            if (this.check_homonyms && !isEqual(v, v_orig)) {
                 await this.update_potential_homonyms(v);
             }
         },
         async update_potential_homonyms(v) {
-            const l = await Ws.homonymes(this.id, v, this.all_attrs_flat);
-            l.forEach(h => h.ignore = false);
-            this.all_potential_homonyms = unionBy(this.all_potential_homonyms || [], l, 'uid');
+            const l = await Ws.homonymes(this.id, v, this.all_attrs_flat, this.v_pre, this.stepName);
+            l.forEach(h => h.ignore = h.merged_ids_values = false);
+            const have_the_same_ids = (a, b) => _.every(this.homonym_attrs, attr => a[attr] === b[attr])
+            this.all_potential_homonyms = _.unionWith(this.all_potential_homonyms || [], l, have_the_same_ids)
         },
         async submit_() {
             await this.may_update_potential_homonyms(this.v, this.v_orig);
@@ -275,13 +283,37 @@ export default Vue.extend({
       },        
       merge(homonyme) {
           Helpers.eachObject(homonyme, (attr, val) => {
-            if (attr.match(/^global_|^(uid|supannAliasLogin)$/)) {
+            if (!val) return;
+            const is_id_attr = this.homonym_attrs.includes(attr)
+            if (homonyme.mergeAll || is_id_attr || attr.match(/^global_/)) {
+                if (this.v[attr]) {
+                    if (this.v[attr] === val) {
+                        // nothing to do
+                    } else if (is_id_attr) {
+                        // this should never happen since we remove homonyms with same id attr already set
+                        throw "homonyms conflict"
+                    } else {
+                        // no overriding
+                    }
+                } else {
                 console.log("adding " + attr + " = " + val); 
                 this.v[attr] = val;
                 this.v_orig[attr] = val;
             }
+            }
           });
-          this.all_potential_homonyms = [];
+
+          const merged_ids: string[] = this.homonym_attrs.filter(attr => homonyme[attr])
+          // set the values for idA and/or idB for display in template
+          homonyme.merged_ids_values = _.uniq(_.at(homonyme, merged_ids)).join('/')
+          // if "homonym" has both idA & idB, mark as ignored all other homonymes with either idA or idB
+          // if "homonym" has only idA, mark as ignored homonymes with either idA, but keeping those with only idB
+          for (const h of this.all_potential_homonyms) {
+              h.ignore ||= _.some(merged_ids, attr => h[attr])
+          }
+          // tell Vue.js
+          this.all_potential_homonyms = [...this.all_potential_homonyms]
+
           this.v_ldap = homonyme;
           this.v_orig = Helpers.copy(this.v_orig); // make it clear for Vuejs that v_orig has been updated
         },

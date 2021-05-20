@@ -11,7 +11,7 @@ import * as mail from './mail';
 import shared_conf from '../shared/conf';
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
-import { export_v, merge_v, exportAttrs, merge_attrs_overrides, selectUserProfile, checkAttrs, transform_object_items_oneOf_async_to_oneOf, findStepAttr } from './step_attrs_option';
+import { export_v, merge_v, exportAttrs, merge_attrs_overrides, selectUserProfile, checkAttrs, transform_object_items_oneOf_async_to_oneOf, findStepAttr, flatMapAttrs } from './step_attrs_option';
 import { filters } from './ldap';
 import gen_gsh_script from './gen_gsh_script';
 require('./helpers'); // for Promise.prototype.tap
@@ -292,16 +292,33 @@ async function listAuthorized(req: req) {
 
 const body_to_v = search_ldap.v_from_WS;
 
-function homonymes(req: req, id: id, v: v): Promise<search_ldap.Homonyme[]> {
-    return getRaw(req, id, undefined).then(sv => {
-        // we merge sv from database with information corrected by moderator. Useful to recheck homonymes after a correction
-        if (!_.isEmpty(v)) sv.v = merge_v(sv_attrs(sv), shared_conf.default_attrs_opts, sv.v, v);        
-        return search_ldap.homonymes(sv.v).then(l => {
-                console.log(`homonymes found for ${sv.v.givenName} ${sv.v.sn}: ${l.map(v => v.uid + " (score:" + v.score + ")")}`);
-                const attrs = { score: {}, ...sv_attrs(sv) };
-                return l.map(v => export_v(attrs, v) as search_ldap.Homonyme)
-            })
-    });
+async function homonymes(req: req, id: id, wanted_step: string, v: v): Promise<search_ldap.Homonyme[]> {
+    const sv = await getRaw(req, id, wanted_step)
+
+    // we merge sv from database with information corrected by moderator. Useful to recheck homonymes after a correction
+    if (!_.isEmpty(v)) sv.v = merge_v(sv_attrs(sv), shared_conf.default_attrs_opts, sv.v, v);        
+
+    let homonym_attrs: Set<string> = new Set()
+    // uniq is needed since we allow the "homonymes" function for different attrs
+    // (useful when we want to merge multiple attributes from the same source. for example "uid" + "supannAliasLogin")
+    const fns = _.uniq(flatMapAttrs(sv_attrs(sv), (opts, attr) => {
+        const fn = opts.homonyms || opts.uiType === 'homonym' && search_ldap.homonymes
+        if (fn) {
+            homonym_attrs.add(attr)
+            return [fn]
+        } else {
+            return []
+        }
+    }))
+    if (!fns.length) {
+        throw "homonyms: invalid step attr " + sv.step;
+    }
+    const l = _.flatten(await Promise.all(fns.map(fn => fn(sv.v))))
+    if (l.length) {
+        console.log(`homonymes found for ${sv.v.givenName} ${sv.v.sn}: ${l.map(v => JSON.stringify(_.pick(v, Array.from(homonym_attrs))) + " (score:" + v.score + ")")}`);
+    }
+    const attrs = { score: {}, mergeAll: {}, ...sv_attrs(sv) };
+    return l.map(v => export_v(attrs, v) as search_ldap.Homonyme)
 }
 
 const exportLabels = async (req: req, { description_in_list, ...labels }: StepLabels): Promise<ClientSideStepLabels> => {
@@ -375,11 +392,11 @@ router.delete('/comptes/:id/:step?', (req: req, res) => {
     respondJson(req, res, remove(req, req.params.id, req.params.step));
 });
 
-router.get('/homonymes/:id', (req: req, res) => {
-    respondJson(req, res, homonymes(req, req.params.id, {} as v));
+router.get('/homonymes/:id/:step?', (req: req, res) => {
+    respondJson(req, res, homonymes(req, req.params.id, req.params.step, {} as v));
 });
-router.post('/homonymes/:id', (req: req, res) => {
-    respondJson(req, res, homonymes(req, req.params.id, body_to_v(req.body)));
+router.post('/homonymes/:id/:step?', (req: req, res) => {
+    respondJson(req, res, homonymes(req, req.params.id, req.params.step, body_to_v(req.body)));
 });
 
 function search_for_typeahead(req: req, step: string, attr: string) {

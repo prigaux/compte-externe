@@ -280,9 +280,9 @@ async function listInScope_maybe_retry($scope, params, cancelToken, opts) : Prom
     }
 }
 
-export function homonymes(id, v, all_attrs_flat) {
+export function homonymes(id, v, all_attrs_flat, params, stepName: string) {
     const v_ = toWs(v, all_attrs_flat);
-    return axios.post(api_url + '/homonymes/' + id, v_).then((resp) =>
+    return axios.post(api_url + '/homonymes/' + id + '/' + stepName, v_, password_to_auth(params)).then((resp) =>
         (<any>resp.data).map(v => fromWs(v, all_attrs_flat))
         , _handleErr);
 }
