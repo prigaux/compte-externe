@@ -9,6 +9,19 @@ export const addDays = (date : Date, days : number) => {
     return r;
 }
 
+export const addYears = (date : Date, years : number) => {
+    let r = new Date(date);
+    r.setFullYear(r.getFullYear() + years)
+    return r;
+}
+
+export const nextDate = (pattern : string, date: Date) => {
+    let s = pattern.replace(/^XXXX-/, "" + date.getFullYear() + "-");
+    let r = new Date(s);
+    if (r.getTime() < date.getTime()) r.setFullYear(r.getFullYear() + 1);
+    return r;
+}
+
 export const setTimeoutPromise = (time: number) => (
     new Promise((resolve, _) => setTimeout(resolve, time))
 );
