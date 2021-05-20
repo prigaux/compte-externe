@@ -3,7 +3,6 @@ import * as _ from 'lodash'
 import { memoize } from 'lodash';
 import { formatDate } from '../../../shared/helpers';
 import { formatValue } from '../../../shared/v_utils';
-import conf from '../conf';
 
 export * from '../../../shared/helpers';
 
@@ -126,13 +125,6 @@ export * from '../../../shared/helpers';
         return p.then(cb).catch(cb);
     }
     
-    export const maybeFormatPhone = (resultFrenchPrefix: string) => (maybePhone : string) : string => {
-        if (maybePhone.match(conf.pattern.frenchPhone)) {
-            return maybePhone.replace(/^(\+33|0)/, '').replace(/\s/g, '').replace(/(.)(..)(..)(..)(..)/, resultFrenchPrefix + "$1 $2 $3 $4 $5");
-        }
-        return maybePhone;
-    }
-
     export function escapeRegexp(s : string) {
         return ('' + s).replace(/[.?*+^$[\]\\(){}|-]/g, "\\$&");
     }

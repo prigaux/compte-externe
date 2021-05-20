@@ -40,3 +40,11 @@ export function formatDate(date : Date | string, format : string) : string {
     }).join('');   
 }
 
+const frenchPhone_pattern = "^(\\+33|0)\\s*[1-9](\\s*[0-9]){8}$"
+
+export const maybeFormatPhone = (resultFrenchPrefix: string) => (maybePhone : string) : string => {
+    if (maybePhone.match(frenchPhone_pattern)) {
+        return maybePhone.replace(/^(\+33|0)/, '').replace(/\s/g, '').replace(/(.)(..)(..)(..)(..)/, resultFrenchPrefix + "$1 $2 $3 $4 $5");
+    }
+    return maybePhone;
+}

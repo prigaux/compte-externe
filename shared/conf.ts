@@ -112,7 +112,6 @@ export default {
     }),
 
     pattern: {
-        frenchPhone: "^(\\+33|0)\\s*[1-9](\\s*[0-9]){8}$", // french
         frenchMobilePhone: "(0|\\+33)\\s*[67](\\s*[0-9]){8}",        
         phone: [
             "0\\s*[1-9](\\s*[0-9]){8}", // french
