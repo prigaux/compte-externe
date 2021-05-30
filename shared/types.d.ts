@@ -21,6 +21,7 @@ interface StepAttrItemsOption {
         object_items_export_csv?: boolean
         readOnly__avoid_disabled_input?: boolean
         texts_are_html?: boolean
+        date_todayButton?: string
     };
 
     uiHidden?: boolean;

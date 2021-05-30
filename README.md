@@ -131,6 +131,7 @@ You can customize the way it is displayed:
 * ```uiOptions.title_rowspan```: allow title to span next titles
 * ```uiOptions.title_hidden```: do not display the title
 * ```uiOptions.texts_are_html```: treat `labels` / `oneOf`[].`const` as HTML
+* ```uiOptions.date_todayButton```: set it to add a button to set date today
 * ```uiOptions.readOnly__avoid_disabled_input```: display value as text instead of `disabled <input>`. Hint: use CSS to force a same width for all fields (example `.instead_of_disabled_input { display: inline-block; min-width: 6em }`)
 
 * ```labels.custom_error_message```: displayed when the value is not valid

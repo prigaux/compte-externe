@@ -301,3 +301,15 @@ table.v-diff tr th {
     color: #00326E !important;
     margin-left: -10px;
 }
+
+.inputWithButton {
+    display: flex;
+}
+.inputWithButton input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.inputWithButton button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}

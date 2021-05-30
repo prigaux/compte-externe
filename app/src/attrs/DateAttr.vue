@@ -1,8 +1,11 @@
 <template>
   <my-bootstrap-form-group :name="name" :opts="opts" :validity="validity">
-    <input-with-validity :name="name" v-model="val" type="date"
-       :disabled="opts.readOnly"
-       :min="min" :max="max" :required="!opts.optional" :validity.sync="validity[name]"></input-with-validity>
+    <span :class="{ inputWithButton: todayButton }">
+      <input-with-validity :name="name" v-model="val" type="date"
+         :disabled="opts.readOnly"
+         :min="min" :max="max" :required="!opts.optional" :validity.sync="validity[name]"></input-with-validity>
+      <button v-if="todayButton" class="btn btn-primary" type="button" @click="set_today">{{todayButton}}</button>
+    </span>
     <CurrentLdapValue :value="initial_val" :ldap_value="ldap_val" @input="v => val = v"></CurrentLdapValue>
     <span v-html="opts.description"></span>
   </my-bootstrap-form-group>
@@ -49,6 +52,14 @@ export default Vue.extend({
         max() {
             return toYYYY_MM_DD(to_absolute_date(this.opts.maxDate));
         },
+        todayButton() {
+            return this.opts?.uiOptions?.date_todayButton
+        },
     },
+    methods: {
+        set_today() {
+            this.val = toYYYY_MM_DD(new Date())
+        },
+    }
 });
 </script>
