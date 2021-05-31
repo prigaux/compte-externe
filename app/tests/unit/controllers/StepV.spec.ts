@@ -72,10 +72,10 @@ describe('homonyms', () => {
 
     let mock = mocha_axios_mock()
 
-    it("should handle one homonym attr", async () => {
+    it("should handle one homonym attr: ignore", async () => {
         const params = {
-            attrs: { attr1: {}, uid: { uiType: 'homonym' } }, 
-            v: {},
+            attrs: { attr1: {}, uid: { uiType: 'homonym' }, sn: {} }, 
+            v: { sn: 'Rigaux' },
         }
         const homonymes = all_homonymes.slice(0, 1)
 
@@ -90,15 +90,38 @@ describe('homonyms', () => {
         // merge homonyme
         await vm.merge(vm.potential_homonyms[0])
         check_potential_homonyms(vm, [])
-        assert.deepEqual(vm.v, _.pick(homonymes[0], 'uid', 'global_main_profile'))
+        assert.deepEqual(vm.v, _.pick(homonymes[0], 'uid', 'sn', 'global_main_profile'))
         assert.include(wrapper.html(), homonymes[0].global_main_profile.description, 'display a message about the merged homonym')
+        check_display_attrsform(wrapper)
+    })
+
+    it("should handle one homonym attr: merge", async () => {
+        const params = {
+            attrs: { attr1: {}, uid: { uiType: 'homonym' }, sn: {} }, 
+            v: { sn: 'Rigaux' },
+        }
+        const homonymes = all_homonymes.slice(0, 1)
+
+        mock.adapter.onPost(/\/api\/homonymes\/.*/).reply(_ => [200, homonymes])
+        const wrapper = mountStepV(params)
+        await flushPromises()
+        const vm = wrapper.vm as any
+        //
+        check_potential_homonyms(vm, homonymes)
+        check_display_homonyms_stub(wrapper)
+
+        // ignore homonyme
+        vm.potential_homonyms[0].ignore = true
+        await flushPromises()
+        check_potential_homonyms(vm, [])
+        assert.deepEqual(vm.v, { sn: 'Rigaux' })
         check_display_attrsform(wrapper)
     })
 
     it("should handle two homonym_attrs, two merges", async () => {
         const params = {
             attrs: { attr1: {}, uid: { uiType: 'homonym' }, idFoo: { uiType: 'homonym' } },
-            v: {},
+            v: { sn: 'Rigaux' },
         }
         const homonymes = all_homonymes
 
@@ -115,7 +138,7 @@ describe('homonyms', () => {
         await vm.merge(vm.potential_homonyms[0])
         check_display_homonyms_stub(wrapper)
         check_potential_homonyms(vm, homonymes.slice(1, 2))
-        assert.deepEqual(vm.v, { ..._.pick(homonymes[0], 'uid', 'global_main_profile') })
+        assert.deepEqual(vm.v, { ..._.pick(homonymes[0], 'uid', 'sn', 'global_main_profile') })
 
         // merge second (NB: is has "mergeAll")
         await vm.merge(vm.potential_homonyms[0])
@@ -128,7 +151,7 @@ describe('homonyms', () => {
     it("should handle two homonym_attrs, one merge", async () => {
         const params = { 
             attrs: { attr1: {}, uid: { uiType: 'homonym' }, idFoo: { uiType: 'homonym' } },
-            v: {},
+            v: { sn: 'Rigaux' },
         }
         const homonymes = all_homonymes
 
@@ -148,4 +171,140 @@ describe('homonyms', () => {
         check_display_attrsform(wrapper)
     })
 
+    it("should check homonym again before submit: no new homonym found", async () => {
+        const params = {
+            attrs: { attr1: {}, uid: { uiType: 'homonym' }, sn: {} }, 
+            v: { sn: 'Foo' },
+        }
+
+        let lastApiCall = null
+        mock.adapter.onPost(/\/api\/homonymes\/.*/).reply(config => {
+            lastApiCall = config
+            return [200, []]
+        })
+        mock.adapter.onPut(/\/api\/comptes\//).reply(_ => [ 200, { labels: { added: "Foo" } } ])
+        const wrapper = mountStepV(params)
+        await flushPromises()
+        const vm = wrapper.vm as any
+        //
+        assert.deepEqual(lastApiCall.data, JSON.stringify({}))
+        check_display_attrsform(wrapper)
+
+        // set values and submit
+        vm.v.sn = "Rigaux"
+        await vm.submit_()
+        assert.deepEqual(lastApiCall.data, JSON.stringify({sn: "Rigaux"}))
+        check_potential_homonyms(vm, [])
+        assert.equal(wrapper.find('.response').text(), 'Foo')
+    })
+
+
+    it("should check homonym again before submit: new homonym found", async () => {
+        const params = {
+            attrs: { attr1: {}, uid: { uiType: 'homonym' }, sn: {} }, 
+            v: { sn: 'Foo' },
+        }
+        let homonymes = all_homonymes.slice(0, 1)
+
+        let lastApiCall = null
+        mock.adapter.onPost(/\/api\/homonymes\/.*/).reply(config => {
+            lastApiCall = config
+            return [200, JSON.parse(config.data).sn === 'Rigaux' ? homonymes : []]
+        })
+        mock.adapter.onPut(/\/api\/comptes\//).reply(_ => [ 200, { labels: { added: "Foo" } } ])
+        const wrapper = mountStepV(params)
+        await flushPromises()
+        const vm = wrapper.vm as any
+        //
+        assert.deepEqual(lastApiCall.data, JSON.stringify({}))
+        check_display_attrsform(wrapper)
+
+        // set values and submit
+        vm.v.sn = "Rigaux"
+        await vm.submit_()
+        check_display_homonyms_stub(wrapper)
+        check_potential_homonyms(vm, homonymes)
+
+        // ignore homonyme
+        vm.potential_homonyms[0].ignore = true
+        await flushPromises()
+        check_potential_homonyms(vm, [])
+        check_display_attrsform(wrapper)
+        assert.deepEqual(vm.v, {sn: 'Rigaux'})
+
+        await vm.submit_()
+        check_potential_homonyms(vm, [])
+        assert.equal(wrapper.find('.response').text(), 'Foo')
+    })
+
+
+    it("should check homonym again before submit if needed", async () => {
+        const params = {
+            attrs: { attr1: {}, uid: { uiType: 'homonym' }, sn: {} }, 
+            v: { sn: 'Foo' },
+        }
+        const homonymes = all_homonymes.slice(0, 1)
+
+        let lastApiCall = null
+        mock.adapter.onPost(/\/api\/homonymes\/.*/).reply(config => {
+            lastApiCall = config
+            return [200, JSON.parse(config.data).sn === 'Rigaux' ? homonymes : []]
+        })
+        const wrapper = mountStepV(params)
+        await flushPromises()
+        const vm = wrapper.vm as any
+        //
+        assert.deepEqual(lastApiCall.data, JSON.stringify({}))
+        check_display_attrsform(wrapper)
+
+        // set values and submit
+        vm.v.sn = "Rigaux"
+        await vm.submit_()
+        assert.deepEqual(lastApiCall.data, JSON.stringify({sn: "Rigaux"}))
+        check_display_homonyms_stub(wrapper)
+        check_potential_homonyms(vm, homonymes)
+
+        // ignore homonyme
+        vm.potential_homonyms[0].ignore = true
+        await flushPromises()
+        check_potential_homonyms(vm, [])
+        check_display_attrsform(wrapper)
+        assert.deepEqual(vm.v, {sn: 'Rigaux'})
+
+    })
+
+    it("should check homonym before submit (starting with empty form)", async () => {
+        const params = {
+            attrs: { attr1: {}, uid: { uiType: 'homonym' }, sn: {} }, 
+            v: {},
+        }
+        const homonymes = all_homonymes.slice(0, 1)
+
+        let lastApiCall = null
+        mock.adapter.onPost(/\/api\/homonymes\/.*/).reply(config => {
+            lastApiCall = config
+            return [200, homonymes]
+        })
+        const wrapper = mountStepV(params)
+        await flushPromises()
+        const vm = wrapper.vm as any
+        //
+        assert.equal(lastApiCall, null)
+        check_display_attrsform(wrapper)
+
+        // set values and submit
+        vm.v.sn = "Rigaux"
+        await vm.submit_()
+        assert.deepEqual(lastApiCall.data, JSON.stringify({sn: "Rigaux"}))
+        check_display_homonyms_stub(wrapper)
+        check_potential_homonyms(vm, homonymes)
+
+        // ignore homonyme
+        vm.potential_homonyms[0].ignore = true
+        await flushPromises()
+        check_potential_homonyms(vm, [])
+        check_display_attrsform(wrapper)
+        assert.deepEqual(vm.v, {sn: 'Rigaux'})
+
+    })
 })

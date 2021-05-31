@@ -169,7 +169,7 @@ export default Vue.extend({
             }
         },
         async update_potential_homonyms(v) {
-            const l = await Ws.homonymes(this.id, v, this.all_attrs_flat, this.v_pre, this.stepName);
+            const l = !this.v.birthDay && !this.v.sn ? [] : await Ws.homonymes(this.id, v, this.all_attrs_flat, this.v_pre, this.stepName);
             l.forEach(h => h.ignore = h.merged_ids_values = false);
             const have_the_same_ids = (a, b) => _.every(this.homonym_attrs, attr => a[attr] === b[attr])
             this.all_potential_homonyms = _.unionWith(this.all_potential_homonyms || [], l, have_the_same_ids)
