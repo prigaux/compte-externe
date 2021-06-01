@@ -72,9 +72,14 @@ Vue.directive('magic-aria', function (el: HTMLElement) {
 Vue.directive('on-visible', function (el : HTMLElement, binding) {
     const callback = binding.value
     if (!callback) return // disabled
-    new IntersectionObserver((events) => {
-        if (events.some(e => e.isIntersecting)) callback(el)
-    }).observe(el)
+    if (window.IntersectionObserver && window.IntersectionObserverEntry && 'isIntersecting' in window.IntersectionObserverEntry.prototype) {
+        new IntersectionObserver((events) => {
+            if (events.some(e => e.isIntersecting)) callback(el)
+        }).observe(el)
+    } else {
+        // ugly fallback: call it even if non visible /o\
+        setTimeout(_ => callback(el), 200)
+    }
 })
 
 /* it works if one can access DOM inside the iframe: it works if same vhost */
