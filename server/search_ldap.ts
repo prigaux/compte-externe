@@ -150,6 +150,7 @@ function homonymes_filter(sns: string[], givenNames: string[], birthDay: Date, s
               filters.and([ mail_filter(), birthDay_filter ]) ];
     if (supannMailPerso) {
         l.push(filters.eq('supannMailPerso', supannMailPerso));
+        l.push(filters.eq('mail', supannMailPerso));
     }
     //console.log("homonymes_filter", l);
     return filters.or(l);
