@@ -1,7 +1,7 @@
 'use strict';
 
 import * as _ from 'lodash';
-import * as shared_helpers from '../shared/helpers';
+export * from '../shared/helpers'
 
 if (Promise.prototype.tap === undefined) {
     // https://github.com/kriskowal/q/wiki/API-Reference#promisetaponfulfilled
@@ -24,8 +24,6 @@ export function promise_defer<T>() {
     return deferred;
 }
 
-export const setTimeoutPromise = shared_helpers.setTimeoutPromise
-
 // @ts-expect-error
 export const promisify_callback = f => (
     // @ts-expect-error
@@ -44,11 +42,6 @@ export function pmap<T,U>(o: T[], f: (e: T) => Promise<U>): Promise<U[]>
 export function pmap<T,U>(o: Dictionary<T>, f: (e: T, key: string) => Promise<U>): Promise<U[]>
 // @ts-expect-error
 export function pmap (o, f) { return Promise.all(_.map(o, f)) }
-
-
-export const addDays = shared_helpers.addDays;
-export const addYears = shared_helpers.addYears;
-export const nextDate = shared_helpers.nextDate
 
 export const anonymize_phoneNumber = (s: string) => (
     s && s.replace(/ /g, "").replace(/^\+33/, "0").substring(0, 6) + "****"
