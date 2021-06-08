@@ -178,6 +178,9 @@ More complex ACLs are possible. They need to provide 3 functions:
 * (logged) user => a mongo filter (that returns allowed `v`)
 * `v` => an LDAP filter (that will return allowed user)
 
+## Various
+
+* ```nextBrowserStep```: the name of a step (with a leading `/`) or an external url.
 
 # Authentication
 
