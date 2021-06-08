@@ -58,7 +58,7 @@ export default Vue.extend({
    },
    computed: {
      allow_reuse() {
-         return this.step.attrs.uid && !this.step.attrs.uid.uiHidden;
+         return this.step.attrs.uid?.uiType === 'queryParamForActionPre';
      },
      title_in_list() {
          return "title_in_list" in this.labels ? this.labels.title_in_list : this.labels.title;

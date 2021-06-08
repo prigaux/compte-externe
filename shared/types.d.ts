@@ -4,7 +4,8 @@ type uiTypes =
     'radio'|'select'|'checkbox'|'email'|'password'|'text'|'url' |
     'textarea'|'phone'|'frenchMobilePhone'|'frenchPostalCode'|'date' |
     'dateThreeInputs'|'postalAddress'|'cameraSnapshot'|'photoUpload' |
-    'autocomplete'|'newPassword'|'siret' | 'array' | 'homonym' |
+    'autocomplete'|'newPassword'|'siret' | 'array' |
+    'homonym' | 'queryParamForActionPre' |
     'tab' | 'iframe';
 
 interface StepAttrItemsOption {
