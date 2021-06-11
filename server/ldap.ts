@@ -269,8 +269,16 @@ export const filters = {
     eq: (attr: string, val: string) => "(" + escape(attr) + "=" + escape(val) + ")",
     startsWith: (attr: string, val: string) => "(" + escape(attr) + "=" + escape(val) + "*)",
     contains: (attr: string, val: string, prefix: string) => "(" + escape(attr) + "=" + escape(prefix || '') + "*" + escape(val) + "*)",
-    and: (filters: filter[]) => filters.length === 1 ? filters[0] : "(&" + filters.join('') + ")",
-    or: (filters: filter[]) => filters.length === 1 ? filters[0] : "(|" + filters.join('') + ")",
+    and: (filters: filter[]) => {
+        // simplify empty AND/OR which are not handled by ldapjs.parseFilter
+        const l = filters.filter(e => e !== '(&)')
+        return l.length === 1 ? l[0] : l.includes('(|)') ? '(|)' : "(&" + l.join('') + ")"
+    },
+    or: (filters: filter[]) => {
+        // simplify empty AND/OR which are not handled by ldapjs.parseFilter
+        const l = filters.filter(e => e !== '(|)')
+        return l.length === 1 ? l[0] : l.includes('(&)') ? '(&)' : "(|" + l.join('') + ")"
+    },
     memberOf: (cn: string) => filters.eq("memberOf", conf.ldap.group_cn_to_memberOf(cn)),
 
     startsOrEndsWith: (attr: string, val: string, prefix: string) => (

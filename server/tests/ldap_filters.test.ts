@@ -53,4 +53,20 @@ describe('ldap filters', () => {
         })
     })
 
+    describe('simplify and/or', () => {
+        it("should simplify AND containing (|)", () => {
+            assert.equal(filters.and([ filters.or([]), filters.eq("a", "b") ]), "(|)")
+        })
+        it("should simplify OR containing (&)", () => {
+            assert.equal(filters.or([ filters.and([]), filters.eq("a", "b") ]), "(&)")
+        })
+
+        it("should remove (|) from OR", () => {
+            assert.equal(filters.or([ filters.or([]), filters.eq("a", "b") ]), "(a=b)")
+        })
+        it("should remove (&) from AND", () => {
+            assert.equal(filters.and([ filters.and([]), filters.eq("a", "b") ]), "(a=b)")
+        })
+
+    })
 });
