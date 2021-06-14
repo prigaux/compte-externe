@@ -1,12 +1,8 @@
-import { find, forIn, map, mapValues, pickBy } from 'lodash';
+import { forIn, map, mapValues, pickBy } from 'lodash';
+import { find_choice } from './v_utils';
 
 const matches_if = (if_: { optional: false }, val: string) => (
     if_.optional || val
-)
-
-const find_choice = (oneOf: StepAttrOptionChoicesT<StepAttrOptionM<unknown>>[], val: any) => (
-    // tslint:disable-next-line:triple-equals
-    find(oneOf, choice => choice.const == val) // allow equality if val is number and choice.const is string
 )
 
 const handle_then_if_matching = (opts: StepAttrOptionM<unknown>, val: string, rec: (attrs: StepAttrsOptionM<unknown>, mpo: MergePatchOptions) => void) => {
@@ -27,30 +23,6 @@ const handle_chosen_oneOf_mppp = (opts: StepAttrOptionM<unknown>, val: string, r
 const handle_chosen_oneOf_or_if_then_mppp = (opts: StepAttrOptionM<unknown>, val: any, rec: (attrs: StepAttrsOptionM<unknown>, mpo: MergePatchOptions) => void) => {
     handle_then_if_matching(opts, val, rec);
     handle_chosen_oneOf_mppp(opts, val, rec);
-}
-
-export function filterAttrs(attrs: StepAttrsOptionM<unknown>, oneOfTraversal: 'always' | 'never', f: (opts: StepAttrOptionM<unknown>, key: string, attrs: StepAttrsOptionM<unknown>) => boolean): StepAttrsOptionM<unknown> {
-    function rec_mpp<T extends MppT<unknown>>(mpp: T) {
-        return mpp.merge_patch_parent_properties ? { ...mpp, merge_patch_parent_properties: rec(mpp.merge_patch_parent_properties) } : mpp
-    }
-    function rec(attrs: StepAttrsOptionM<unknown>) {
-        let r: StepAttrsOptionM<unknown> = {};  
-        forIn(attrs, (opts, key) => {
-            if (!f(opts, key, attrs)) return;
-            r[key] = opts = { ...opts };
-            if (opts.properties) opts.properties = rec(opts.properties);
-            if (oneOfTraversal === 'always') {
-                if (opts.then) {
-                    opts.then = rec_mpp(opts.then)
-                }
-                if (opts.oneOf) {
-                    opts.oneOf = opts.oneOf.map(rec_mpp);
-                }
-            }
-        });
-        return r;
-    }
-    return rec(attrs);
 }
 
 // assign "default" values
