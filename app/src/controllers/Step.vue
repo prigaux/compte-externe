@@ -95,7 +95,7 @@ export default Vue.extend({
             Ws.getInScope(this, this.id, this.v_pre, this.hash_params, this.stepName);    
         },
         export_csv(event) {
-            const csv = Helpers.to_csv(this.vs, mapValues(this.all_attrs_flat, 'title'))
+            const csv = Helpers.to_csv(this.vs, this.all_attrs_flat)
             event.target.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv)
         },
     },

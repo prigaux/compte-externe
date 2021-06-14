@@ -30,7 +30,10 @@ export function filterAttrs(attrs: StepAttrsOptionM<unknown>, oneOfTraversal: 'a
     return rec(attrs);
 }
 
-export function formatValue(val: any) {
+export function formatValue(val: any, opts : StepAttrOptionM<unknown> = {}) {
+    if (opts.oneOf) {
+       return find_choice(opts.oneOf, val)?.title
+    }
     if (val instanceof Date) {
         return formatDate(val, 'dd/MM/yyyy');
     } else {

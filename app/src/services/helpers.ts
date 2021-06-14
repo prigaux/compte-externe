@@ -1,6 +1,8 @@
 import axios from 'axios';
+import * as _ from 'lodash'
 import { memoize } from 'lodash';
 import { formatDate } from '../../../shared/helpers';
+import { formatValue } from '../../../shared/v_utils';
 import conf from '../conf';
 
 export * from '../../../shared/helpers';
@@ -212,7 +214,10 @@ export function isElementInViewport (el : HTMLElement) {
     );
 }
 
-const val_to_csv = (val: Date | string | number) => {
+const val_to_csv = (val: Date | string | number, opts: StepAttrOptionM<unknown>) => {
+    if (opts.oneOf) {
+        val = formatValue(val, opts)
+    }
     if (val instanceof Date) {
         return formatDate(val, 'yyyy-MM-dd')
     } else if (typeof val === 'string' && val.match(/[,"\n\r]/)) {
@@ -221,12 +226,12 @@ const val_to_csv = (val: Date | string | number) => {
         return val || ''
     }
 }
-const line_to_csv = (vals) => (
-    vals.map(val_to_csv).join(',')
+const line_to_csv_ = (line: Dictionary<any>, attrs: StepAttrsOptionM<unknown>) => (
+    _.map(attrs, (opts, attr) => val_to_csv(line[attr], opts)).join(',')
 )
 export function to_csv(l, attrs) {
-    const fields = Object.keys(attrs)
-    return [ attrs, ...l ].map(o => (
-        line_to_csv(fields.map(attr => o[attr]))
-    )).join("\r\n")
+    return [
+        _.map(attrs, (opts, _) => val_to_csv(opts.title, {})).join(','), 
+        ...l.map(o => line_to_csv_(o, attrs))
+    ].join("\r\n")
 }
