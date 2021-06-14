@@ -1,4 +1,5 @@
 import { find, forIn } from 'lodash';
+import { formatDate } from './helpers';
 
 export const find_choice = (oneOf: StepAttrOptionChoicesT<StepAttrOptionM<unknown>>[], val: any) => (
     // tslint:disable-next-line:triple-equals
@@ -29,3 +30,10 @@ export function filterAttrs(attrs: StepAttrsOptionM<unknown>, oneOfTraversal: 'a
     return rec(attrs);
 }
 
+export function formatValue(val: any) {
+    if (val instanceof Date) {
+        return formatDate(val, 'dd/MM/yyyy');
+    } else {
+        return "" + (val || '');
+    }
+}

@@ -120,7 +120,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { includes, find, isNil, keyBy, mapValues } from 'lodash';
-import { isDateInputSupported, formatValue } from '../services/helpers';
+import { isDateInputSupported } from '../services/helpers';
+import { formatValue } from '../../../shared/v_utils'
 import * as Ws from '../services/ws';
 
 import DateAttr from './DateAttr.vue';

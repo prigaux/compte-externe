@@ -19,9 +19,8 @@ import Vue from 'vue';
 import * as _ from 'lodash';
 import conf from '../conf';
 import * as Helpers from '../services/helpers';
+import { formatValue as format } from '../../../shared/v_utils'
 import * as JsDiff from 'diff';
-
-const format = Helpers.formatValue;
 
 function computeComparisons(v, homonyme) {   
         let sameAttrs = {};

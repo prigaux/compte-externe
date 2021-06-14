@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { memoize } from 'lodash';
+import { formatDate } from '../../../shared/helpers';
 import conf from '../conf';
+
+export * from '../../../shared/helpers';
 
     const entityMap = {
         "&": "&amp;",
@@ -117,45 +120,10 @@ import conf from '../conf';
         return result;
     }
 
-    export function padStart(value, length : number, char : string) : string {
-        value = value + '';
-        var len = length - value.length;
-
-        if (len <= 0) {
-                return value;
-        } else {
-                return Array(len + 1).join(char) + value;
-        }
-    }
-
     export function finallyP<P>(p : Promise<P>, cb : () => void) : Promise<void> {
         return p.then(cb).catch(cb);
     }
     
-    export function formatDate(date : Date | string, format : string) : string {
-        const date_ : Date = typeof date === "string" ? new Date(date) : date;
-        if (!date) return null;
-        return format.split(/(yyyy|MM|dd|HH|mm|ss)/).map(function (item) {
-            switch (item) {
-                case 'yyyy': return date_.getFullYear();
-                case 'MM': return padStart(date_.getMonth() + 1, 2, '0');
-                case 'dd': return padStart(date_.getDate(), 2, '0');
-                case 'HH': return padStart(date_.getHours(), 2, '0');
-                case 'mm': return padStart(date_.getMinutes(), 2, '0');
-                case 'ss': return padStart(date_.getSeconds(), 2, '0');
-                default: return item;
-            }
-        }).join('');   
-    }
-
-    export function formatValue(val) {
-        if (val instanceof Date) {
-            return formatDate(val, 'dd/MM/yyyy');
-        } else {
-            return "" + (val || '');
-        }
-    }
-
     export const maybeFormatPhone = (resultFrenchPrefix: string) => (maybePhone : string) : string => {
         if (maybePhone.match(conf.pattern.frenchPhone)) {
             return maybePhone.replace(/^(\+33|0)/, '').replace(/\s/g, '').replace(/(.)(..)(..)(..)(..)/, resultFrenchPrefix + "$1 $2 $3 $4 $5");
