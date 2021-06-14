@@ -1,5 +1,5 @@
 import { assert } from './test_utils';
-import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile, merge_attrs_overrides, checkAttrs, one_diff } from '../step_attrs_option';
+import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile, merge_attrs_overrides, checkAttrs, one_diff, transform_object_items_oneOf_async_to_oneOf } from '../step_attrs_option';
 import checkDisplayName from '../../shared/validators/displayName';
 
 const a_or_b : StepAttrOption = { oneOf: [
@@ -123,7 +123,11 @@ describe('export_v', () => {
         test(attrs(true), { a: "a" }, {})
         test(attrs(true), { a: "x" }, { a: "x" })
     });
-
+    it("should handle items properties", () => {
+        test({ v_array: { items: { properties: { a: {} } } } }, 
+             { v_array: [ { a: "aa", b: "bb" } ] },
+             { v_array: [ { a: "aa" } ] })
+    })
 });
 
 describe('flatten_attrs', () => {
@@ -451,4 +455,21 @@ describe('checkAttrs', () => {
             assert.throws(() => checkAttrs({ sn: then_mppp, givenName: { readOnly: true } }, 'test4'))
         })
     })
+})
+
+describe('transform_object_items_oneOf_async_to_oneOf', () => {
+    it('should work', async () => {
+        const attrs = (c: StepAttrOption) : StepAttrsOption => ({ v_array: { items: { properties: { a: {}, b: { oneOf: [] }, c } } } })
+        const transform = async (v: v) => {
+            let attrs_ = attrs({ oneOf_async: async (v, _) => ([{ const: v, title: "t_" + v }]) })
+            await transform_object_items_oneOf_async_to_oneOf(attrs_, v)
+            return attrs_
+        }
+        assert.deepEqual(await transform({ v_array: [] }), 
+            attrs({ oneOf: [] }))
+        assert.deepEqual(await transform({ v_array: [ { c: "c1" } ] }),
+            attrs({ oneOf: [ { const: "c1", title: "t_c1" } ] }))
+        assert.deepEqual(await transform({ v_array: [ { c: "c1" }, { c: "c2" }, { c: "c1" } ] }),
+            attrs({ oneOf: [ { const: "c1", title: "t_c1" }, { const: "c2", title: "t_c2" } ] }))
+    })    
 })

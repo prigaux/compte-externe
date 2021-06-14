@@ -11,7 +11,7 @@ import * as mail from './mail';
 import shared_conf from '../shared/conf';
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
-import { export_v, merge_v, exportAttrs, merge_attrs_overrides, selectUserProfile, checkAttrs } from './step_attrs_option';
+import { export_v, merge_v, exportAttrs, merge_attrs_overrides, selectUserProfile, checkAttrs, transform_object_items_oneOf_async_to_oneOf } from './step_attrs_option';
 import { filters } from './ldap';
 import gen_gsh_script from './gen_gsh_script';
 require('./helpers'); // for Promise.prototype.tap
@@ -82,7 +82,7 @@ async function may_export_v_ldap(sv: sva) {
 async function export_sv(req: req, sv: sva): Promise<ClientSideSVA> {
     sv = _.clone(sv);
     sv.v = export_v(sv_attrs(sv), sv.v) as v;
-    if (sv.vs) sv.vs = sv.vs.map(v => export_v(sv_attrs(sv), v) as v);
+    await transform_object_items_oneOf_async_to_oneOf(sv.attrs, sv.v) // modifies sv.attrs
     const attrs = exportAttrs(sv.attrs);
     return { ...sv as any, stepName: sv.step, ...await exportStep(req, step(sv)), attrs };
 }
@@ -393,7 +393,7 @@ function search_for_typeahead(req: req, step: string, attr: string) {
     return opts.oneOf_async(token, sizeLimit)
 }
 router.get('/search/:step/:attr', (req : req, res) => {
-    res.header('Cache-Control', 'private, max-age=60') // minimal caching. Especially useful to handle multiple requests in case of list of "v" (ie "vs")
+    res.header('Cache-Control', 'private, max-age=60') // minimal caching
     respondJson(req, res, search_for_typeahead(req, req.params.step, req.params.attr))
 });
 

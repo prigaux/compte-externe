@@ -24,7 +24,7 @@ const ensureElementErrorIsVisible = (subform) => {
 
 
 export default Vue.extend({
-    props: ['v', 'v_ldap', 'attrs', 'step_labels', 'stepName', 'onelineForm', 'disableOkButton'],
+    props: ['v', 'v_ldap', 'attrs', 'step_labels', 'stepName', 'disableOkButton'],
     data() {
         return {
             selectedTab: undefined,

@@ -182,39 +182,6 @@ fieldset {
     text-decoration: line-through;
 }
 
-/* hack to display compact form-inline:
-   - everything on one line
-*/
-.form-inline .genericAttrs,
-.form-inline .genericAttr { 
-    display: inline-block;
-    border-left: 1px solid #eee;
-}
-.normalContent:nth-child(2) .form-inline .genericAttr {
-    vertical-align: top;
-}
-/* label above text */
-.form-inline label {
-    flex-direction: column;
-}
-.form-inline .the-label {
-    display: inline-block;
-    text-align: center;
-    line-height: 4rem;
-}
-/* hide <label>s except for the first line: */
-.normalContent:not(:nth-child(2)) .form-inline .the-label {
-    visibility: hidden;
-    line-height: 0;
-}
-/* remove tooltip since it messes things up */
-.form-inline .mytooltip {
-    display: none;
-}
-.form-inline .form-control[disabled] {
-    padding: 0;
-}
-
 .my-radio-inline {
     padding-top: 5px;
 }
@@ -262,7 +229,7 @@ label {
 }
 
 @media screen and (min-width: 992px) {
-    form:not(.form-inline) .label-and-more > .the-label {
+    form .label-and-more > .the-label {
         flex-basis: 0;
         text-align: right;
         padding-top: 7px;

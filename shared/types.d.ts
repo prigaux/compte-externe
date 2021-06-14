@@ -15,7 +15,7 @@ interface StepAttrItemsOption {
         autocomplete?: boolean
         title_rowspan?: boolean
         title_hidden?: boolean
-        allowOnelineForm?: boolean
+        object_items_export_csv?: boolean
         readOnly__avoid_disabled_input?: boolean
         texts_are_html?: boolean
     };
@@ -45,7 +45,7 @@ type MinimalStepAttrOption = StepAttrItemsOption & {
         tooltip?: string;
         warning?: string; // similar to tooltip, but with a "warning" sign
     }
-    items?: MinimalStepAttrOption,
+    items?: MinimalStepAttrOption & { properties?: StepAttrsOptionM<unknown> },
 
     format?: 'date' | 'image/jpeg' | 'phone';
     default?: string;
@@ -126,7 +126,6 @@ interface ClientSideSVA {
     stepName: string
     v: CommonV
     v_ldap?: CommonV
-    vs?: CommonV[]
     step: {
         labels: ClientSideStepLabels
         allow_many?: boolean

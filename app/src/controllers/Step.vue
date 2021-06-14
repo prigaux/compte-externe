@@ -4,22 +4,10 @@
 </div>
 <div :class="'step-' + stepName" v-else>
 
-    <div v-show="vs && vs.length > 1">
-        <a class="btn btn-default export" @click="export_csv" href="#" download="comptes.html">
-            <span class="glyphicon glyphicon-export"></span>
-            Exporter
-        </a>
-    </div>
-
-    <div v-if="vs && vs.length === 0">
-        Aucun
-    </div>
-
-    <StepV v-for="(v, index) in vs" :key="index"
+    <StepV v-if="v"
         :wanted_id="wanted_id" :stepName="stepName"
         :id="id" :v_pre="v_pre"
-        :step="index === 0 ? step : non_first_step" :attrs="attrs" :all_attrs_flat="all_attrs_flat" :v="v" :v_orig="vs_orig[index]" :v_ldap="v_ldap"
-        :onelineForm="onelineForm"
+        :step="step" :attrs="attrs" :all_attrs_flat="all_attrs_flat" :v="v" :v_orig="v_orig" :v_ldap="v_ldap"
     ></StepV>
 </div>
 </template>
@@ -29,7 +17,7 @@ import Vue from "vue";
 import * as Helpers from '../services/helpers';
 import * as Ws from '../services/ws';
 import { router } from '../router';
-import { isEmpty, fromPairs, every, mapValues } from 'lodash';
+import { isEmpty, fromPairs } from 'lodash';
 import { V, StepAttrsOption } from '../services/ws';
 
 import { v_from_prevStep } from './StepV.vue';
@@ -41,8 +29,8 @@ function AttrsForm_data() {
       step: undefined,
       attrs: <StepAttrsOption> undefined,
       all_attrs_flat: <StepAttrsOption> undefined,
-      vs: <V> undefined,
-      vs_orig: <V> undefined,
+      v: <V> undefined,
+      v_orig: <V> undefined,
       v_ldap: <V> undefined,
       fatal_error: undefined,
     };    
@@ -80,13 +68,6 @@ export default Vue.extend({
         hash_params() {
             if (!this.$route.hash) return {};
             return fromPairs(this.$route.hash.replace(/^#/, '').split('&').map((s: string) => s.split('=')));
-        },
-        onelineForm() {
-            return this.vs && every(this.all_attrs_flat || [], opts => opts.readOnly || opts.uiOptions?.allowOnelineForm)
-        },
-        non_first_step() {
-            const labels = this.step.labels
-            return { ...this.step, labels: { ...labels, title: '' } }
         },
     },
 

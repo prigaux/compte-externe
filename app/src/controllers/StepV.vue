@@ -44,7 +44,6 @@
         :class="{ display_fieldIsRequired_hint: display_fieldIsRequired_hint }"
         :v="v" :v_ldap="v_ldap" :attrs="other_attrs" :step_labels="step.labels" :stepName="stepName"
         :disableOkButton="disableOkButton"
-        :onelineForm="onelineForm"
         @submit="submit" @reject="reject"></attrsForm>
 
     <div class="display_fieldIsRequired_hint" v-if="display_fieldIsRequired_hint">
@@ -100,7 +99,6 @@ export default Vue.extend({
         'wanted_id', 'stepName', 
         'id', 'v_pre',
         'step', 'attrs', 'all_attrs_flat', 'v', 'v_orig', 'v_ldap',
-        'onelineForm',
     ],
     data: AttrsForm_data,
     components: { ImportFile, ImportResult, Homonyms, attrsForm, MyModalP },

@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { merge, omit, cloneDeep, some } from 'lodash';
+import { merge, omit, cloneDeep } from 'lodash';
 import { setTimeoutPromise } from '../../../shared/helpers'
 import { router } from '../router';
 import * as Helpers from './helpers';
@@ -50,6 +50,7 @@ export function eachAttrs(attrs: StepAttrsOption, oneOfTraversal: 'always' | 'ne
         for (const attr in attrs) {
             const opts = attrs[attr];
             if (opts?.properties) rec(opts.properties);
+            if (opts?.items?.properties) rec(opts.items.properties)
             if (oneOfTraversal === 'always') {
                 if (opts?.then) rec_mpp(opts.then)
                 if (opts?.oneOf) opts.oneOf.forEach(rec_mpp)
@@ -110,6 +111,8 @@ function to_or_from_ws(direction: 'fromWs' | 'fromCSV' | 'toWs', v: {}, attrs: S
         const item_converter = _to_converter(opts.items?.format);
         if (item_converter && Array.isArray(v[attr])) v_[attr] = v[attr].map(item_converter)
         
+        if (opts.items?.properties) v_[attr] = v[attr].map(v_ => to_or_from_ws(direction, v_, opts.items.properties))
+
         if (direction === 'fromCSV' && opts.normalize) v_[attr] = opts.normalize(v_[attr]);
     }
     return v_;
@@ -220,11 +223,8 @@ export function getInScope($scope, id: string, params, hash_params, expectedStep
         initAttrs(sv.attrs);
         $scope.attrs = sv.attrs;
         let all_attrs = get_all_attrs_flat($scope.attrs);
-        let vs: {}[] = (sv.vs || [ sv.v ]).map(v => (
-                fromWs(v, all_attrs)
-            ));
-            let v = vs[0];
-            $scope.v_ldap = sv.v_ldap && fromWs(sv.v_ldap, all_attrs) || id === 'new' && vs.length === 1 && cloneDeep(v);
+        let v = fromWs(sv.v, all_attrs)
+            $scope.v_ldap = sv.v_ldap && fromWs(sv.v_ldap, all_attrs) || id === 'new' && cloneDeep(v);
             // pass v_orig to attrs opts.validator:
             handleAttrsValidators_and_allowUnchangedValue(all_attrs, Helpers.copy(v));
             Helpers.eachObject(all_attrs, (attr, opts) => {
@@ -249,14 +249,8 @@ export function getInScope($scope, id: string, params, hash_params, expectedStep
                 }
             });
             (v['various'] ??= {}).extern_ask_confirmation = undefined
-        Helpers.eachObject(all_attrs, (attr, opts) => {
-            if (opts.readOnly && !('uiHidden' in opts) && some(vs, v => v[attr])) {
-                // force displaying all attr fields if at least one has a value (useful for form-inline table)
-                opts.uiHidden = false
-            }
-        });
-        $scope.vs_orig = cloneDeep(vs);
-        $scope.vs = vs // assign it when it is fully computed. Needed for Vue.js
+        $scope.v_orig = cloneDeep(v);
+        $scope.v = v // assign it when it is fully computed. Needed for Vue.js
         $scope.all_attrs_flat = all_attrs;
         $scope.step = sv.step;
     }, err => _handleErr(err, $scope, true));

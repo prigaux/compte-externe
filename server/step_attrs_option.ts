@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import * as helpers from './helpers';
 import * as utils from './utils';
 import { compute_mppp_and_handle_default_values } from '../shared/mppp_and_defaults'
 
@@ -125,12 +126,15 @@ function export_v_(attrs: StepAttrsOption, v: v) {
     const ignore = (key: string, opts: StepAttrOption) => (
         opts.ignoreInvalidExistingValue && !validate_nothrow(key, opts, {}, v[key], v, v)
     )
+    function rec_items_properties(val: v[], attrs: StepAttrsOption) {
+        return _.isArray(val) ? val.map(subv => export_v_(attrs, subv)) : val
+    }
     function rec(attrs: StepAttrsOption) {
         _.forEach(attrs, (opts, key) => {
             if (!opts.hidden && (key in v || opts.toUser) && !ignore(key, opts)) {
                 let val = v[key];
                 if (opts.toUser) val = opts.toUser(v[key], v);
-                r[key] = val;
+                r[key] = opts.items?.properties ? rec_items_properties(val, opts.items.properties) : val;
             }
             if (opts.properties) rec(opts.properties);
         });
@@ -229,4 +233,25 @@ export const checkAttrs = (attrs: StepAttrsOption, stepName: string) => {
         const no_cond_ = merge(key, no_cond, undefined);
         merge(key, cond, no_cond_)
     })
+}
+
+const transform_object_items_oneOf_async_to_oneOf_ = async (attrs: StepAttrsOption, items: v[]) => {
+    for (const key in attrs) {
+        const opts = attrs[key]
+        if (opts.oneOf_async) {
+            const used_values = _.compact(_.uniq(items.map(v => v[key])))
+            console.log('used_values', used_values)
+            opts.oneOf = _.flatten(await helpers.pmap(used_values, val => opts.oneOf_async(val, 1)))
+            delete opts.oneOf_async
+        }
+    }
+}
+
+export const transform_object_items_oneOf_async_to_oneOf = async (attrs: StepAttrsOption, v: v) => {
+    for (const key in attrs) {
+        const opts = attrs[key]
+        if (opts.items?.properties) {
+            await transform_object_items_oneOf_async_to_oneOf_(opts.items.properties, v[key])
+        }
+    }
 }

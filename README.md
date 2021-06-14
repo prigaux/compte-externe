@@ -122,16 +122,15 @@ You can also ensure the browser does not modify the value:
 
 
 You can customize the way it is displayed:
-* ```uiHidden```: use `true with `readOnly` or `toUserOnly` to hide the `<input>` (useful when you want to display the value in step `description`) ; use `false` with `readOnly` to force display of an empty input (useful for `vs` using `form-inline`).
+* ```uiHidden```: use `true with `readOnly` or `toUserOnly` to hide the `<input>` (useful when you want to display the value in step `description`) ; use `false` with `readOnly` to force display of an empty input.
 * ```title```: (*text*) the `<label>`. Use [Unicode non-breaking space](https://en.wikipedia.org/wiki/Non-breaking_space) to force layout
-* ```description```: *(html)* displayed below the `<input>`
+* ```description```: *(html)* displayed below the `<input>`. For `items.properties`, it is a *vue template*
 * ```uiPlaceholder```: the `<input>` placeholder
 * ```uiOptions.rows```: number of lines (uiType textarea)
 * ```uiOptions.autocomplete```: enable localStorage history for uiType textarea
 * ```uiOptions.title_rowspan```: allow title to span next titles
 * ```uiOptions.title_hidden```: do not display the title
 * ```uiOptions.texts_are_html```: treat `labels` / `oneOf`[].`const` as HTML
-* ```uiOptions.allowOnelineForm```: WIP
 * ```uiOptions.readOnly__avoid_disabled_input```: display value as text instead of `disabled <input>`. Hint: use CSS to force a same width for all fields (example `.instead_of_disabled_input { display: inline-block; min-width: 6em }`)
 
 * ```labels.custom_error_message```: displayed when the value is not valid

@@ -32,13 +32,12 @@ type sv = {
   step: string,
   v: v,
   v_ldap?: v,
-  vs?: v[],
   lock?: boolean,
 }
 type sva = sv & { attrs: StepAttrsOption };
 
 type r = response & { success: boolean, step?: string, labels?: StepLabels, nextBrowserStep: string }
-type vr = {v: v; vs?: v[]; response?: response }
+type vr = {v: v; response?: response }
 type svr = sv & { response?: response }
 type svra = sva & { response?: response }
 type simpleAction = (req: req, sv: {v: v}) => Promise<vr>
@@ -59,6 +58,8 @@ type Mpp<T> = MppT<T>
 
 interface ServiceSideOnlyStepAttrOptions {
   hidden?: boolean;  
+
+  items?: MinimalStepAttrOption & { properties?: StepAttrsOptionT<unknown> }
 
   toUserOnly?: boolean; // implies hidden
   toUser?: (val: string, v: v) => any;
