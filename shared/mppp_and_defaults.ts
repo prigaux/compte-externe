@@ -109,10 +109,10 @@ const get_ordered_opts_and_dependencies = (attrs: StepAttrsOptionM<unknown>) => 
     return mapValues(normal, merge_late_deps)
 }
 
-export function compute_mppp_and_handle_default_values(attrs : StepAttrsOptionM<unknown>, prev_defaults: Dictionary<string>, v: CommonV) {
+export function compute_mppp_and_handle_default_values(attrs : StepAttrsOptionM<unknown>, prev_defaults: Dictionary<string> | 'ignore_opts_default', v: CommonV) {
     let current_defaults: Dictionary<string> = {};
     const handle_default = (opts: StepAttrOptionM<unknown>, k: string) => {
-        may_set_default_value(k, opts, v, prev_defaults || {});
+        if (prev_defaults !== 'ignore_opts_default') may_set_default_value(k, opts, v, prev_defaults || {});
         if ("default" in opts) current_defaults[k] = opts.default;
     }
 

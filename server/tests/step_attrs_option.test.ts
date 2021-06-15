@@ -319,6 +319,10 @@ describe('merge_v', () => {
         test_fail(attrs, {}, { duration: 2 }, "constraint duration.oneOf 1 failed for 2");
         test(attrs, { duration: 2 }, { duration: 2 }, { duration: 2 });
     });
+    it("should ignore default option", () => {
+        test({ sn: { default: "foo", optional: true } }, {}, { sn: "" }, { sn: "" })
+        test({ sn: { default: "foo", optional: true, oneOf: [ { const: "foo" }, { const: "" } ] } }, {}, { sn: "" }, { sn: "" })
+    })
 });
 
 describe('compute_diff', () => {

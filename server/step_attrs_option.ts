@@ -54,7 +54,7 @@ export function merge_v(attrs_ : StepAttrsOption, more_attrs: SharedStepAttrsOpt
         if (opt.properties) merge_one_level(opt.properties);
       });
     }
-    let { attrs } = compute_mppp_and_handle_default_values(attrs_, {}, v as any)
+    let { attrs } = compute_mppp_and_handle_default_values(attrs_, 'ignore_opts_default', v as any)
     merge_one_level(attrs);
 
     if (!opts?.no_diff) r['various'].diff = diff;
