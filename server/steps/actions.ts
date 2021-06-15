@@ -264,23 +264,27 @@ export const expireAccount : simpleAction = (_req, sv) => {
     return crejsonldap_simple(v, { create: false }); // should we return sv.v?
 };
 
-const prepareMailTemplateParams = (req: req, sv: sva, params: Dictionary<any> = {}) => {
+const prepareMailTemplateParams = async (req: req, sv: sva, params: Dictionary<any>, opts: { cc_personParrain?: true }) => {
     const v = sv.v;
     const v_ = v_display(v, flatten_attrs(sv.attrs, v));
     const sv_url = conf.mainUrl + "/" + sv.step + "/" + sv.id;
     let to = params['to'];
     if (!to) to = v.mail || v.supannMailPerso;
     if (!to && v.various && v.various.full_v) to = v.various.full_v.mail || v.various.full_v.supannMailPerso;
-    return { ...params, to, moderator: req.user, v, v_display: v_, sv_url };
+    let cc =params['cc']
+    if (!cc && opts.cc_personParrain && v.personParrain) {
+        cc = await search_ldap.onePersonLoginToMail(v.personParrain)
+    }
+    return { ...params, to, cc, moderator: req.user, v, v_display: v_, sv_url };
 }
 
-export const sendMail = (template: string, params = {}): action => async (req, sv) => {
-    mail.sendWithTemplate(template, prepareMailTemplateParams(req, sv, params));
+export const sendMail = (template: string, params = {}, opts : { cc_personParrain?: true } = {}): action => async (req, sv) => {
+    mail.sendWithTemplate(template, await prepareMailTemplateParams(req, sv, params, opts));
     return { v: sv.v };
 };
 
-export const sendMailWithFileTemplate = (templateName: string, params = {}): action => async (req, sv) => {
-    mail.sendWithTemplateFile(templateName, prepareMailTemplateParams(req, sv, params));
+export const sendMailWithFileTemplate = (templateName: string, params = {}, opts = {}): action => async (req, sv) => {
+    mail.sendWithTemplateFile(templateName, await prepareMailTemplateParams(req, sv, params, opts));
     return { v: sv.v };
 }
 
@@ -290,7 +294,7 @@ export const ask_confirmation = (attr_to_save_confirmation: string, msg_template
         return sv;
     } else {
         // tell frontend to popup the msg
-        const msg = await mail.mustache_async_render(msg_template, prepareMailTemplateParams(req, sv))
+        const msg = await mail.mustache_async_render(msg_template, await prepareMailTemplateParams(req, sv, {}, {}))
         throw { code: "OK", ask_confirmation: { attr_to_save_confirmation, msg, title } };
     }
 }
