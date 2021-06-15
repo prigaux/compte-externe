@@ -227,7 +227,8 @@ const after_createAccount = async (v: v, attrs: StepAttrsOption, accountStatus: 
     }
     if (v.supannMailPerso) {
         const v_ = v_display(v, flatten_attrs(attrs, v));
-        mail.sendWithTemplateFile('warn_user_account_created.html', { from: mailFrom(v), to: v.supannMailPerso, v, v_display: v_, created, isActive: !!accountStatus });
+        const cc = v.personParrain && await search_ldap.onePersonLoginToMail(v.personParrain)
+        mail.sendWithTemplateFile('warn_user_account_created.html', { from: mailFrom(v), to: v.supannMailPerso, cc, v, v_display: v_, created, isActive: !!accountStatus });
     }
 }
 

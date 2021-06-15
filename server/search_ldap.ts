@@ -31,6 +31,10 @@ export const oneExistingPerson = (filter: string) => (
     })
 )
 
+export const onePersonLoginToMail = (login: string) => (
+    onePersonAttr(filters.eq("uid", login), 'mail')
+)
+
 export const oneGroupAttr = (cn: string, attr: string) => (
     ldap.searchOneThisAttr(conf.ldap.base_groups, filters.eq('cn', cn), attr, '')
 )
