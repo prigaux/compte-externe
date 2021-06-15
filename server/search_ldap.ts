@@ -20,7 +20,7 @@ export const onePerson = (filter: string) => (
 );
 
 export const onePersonAttr = (filter: string, attr: string) => (
-    ldap.searchThisAttr(conf.ldap.base_people, filter, attr, '', {})
+    ldap.searchOneThisAttr(conf.ldap.base_people, filter, attr, '', {})
 );
 
 
