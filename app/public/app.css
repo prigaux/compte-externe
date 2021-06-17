@@ -235,6 +235,7 @@ label {
         padding-top: 7px;
     }
 }
+form:not(.submitted) .validation-errors,
 form:not(.submitted) .advice-after-submit,
 form:not(.submitted) .my-has-error .help-block {
     display: none;

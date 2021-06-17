@@ -3,12 +3,14 @@ import Vue from "vue";
 Vue.component("validation-errors", {
     props: ['name', 'validity', 'custom_message', 'custom_msg_is_html'],
     template: `
+  <span class="validation-errors">
    <transition name="fade">
     <span v-if="!validity_.valid">    
        <span class="help-block" v-if="custom_message && custom_msg_is_html" v-html="custom_message"></span>
        <span class="help-block" v-else>{{custom_message || validity_.message}}</span>
     </span>
    </transition>
+  </span>
     `,
     computed: {
         validity_() {
