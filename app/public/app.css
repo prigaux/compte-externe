@@ -61,10 +61,7 @@ fieldset {
     to { transform: scale(1) rotate(360deg); }
 }
 
-.fade-enter-active {
-  transition: all 0.5s
-}
-.fade-leave-active {
+.fade-enter-active, .fade-leave-active {
   transition: all 0.5s    
 }
 .fade-enter, .fade-leave-to {
