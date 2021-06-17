@@ -65,8 +65,15 @@ fieldset {
   transition: all 0.5s    
 }
 .fade-enter, .fade-leave-to {
-  transform: translateX(100px);
-  opacity: 0
+  max-height: 0;
+  opacity: 0;
+  display: block;
+  overflow: hidden;
+}
+.fade-enter-to, .fade-leave {
+  max-height: 4rem;
+  display: block;
+  overflow: hidden;
 }
 
 .current-ldap-value {
