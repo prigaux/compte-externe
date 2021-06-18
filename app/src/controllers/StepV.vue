@@ -208,6 +208,7 @@ export default Vue.extend({
         this.go_back();
       },
       nextBrowserStep(resp) {
+        if (resp.v) Object.assign(this.v, resp.v)
         // passwords must NOT be passed as query, pass them in javascript memory
         // in that case, add "prev" parameter to correctly handle missing "v_from_prevStep" parameters
         let query;
