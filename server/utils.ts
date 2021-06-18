@@ -11,7 +11,6 @@ import concat = require('concat-stream');
 import simpleGet = require('simple-get');
 import * as http from 'http';
 import * as conf from './conf';
-import shared_conf from '../shared/conf';
 import { EventEmitter } from 'events';
 
 export const shibboleth_express_auth : express.RequestHandler<any, unknown, unknown, unknown> = (req, _res, next): void => {
@@ -178,18 +177,6 @@ export function mergeSteps(initialSteps: steps, nextSteps: steps): steps {
     _.forEach(initialSteps, (step, _name) => step.initialStep = true);
     return { ...initialSteps, ...nextSteps };
 }
-
-export const attrsHelpingDiagnoseHomonymes = (
-    { 
-        global_main_profile: { 
-            toUser(_: any, v: v) {
-                return v.uid && { description: ` est ${shared_conf.affiliation_labels[v.global_eduPersonPrimaryAffiliation] || 'un ancien compte sans affiliation'}` }
-            },
-            toUserOnly: true, 
-            uiHidden: true,
-        },
-    }
-);
 
 export const deep_extend = <T extends Dictionary<any>, U extends Dictionary<any>>(o: T, overrides: U) => {
     if (_.isPlainObject(o) && _.isPlainObject(overrides)) {
