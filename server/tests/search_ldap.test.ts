@@ -128,6 +128,7 @@ describe('homonymes', () => {
         before(() => (
             test_ldap.create().then(() => {
                 conf.ldap.people.homonymes_restriction = '(eduPersonAffiliation=*)';
+                conf.ldap.people.homonymes_preferStudent = s => (s||'').includes('learner')
             })
         ));
         after(() => test_ldap.stop())   
