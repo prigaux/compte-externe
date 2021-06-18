@@ -66,9 +66,9 @@ export const filtered_etablissements = (global_filter: string) => (token: string
     if (token.match(/\{.*/)) {
         filters_ = [filters.eq("up1TableKey", token)]
     } else if (token.match(/^[0-9\s-]{5,14}$/)) {
-        filters_ = [filters.startsWith("up1TableKey", "" + conf.ldap.etablissements.attrs.siret.convert.toLdap(token))];
+        filters_ = [filters.startsWith("up1TableKey", ldap.convert_toLdap_string(conf.ldap.etablissements.attrs.siret, token))];
     } else if (helpers.is_valid_uai_code(token)) {
-        filters_ = [filters.startsWith("up1TableKey", "" + conf.ldap.etablissements.attrs.uai.convert.toLdap(token))];
+        filters_ = [filters.startsWith("up1TableKey", ldap.convert_toLdap_string(conf.ldap.etablissements.attrs.uai, token))];
     } else {
         filters_ = [
             filters.eq('ou', token),
