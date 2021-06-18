@@ -11,7 +11,7 @@ import * as mail from './mail';
 import shared_conf from '../shared/conf';
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
-import { export_v, merge_v, exportAttrs, merge_attrs_overrides, selectUserProfile, checkAttrs, transform_object_items_oneOf_async_to_oneOf } from './step_attrs_option';
+import { export_v, merge_v, exportAttrs, merge_attrs_overrides, selectUserProfile, checkAttrs, transform_object_items_oneOf_async_to_oneOf, findStepAttr } from './step_attrs_option';
 import { filters } from './ldap';
 import gen_gsh_script from './gen_gsh_script';
 require('./helpers'); // for Promise.prototype.tap
@@ -383,7 +383,7 @@ router.post('/homonymes/:id', (req: req, res) => {
 });
 
 function search_for_typeahead(req: req, step: string, attr: string) {
-    const opts = utils.findStepAttr(name2step(step).attrs, (opts, attr_) => opts.oneOf_async && attr === attr_)?.opts
+    const opts = findStepAttr(name2step(step).attrs, (opts, attr_) => opts.oneOf_async && attr === attr_)?.opts
     if (!opts) {
         throw "search: invalid step attr " + step + ' ' + attr;
     }

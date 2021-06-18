@@ -255,3 +255,42 @@ export const transform_object_items_oneOf_async_to_oneOf = async (attrs: StepAtt
         }
     }
 }
+
+export const mapAttrs = <T>(attrs: StepAttrsOptionT<T>, f: (opts: StepAttrOptionT<T>, attrName: string) => StepAttrOptionT<T>) => (
+    _.mapValues(attrs, (opts, key) => {
+        opts = f(opts, key);
+        if (opts.properties) opts.properties = mapAttrs(opts.properties, f);
+        const rec_mpp = <M extends Mpp<T>>(mpp: M) => (
+            mpp.merge_patch_parent_properties ? { ...mpp, merge_patch_parent_properties: mapAttrs(mpp.merge_patch_parent_properties, f) } : mpp
+        )
+        if (opts.then) opts.then = rec_mpp(opts.then)
+        if (opts.oneOf) opts.oneOf = opts.oneOf.map(rec_mpp)
+        return opts;        
+    })
+)
+
+export const findStepAttr = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string) => boolean): { key: string, opts: StepAttrOption } => {
+    for (const key in attrs) {
+        const opts = attrs[key];
+
+        if (f(opts, key)) return { key, opts };
+
+        if (opts.properties) {
+            const r = findStepAttr(opts.properties, f);
+            if (r) return r;
+        }
+        if (opts.then?.merge_patch_parent_properties) {
+            const r = findStepAttr(opts.then.merge_patch_parent_properties, f);
+            if (r) return r;
+        }
+        if (opts.oneOf) {
+            for (const choice of opts.oneOf) {
+                if (choice.merge_patch_parent_properties) {
+                    const r = findStepAttr(choice.merge_patch_parent_properties, f);
+                    if (r) return r;
+                }
+            }
+        }
+    }
+    return undefined;
+}

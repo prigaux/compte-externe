@@ -191,23 +191,6 @@ export const attrsHelpingDiagnoseHomonymes = (
     }
 );
 
-export const mapAttrs = <T>(attrs: StepAttrsOptionT<T>, f: (opts: StepAttrOptionT<T>, attrName: string) => StepAttrOptionT<T>) => (
-    _.mapValues(attrs, (opts, key) => {
-        opts = f(opts, key);
-        if (opts.properties) opts.properties = mapAttrs(opts.properties, f);
-        const rec_mpp = <M extends Mpp<T>>(mpp: M) => (
-            mpp.merge_patch_parent_properties ? { ...mpp, merge_patch_parent_properties: mapAttrs(mpp.merge_patch_parent_properties, f) } : mpp
-        )
-        if (opts.then) opts.then = rec_mpp(opts.then)
-        if (opts.oneOf) opts.oneOf = opts.oneOf.map(rec_mpp)
-        return opts;        
-    })
-)
-
-export const forceAttrs = (attrs: StepAttrsOption, attrsToForce: Dictionary<any>) => (
-    mapAttrs(attrs, (opts) => ({ ...opts, ...attrsToForce }))
-)
-
 export const deep_extend = <T extends Dictionary<any>, U extends Dictionary<any>>(o: T, overrides: U) => {
     if (_.isPlainObject(o) && _.isPlainObject(overrides)) {
         const r: T & U = { ...o, ...overrides };
@@ -219,30 +202,4 @@ export const deep_extend = <T extends Dictionary<any>, U extends Dictionary<any>
     } else {
         return overrides;
     }
-}
-
-export const findStepAttr = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string) => boolean): { key: string, opts: StepAttrOption } => {
-    for (const key in attrs) {
-        const opts = attrs[key];
-
-        if (f(opts, key)) return { key, opts };
-
-        if (opts.properties) {
-            const r = findStepAttr(opts.properties, f);
-            if (r) return r;
-        }
-        if (opts.then?.merge_patch_parent_properties) {
-            const r = findStepAttr(opts.then.merge_patch_parent_properties, f);
-            if (r) return r;
-        }
-        if (opts.oneOf) {
-            for (const choice of opts.oneOf) {
-                if (choice.merge_patch_parent_properties) {
-                    const r = findStepAttr(choice.merge_patch_parent_properties, f);
-                    if (r) return r;
-                }
-            }
-        }
-    }
-    return undefined;
 }

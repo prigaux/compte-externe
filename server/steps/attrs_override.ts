@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as utils from '../utils';
+import * as step_attrs_option from '../step_attrs_option'
 import * as search_ldap from '../search_ldap';
 
 export const group_for_each_attr_codes = (
@@ -75,7 +76,7 @@ export const add_not_conds = (conds: Dictionary<(v: v) => boolean>) => {
 }
 
 export const handle_attrs_cond_overrides = (conds: Dictionary<(v: v) => boolean>) => (with_conds: StepAttrOption_with_cond_overrides) => {
-    const attrs = utils.mapAttrs(with_conds, (opts) => _.omit(opts, ['cond_overrides']));
+    const attrs = step_attrs_option.mapAttrs(with_conds, (opts) => _.omit(opts, ['cond_overrides']));
     const attrs_override = async (_req: req, sv: sv) => {
         const allowed_conds = _.mapValues(conds, predicate => predicate(sv.v));
         const override = compute_overrides(allowed_conds, with_conds, sv.v)
