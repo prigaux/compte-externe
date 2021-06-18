@@ -161,11 +161,7 @@ describe('homonymes', () => {
         it('should sort according to preferStudent', () => (
             search_ldap.homonymes(
                 { sn: 'rigaux', givenName: 'pascal', birthDay: new Date('1975-10-02'), profilename: '{COMPTEX}learner.xxx' } as v).then(l => {
-                    assert.equal(l.length, 2);
-                    assert.equal(l[0].uid, "e10000000");
-                    assert.equal(l[0].score, 1120100);
-                    assert.equal(l[1].uid, "prigaux");
-                    assert.equal(l[1].score, 30000);
+                    assert.deepEqual(l.map(e => _.pick(e, 'uid', 'score')), [ { score: 1120100, uid: 'e10000000' }, { score: 30000, uid: 'prigaux' } ])
                 })
         ));
         it('should not detect homonyme with birth date a little different', () => (
