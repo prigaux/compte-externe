@@ -31,6 +31,7 @@
     "node": ">= 10.15"
   },
   "dependencies": {
+    "@types/accept-language-parser": "^1.5.1",
     "@types/body-parser": "^1.16.4",
     "@types/concat-stream": "^1.6.0",
     "@types/cookie-parser": "^1.4.1",
@@ -50,6 +51,7 @@
     "@types/nodemailer": "4.6.x",
     "@types/session-file-store": "^1.2.0",
     "@types/xml2js": "^0.4.0",
+    "accept-language-parser": "^1.5.0",
     "basic-auth": "^2.0.1",
     "body-parser": "^1.12.4",
     "concat-stream": "^1.5.0",

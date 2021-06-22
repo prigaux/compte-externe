@@ -43,6 +43,8 @@ export function pmap<T,U>(o: Dictionary<T>, f: (e: T, key: string) => Promise<U>
 // @ts-expect-error
 export function pmap (o, f) { return Promise.all(_.map(o, f)) }
 
+export const objectKeys = <T extends {}>(o: T) => <Array<keyof T>>Object.keys(o)
+
 export const anonymize_phoneNumber = (s: string) => (
     s && s.replace(/ /g, "").replace(/^\+33/, "0").substring(0, 6) + "****"
 )

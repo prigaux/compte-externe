@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as helpers from './helpers';
 import * as utils from './utils';
 import { compute_mppp_and_handle_default_values } from '../shared/mppp_and_defaults'
+import shared_conf from '../shared/conf'
 
 export type one_diff = { prev: any, current: any }
 
@@ -160,18 +161,33 @@ export function flatten_attrs(attrs: StepAttrsOption, v: v) {
 
 const find_choice = (oneOf: StepAttrOptionChoices[], val: any) => oneOf.find(choice => choice.const == val); // allow equality if val is number and choice.const is string
 
+const may_set_translated = (translate: translate, default_opts: SharedStepAttrOption, opt: ClientSideStepAttrOption, field: 'title'|'description') => {
+    const msg = (opt[field] || default_opts?.[field])
+    if (msg) {
+        const msg_ = translate(msg, { null_if_unknown: true })
+        if (msg_) opt[field] = msg_
+    }
+}
+
 type ClientSideStepAttrOption = StepAttrOptionM<ClientSideOnlyStepAttrOption>
-const exportAttr = ({ toUserOnly, oneOf_async, properties, toUser, then, oneOf, ...opt_} : StepAttrOption) => {
+const exportAttr = ({ toUserOnly, oneOf_async, properties, toUser, then, oneOf, ...opt_} : StepAttrOption, translate: translate, default_opts: SharedStepAttrOption) => {
     const opt : ClientSideStepAttrOption = opt_;
+
+    may_set_translated(translate, default_opts, opt, 'title')
+    may_set_translated(translate, default_opts, opt, 'description')
+    if (opt.labels) opt.labels = _.mapValues(opt.labels, translate)
+
     if (toUserOnly) opt.readOnly = true
     if (oneOf_async) opt.oneOf_async = "true";
-    if (properties) opt.properties = exportAttrs(properties);
+    if (properties) opt.properties = exportAttrs(properties, translate);
 
     function rec_mpp(one: Mpp<StepAttrOption>): Mpp<ClientSideStepAttrOption>
     function rec_mpp(one: StepAttrOptionChoicesT<StepAttrOption>): StepAttrOptionChoicesT<ClientSideStepAttrOption>
     function rec_mpp(one: any) {
+        one = { ...one }
+        may_set_translated(translate, null, one, 'title')
         if (one.merge_patch_parent_properties) {
-            return { ...one, merge_patch_parent_properties: exportAttrs(one.merge_patch_parent_properties) };
+            return { ...one, merge_patch_parent_properties: exportAttrs(one.merge_patch_parent_properties, translate) };
         } else {
             return one;
         }
@@ -183,8 +199,8 @@ const exportAttr = ({ toUserOnly, oneOf_async, properties, toUser, then, oneOf, 
     return opt;
 }
 
-export const exportAttrs = (attrs: StepAttrsOption): Dictionary<ClientSideStepAttrOption> => (
-    _.mapValues(_.omitBy(attrs, val => val.hidden), exportAttr)
+export const exportAttrs = (attrs: StepAttrsOption, translate: translate = _ => null): Dictionary<ClientSideStepAttrOption> => (
+    _.mapValues(_.omitBy(attrs, val => val.hidden), (opts, attr) => exportAttr(opts, translate, shared_conf.default_attrs_opts[attr]))
 )
 
 export const eachAttrs = (attrs: StepAttrsOption, f: (opts: StepAttrOption, key: string, attrs: StepAttrsOption, cond: boolean) => void) => {

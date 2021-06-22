@@ -8,7 +8,8 @@ interface CurrentUser {
   id: string;
   mail?: string; // available after step "acls" are checked
 }
-type req = express.Request<Dictionary<string>, any, any, Dictionary<string>> & { user?: CurrentUser };
+type translate = (msg: string, opts?: { null_if_unknown?: true }) => string
+type req = express.Request<Dictionary<string>, any, any, Dictionary<string>> & { user?: CurrentUser, translate?: translate };
 type res = express.Response<any>;
 type next = express.NextFunction;
 

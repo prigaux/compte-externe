@@ -8,6 +8,7 @@ import * as db from './db';
 import api from './api';
 import * as utils from './utils';
 import * as cas from './cas';
+import * as translate from './translate'
 import * as conf from './conf';
 import * as conf_steps from './steps/conf';
 const app = express();
@@ -49,7 +50,7 @@ const force_noCache: express.RequestHandler = (_req, res, next) => {
     next();
 }
 
-app.use('/api', myBodyParser, force_noCache, api);
+app.use('/api', myBodyParser, force_noCache, translate.express_handler, api);
 
 // handle main Vue html page.
 // list valid urls (as already done in app/src/router.ts) 
