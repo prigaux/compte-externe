@@ -130,6 +130,11 @@ describe('export_v', () => {
              { v_array: [ { a: "aa", b: "bb" } ] },
              { v_array: [ { a: "aa" } ] })
     })
+    it("should handle toUser", () => {
+        test({ a: { toUser: (val, _v) => "a:" + val }}, { a: "aa" }, { a: "a:aa" })
+        test({ a: { toUser: _ => '' }}, { a: "aa" }, { a: '' })
+        test({ a: { toUser: (val, _v) => val }}, {}, { a: undefined })
+    })
 });
 
 describe('flatten_attrs', () => {
@@ -284,6 +289,15 @@ describe('merge_v', () => {
         const attrs = { duration: { oneOf: [
             { const: "1", merge_patch_parent_properties: { sn: {} } }, 
             { const: "2", merge_patch_parent_properties: { sn: { readOnly: true } } },
+        ] } };
+        test(attrs, { sn: 'y' }, { sn: 'x', duration: 1 }, { duration: 1, sn: 'x' });
+        test(attrs, { sn: 'y' }, { sn: 'x', duration: 2 }, { duration: 2, sn: 'y' });
+        test_fail(attrs, { sn: 'y' }, { duration: 1 }, "constraint !sn.optional failed for undefined");
+    });
+    it ("should handle oneOf merge_patch_parent_properties readOnly #2", () => {
+        const attrs = { sn: { readOnly: true }, duration: { oneOf: [
+            { const: "1", merge_patch_parent_properties: { sn: { readOnly: false } } }, 
+            { const: "2" },
         ] } };
         test(attrs, { sn: 'y' }, { sn: 'x', duration: 1 }, { duration: 1, sn: 'x' });
         test(attrs, { sn: 'y' }, { sn: 'x', duration: 2 }, { duration: 2, sn: 'y' });
