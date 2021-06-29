@@ -220,7 +220,7 @@ export default Vue.extend({
         // passwords must NOT be passed as query, pass them in javascript memory
         // in that case, add "prev" parameter to correctly handle missing "v_from_prevStep" parameters
         let query;
-        [ v_from_prevStep, query ] = Helpers.partitionObject(this.v, (k, _) => (this.attrs[k] || {}).uiType === 'password');
+        [ v_from_prevStep, query ] = Helpers.partitionObject(_.omit(this.v, 'various'), (k, _) => (this.attrs[k] || {}).uiType === 'password');
 
         query = Ws.toWs(query, this.all_attrs_flat);
 
