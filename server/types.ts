@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as mongodb from 'mongodb';
 import * as conf from './conf';
+import * as search_ldap from './search_ldap'
 
 declare global {
     
@@ -16,7 +17,8 @@ type next = express.NextFunction;
 type Mails = string[]
 
 type id = string
-type v = Partial<typeof conf.ldap.people.types> & { noInteraction?: boolean, profilename_to_modify?: string, various?: any } & Dictionary<any>
+type allow_homonyme_merge = (existingUser : search_ldap.Homonyme, v: v) => boolean
+type v = Partial<typeof conf.ldap.people.types> & { noInteraction?: boolean, profilename_to_modify?: string, various?: Dictionary<any> & { allow_homonyme_merge?: allow_homonyme_merge } } & Dictionary<any>
 type response = { [index: string]: any };
 interface history_event {
     when: Date
