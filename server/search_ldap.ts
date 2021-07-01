@@ -231,8 +231,8 @@ export let existLogin = (login: string): Promise<boolean> => (
     ldap.exist(conf.ldap.base_people, filters.eq("uid", login))
 );
 
-export const existPeople = (peopleFilter: string): Promise<boolean> => (
-    ldap.exist(conf.ldap.base_people, peopleFilter)
+export const existPeople = (peopleFilter: string, user: CurrentUser = null): Promise<boolean> => (
+    ldap.exist(conf.ldap.base_people, user ? filters.and([ currentUser_to_filter(user), peopleFilter ]) : peopleFilter)
 );
 
 function truncateLogin(login: string) {
