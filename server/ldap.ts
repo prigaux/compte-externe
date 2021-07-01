@@ -250,6 +250,10 @@ export const searchOne = <T extends LdapEntry> (base: string, filter: filter, at
     ));
 };
 
+export const exist = (base: string, filter: filter, options: Options = {}) => (
+    searchRaw(base, filter, [], { sizeLimit: 1, ...options }).then(l => l.length > 0)
+)
+
 export const read = <T extends LdapEntry> (dn: string, attrTypes: T, attrsConvert: AttrsConvert, options: Options = {}) => {
     options = merge({ sizeLimit: 1, scope: "base" }, options); // no use getting more than one answer
     return search(dn, null, attrTypes, attrsConvert, options).then(l => (

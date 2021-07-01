@@ -228,13 +228,11 @@ export function searchPeople_matching_acl_ldap_filter<T extends {}>(acl_filter: 
 
 // export it to allow override
 export let existLogin = (login: string): Promise<boolean> => (
-    ldap.searchOne(conf.ldap.base_people, filters.eq("uid", login), {}, null).then(v => (
-        !!v
-    ))
+    ldap.exist(conf.ldap.base_people, filters.eq("uid", login))
 );
 
 export const existPeople = (peopleFilter: string): Promise<boolean> => (
-    ldap.searchRaw(conf.ldap.base_people, peopleFilter, ['uid'], { sizeLimit: 1 }).then(l => l.length > 0)
+    ldap.exist(conf.ldap.base_people, peopleFilter)
 );
 
 function truncateLogin(login: string) {
