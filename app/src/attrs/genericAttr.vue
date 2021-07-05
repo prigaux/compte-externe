@@ -185,7 +185,8 @@ export default Vue.extend({
             return this.oneOf && mapValues(keyBy(this.oneOf, 'const'), choice => choice['title']);
         },
         oneOf() {
-            return add_to_oneOf_if_missing(this.oneOf_, this.opts.allowUnchangedValue)
+            const l = add_to_oneOf_if_missing(this.oneOf_, this.opts.allowUnchangedValue)
+            return this.opts.max ? l?.filter(choice => choice.const <= this.opts.max) : l
         },
         validValue() {
             return this.uiType === 'select' ? (
