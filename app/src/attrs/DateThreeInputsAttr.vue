@@ -54,7 +54,9 @@ export default Vue.extend({
             if (val && val !== this.currentValue) Helpers.assign(this, init(val));
         },
         currentValue(val) {
-            this.$emit('input', val);
+            if (+val !== +this.value) {
+                this.$emit('input', val);
+            }
         },
     },
     computed: {
