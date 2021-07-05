@@ -413,7 +413,7 @@ function search_for_typeahead(req: req, step: string, attr: string) {
     }
     if (!("token" in req.query)) return Promise.reject("missing token parameter");
     let token = req.query.token;
-    let sizeLimit = parseInt(req.query.maxRows) || 0; // defaults to unlimited. not allowing this is up to "oneOf_async" function
+    let sizeLimit = parseInt(req.query.maxRows) || 0; // defaults to unlimited. "oneOf_async" function must handle a lower limit if wanted
     return opts.oneOf_async(token, sizeLimit)
 }
 router.get('/search/:step/:attr', (req : req, res) => {
