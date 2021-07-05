@@ -21,7 +21,7 @@ describe('exportAttrs', () => {
         const checkSame = (attrs: Dictionary<any>) => assert.deepEqual(exportAttrs(attrs), attrs);
         checkSame({ sn: {} });
         checkSame({ _foo: { properties: { sn: {} } } });
-        assert.deepEqual(exportAttrs({ sn: { readOnly: true, maxYear: 11 } }), { sn: { readOnly: true, optional: true, maxYear: 11 } });
+        assert.deepEqual(exportAttrs({ sn: { readOnly: true, max: 11 } }), { sn: { readOnly: true, optional: true, max: 11 } });
     });
     it("should handle hidden", () => {
         assert.deepEqual(exportAttrs({ sn: { hidden: true } }), {});
@@ -29,7 +29,7 @@ describe('exportAttrs', () => {
     });
     it("should handle toUserOnly", () => {
         assert.deepEqual(exportAttrs({ sn: { toUserOnly: true } }), { sn: { optional: true, readOnly: true }});
-        assert.deepEqual(exportAttrs({ sn: { toUserOnly: true, maxYear: 22 } }), { sn: { optional: true, readOnly: true, maxYear: 22 }});
+        assert.deepEqual(exportAttrs({ sn: { toUserOnly: true, max: 22 } }), { sn: { optional: true, readOnly: true, max: 22 }});
         assert.deepEqual(exportAttrs({ a_or_b }), { a_or_b: { oneOf: [
             { const: "a", merge_patch_parent_properties: { a: {} } },
             { const: "b", merge_patch_parent_properties: { a: { optional: true, readOnly: true }, b: {} } },

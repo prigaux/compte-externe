@@ -27,9 +27,7 @@ interface StepAttrItemsOption {
 
     pattern?: string;
     min?: number;
-    minYear?: number;
     max?: number;
-    maxYear?: number;
 
     // for images
     width?: number

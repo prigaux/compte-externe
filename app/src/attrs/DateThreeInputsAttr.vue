@@ -15,7 +15,7 @@
     </div>
     <div class="col-xs-5" :class="{'my-has-error': !validity.year.valid }">
         <div>
-        <input-with-validity name="year" v-model="year" type="number" :min="opts.minYear" :max="opts.maxYear" placeholder="Année" :required="!opts.optional" :validity.sync="validity.year"></input-with-validity>
+        <input-with-validity name="year" v-model="year" type="number" :min="minYear" :max="maxYear" placeholder="Année" :required="!opts.optional" :validity.sync="validity.year"></input-with-validity>
         <validation-errors name="year" :validity="validity"></validation-errors>
         </div>
     </div>
@@ -63,12 +63,18 @@ export default Vue.extend({
         maxDay() {
             return this.month && month2maxDay[this.month] || 31;
         },
+        minYear() {
+            return this.opts.minDate?.getUTCFullYear()
+        },
+        maxYear() {
+            return this.opts.maxDate?.getUTCFullYear()
+        },
         currentValue() {
             const [ year, month, day ] = [ 'year', 'month', 'day' ].map(n => parseInt(this[n]));
             return year && month && day && 
                    day <= this.maxDay &&
-                   (!this.opts.minYear || this.opts.minYear <= year) && 
-                   (!this.opts.maxYear || year <= this.opts.maxYear) &&
+                   (!this.minYear || this.minYear <= year) && 
+                   (!this.maxYear || year <= this.maxYear) &&
                new Date(Date.UTC(year, month - 1, day)) || undefined;
         },
     },
