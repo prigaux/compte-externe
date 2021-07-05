@@ -52,7 +52,7 @@
 
     <div v-if="uiType === 'radio'">
       <radio-with-validity :name="name" v-model="val"
-          :values="choicesMap"
+          :values="choicesMap" v-if="choicesMap"
           :texts_are_html="uiOptions.texts_are_html"
           :disabled="opts.readOnly" :required="!opts.optional" :validity.sync="validity[name]">
       </radio-with-validity>
@@ -182,7 +182,7 @@ export default Vue.extend({
             return includes(['phone', 'frenchMobilePhone', 'frenchPostalCode', 'siret'], this.opts.uiType) ? this.opts.uiType : undefined;
         },
         choicesMap() {
-            return this.opts.oneOf && mapValues(keyBy(this.opts.oneOf, 'const'), choice => choice['title']);
+            return this.oneOf && mapValues(keyBy(this.oneOf, 'const'), choice => choice['title']);
         },
         oneOf() {
             return add_to_oneOf_if_missing(this.oneOf_, this.opts.allowUnchangedValue)
@@ -207,7 +207,7 @@ export default Vue.extend({
             const opts = this.opts || {};
             if (opts.oneOf) {
                 return opts.oneOf;
-            } else if (opts.oneOf_async && this.uiType === 'select') {
+            } else if (opts.oneOf_async && ['select', 'radio'].includes(this.uiType)) {
                 return await Ws.search(this.stepName, this.real_name || this.name, '');
             } else {
                 return undefined;
