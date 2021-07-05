@@ -64,11 +64,11 @@ export default Vue.extend({
             return this.month && month2maxDay[this.month] || 31;
         },
         currentValue() {
-            const [ year, month, day, minYear, maxYear, maxDay ] = [ 'year', 'month', 'day', 'minYear', 'maxYear', 'maxDay' ].map(n => parseInt(this[n]));
+            const [ year, month, day ] = [ 'year', 'month', 'day' ].map(n => parseInt(this[n]));
             return year && month && day && 
-                   day <= maxDay &&
-                   (!minYear || minYear <= year) && 
-                   (!maxYear || year <= maxYear) &&
+                   day <= this.maxDay &&
+                   (!this.opts.minYear || this.opts.minYear <= year) && 
+                   (!this.opts.maxYear || year <= this.opts.maxYear) &&
                new Date(Date.UTC(year, month - 1, day)) || undefined;
         },
     },
