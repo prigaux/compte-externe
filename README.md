@@ -93,7 +93,7 @@ Labels which can use variable `resp` which is the response of "next" `action_pre
 
 By default, the value is sent to the browser, and can be modified with potential restrictions:
 * ```oneOf```: restricted list of possibilities (const + title list)
-* ```oneOf_async```: similar to above but list is computed using user search (ie autocomplete, useful for long lists)
+* ```oneOf_async```: similar to above but list is computed using user search (ie autocomplete, useful for long lists), or simply computed dynamically for uiType `select` (`""` token is passed)
 * ```serverValidator```: custom validator. Use it when you must validate using multiple fields. The error will be displayed in a popup. Use a `labels.advice_after_submit` to display a visual hint to the user that something is wrong.
 * ```pattern```: regexp the value sent by the browser must match
 * ```allowedChars```: prefer this over `pattern` for simple cases since it can explain the user what is wrong
