@@ -1,5 +1,5 @@
 <template>
-  <my-bootstrap-form-group name="day" :opts="opts">
+  <my-bootstrap-form-group name="date" :opts="opts" :validity="currentValue_validity">
    <div class="row">
     <div class="col-xs-2" :class="{'my-has-error': !validity.day.valid }">
         <div>
@@ -25,6 +25,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import * as _ from 'lodash'
 import * as Helpers from '../services/helpers';
 
 function init(date) {
@@ -63,20 +64,30 @@ export default Vue.extend({
         maxDay() {
             return this.month && month2maxDay[this.month] || 31;
         },
+        minDate() {
+            return this.opts.minDate;
+        },
+        maxDate() {
+            return this.opts.maxDate;
+        },
         minYear() {
-            return this.opts.minDate?.getUTCFullYear()
+            return this.minDate?.getUTCFullYear()
         },
         maxYear() {
-            return this.opts.maxDate?.getUTCFullYear()
+            return this.maxDate?.getUTCFullYear()
         },
         currentValue() {
             const [ year, month, day ] = [ 'year', 'month', 'day' ].map(n => parseInt(this[n]));
             return year && month && day && 
                    day <= this.maxDay &&
-                   (!this.minYear || this.minYear <= year) && 
-                   (!this.maxYear || year <= this.maxYear) &&
                new Date(Date.UTC(year, month - 1, day)) || undefined;
         },
+        currentValue_validity() {
+            const val = this.currentValue
+            const valid = val ? (!this.minDate || +this.minDate <= +val) && (!this.maxDate || +val <= +this.maxDate) : this.opts.optional
+            const message = !valid && _.every(this.validity, (validity_ => validity_.valid)) && "Date manquante ou invalide" || undefined
+            return { date: { valid, message } }
+        }
     },
 });
 </script>
