@@ -64,6 +64,9 @@ interface ServiceSideOnlyStepAttrOptions {
 
   items?: MinimalStepAttrOption & { properties?: StepAttrsOptionT<unknown> }
 
+  minDate?: relativeDate;
+  maxDate?: relativeDate;
+
   toUserOnly?: boolean; // implies hidden
   toUser?: (val: string, v: v) => any;
 

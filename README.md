@@ -99,8 +99,8 @@ By default, the value is sent to the browser, and can be modified with potential
 * ```allowedChars```: prefer this over `pattern` for simple cases since it can explain the user what is wrong
 * ```min```: min number the value sent by the browser must match
 * ```max```: max number the value sent by the browser must match
-* ```minDate```: min date the value sent by the browser must match (for dates)
-* ```maxDate```: max date the value sent by the browser must match (for dates)
+* ```minDate```: min date the value sent by the browser must match (for dates), relative date examples: "-10SY" (start year), "+365D", "+1Y" or "+1EY" (end year)
+* ```maxDate```: max date the value sent by the browser must match (for dates), see `minDate` for examples
 * ```optional```: by default empty value is not allowed
 * ```allowUnchangedValue```: if set, if the user changes the value, the value must pass checks. If kept unchanged, it bypasses checks!
 * ```ignoreInvalidExistingValue```: if set, the existing value must pass validation otherwise it is ignored (ie nullified)

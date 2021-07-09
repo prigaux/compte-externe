@@ -10,6 +10,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { to_absolute_date } from "../services/helpers";
 import CurrentLdapValue from './CurrentLdapValue.vue';
 
 function toYYYY_MM_DD(date) {
@@ -43,10 +44,10 @@ export default Vue.extend({
             return this.val && new Date(this.val) || undefined;
         },
         min() {
-            return toYYYY_MM_DD(this.opts.minDate);
+            return toYYYY_MM_DD(to_absolute_date(this.opts.minDate));
         },
         max() {
-            return toYYYY_MM_DD(this.opts.maxDate);
+            return toYYYY_MM_DD(to_absolute_date(this.opts.maxDate));
         },
     },
 });

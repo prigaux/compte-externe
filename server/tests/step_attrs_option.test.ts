@@ -1,4 +1,6 @@
+import * as _ from 'lodash'
 import { assert } from './test_utils';
+import * as helpers from '../helpers'
 import { merge_v, exportAttrs, export_v, flatten_attrs, selectUserProfile, merge_attrs_overrides, checkAttrs, one_diff, transform_object_items_oneOf_async_to_oneOf } from '../step_attrs_option';
 import checkDisplayName from '../../shared/validators/displayName';
 
@@ -167,7 +169,11 @@ describe('merge_v', () => {
             merge_v(attrs, more_attrs, prev, v);
             assert.fail("should raise error");
         } catch (err) {
-            assert.deepEqual(err, wanted_err);
+            if (_.isRegExp(wanted_err)) {
+                if (!wanted_err.test(err)) assert.fail(`expected\n"""${err}""" to match regexp ${wanted_err}`)
+            } else {
+                assert.deepEqual(err, wanted_err);
+            }
         }
     }
     function test(attrs: StepAttrsOption, prev: v, v: v, wanted_v: v) {
@@ -217,6 +223,13 @@ describe('merge_v', () => {
         test_fail({ attr1: { min: 2 } }, {}, { attr1: 1 }, "constraint attr1.min >= 2 failed for 1");
         test({ attr1: { max: 2 } }, {}, { attr1: 2 }, { attr1: 2 });
         test_fail({ attr1: { max: 2 } }, {}, { attr1: 3 }, "constraint attr1.max <= 2 failed for 3");
+    });
+    it ("should check minDate/maxDate", () => {
+        const v = { attr1: helpers.addDays(new Date(), 100) }
+        test({ attr1: { minDate: '+99D' } }, {}, v, v);
+        test_fail({ attr1: { minDate: '+101D' } }, {}, v, /^constraint attr1[.]minDate >= [+]101D failed/);
+        test({ attr1: { maxDate: '+101D' } }, {}, v, v);
+        test_fail({ attr1: { maxDate: '+99D' } }, {}, v, /^constraint attr1[.]maxDate <= [+]99D failed/);
     });
     it ("should check array", () => {
         test_fail({ altGivenName: { items: {} } }, {}, {}, 'constraint !altGivenName.optional failed for undefined');

@@ -42,7 +42,7 @@ async function key2name(raw: any, spec: StepAttrOption, if_empty : string = '') 
     return raw || if_empty;
 }
 
-const _format_attr_name = (key: string, opts: StepAttrOption) => (
+const _format_attr_name = (key: string, opts: SharedStepAttrOption) => (
     opts.title || key
 )
 
@@ -55,7 +55,7 @@ const format_v = async (v: v, attrs: StepAttrsOption) => (
 ` +
       (await pmap(v, async (val, key) => {
           if (key === 'various') return '';
-          const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
+          const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] } as StepAttrOption;
           return '  <tr><td>' + _format_attr_name(key, opts) + '</td><td>' + await key2name(val, opts) + '</td></tr>'
       })).join("\n") + `\n</table>`
 )
@@ -68,7 +68,7 @@ export const format_various_diff = async (diff: Dictionary<one_diff>, attrs: Ste
   <tr><th>Champ</th><th>Ancienne valeur</th><th>Nouvelle valeur</th></tr>
 ` +
     (await pmap(diff, async ({ prev, current }: one_diff, key: string) => {
-        const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] };
+        const opts = { ...client_conf.default_attrs_opts[key], ...attrs[key] } as StepAttrOption;
         const tds = [
             _format_attr_name(key, opts),
             await key2name(prev, opts, '<i>aucune</i>'),

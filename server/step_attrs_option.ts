@@ -86,6 +86,16 @@ function validate(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOpti
             if (!((""+val).match(/\d+/) && 0 <= val && val <= opt.max))
                 throw `constraint ${key}.max <= ${opt.max} failed for ${val}`;
         }
+        if (opt.minDate) {
+            let val_ = val && new Date(val)
+            if (!(val_ && +helpers.compute_absolute_date(opt.minDate) <= +val_))
+                throw `constraint ${key}.minDate >= ${opt.minDate} failed when checking ${helpers.compute_absolute_date(opt.minDate)} <= ${val}`;
+        }
+        if (opt.maxDate) {
+            let val_ = val && new Date(val)
+            if (!(val_ && +helpers.compute_absolute_date(opt.maxDate) >= +val_))
+                throw `constraint ${key}.maxDate <= ${opt.maxDate} failed when checking ${helpers.compute_absolute_date(opt.maxDate)} >= ${val}`;
+        }
         if (opt.pattern) {
             let val_ = val !== undefined ? val : '';
             if (!(_.isString(val_) && val_.match("^(" + opt.pattern + ")$")))

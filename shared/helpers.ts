@@ -61,3 +61,27 @@ export const maybeFormatPhone = (resultFrenchPrefix: string) => (maybePhone : st
     }
     return maybePhone;
 }
+
+export const compute_absolute_date = (relativeDate: relativeDate, date: Date = new Date()) => {
+    const [ , number_, what ] = relativeDate.match(/^(.*?)(D|EY|SY|Y)$/) || []
+    const number = parseInt(number_)
+
+    switch (what.toUpperCase()) {
+        case "D":
+            return addDays(date, number)
+        //case "M":
+        //    return addMonths(startdate, number)
+        case "Y":
+            return addYears(date, number)
+        case "SY":
+            return nextDate("XXXX-01-01", addYears(date, number - 1))
+        case "EY":
+            return nextDate("XXXX-12-31", addYears(date, number))
+        default:
+            throw "getExpiryDate: invalid code " + what
+    }
+}
+
+export const to_absolute_date = (date: Date | relativeDate) => (
+    date instanceof Date ? date : date && compute_absolute_date(date, new Date())
+)

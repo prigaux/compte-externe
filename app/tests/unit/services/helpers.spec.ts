@@ -75,4 +75,29 @@ describe('service helpers', function() {
             assert.equal(Helpers.to_csv([{ foo: "foo1" }], { foo: { oneOf: [ { const: "foo1", title: "Foo1" } ], title: "Foo" } }), "Foo\r\nFoo1");
         })
     })
+
+    describe('to_absolute_date', function() {
+        it('should handle xxD', () => {
+            assert.deepEqual(Helpers.compute_absolute_date('+0D', new Date("2020-01-01")), new Date("2020-01-01"))
+            assert.deepEqual(Helpers.compute_absolute_date('+1D', new Date("2020-01-01")), new Date("2020-01-02"))
+            assert.deepEqual(Helpers.compute_absolute_date('-1D', new Date("2020-01-01")), new Date("2019-12-31"))
+        })
+        it('should handle xxY', () => {
+            assert.deepEqual(Helpers.compute_absolute_date('+0Y', new Date("2020-01-01")), new Date("2020-01-01"))
+            assert.deepEqual(Helpers.compute_absolute_date('+1Y', new Date("2020-01-01")), new Date("2021-01-01"))
+            assert.deepEqual(Helpers.compute_absolute_date('-1Y', new Date("2020-01-01")), new Date("2019-01-01"))
+        })
+        it('should handle xxEY', () => {
+            assert.deepEqual(Helpers.compute_absolute_date('+0EY', new Date("2020-01-01")), new Date("2020-12-31"))
+            assert.deepEqual(Helpers.compute_absolute_date('+0EY', new Date("2020-12-31")), new Date("2020-12-31"))
+            assert.deepEqual(Helpers.compute_absolute_date('+1EY', new Date("2020-01-01")), new Date("2021-12-31"))
+            assert.deepEqual(Helpers.compute_absolute_date('-1EY', new Date("2020-01-01")), new Date("2019-12-31"))
+        })
+        it('should handle xxSY', () => {
+            assert.deepEqual(Helpers.compute_absolute_date('-0SY', new Date("2020-01-01")), new Date("2019-01-01")) // to fix?
+            assert.deepEqual(Helpers.compute_absolute_date('-0SY', new Date("2020-01-02")), new Date("2020-01-01"))
+            assert.deepEqual(Helpers.compute_absolute_date('-1SY', new Date("2020-01-02")), new Date("2019-01-01"))
+            assert.deepEqual(Helpers.compute_absolute_date('+1SY', new Date("2020-01-02")), new Date("2021-01-01"))
+        })
+    })
 });

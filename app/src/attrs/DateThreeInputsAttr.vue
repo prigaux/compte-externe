@@ -65,10 +65,10 @@ export default Vue.extend({
             return this.month && month2maxDay[this.month] || 31;
         },
         minDate() {
-            return this.opts.minDate;
+            return Helpers.to_absolute_date(this.opts.minDate);
         },
         maxDate() {
-            return this.opts.maxDate;
+            return Helpers.to_absolute_date(this.opts.maxDate);
         },
         minYear() {
             return this.minDate?.getUTCFullYear()

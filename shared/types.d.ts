@@ -8,6 +8,8 @@ type uiTypes =
     'homonym' | 'queryParamForActionPre' |
     'tab' | 'iframe';
 
+type relativeDate = `${number}${"D"|"Y"|"EY"|"SY"}`
+
 interface StepAttrItemsOption {
     uiPlaceholder?: string;
 
@@ -62,8 +64,8 @@ type SharedStepAttrOption = MinimalStepAttrOption & {
     onVisible?: (v: {}, elt: HTMLElement) => void;
     validator?: (val: any, v_orig: {}) => string;
 
-    minDate?: Date;
-    maxDate?: Date;
+    minDate?: Date | relativeDate;
+    maxDate?: Date | relativeDate;
 }
 
 type SharedStepAttrsOption = Dictionary<SharedStepAttrOption>;
