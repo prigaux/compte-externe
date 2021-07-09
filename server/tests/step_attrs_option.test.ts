@@ -248,9 +248,11 @@ describe('merge_v', () => {
         test({ altGivenName: { items: {} } }, {}, { altGivenName: ["x"] }, { altGivenName: ["x"] });
     });
     it ("should check oneOf", () => {
-        const attrs = { duration: { oneOf: [ { const: "1" } ] } };
-        test(attrs, {}, { duration: 1 }, { duration: 1 });
-        test_fail(attrs, {}, { duration: 2 }, "constraint duration.oneOf 1 failed for 2");
+        const attrs = { attr1: { oneOf: [ { const: "1" } ] } };
+        test(attrs, {}, { attr1: 1 }, { attr1: 1 });
+        test_fail(attrs, {}, { attr1: 2 }, "constraint attr1.oneOf 1 failed for 2");
+        test_fail(attrs, {}, { attr1: undefined }, 'constraint !attr1.optional failed for undefined');
+        test_fail(attrs, {}, { attr1: "" }, 'constraint !attr1.optional failed for ');
     });
     it ("should check simple properties", () => {
         const attrs = { _foo: { toUserOnly: true, properties: { sn: {} } } };
