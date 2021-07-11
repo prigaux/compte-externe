@@ -212,6 +212,12 @@ describe('merge_v', () => {
         test({ sn: { optional: true, pattern: "x" } }, {}, {}, {});
         test({ sn: { optional: true, pattern: "x" } }, {}, { sn: '' }, { sn: '' });
     });
+    it ("should check min/max", () => {
+        test({ attr1: { min: 2 } }, {}, { attr1: 2 }, { attr1: 2 });
+        test_fail({ attr1: { min: 2 } }, {}, { attr1: 1 }, "constraint attr1.min >= 2 failed for 1");
+        test({ attr1: { max: 2 } }, {}, { attr1: 2 }, { attr1: 2 });
+        test_fail({ attr1: { max: 2 } }, {}, { attr1: 3 }, "constraint attr1.max <= 2 failed for 3");
+    });
     it ("should check array", () => {
         test_fail({ altGivenName: { items: {} } }, {}, {}, 'constraint !altGivenName.optional failed for undefined');
         // @ts-expect-error

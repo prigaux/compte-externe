@@ -78,6 +78,10 @@ function validate(key: string, opt: StepAttrOption, more_opt: SharedStepAttrOpti
             // bypass checks
             return
         }
+        if (opt.min) {
+            if (!((""+val).match(/\d+/) && opt.min <= val))
+                throw `constraint ${key}.min >= ${opt.min} failed for ${val}`;
+        }
         if (opt.max) {
             if (!((""+val).match(/\d+/) && 0 <= val && val <= opt.max))
                 throw `constraint ${key}.max <= ${opt.max} failed for ${val}`;
