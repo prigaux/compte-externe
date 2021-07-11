@@ -190,3 +190,19 @@ export const deep_extend = <T extends Dictionary<any>, U extends Dictionary<any>
         return overrides;
     }
 }
+
+export const deep_extend_concat = <T>(v1: Partial<T>, v2: T): T => {
+    if (_.isPlainObject(v1) && _.isPlainObject(v2)) {
+        const r = { ...v1, ...v2 };
+        for (const attr of _.intersection(Object.keys(v1), Object.keys(v2))) {
+            // @ts-expect-error
+            r[attr] = deep_extend_concat(v1[attr], v2[attr]);
+        }
+        return r;
+    } else if (_.isArray(v1) && _.isArray(v2)) {
+        // @ts-expect-error
+        return [ ...v1, ...v2 ]
+    } else {
+        return v2;
+    }
+}
