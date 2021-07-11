@@ -74,7 +74,7 @@ interface StepAttrOption_no_extensions {}
 type StepAttrOption = StepAttrOptionT<StepAttrOption_no_extensions>;
 type StepAttrsOption = StepAttrsOptionT<StepAttrOption_no_extensions>;
 type StepAttrOptionChoices = StepAttrOptionChoicesT<StepAttrOption>;
-type profileValues = profileValuesT<StepAttrsOption>;
+type profileValues = profileValuesT<StepAttrOption>;
 
 interface StepLabels extends Omit<ClientSideStepLabels, 'description_in_list'> {
     description_in_list?: string | ((req : req) => Promise<string>); // description displayed in list of steps (InitialStep / ModerateList)
