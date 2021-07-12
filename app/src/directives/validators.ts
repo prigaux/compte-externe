@@ -161,6 +161,15 @@ Vue.component('select-with-validity', {
     },
     watch: {
       value: 'on_value_set',
+      choices() {
+          setTimeout(() => {
+            // this.$el.value is now updated according to new "choices"
+            // if it is different, it means current choice is no more allowed
+            if (this.$el.value !== this.value) {
+                this.onchange({ target: this.$el })
+            }
+        })
+      },
     },
 });
 
