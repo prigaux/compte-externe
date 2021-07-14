@@ -3,7 +3,7 @@ type Dictionary<T> = Record<string, T>
 type uiTypes =
     'radio'|'select'|'checkbox'|'email'|'password'|'text'|'url' |
     'textarea'|'phone'|'frenchMobilePhone'|'frenchPostalCode'|'date' |
-    'dateThreeInputs'|'postalAddress'|'cameraSnapshot'|'photoUpload' |
+    'dateThreeInputs'|'postalAddress'|'cameraSnapshot'|'photoUpload'|'fileUpload' |
     'autocomplete'|'newPassword'|'siret' | 'array' |
     'homonym' | 'queryParamForActionPre' |
     'tab' | 'iframe';
@@ -31,6 +31,8 @@ interface StepAttrItemsOption {
     pattern?: string;
     min?: number;
     max?: number;
+
+    acceptedMimeTypes?: string[];
 
     // for images
     width?: number

@@ -33,6 +33,10 @@
      :opts="opts">
   </PhotoUploadAttr>
 
+  <FileUploadAttr v-model="val" :name="name" v-else-if="uiType === 'fileUpload'"
+     :opts="opts">
+  </FileUploadAttr>
+
   <PasswordAttr v-model="val" v-else-if="uiType === 'newPassword'"
      :opts="opts">
   </PasswordAttr>
@@ -136,6 +140,7 @@ import cameraSnapshotAttr from './cameraSnapshotAttr.vue';
 import PasswordAttr from './PasswordAttr.vue';
 import AutocompleteAttr from './AutocompleteAttr.vue';
 import CurrentLdapValue from './CurrentLdapValue.vue';
+import FileUploadAttr from './FileUploadAttr.vue';
 
 function add_to_oneOf_if_missing(choices: Ws.StepAttrOptionChoices[], to_have) {
     if (!isNil(to_have) && choices && !choices.some(choice => choice.const === to_have)) {
@@ -147,7 +152,7 @@ function add_to_oneOf_if_missing(choices: Ws.StepAttrOptionChoices[], to_have) {
 export default Vue.extend({
     props: ['value', 'real_name', 'name', 'opts', 'v', 'ldap_value', 'stepName', 'allow_remove'],
     components: { 
-        DateAttr, DateThreeInputsAttr, ArrayAttr, ReadOnlyObjectItems, AddressAttr, cameraSnapshotAttr, PasswordAttr, AutocompleteAttr, CurrentLdapValue,
+        DateAttr, DateThreeInputsAttr, ArrayAttr, ReadOnlyObjectItems, AddressAttr, cameraSnapshotAttr, PasswordAttr, AutocompleteAttr, CurrentLdapValue, FileUploadAttr,
         PhotoUploadAttr: () => import('./PhotoUploadAttr.vue'),
     },
     data() {
