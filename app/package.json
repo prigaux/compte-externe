@@ -19,6 +19,7 @@
     "croppie": "^2.6.3",
     "exif-js": "^2.3.0",
     "load-script-once": "^1.1.2",
+    "prismjs": "^1.24.1",
     "raw-loader": "^0.5.1",
     "tslib": "^2.3.0",
     "vue": "^2.6.7",

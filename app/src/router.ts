@@ -9,6 +9,7 @@ import template_welcome from '!raw-loader!./templates/welcome.html'
 export let router;
 
 const _routes = {
+    '/playground': () => import('./controllers/Playground.vue'),
     '/login/:kind?': { render(_h) { router.replace(this.$route.query.then) } }, // TODO, use vue-router redirect
     '/steps/:kind?': ModerateList,
     '/:stepName/:wanted_id?': Step,
