@@ -20,6 +20,7 @@
         </div>
     </div>
    </div>
+   <span v-html="opts.description"></span>
   </my-bootstrap-form-group>
 </template>
 
