@@ -107,6 +107,7 @@
         :disabled="opts.readOnly"
         :placeholder="opts.uiPlaceholder"
         :type="type" :realType="realType" :required="!opts.optional" :pattern="opts.pattern" :allowedChars="opts.allowedChars" :validator="opts.validator"
+        :min="opts.min" :max="opts.max" :step="uiType === 'number' && 'any'"
         :title="opts.labels && opts.labels.tooltip" :validity.sync="validity[name]">
     </input-with-validity>
     <span v-html="opts.description"></span>
@@ -181,6 +182,7 @@ export default Vue.extend({
         type() {
             return this.realType || !this.opts.uiType ?
                'text' : 
+               this.opts.uiType === 'integer' ? 'number' :
                this.opts.uiType;
         },
         realType() { 

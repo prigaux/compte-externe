@@ -1,7 +1,7 @@
 type Dictionary<T> = Record<string, T>
 
 type uiTypes =
-    'radio'|'select'|'checkbox'|'email'|'password'|'text'|'url' |
+    'radio'|'select'|'checkbox'|'email'|'password'|'text'|'integer'|'number'|'url' |
     'textarea'|'phone'|'frenchMobilePhone'|'frenchPostalCode'|'date' |
     'dateThreeInputs'|'postalAddress'|'cameraSnapshot'|'photoUpload'|'fileUpload' |
     'autocomplete'|'newPassword'|'siret' | 'array' |
