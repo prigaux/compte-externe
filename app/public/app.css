@@ -36,7 +36,16 @@ ins {
 
 fieldset {
     margin-bottom: 4px;
-    border-bottom: 1px solid #e5e5e5;
+    border: 1px solid #e5e5e5;
+    padding: 2rem;
+}
+@media screen and (min-width: 992px) {
+    fieldset {
+        padding-left: 0;
+    }
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, fieldset {
+    background: #f8f8f8;
 }
 
 .tab-description {
