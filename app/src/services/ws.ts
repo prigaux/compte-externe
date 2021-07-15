@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { merge, omit, cloneDeep } from 'lodash';
 import { setTimeoutPromise } from '../../../shared/helpers'
-import { router } from '../router';
 import * as Helpers from './helpers';
 
 
@@ -156,7 +155,10 @@ function _handleErr(err : AxiosError, $scope = null, redirect = false) {
             $scope.fatal_error = msg;
         } else {
             alert(msg);
-            if (redirect) router.back();
+            if (redirect) {
+                // dynamic import to avoid circular dependency
+                import('../router').then(({ router }) => router.back());
+            }
         }
         return Promise.reject(json_error);
     }
